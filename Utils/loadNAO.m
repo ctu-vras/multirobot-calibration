@@ -1,25 +1,25 @@
-function [name, optProperties, structure, structure2]=loadNAO()
+function [name, structure, structure2]=loadNAO()
     %optProperties=robot.optProperties;
     %% Solver options
-    options = optimoptions('lsqnonlin');
-    %options.Algorithm = 'trust-region-reflective';
-    options.Algorithm = 'levenberg-marquardt';
-    options.Display = 'iter';
-    options.TolFun = 1e-10;
-    options.TolX = 1e-16;
-    options.MaxIter = 100;
-    options.InitDamping = 1000;
-    options.MaxFunctionEvaluations=9999999;
-
-    optProperties.options=options;
+%     options = optimoptions('lsqnonlin');
+%     %options.Algorithm = 'trust-region-reflective';
+%     options.Algorithm = 'levenberg-marquardt';
+%     options.Display = 'iter';
+%     options.TolFun = 1e-10;
+%     options.TolX = 1e-16;
+%     options.MaxIter = 100;
+%     options.InitDamping = 1000;
+%     options.MaxFunctionEvaluations=9999999;
+% 
+%     optProperties.options=options;
     
     %% Patches
-    optProperties.patches.hands_upper=[7,8,9,10,11,14,15,0,13,12,1,2,3,4,5,6];
-    optProperties.patches.hands_lower=[19,22,23,25,26,20,21,31];
-    optProperties.patches.head_left=[0,1,2,3,4,5,6,7,8,12,13,15];
-    optProperties.patches.head_right=[16,17,18,19,20,21,22,23,24,28,29,31];
-    optProperties.patches.torso_left=[0,1,2,3,4,5,8,9,10,11,12,13,14,15];
-    optProperties.patches.torso_right=[16,17,18,24,25,26,27,28,29,30,31];
+    hands_upper=[7,8,9,10,11,14,15,0,13,12,1,2,3,4,5,6];
+    hands_lower=[19,22,23,25,26,20,21,31];
+    head_left=[0,1,2,3,4,5,6,7,8,12,13,15];
+    head_right=[16,17,18,19,20,21,22,23,24,28,29,31];
+    torso_left=[0,1,2,3,4,5,8,9,10,11,12,13,14,15];
+    torso_right=[16,17,18,24,25,26,27,28,29,30,31];
 
 %     %% Self touch
 %     optProperties.offsets.selftouch=0;
@@ -259,24 +259,24 @@ function [name, optProperties, structure, structure2]=loadNAO()
         {'torsoPlastic',types.mount,1,[0,0,0,0],1,group.torso},...
         {'torsoLeftPatch',types.patch,23,[ 0, 0, 0, 0],1,group.torso},...
         {'torsoRightPatch',types.patch,23,[ 0, 0, 0, 0],1,group.torso}};
-    for triangleId=optProperties.patches.hands_upper
+    for triangleId=hands_upper
         structure{end+1}={strcat('rightTriangle',num2str(triangleId)),types.triangle,21,[0,0,0,0],1,group.rightArm};
         structure{end+1}={strcat('leftTriangle',num2str(triangleId)),types.triangle,13,[0,0,0,0],1,group.leftArm};
     end
-    for triangleId=optProperties.patches.hands_lower
+    for triangleId=hands_lower
         structure{end+1}={strcat('rightTriangle',num2str(triangleId)),types.triangle,22,[0,0,0,0],1,group.rightArm};
         structure{end+1}={strcat('leftTriangle',num2str(triangleId)),types.triangle,14,[0,0,0,0],1,group.leftArm};
     end
-    for triangleId=optProperties.patches.head_left
+    for triangleId=head_left
         structure{end+1}={strcat('headTriangle',num2str(triangleId)),types.triangle,5,[0,0,0,0],1,group.head};
     end
-    for triangleId=optProperties.patches.head_right
+    for triangleId=head_right
         structure{end+1}={strcat('headTriangle',num2str(triangleId)),types.triangle,6,[0,0,0,0],1,group.head};
     end
-    for triangleId=optProperties.patches.torso_left
+    for triangleId=torso_left
         structure{end+1}={strcat('torsoTriangle',num2str(triangleId)),types.triangle,24,[0,0,0,0],1,group.torso};
     end
-    for triangleId=optProperties.patches.torso_right
+    for triangleId=torso_right
         structure{end+1}={strcat('torsoTriangle',num2str(triangleId)),types.triangle,25,[0,0,0,0],1,group.torso};
     end
     %optProperties=reloadParametersNAO(optProperties);

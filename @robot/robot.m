@@ -28,7 +28,7 @@ classdef robot < handle
                 %addpath(genpath('../Visualization'));
                 addpath(genpath(pwd));
                 func=str2func(name);
-                [name, optProperties, structure, structure2]=func();
+                [name, structure, modelStructure]=func();
                 joints=cell(size(structure,2));
                 for jointId=1:size(structure,2)
                     curJoint=structure{jointId};
@@ -41,8 +41,8 @@ classdef robot < handle
                     obj.joints{end+1}=joints{jointId};
                 end
                 obj.name=name;
-                obj.optProperties=optProperties;
-                obj.structure=structure2;
+                obj.optProperties=[];
+                obj.structure=modelStructure;
                 
             else
                 error(sprintf('Incorrect number of arguments inserted, expected 1, but got %d',nargin));
@@ -65,17 +65,7 @@ classdef robot < handle
                 joint{index}=obj.joints{indexes(index)};
             end
         end
-        
-%         %% Find joint by type
-%         function [joint,indexes]=findJointByType(obj,type)
-%             %Returns instance of joints as cell array and corresponding indexes in robot.joints cell array
-%             fun=cellfun(@(x) strcmp(x.type,type), obj.joints);
-%             indexes=find(fun);
-%             joint=cell(size(indexes,2),1);
-%             for index=1:size(indexes,2)
-%                 joint{index}=obj.joints{indexes(index)};
-%             end
-%         end
+       
         %% Find joint by type
         function [joint,indexes]=findJointByType(obj,type)
             %Returns instance of joints as cell array and corresponding indexes in robot.joints cell array
@@ -98,14 +88,10 @@ classdef robot < handle
             end
         end
         
-        %% Function to print joints/end-effectors in format (name, index in cell array)
-        function print(obj,type)
+        %% Function to print joints in format (name, index in cell array)
+        function print(obj)
             % Type is 'joint' for joints/ 'ee' for end-effectors
-            if strcmp(type,'joint')
-                cellArray=obj.joints;
-            elseif strcmp(type,'ee')
-                cellArray=obj.endEffectors;
-            end
+            cellArray=obj.joints;
             for jointId=1:size(cellArray,2)
                 fprintf('%s %d\n',cellArray{jointId}.name,jointId);
             end
@@ -122,7 +108,7 @@ classdef robot < handle
             if strcmp(type,'name')
                 [joint, ~] = findJoint(obj,name);
             elseif strcmp(type,'type')
-                [joint, ~] = findJointByNaType(obj,name);
+                [joint, ~] = findJointByType(obj,name);
             end
             len=size(joint,1);
             for i=1:len

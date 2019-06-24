@@ -1,11 +1,12 @@
 function showModel(r, angles, varargin)
     % angles - cell array, {[th_1_chain1,...,th_n_chain1],...,[]}
-    % 'skin' - 1/0 for skin/markers, 'dual' - 
+    % 'skin' - 1/0 for skin/markers, 'dual' - 1/0 for dual robot
     close all;
     p=inputParser;
     addRequired(p,'angles');
     addParameter(p,'skin',0,@isnumeric);
-    addParameter(p,'dual',0);
+    addParameter(p,'dual',0,@isnumeric);
+    addParameter(p,'dualDH',[]);
 %     if  size(varargin,1)> 0
 %         if strcmp(varargin{1},'skin')
 %             MARKERS_ON=1;
@@ -71,10 +72,11 @@ function showModel(r, angles, varargin)
         name=fnames{i};
         joints=findJointByGroup(r,name);
         for joint=1:size(joints,2)
-            if joints(joint).type==types.joint
-                structure.(name)(joint,:)=
+            j=joints(joint);
+            if j{1}.type==types.joint
+                structure.(name)(joint,:)=j{1}.DH;
             end
-        end
+        end 
         robot.(name).name = name;
         robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
         robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
@@ -82,6 +84,30 @@ function showModel(r, angles, varargin)
         robot.(name).Th = [robot.tor.Th,angles{i}];
         robot.(name).LinkColor = LINK_COLOR;
         robot.chain.(name) = FwdKin(robot.(name),MARKERS_ON);
+    end
+    
+    if p.Results.dual
+        fnames=fieldnames(r.structure);
+        size(p.Results.dualDH,1)
+        if size(p.Results.dualDH,1)==0
+            structure=r.structure;
+        else
+            for name=1:size(fnames,2)
+               structure.(fnames{name})=p.Results.dualDH{name}; 
+            end
+        end
+
+        for i=1:length(fnames)
+            %joint=structure.(fnames{i});
+            name=fnames{i};
+            robot.(name).name = name;
+            robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
+            robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
+            robot.(name).DH = structure.(name);
+            robot.(name).Th = [robot.tor.Th,angles{i}];
+            robot.(name).LinkColor = LINK_COLOR;
+            robot.chain.(name) = FwdKin(robot.(name),MARKERS_ON);
+        end
     end
     %% MARKERS
     if strcmp(r.name,'motoman') && MARKERS_ON

@@ -1,11 +1,12 @@
 function showModel(r, angles, varargin)
     % angles - cell array, {[th_1_chain1,...,th_n_chain1],...,[]}
-    % 'skin' - 1/0 for skin/markers, 'dual' - 
+    % 'skin' - 1/0 for skin/markers, 'dual' - 1/0 for dual robot
     close all;
     p=inputParser;
     addRequired(p,'angles');
     addParameter(p,'skin',0,@isnumeric);
-    addParameter(p,'dual',0);
+    addParameter(p,'dual',0,@isnumeric);
+    addParameter(p,'dualDH',[]);
 %     if  size(varargin,1)> 0
 %         if strcmp(varargin{1},'skin')
 %             MARKERS_ON=1;
@@ -17,8 +18,15 @@ function showModel(r, angles, varargin)
 %     end
     parse(p,angles,varargin{:});
     if p.Results.skin %Skin or Markers
-        MARKERS_ON=1;
+        if strcmp(r.name,'nao')
+            SKIN_ON=1;
+            MARKERS_ON=0;
+        else
+            MARKERS_ON=1;
+            SKIN_ON=0;
+        end
     else
+        SKIN_ON=0;
         MARKERS_ON=0;
     end
         
@@ -61,7 +69,7 @@ function showModel(r, angles, varargin)
     robot.tor.DH = [0.0, 0.0, 0.0, 0.0];
     robot.tor.Th = 0; % only first joint go here
     robot.tor.LinkColor = LINK_COLOR;
-    robot.chain.rootToTorso = FwdKin(robot.tor,'noFrames',MARKERS_ON); % we don't draw this chain common to all
+    robot.chain.rootToTorso = FwdKin(robot.tor,'noFrames',SKIN_ON); % we don't draw this chain common to all
 
     %% Other joints
     structure=r.structure;
@@ -82,10 +90,33 @@ function showModel(r, angles, varargin)
         robot.(name).DH = structure.(name);
         robot.(name).Th = [robot.tor.Th,angles{i}];
         robot.(name).LinkColor = LINK_COLOR;
-        robot.chain.(name) = FwdKin(robot.(name),MARKERS_ON);
+        robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
+    end
+    
+    if p.Results.dual
+        fnames=fieldnames(r.structure);
+        if size(p.Results.dualDH,1)==0
+            structure=r.structure;
+        else
+            for name=1:size(fnames,2)
+               structure.(fnames{name})=p.Results.dualDH{name}; 
+            end
+        end
+
+        for i=1:length(fnames)
+            %joint=structure.(fnames{i});
+            name=fnames{i};
+            robot.(name).name = name;
+            robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
+            robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
+            robot.(name).DH = structure.(name);
+            robot.(name).Th = [robot.tor.Th,angles{i}];
+            robot.(name).LinkColor = LINK_COLOR;
+            robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
+        end
     end
     %% MARKERS
-    if strcmp(r.name,'motoman') && MARKERS_ON
+    if MARKERS_ON
         tf_mk_01 = [-0.79466465  0.0         0.60704867  0.03200057;
          0.0         1.0         0.0         0.0;
         -0.60704867  0.0        -0.79466465 -0.04189075;
