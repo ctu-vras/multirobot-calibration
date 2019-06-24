@@ -1,4 +1,4 @@
-function [name, optProperties, structure, structure2]=loadNAO()
+function [name, optProperties, structure]=loadNAO()
     %optProperties=robot.optProperties;
     %% Solver options
     options = optimoptions('lsqnonlin');
@@ -280,21 +280,21 @@ function [name, optProperties, structure, structure2]=loadNAO()
         structure{end+1}={strcat('torsoTriangle',num2str(triangleId)),types.triangle,25,[0,0,0,0],1,group.torso};
     end
     %optProperties=reloadParametersNAO(optProperties);
-    structure2.leftArm=[0, 0.1, -pi/2, 0;
+    structure2={{'left_arm',[0, 0.1, -pi/2, 0;
                0, 0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
                0, 0.105, -pi/2, 0.0;
                0, 0.0, pi/2, 0;
-               0, 0, -pi/2, pi];
-    structure2.rightArm=[0, 0.1, -pi/2, 0; 
+               0, 0, -pi/2, pi]},...
+        {'right_arm',[0, 0.1, -pi/2, 0; 
                0, -0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
                0, 0.105, -pi/2, 0.0;
                0, 0, pi/2, 0;
-               0, 0, -pi/2, pi];
-    structure2.head=[0, 0.1265, 0, 0.0;
+               0, 0, -pi/2, pi]},...
+        {'head',[0, 0.1265, 0, 0.0;
          0, 0, -pi/2, 0;
-         0,0,0,0];
+         0,0,0,0]}};
     name='nao';
     %robot.optProperties=optProperties;
 end

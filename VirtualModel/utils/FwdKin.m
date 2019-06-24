@@ -87,7 +87,7 @@ function [chain] = FwdKin(body_part,varargin)
             variables=fields(data);
             points=data.(variables{1}); %get values on key from struct
             points_new=[];
-            if strcmp(body_part.name,'left_arm') || strcmp(body_part.name,'right_arm')
+            if strcmp(body_part.name,'leftArm') || strcmp(body_part.name,'rightArm')
                for i=1:length(points)
                    p=[points(i,1);points(i,2);points(i,3)]; %tranfser from row to column vector
                    %p=[0 0 -1;0 1 0;1 0 0]*p; % -90deg roration y

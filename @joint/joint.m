@@ -11,24 +11,26 @@ classdef joint < handle
         endEffector
         lowerBounds
         upperBounds
+        group
     end
     
     methods
         %% Constructor
-        function obj = joint(name, type, parent, DH, optimizedPars, perturbedDH, endEffector, lowerBounds, upperBounds)
-            if nargin==9
+        function obj = joint(name, type, parent, DH, endEffector, group)
+            if nargin==6
                obj.type=type;
                obj.name=name;
                obj.parent=parent;
                obj.DH=DH;
                %obj.optimize=optimize;
-               obj.optimizedPars=optimizedPars;
-               obj.perturbedDH=perturbedDH;
+               obj.optimizedPars=zeros(1,4);
+               obj.perturbedDH=zeros(1,4);
                obj.endEffector=endEffector;
-               obj.lowerBounds=lowerBounds;
-               obj.upperBounds=upperBounds;
+               obj.lowerBounds=zeros(1,4);
+               obj.upperBounds=zeros(1,4);
+               obj.group=group;
             else
-                error(sprintf('Incorrect number of arguments inserted,expected 9, but got %d',nargin));
+                error(sprintf('Incorrect number of arguments inserted,expected 6, but got %d',nargin));
             end
         end
         

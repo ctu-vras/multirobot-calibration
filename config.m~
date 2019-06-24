@@ -1,0 +1,7 @@
+function config
+    
+end
+
+classdef group
+    enumeration
+        leftArm, rightArm, h

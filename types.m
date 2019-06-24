@@ -1,0 +1,1 @@
+classdef types    enumeration        base, torso, joint, patch, triangle, mount    endend
