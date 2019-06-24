@@ -12,11 +12,11 @@ function setRobot(robot)
         else
             j=nan;
         end
-        joints{jointId}=joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},curJoint{6},curJoint{7},curJoint{8});
+        joints{jointId}=joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},curJoint{6},curJoint{7},curJoint{8},curJoint{9});
         robot.joints{end+1}=joints{jointId};
-        if curJoint{8}
-           robot.endEffectors{end+1}= joints{jointId};
-        end
+        %if curJoint{8}
+        %   robot.endEffectors{end+1}= joints{jointId};
+        %end
     end
     
     
