@@ -5,6 +5,7 @@ classdef robot < handle
         optProperties
         endEffectors={}
         joints={}
+        structure={}
         home=pwd;
     end
     
@@ -25,7 +26,7 @@ classdef robot < handle
                 %addpath(genpath('../Opt'));
                 %addpath(genpath('../MultiRobot'));
                 %addpath(genpath('../Visualization'));
-                addpath(genpath('../'));
+                addpath(genpath(pwd));
                 setRobot(obj);
                 
             else

@@ -280,8 +280,20 @@ function loadNAO(robot)
         optProperties.structure{end+1}={strcat('torsoTriangle',num2str(triangleId)),'triangle',25,[0,0,0,0],[1,1,1,1],[0,0,0,0],1,[0,0,0,0],[0,0,0,0]};
     end
     %optProperties=reloadParametersNAO(optProperties);
-    optProperties.modelStructure={{'left_arm',loadDH('left_hand')},...
-        {'right_arm',loadDH('right_hand')},...
-        {'head',loadDH('head')}};
+    robot.structure={{'left_arm',[0, 0.1, -pi/2, 0;
+               0, 0.098, pi/2, 0;
+               0, 0,  pi/2, pi/2;
+               0, 0.105, -pi/2, 0.0;
+               0, 0.0, pi/2, 0;
+               0, 0, -pi/2, pi]},...
+        {'right_arm',[0, 0.1, -pi/2, 0; 
+               0, -0.098, pi/2, 0;
+               0, 0,  pi/2, pi/2;
+               0, 0.105, -pi/2, 0.0;
+               0, 0, pi/2, 0;
+               0, 0, -pi/2, pi]},...
+        {'head',[0, 0.1265, 0, 0.0;
+         0, 0, -pi/2, 0;
+         0,0,0,0]}};
     robot.optProperties=optProperties;
 end

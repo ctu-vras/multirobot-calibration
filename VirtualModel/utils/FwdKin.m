@@ -81,23 +81,23 @@ function [chain] = FwdKin(body_part,varargin)
         for i = 1:length(RFFrame)-1
             cyl{i} = DrawCylinderFromTo(RFFrame{i}(1:3,4),RFFrame{i+1}(1:3,4), LinkColor, 100, linkTransparency, linkratio);
         end
-        %Skin visualize
+        %Skin visualize -- NAO/iCub
         if nargin>1 && (~strcmp(varargin{1},'noFrames') && varargin{1}) || (nargin>2 && varargin{2})
             data=load(strcat(body_part.name,'Points.mat')); %load .mat files with points
             variables=fields(data);
             points=data.(variables{1}); %get values on key from struct
             points_new=[];
-            if strcmp(body_part.name,'left_arm') || strcmp(body_part.name,'right_arm̈́')
+            if strcmp(body_part.name,'left_arm') || strcmp(body_part.name,'right_arm')
                for i=1:length(points)
                    p=[points(i,1);points(i,2);points(i,3)]; %tranfser from row to column vector
                    %p=[0 0 -1;0 1 0;1 0 0]*p; % -90deg roration y
                    %p=[0 1 0;-1 0 0; 0 0 1]*p; % -90deg rotation z
 
-                   p=[0 -1 0;1 0 0; 0 0 1]*p;    % -90deg rotation z
-                   p=[1 0 0;0 -1 0; 0 0 -1]*p;
+                   %p=[0 -1 0;1 0 0; 0 0 1]*p;    % -90deg rotation z
+                   %p=[1 0 0;0 -1 0; 0 0 -1]*p;
                    p=[p;1]; %Adding  to end of vector for multipliying
                    %*[0 -1 0 0;-1 0 0 0; 0 0 -1 0; 0 0 0 1]
-                   point_new=RFFrame{end}*p; %roto-trans matrix multiply
+                   point_new=RFFrame{end}*[0 -1 0 0;-1 0 0 0; 0 0 -1 0; 0 0 0 1]*p; %roto-trans matrix multiply
                    point_new=[point_new(1) point_new(2) point_new(3)]; %back to row vector
                    %point_new(1)=point_new(1)-100;
                    points_new=[points_new;point_new]; %Concatenate new array

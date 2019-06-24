@@ -19,5 +19,4 @@ function setRobot(robot)
         %end
     end
     
-    
 end

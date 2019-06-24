@@ -1,14 +1,17 @@
-function showModel(r, structure, angles, varargin)
-    % structure - cell array, in format {{'chain_name',DH},...,{}}
+function showModel(r, angles, varargin)
     % angles - cell array, {[th_1_chain1,...,th_n_chain1],...,[]}
     % varargin - int, 1 for skin for nao/markers for motoman
     close all;
-    if nargin > 3
-        MARKERS_ON=1;
+    if  size(varargin,1)> 0
+        if strcmp(varargin{1},'skin')
+            MARKERS_ON=1;
+        else
+            MARKERS_ON=0;
+        end
     else
         MARKERS_ON=0;
     end
-
+    
     % settings
     LINK_COLOR = [0.5 0.5 0.8]; % blueish
     %MARKERS_ON = false;
@@ -51,9 +54,9 @@ function showModel(r, structure, angles, varargin)
     robot.chain.rootToTorso = FwdKin(robot.tor,'noFrames',MARKERS_ON); % we don't draw this chain common to all
 
     %% Other joints
-    for i=1:size(structure,2)
-        joint=structure{i};
-        robot.(joint{1}).name = joint{1};%'right_arm';
+    for i=1:size(r.structure,2)
+        joint=r.structure{i};
+        robot.(joint{1}).name = joint{1};
         robot.(joint{1}).H0 = robot.chain.rootToTorso.RFFrame{end};
         robot.(joint{1}).H0(1:3,4) = robot.(joint{1}).H0(1:3,4)./1000; % converting the translational part from mm back to m
         robot.(joint{1}).DH = (joint{2});
@@ -161,7 +164,7 @@ function showModel(r, structure, angles, varargin)
     view([90,0]);
     axis equal;
     
-    if nargin > 7
-        saveas(gcf, varargin{1});
-    end
+    %if nargin > 7
+    %    saveas(gcf, varargin{1});
+    %end
 end
