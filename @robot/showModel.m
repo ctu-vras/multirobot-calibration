@@ -75,10 +75,9 @@ function showModel(r, angles, varargin)
     structure=r.structure;
     fnames=fieldnames(structure);
     for i=1:length(fnames)
-        %joint=structure.(fnames{i});
         name=fnames{i};
         joints=findJointByGroup(r,name);
-        for joint=1:size(joints,2)
+        for joint=1:size(joints,1)
             j=joints(joint);
             if j{1}.type==types.joint
                 structure.(name)(joint,:)=j{1}.DH;
@@ -98,13 +97,12 @@ function showModel(r, angles, varargin)
         if size(p.Results.dualDH,1)==0
             structure=r.structure;
         else
-            for name=1:size(fnames,2)
+            for name=1:size(fnames,1)
                structure.(fnames{name})=p.Results.dualDH{name}; 
             end
         end
 
         for i=1:length(fnames)
-            %joint=structure.(fnames{i});
             name=fnames{i};
             robot.(name).name = name;
             robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
