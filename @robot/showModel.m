@@ -32,6 +32,7 @@ function showModel(r, angles, varargin)
         
     % settings
     LINK_COLOR = [0.5 0.5 0.8]; % blueish
+    LINK_COLOR_2 = [0.8 0.5 0.5]; % redish
     %MARKERS_ON = false;
 
     %% INIT AND PLOT BODY PARTS
@@ -74,15 +75,19 @@ function showModel(r, angles, varargin)
     %% Other joints
     structure=r.structure;
     fnames=fieldnames(structure);
+    
     for i=1:length(fnames)
         name=fnames{i};
+        jointNames = {};
         joints=findJointByGroup(r,name);
         for joint=1:size(joints,1)
             j=joints(joint);
             if j{1}.type==types.joint
+                jointNames{end+1} = j{1}.name;
                 structure.(name)(joint,:)=j{1}.DH;
             end
         end 
+        robot.(name).jointNames = jointNames;
         robot.(name).name = name;
         robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
         robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
@@ -109,7 +114,7 @@ function showModel(r, angles, varargin)
             robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
             robot.(name).DH = structure.(name);
             robot.(name).Th = [robot.tor.Th,angles{i}];
-            robot.(name).LinkColor = LINK_COLOR;
+            robot.(name).LinkColor = LINK_COLOR_2;
             robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
         end
     end
@@ -201,11 +206,11 @@ function showModel(r, angles, varargin)
             tf_mk_11, tf_mk_12, tf_mk_13, tf_mk_14, tf_mk_15, ...
             tf_mk_16, tf_mk_17, tf_mk_18, tf_mk_19, tf_mk_20};
 
-        r_ee = robot.chain.right_arm.RFFrame{end};
+        r_ee = robot.chain.rightArm.RFFrame{end};
         r_ee(1:3,4) = r_ee(1:3,4)./1000; % converting the translational part from mm back to m
         r_markers = markers2sphere(markers, r_ee, true);
 
-        l_ee = robot.chain.left_arm.RFFrame{end};
+        l_ee = robot.chain.leftArm.RFFrame{end};
         l_ee(1:3,4) = l_ee(1:3,4)./1000; % converting the translational part from mm back to m
         l_markers = markers2sphere(markers, l_ee, true);       
     end

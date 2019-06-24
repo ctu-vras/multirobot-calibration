@@ -74,7 +74,7 @@ function [chain] = FwdKin(body_part,varargin)
             DrawRefFrame(RFFrame{1},1,refFrameSize,'hat',body_part.name);
             if length(RFFrame) >=2
                 for i = 2:length(RFFrame)
-                    DrawRefFrame(RFFrame{i},i,refFrameSize,'noh',body_part.name);
+                    DrawRefFrame(RFFrame{i},i,refFrameSize,'noh',body_part.jointNames{i-1});
                 end
             end  
         end
