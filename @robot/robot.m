@@ -12,10 +12,10 @@ classdef robot < handle
     methods
         %% Constructor
         function obj = robot(robotName)
-            splittedHome=strsplit(obj.home,'/');
-            if ~strcmp(splittedHome{end},'MultiRobot')
-                error('Please, create instance in GIT_FOLDER/MultiRobot folder');
-            end
+            splittedHome=strsplit(obj.home,'/');            
+%             if ~strcmp(splittedHome{end},'CalibAll')
+%                 error('Please, create instance in GIT_FOLDER/MultiRobot folder');
+%             end
             if nargin==1
                 if ismember(robotName,{'nao','icub','motoman'})
                     obj.name=robotName;
