@@ -91,22 +91,17 @@ function showModel(r, angles, varargin)
         jointNames = {};
         joints=findJointByGroup(r,name);
         index = 1;
-%         if ~isfield(r.structure,'torso')
-%             jointNames{end+1}='torso'
-%         end
         for joint=1:size(joints,1)
             j=joints(joint);
-            j{1}.name
             if j{1}.type==types.joint || j{1}.type==types.eye
                 jointNames{end+1} = j{1}.name;
                 structure.(name)(index,:)=j{1}.DH;
                 index = index + 1;
             end
         end 
-        jointNames
         robot.(name).jointNames = jointNames;
         robot.(name).name = name;
-        if(strcmp(name, 'leftEye') || strcmp(name, 'rightEye'))
+        if((strcmp(name, 'leftEye') || strcmp(name, 'rightEye')) && isfield(structure,'head'))
             robot.(name).H0 = robot.chain.head.RFFrame{end};
         else
             robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
