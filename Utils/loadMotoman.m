@@ -144,5 +144,9 @@ function [ name, structure, structure2 ] = loadMotoman()
             tf_mk_06, tf_mk_07, tf_mk_08, tf_mk_09, tf_mk_10, ...
             tf_mk_11, tf_mk_12, tf_mk_13, tf_mk_14, tf_mk_15, ...
             tf_mk_16, tf_mk_17, tf_mk_18, tf_mk_19, tf_mk_20};
+        
+    structure2.bounds.joint = [0.05, 0.05, 0.05, 0.1];
+    structure2.bounds.eye = [0.15, 0.15, 0.05, 0.1];
+    
 end
 
