@@ -30,19 +30,18 @@ function showGraphModel(r)
 %         end
 %     end
     treeVector=[];
-    for joint=r.jointStructure
-       
-       if isnan(joint{1}{3})
+    for joint=r.joints
+       if isnan(joint{1}.parentId)
            treeVector(end+1)=0;
        else
-           treeVector(end+1)=joint{1}{3};
+           treeVector(end+1)=joint{1}.parentId;
        end
     end
     [x,y]=treelayout(treeVector);
     treeplot(treeVector);
     for i=1:length(x)
-        if r.jointStructure{i}{2}~=types.triangle
-            text(x(i)+0.015,y(i),r.jointStructure{i}{1});
+        if r.joints{i}.type~=types.triangle
+            text(x(i)+0.015,y(i),r.joints{i}.name);
         end
     end
     title(sprintf('Structure of %s robot',r.name))

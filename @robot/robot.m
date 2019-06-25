@@ -6,7 +6,6 @@ classdef robot < handle
         endEffectors={}
         joints={}
         structure={}
-        jointStructure
         home=pwd;
     end
     
@@ -14,19 +13,7 @@ classdef robot < handle
     methods
         %% Constructor
         function obj = robot(name)
-            %splittedHome=strsplit(obj.home,'/');            
-%             if ~strcmp(splittedHome{end},'CalibAll')
-%                 error('Please, create instance in GIT_FOLDER/MultiRobot folder');
-%             end
             if nargin==1
-%                 if ismember(robotName,{'nao','icub','motoman'})
-%                     obj.name=robotName;
-%                 else
-%                     error('Not a valid robot name');
-%                 end
-                %addpath(genpath('../Opt'));
-                %addpath(genpath('../MultiRobot'));
-                %addpath(genpath('../Visualization'));
                 addpath(genpath(pwd));
                 func=str2func(name);
                 [name, structure, modelStructure]=func();
@@ -38,14 +25,12 @@ classdef robot < handle
                     else
                         j=nan;
                     end
-                    joints{jointId}=joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},curJoint{6});
+                    joints{jointId}=joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},curJoint{6},curJoint{3});
                     obj.joints{end+1}=joints{jointId};
                 end
                 obj.name=name;
                 obj.optProperties=[];
-                obj.structure=modelStructure;
-                obj.jointStructure=structure;
-                
+                obj.structure=modelStructure;                
             else
                 error(sprintf('Incorrect number of arguments inserted, expected 1, but got %d',nargin));
             end
