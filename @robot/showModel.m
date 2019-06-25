@@ -64,7 +64,11 @@ function showModel(r, angles, varargin)
     %% TORSO
     robot.tor.name = 'torso';%'root_to_torso';
     robot.tor.H0 = r.structure.H0;
-    torso_dh=r.structure.torso;
+    if isfield(r.structure,'torso')
+        torso_dh=r.structure.torso;
+    else
+       torso_dh=[0 0 0 0]; 
+    end
     index = 1;
     joints=findJointByGroup(r,'torso');
     for joint=1:size(joints,1)
@@ -87,14 +91,19 @@ function showModel(r, angles, varargin)
         jointNames = {};
         joints=findJointByGroup(r,name);
         index = 1;
+%         if ~isfield(r.structure,'torso')
+%             jointNames{end+1}='torso'
+%         end
         for joint=1:size(joints,1)
             j=joints(joint);
+            j{1}.name
             if j{1}.type==types.joint || j{1}.type==types.eye
                 jointNames{end+1} = j{1}.name;
                 structure.(name)(index,:)=j{1}.DH;
                 index = index + 1;
             end
         end 
+        jointNames
         robot.(name).jointNames = jointNames;
         robot.(name).name = name;
         if(strcmp(name, 'leftEye') || strcmp(name, 'rightEye'))
