@@ -1,4 +1,4 @@
-function [options, chains, repetitions, optim, pert]=optimizationConfig
+function [options, chains, optim, pert]=optimizationConfig
     %% Solver options
     options = optimoptions('lsqnonlin');
     %options.Algorithm = 'trust-region-reflective';
@@ -10,6 +10,8 @@ function [options, chains, repetitions, optim, pert]=optimizationConfig
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=999;    
     
+    
+    
     %% Chains combinations
     chains.lare=0;
     chains.lale=0;
@@ -19,10 +21,7 @@ function [options, chains, repetitions, optim, pert]=optimizationConfig
     chains.rator=0;
     chains.lahead=0;
     chains.rahead=0;
-    
-    %% Repetitions
-    repetitions=10;
-    
+
     %% Calibration principle
     optim.type.eyes=0;
     optim.type.selftouch=0;
@@ -30,8 +29,10 @@ function [options, chains, repetitions, optim, pert]=optimizationConfig
     optim.type.external=0;
     optim.onlyOffsets=0;
     optim.skin=0;
-    
-    %% Perturbations
+    optim.bounds=0;
+    optim.repetitions=10;
+    optim.pert=[0,0,0];
+    %% Perturbations   
     pert.mild.a=0.01;
     pert.mild.d=0.01;
     pert.mild.alpha=0.01;

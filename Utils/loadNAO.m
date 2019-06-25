@@ -1,18 +1,4 @@
 function [name, structure, structure2]=loadNAO()
-    %optProperties=robot.optProperties;
-    %% Solver options
-%     options = optimoptions('lsqnonlin');
-%     %options.Algorithm = 'trust-region-reflective';
-%     options.Algorithm = 'levenberg-marquardt';
-%     options.Display = 'iter';
-%     options.TolFun = 1e-10;
-%     options.TolX = 1e-16;
-%     options.MaxIter = 100;
-%     options.InitDamping = 1000;
-%     options.MaxFunctionEvaluations=9999999;
-% 
-%     optProperties.options=options;
-    
     %% Patches
     hands_upper=[7,8,9,10,11,14,15,0,13,12,1,2,3,4,5,6];
     hands_lower=[19,22,23,25,26,20,21,31];
@@ -212,26 +198,6 @@ function [name, structure, structure2]=loadNAO()
 %     end
 % 
 %     %optProperties.triangles.t27.optimize=true; % Turn on one given triangle
-% 
-% 
-%     %% Bounds for algs
-%     optProperties.offsets.bounds=0;
-%     optProperties.offsets.lowerBounds=[-15,-15,-pi,-pi];
-%     optProperties.offsets.upperBounds=[15,15,pi,pi];
-% 
-%     optProperties.triangles.bounds=false;
-%     optProperties.triangles.lowerBounds=[-1,-1,-pi/20,-pi/20];
-%     optProperties.triangles.upperBounds=[1,1,pi/20,pi/20];
-% 
-%     optProperties.patches.bounds=false;
-%     optProperties.patches.lowerBounds=[-1,-inf,-pi/20,-pi/20];
-%     optProperties.patches.upperBounds=[1,inf,pi/20,pi/20];
-%     
-%     %% Perturbations
-%     optProperties.offsets.perturbations=[0,0,0,0]; %a,d,alpha,theta
-%     optProperties.patches.perturbations=[0,0,0,0];
-%     optProperties.triangles.perturbations=[0,0,0,0];%a,d,alpha,theta/x,y,z,~
-
     
     %% Robot structure
     structure={{'base',types.base,nan,[0 0 0 0],0,group.torso},...
@@ -310,7 +276,10 @@ function [name, structure, structure2]=loadNAO()
                      0 1 0 0;
                      0 0 1 0;
                      0 0 0 1];
-
+    structure2.bounds.joint=[inf, inf, inf, inf];
+    structure2.bounds.mount=[15,15,pi,pi];
+    structure2.bounds.patch=[1,1,pi/20,pi/20];
+    structure2.bounds.triangle=[1,inf,pi/20,pi/20];
     name='nao';
     %robot.optProperties=optProperties;
 end
