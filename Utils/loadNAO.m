@@ -234,7 +234,7 @@ function [name, structure, structure2]=loadNAO()
 
     
     %% Robot structure
-    structure={{'torso',types.base,nan,[0 0 0 0],0,group.torso},...
+    structure={{'base',types.base,nan,[0 0 0 0],0,group.torso},...
         {'headYaw',types.joint,1,[0, 0.1265, 0, 0],0,group.head},...
         {'headPitch',types.joint,2,[0,0,-pi/2,0],0,group.head},...
         {'headPlastic',types.mount,3,[0,0,0,0],1,group.head},...
@@ -280,21 +280,27 @@ function [name, structure, structure2]=loadNAO()
         structure{end+1}={strcat('torsoTriangle',num2str(triangleId)),types.triangle,25,[0,0,0,0],1,group.torso};
     end
     %optProperties=reloadParametersNAO(optProperties);
-    structure2.leftArm=[0, 0.1, -pi/2, 0;
+    structure2.DH.leftArm=[0, 0.1, -pi/2, 0;
                0, 0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
                0, 0.105, -pi/2, 0.0;
                0, 0.0, pi/2, 0;
                0, 0, -pi/2, pi];
-    structure2.rightArm=[0, 0.1, -pi/2, 0; 
+    structure2.DH.rightArm=[0, 0.1, -pi/2, 0; 
                0, -0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
                0, 0.105, -pi/2, 0.0;
                0, 0, pi/2, 0;
                0, 0, -pi/2, pi];
-    structure2.head=[0, 0.1265, 0, 0.0;
+    structure2.DH.head=[0, 0.1265, 0, 0.0;
          0, 0, -pi/2, 0;
          0,0,0,0];
+     
+    structure2.H0 = [1 0 0 0;
+                     0 1 0 0;
+                     0 0 1 0;
+                     0 0 0 1];
+
     name='nao';
     %robot.optProperties=optProperties;
 end

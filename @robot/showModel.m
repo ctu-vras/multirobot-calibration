@@ -63,148 +63,92 @@ function showModel(r, angles, varargin)
 
     %% TORSO
     robot.tor.name = 'torso';%'root_to_torso';
-    robot.tor.H0 = [1 0 0 0;
-        0 1 0 0;
-        0 0 1 0;
-        0 0 0 1];
-    robot.tor.DH = [0.0, 0.0, 0.0, 0.0];
-    robot.tor.Th = 0; % only first joint go here
+    robot.tor.H0 = r.structure.H0;
+    torso_dh=r.structure.torso;
+    index = 1;
+    joints=findJointByGroup(r,'torso');
+    for joint=1:size(joints,1)
+        j=joints(joint);
+        if(j{1}.type == types.joint)
+            torso_dh(index,:)=j{1}.DH;
+            index = index + 1;
+        end
+    end    
+    robot.tor.DH = torso_dh;
+    robot.tor.Th = zeros(1,size(torso_dh, 1)); % only first joint go here
     robot.tor.LinkColor = LINK_COLOR;
     robot.chain.rootToTorso = FwdKin(robot.tor,'noFrames',SKIN_ON); % we don't draw this chain common to all
 
     %% Other joints
-    structure=r.structure;
+    structure=r.structure.DH;
     fnames=fieldnames(structure);
-    
     for i=1:length(fnames)
         name=fnames{i};
         jointNames = {};
         joints=findJointByGroup(r,name);
+        index = 1;
         for joint=1:size(joints,1)
             j=joints(joint);
-            if j{1}.type==types.joint
+            if j{1}.type==types.joint || j{1}.type==types.eye
                 jointNames{end+1} = j{1}.name;
-                structure.(name)(joint,:)=j{1}.DH;
+                structure.(name)(index,:)=j{1}.DH;
+                index = index + 1;
             end
         end 
         robot.(name).jointNames = jointNames;
         robot.(name).name = name;
-        robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
+        if(strcmp(name, 'leftEye') || strcmp(name, 'rightEye'))
+            robot.(name).H0 = robot.chain.head.RFFrame{end};
+        else
+            robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
+        end
         robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
         robot.(name).DH = structure.(name);
-        robot.(name).Th = [robot.tor.Th,angles{i}];
+        robot.(name).Th = [angles{i}];   % TODO: vyresit nulu navic
         robot.(name).LinkColor = LINK_COLOR;
         robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
     end
     
     if p.Results.dual
-        fnames=fieldnames(r.structure);
+        fnames=fieldnames(r.structure.DH);
         if size(p.Results.dualDH,1)==0
-            structure=r.structure;
+            structure=r.structure.DH;
         else
             for name=1:size(fnames,1)
                structure.(fnames{name})=p.Results.dualDH{name}; 
             end
         end
-
+            
         for i=1:length(fnames)
             name=fnames{i};
+            jointNames = {};
+            joints=findJointByGroup(r,name);
+            index = 1;
+            for joint=1:size(joints,1)
+                j=joints(joint);
+                if j{1}.type==types.joint || j{1}.type==types.eye
+                    jointNames{end+1} = j{1}.name;
+                    structure.(name)(index,:)=j{1}.DH;
+                    index = index + 1;
+                end
+            end 
+            robot.(name).jointNames = jointNames;
             robot.(name).name = name;
-            robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
+            if(strcmp(name, 'leftEye') || strcmp(name, 'rightEye'))
+                robot.(name).H0 = robot.chain.head.RFFrame{end};
+            else
+                robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
+            end
             robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
             robot.(name).DH = structure.(name);
-            robot.(name).Th = [robot.tor.Th,angles{i}];
+            robot.(name).Th = [angles{i}];   % TODO: vyresit nulu navic
             robot.(name).LinkColor = LINK_COLOR_2;
             robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
         end
     end
     %% MARKERS
     if MARKERS_ON
-        tf_mk_01 = [-0.79466465  0.0         0.60704867  0.03200057;
-         0.0         1.0         0.0         0.0;
-        -0.60704867  0.0        -0.79466465 -0.04189075;
-         0.0         0.0         0.0         1.0];
-        tf_mk_02 = [ 0.82859264 -0.52748058  0.18761256  0.00989000;
-        -0.52748058 -0.62324281  0.57734967  0.03043499;
-        -0.18761256 -0.57734967 -0.79465016 -0.04188998;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_03 = [-0.17462117  0.85340379 -0.49113075 -0.02588996;
-         0.85340379  0.37997199  0.35682385  0.01880997;
-         0.49113075 -0.35682385 -0.79464918 -0.04188993;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_04 =[-0.17462117 -0.85340379 -0.49113075 -0.02588996;
-        -0.85340379  0.37997199 -0.35682385 -0.01880997;
-         0.49113075  0.35682385 -0.79464918 -0.04188993;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_05 = [ 0.82859264  0.52748058  0.18761256  0.00989000;
-         0.52748058 -0.62324281 -0.57734967 -0.03043499;
-        -0.18761256  0.57734967 -0.79465016 -0.04188998;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_06 =[-0.18760895  0.0          0.9822438  0.05177898;
-         0.0         1.0         0.0         0.0;
-        -0.98224380  0.0        -0.18760895 -0.00988981;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_07 =[ 0.88660172 -0.34901866  0.30351833  0.01599997;
-        -0.34901866 -0.07421398  0.93417250  0.04924490;
-        -0.30351833 -0.93417250 -0.18761227 -0.00988998;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_08 = [ 0.22269984  0.5647441  -0.79465016 -0.04188998;
-         0.56474410  0.58968760  0.57734967  0.03043499;
-         0.79465016 -0.57734967 -0.18761256 -0.00989000;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_09 = [ 0.22269984 -0.5647441  -0.79465016 -0.04188998;
-        -0.56474410  0.58968760 -0.57734967 -0.03043499;
-         0.79465016  0.57734967 -0.18761256 -0.00989000;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_10 = [ 0.88660172  0.34901866  0.30351833  0.01599997;
-         0.34901866 -0.07421398 -0.93417250 -0.04924490;
-        -0.30351833  0.93417250 -0.18761227 -0.00988998;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_11 = [ 0.46828713  0.38631371  0.79465016  0.04188998;
-         0.38631371  0.71932543 -0.57734967 -0.03043499;
-        -0.79465016  0.57734967  0.18761256  0.00989000;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_12 = [ 0.46828713 -0.38631371  0.79465016  0.04188998;
-        -0.38631371  0.71932543  0.57734967  0.03043499;
-        -0.79465016 -0.57734967  0.18761256  0.00989000;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_13 = [ 0.92242975  0.23874667 -0.30351833 -0.01599997;
-         0.23874667  0.26518251  0.93417250  0.04924490;
-         0.30351833 -0.93417250  0.18761227  0.00988998;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_14 = [ 0.18760895  0.0         -0.9822438 -0.05177898;
-         0.0         1.0         0.0         0.0;
-         0.98224380  0.0         0.18760895  0.00988981;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_15 = [ 0.92242975 -0.23874667 -0.30351833 -0.01599997;
-        -0.23874667  0.26518251 -0.93417250 -0.04924490;
-         0.30351833  0.9341725   0.18761227  0.00988998;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_16 = [ 0.86559523  0.09764982  0.49113075  0.02588996;
-         0.09764982  0.92905396 -0.35682385 -0.01880997;
-        -0.49113075  0.35682385  0.79464918  0.04188993;
-         0.0         0.0         0.0         1.0       ];
-        tf_mk_17 = [ 0.86559523 -0.09764982  0.49113075  0.02588996;
-        -0.09764982  0.92905396  0.35682385  0.01880997;
-        -0.49113075 -0.35682385  0.79464918  0.04188993;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_18 = [ 0.980387    0.06035608 -0.18761256 -0.00989000;
-         0.06035608  0.81426316  0.57734967  0.03043499;
-         0.18761256 -0.57734967  0.79465016  0.04188998;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_19 = [ 0.79466465  0.0        -0.60704867 -0.03200057;
-         0.0         1.0         0.0         0.0;
-         0.60704867  0.0         0.79466465  0.04189075;
-         0.0         0.0         0.0         1.0        ];
-        tf_mk_20 = [ 0.98038700 -0.06035608 -0.18761256 -0.00989000;
-        -0.06035608  0.81426316 -0.57734967 -0.03043499;
-         0.18761256  0.57734967  0.79465016  0.04188998;
-         0.0         0.0         0.0         1.0        ];
-
-        markers = {tf_mk_01, tf_mk_02, tf_mk_03, tf_mk_04, tf_mk_05, ...
-            tf_mk_06, tf_mk_07, tf_mk_08, tf_mk_09, tf_mk_10, ...
-            tf_mk_11, tf_mk_12, tf_mk_13, tf_mk_14, tf_mk_15, ...
-            tf_mk_16, tf_mk_17, tf_mk_18, tf_mk_19, tf_mk_20};
+        markers = r.structure.markers
 
         r_ee = robot.chain.rightArm.RFFrame{end};
         r_ee(1:3,4) = r_ee(1:3,4)./1000; % converting the translational part from mm back to m
