@@ -6,6 +6,7 @@ classdef robot < handle
         endEffectors={}
         joints={}
         structure={}
+        jointStructure
         home=pwd;
     end
     
@@ -43,6 +44,7 @@ classdef robot < handle
                 obj.name=name;
                 obj.optProperties=[];
                 obj.structure=modelStructure;
+                obj.jointStructure=structure;
                 
             else
                 error(sprintf('Incorrect number of arguments inserted, expected 1, but got %d',nargin));
@@ -128,7 +130,10 @@ classdef robot < handle
         visualizeNAO(robot,type,name);
         
         %% Show Matlab model
-        showModel(robot, structure, angles, varargin);
+        showModel(robot, angles, varargin);
+        
+        %% Show graph model
+        showGraphModel(robot);
         
         %% Dataset divide
         [training,testing]=splitDataset(robot, len, repetitions, batchSize);
