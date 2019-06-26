@@ -120,10 +120,12 @@ classdef robot < handle
         %% Show graph model
         showGraphModel(robot);
         
+        %% Prepare DH, bounds and perts
         [init, lb, ub]=prepareDH(r, pert, distribution, optim);
         
-        %% Dataset divide
-        [training,testing]=splitDataset(robot, len, repetitions, batchSize);
+        %% Prepare datasets
+        [training_set_indexes, testing_set_indexes, dataset]=prepareDataset(robot, funcname, varargin);
+        
         
     end
     

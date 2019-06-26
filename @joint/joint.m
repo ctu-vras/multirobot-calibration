@@ -40,7 +40,7 @@ classdef joint < handle
                 par=par.parent;
             end
             R=R*evalDHMatrix(par.DH(1)*1000,par.DH(2)*1000,par.DH(3),par.DH(4));
-            R=eye(4)\R;
+            %R=eye(4)\R;
         end
         
     end
