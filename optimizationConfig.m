@@ -33,33 +33,15 @@ function [options, chains, optim, pert]=optimizationConfig
     optim.repetitions=10;
     optim.pert=[0,0,0];
     %% Perturbations   
-    pert.mild.a=0.01;
-    pert.mild.d=0.01;
-    pert.mild.alpha=0.01;
-    pert.mild.theta=0.1;
+    pert.mild.DH=[0.01,0.01,0.01,0.1];
     
-    pert.mild.camera.a=0.05;
-    pert.mild.camera.d=0.05;
-    pert.mild.camera.alpha=0.05;
-    pert.mild.camera.theta=0.05;
+    pert.mild.camera=[0.05,0.05,0.05,0.05];
     
-    pert.fair.a=0.03;
-    pert.fair.d=0.03;
-    pert.fair.alpha=0.03;
-    pert.fair.theta=0.3;
+    pert.fair.DH=[0.03,0.03,0.03,0.3];
     
-    pert.fair.camera.a=0.03;
-    pert.fair.camera.d=0.03;
-    pert.fair.camera.alpha=0.03;
-    pert.fair.camera.theta=0.03;
+    pert.fair.camera=[0.03,0.03,0.03,0.03];
     
-    pert.stormy.a=0.1;
-    pert.stormy.d=0.1;
-    pert.stormy.alpha=0.1;
-    pert.stormy.theta=1;
+    pert.stormy.DH=[0.1,0.1,0.1,1];
     
-    pert.stormy.camera.a=0.1;
-    pert.stormy.camera.d=0.1;
-    pert.stormy.camera.alpha=0.1;
-    pert.stormy.camera.theta=0.1;
+    pert.stormy.camera=[0.1,0.1,0.1,0.1];
 end

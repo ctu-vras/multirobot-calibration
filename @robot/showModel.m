@@ -69,15 +69,15 @@ function showModel(r, angles, varargin)
     else
        torso_dh=[0 0 0 0]; 
     end
-    index = 1;
-    joints=findJointByGroup(r,'torso');
-    for joint=1:size(joints,1)
-        j=joints(joint);
-        if(j{1}.type == types.joint)
-            torso_dh(index,:)=j{1}.DH;
-            index = index + 1;
-        end
-    end    
+%     index = 1;
+%     joints=findJointByGroup(r,'torso');
+%     for joint=1:size(joints,1)
+%         j=joints(joint);
+%         if(j{1}.type == types.joint)
+%             torso_dh(index,:)=j{1}.DH;
+%             index = index + 1;
+%         end
+%     end    
     robot.tor.DH = torso_dh;
     robot.tor.Th = zeros(1,size(torso_dh, 1)); % only first joint go here
     robot.tor.LinkColor = LINK_COLOR;
@@ -90,13 +90,13 @@ function showModel(r, angles, varargin)
         name=fnames{i};
         jointNames = {};
         joints=findJointByGroup(r,name);
-        index = 1;
+        %index = 1;
         for joint=1:size(joints,1)
             j=joints(joint);
             if j{1}.type==types.joint || j{1}.type==types.eye
                 jointNames{end+1} = j{1}.name;
-                structure.(name)(index,:)=j{1}.DH;
-                index = index + 1;
+                %structure.(name)(index,:)=j{1}.DH;
+                %index = index + 1;
             end
         end 
         robot.(name).jointNames = jointNames;

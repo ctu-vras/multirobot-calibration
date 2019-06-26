@@ -4,34 +4,31 @@ classdef joint < handle
         name
         parent
         parentId
-        DH
+        DHindex
         type
-        perturbedDH
-        optimizedPars
+        %perturbedDH
+        %optimizedPars
         endEffector
-        lowerBounds
-        upperBounds
+        %lowerBounds
+        %upperBounds
         group
     end
     
     methods
         %% Constructor
-        function obj = joint(name, type, parent, DH, endEffector, group,  parentId, optimizedPars)
+        function obj = joint(name, type, parent, DHindex, endEffector, group,  parentId)
             
                obj.type=type;
                obj.name=name;
                obj.parent=parent;
-               obj.DH=DH;
-               obj.optimizedPars=ones(1,4);
-               obj.perturbedDH=zeros(1,4);
+               obj.DHindex=DHindex;
+               %obj.optimizedPars=ones(1,4);
+               %obj.perturbedDH=zeros(1,4);
                obj.endEffector=endEffector;
-               obj.lowerBounds=-inf(1,4);
-               obj.upperBounds=inf(1,4);
+               %obj.lowerBounds=-inf(1,4);
+               %obj.upperBounds=inf(1,4);
                obj.group=group;
                obj.parentId=parentId;
-            if nargin==8
-               obj.optimizedPars=optimizedPars;
-            end
         end
         
         %% Computes RT matrix to base
