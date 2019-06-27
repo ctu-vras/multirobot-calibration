@@ -1,4 +1,4 @@
-function [ datasets ] = loadDatasetMotoman( varargin )
+function [ datasets, indexes ] = loadDatasetMotoman( varargin )
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -18,14 +18,15 @@ end
         'no_leica_self_upper1_4x4.csv', 'no_leica_self_upper2_4x4.csv', ...
         'no_leica_self_lower1_4x4.csv', 'no_leica_self_lower2_4x4.csv', ...     
         'leica_right_hand_6x6x6.csv', 'leica_left_hand_6x6x6.csv'};
-    datasets = cell(4,1);
+    datasets = cell(length(used_datasets(used_datasets==1)),1);
     indexes = {1:4, [5:6,9:10], [7:8, 11:12], 13:20};
+    index = 0;
     for k = 1:4
         dataset.point = [];
         dataset.group = [];
         dataset.frame = {};
         dataset.joints = [];
-        dataset.extcoords = [];
+        dataset.extCoords = [];
         dataset.cameras = [];
         dataset.pixels = [];
         if(used_datasets(k))      
@@ -39,12 +40,15 @@ end
                 dataset.group = [dataset.group; data2(:,1)];
                 dataset.frame = [dataset.frame;cellstr(strcat('EE',num2str(data2(:,3))))];
                 dataset.joints = [dataset.joints; data2(:, 7:19)];
-                dataset.extcoords = [dataset.extcoords; data2(:,20:22)];
+                dataset.extCoords = [dataset.extCoords; data2(:,20:22)];
                 dataset.cameras = [dataset.cameras; data2(:,4)];
                 dataset.pixels = [dataset.pixels; data2(:,5:6)];
-            end      
+                dataset.refDist = 0.116; 
+            end     
+            index = index + 1;
+            datasets{index} = dataset;        
         end
-        datasets{k} = dataset;
     end
+    indexes = {index, 1:index-1 ,1:index, 1:index};
 end
 
