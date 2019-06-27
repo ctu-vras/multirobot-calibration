@@ -54,6 +54,32 @@ function [ name, structure, structure2 ] = loadMotoman()
     structure2.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
             0.0, -0.445,     0.0,  0.0];
         
+        
+    structure2.WL.leftArm = [1, 0, 1, 0;
+                             1, 1, 1, 1;
+                             1, 0, 1, 1;
+                             1, 1, 1, 1;
+                             1, 1, 1, 1;
+                             1, 1, 1, 1;
+                             1, 0, 1, 0;
+                             0, 1, 0, 1];
+       
+    structure2.WL.rightArm = [0, 0, 0, 0;
+                              1, 0, 1, 0;
+                              1, 0, 1, 1;
+                              1, 1, 1, 1;
+                              1, 1, 1, 1;
+                              1, 1, 1, 1;
+                              1, 0, 1, 0;
+                              0, 1, 0, 1];
+       
+    structure2.WL.leftEye = [1, 1, 1, 1;
+                             0, 1, 0, 1];
+        
+    structure2.WL.rightEye = [1, 1, 1, 1;
+                              0, 1, 0, 1];
+    
+        
     structure2.H0 = [1 0 0 0;
                      0 1 0 0;
                      0 0 1 0;

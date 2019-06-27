@@ -121,12 +121,13 @@ classdef robot < handle
         showGraphModel(robot);
         
         %% Prepare DH, bounds and perts
-        [init, lb, ub]=prepareDH(r, pert, distribution, optim);
+        [init, lb, ub]=prepareDH(robot, pert, distribution, optim);
         
         %% Prepare datasets
         [training_set_indexes, testing_set_indexes, dataset]=prepareDataset(robot, optim, funcname, varargin);
         
-        
+        %% Prepare vector of parameters for optimization
+        opt_pars=createWhitelist(robot, funcname);
     end
     
 end
