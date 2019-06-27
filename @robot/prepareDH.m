@@ -31,7 +31,7 @@ function [init, lb, ub]=prepareDH(r, pert, distribution, optim)
         end
     end
     
-    %% No pert
+    %% start pars and bounds
     for jointId=1:length(r.joints)
        joint=r.joints{jointId};
        if joint.type==types.joint || joint.type==types.eye 
@@ -43,7 +43,7 @@ function [init, lb, ub]=prepareDH(r, pert, distribution, optim)
        end
        init.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:),1,1,optim.repetitions); 
       for i=1:length(optim.pert(optim.pert==1))
-           init.(sprintf('%s',joint.group))(joint.DHindex,:,:,i+1)=init.(sprintf('%s',joint.group))(index,:,:,1)+perms(jointId,:,i);
+           init.(sprintf('%s',joint.group))(joint.DHindex,:,:,i+1)=init.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)+perms(jointId,:,i);
        end
        if optim.bounds
         lb.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:)-r.structure.bounds.(sprintf('%s',joint.type)),1,1,optim.repetitions); 

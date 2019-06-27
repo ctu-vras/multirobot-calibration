@@ -10,10 +10,11 @@ function [training_set_indexes, testing_set_indexes, datasets]=prepareDataset(r,
     
     %% Assing joint to names and split
     for dataset=1:length(datasets)
-        joints=[];
+        clear joints
+        joints(length(datasets{dataset}.frame),1) = joint();
         for name=1:length(datasets{dataset}.frame)
             j=findJoint(r,datasets{dataset}.frame{name});
-            joints=[joints;j{1}];
+            joints(name)=j{1};
         end
         datasets{dataset}.frame=joints;
     end

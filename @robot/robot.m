@@ -127,7 +127,7 @@ classdef robot < handle
         [training_set_indexes, testing_set_indexes, dataset]=prepareDataset(robot, optim, funcname, varargin);
         
         %% Prepare vector of parameters for optimization
-        opt_pars=createWhitelist(robot, funcname);
+        [opt_pars, lb_pars, up_pars] = createWhitelist(robot, dh_pars, lb_pars, ub_pars, optim, funcname);
     end
     
 end
