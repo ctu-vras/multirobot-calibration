@@ -12,21 +12,23 @@ function [init, lb, ub]=prepareDH(r, pert, distribution, optim)
     end
     
     %% Init
-    fnames=[fieldnames(r.structure.DH);fieldnames(r.structure.skinDH)];
-    fnames=unique(fnames);
+    fnames=fieldnames(r.structure.DH);
+    
     for fname=1:size(fnames,1)
-       lines=0;
-       if isfield(r.structure.DH,fnames{fname})
-           lines=lines+size(r.structure.DH.(fnames{fname}),1);
-       end
-       if isfield(r.structure.skinDH,fnames{fname})
-           lines=lines+size(r.structure.skinDH.(fnames{fname}),1);
-       end
-       
+       lines=size(r.structure.DH.(fnames{fname}),1);
        init.(fnames{fname})=zeros(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
        lb.(fnames{fname})=-inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
-       ub.(fnames{fname})=inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
-       
+       ub.(fnames{fname})=inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1)));    
+    end
+    
+    if isfield(r.structure,'skinDH')
+        fnamesSkin=fieldnames(r.structure.skinDH);
+        for fname=1:size(fnamesSkin,1)
+           lines=size(r.structure.skinDH.(fnamesSkin{fname}),1);
+           init.(fnamesSkin{fname})=zeros(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
+           lb.(fnamesSkin{fname})=-inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
+           ub.(fnamesSkin{fname})=inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
+        end
     end
     
     %% No pert
@@ -34,24 +36,18 @@ function [init, lb, ub]=prepareDH(r, pert, distribution, optim)
        joint=r.joints{jointId};
        if joint.type==types.joint || joint.type==types.eye 
           type='DH';
-          index=joint.DHindex;
        elseif joint.type~=types.base
           type='skinDH'; 
-          if isfield(r.structure.DH,sprintf('%s',joint.group))
-            index=joint.DHindex+size(r.structure.DH.(sprintf('%s',joint.group)),1);
-          else
-              index=joint.DHindex;
-          end
        else
            continue
        end
-       init.(sprintf('%s',joint.group))(index,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:),1,1,optim.repetitions); 
+       init.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:),1,1,optim.repetitions); 
       for i=1:length(optim.pert(optim.pert==1))
-           init.(sprintf('%s',joint.group))(index,:,:,i+1)=init.(sprintf('%s',joint.group))(index,:,:,1)+perms(jointId,:,i);
+           init.(sprintf('%s',joint.group))(joint.DHindex,:,:,i+1)=init.(sprintf('%s',joint.group))(index,:,:,1)+perms(jointId,:,i);
        end
        if optim.bounds
-        lb.(sprintf('%s',joint.group))(index,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:)-r.structure.bounds.(sprintf('%s',joint.type)),1,1,optim.repetitions); 
-        ub.(sprintf('%s',joint.group))(index,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:)+r.structure.bounds.(sprintf('%s',joint.type)),1,1,optim.repetitions);
+        lb.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:)-r.structure.bounds.(sprintf('%s',joint.type)),1,1,optim.repetitions); 
+        ub.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:)+r.structure.bounds.(sprintf('%s',joint.type)),1,1,optim.repetitions);
        end
     end
     
