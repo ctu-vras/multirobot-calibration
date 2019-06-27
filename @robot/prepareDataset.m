@@ -1,22 +1,24 @@
-function [training_set_indexes, testing_set_indexes, datasets]=prepareDataset(r,optim, funcname, varargin)
+function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareDataset(r,optim, funcname, varargin)
     %% functions call
     if nargin>3
         func=str2func(funcname);
-        datasets=func((varargin{1}));
+        [datasets, indexes]=func((varargin{1}));
     else
         func=str2func(funcname);
-        datasets=func();
+        [datasets, indexes]=func();
     end
     
     %% Assing joint to names and split
     for dataset=1:length(datasets)
-        clear joints
-        joints(length(datasets{dataset}.frame),1) = joint();
+        joints=[];
         for name=1:length(datasets{dataset}.frame)
             j=findJoint(r,datasets{dataset}.frame{name});
-            joints(name)=j{1};
+            joints=[joints;j{1}];
         end
         datasets{dataset}.frame=joints;
+        if ~isfield(datasets{dataset},'refDist')
+            datasets{dataset}.refDist=0;
+        end
     end
     
     %% split dataset
@@ -51,5 +53,11 @@ function [training_set_indexes, testing_set_indexes, datasets]=prepareDataset(r,
         testing_set_indexes{j} = testing_set_indexes_dataset;
     end
 
+    datasetsStruct.dist={datasets{indexes{1}}};
+    datasetsStruct.plane={datasets{indexes{2}}};
+    datasetsStruct.ext={datasets{indexes{3}}};
+    datasetsStruct.markers={datasets{indexes{4}}};
+
+    
 end
 
