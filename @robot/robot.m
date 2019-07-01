@@ -45,7 +45,7 @@ classdef robot < handle
         %% Find joint by name
         function [joint,indexes]=findJoint(obj,name)
             %Returns instance of joints as cell array and coresponding indexes in robot.joints cell array
-            fun=cellfun(@(x) isvector(strfind(x.name,name)), obj.joints);
+            fun=cellfun(@(x) strcmp(x.name,name), obj.joints);
             indexes=find(fun);
             joint=cell(size(indexes,2),1);
             for index=1:size(indexes,2)

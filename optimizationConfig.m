@@ -23,15 +23,16 @@ function [options, chains, optim, pert]=optimizationConfig
     chains.rahead=0;
 
     %% Calibration principle
-    optim.type.eyes=0;
-    optim.type.selftouch=0;
-    optim.type.planes=0;
-    optim.type.external=0;
+    optim.type.eyes=0;%1;
+    optim.type.selftouch=1;
+    optim.type.planes=0;%40000;
+    optim.type.external=0;%40000;
     optim.onlyOffsets=0;
     optim.skin=0;
     optim.bounds=0;
     optim.repetitions=10;
     optim.pert=[0,0,0];
+    optim.multi_pose = 1;
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1];
     

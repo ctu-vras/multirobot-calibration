@@ -8,9 +8,16 @@ function [ dataset ] = getDatasetPart(dataset, indexes)
             dataset.(name){i}.point = dataset.(name){i}.point(indexes{dataset.(name){i}.id},:);
             dataset.(name){i}.group = dataset.(name){i}.group(indexes{dataset.(name){i}.id},:);
             dataset.(name){i}.frame = dataset.(name){i}.frame(indexes{dataset.(name){i}.id},:);
+            dataset.(name){i}.frame2 = dataset.(name){i}.frame2(indexes{dataset.(name){i}.id},:);
             dataset.(name){i}.joints = dataset.(name){i}.joints(indexes{dataset.(name){i}.id},:);
             if(isfield(dataset.(name){i}, 'extCoords') && ~isempty(dataset.(name){i}.extCoords))
                 dataset.(name){i}.extCoords = dataset.(name){i}.extCoords(indexes{dataset.(name){i}.id},:);
+            end
+            if(isfield(dataset.(name){i}, 'refPoints') && ~isempty(dataset.(name){i}.refPoints))
+                dataset.(name){i}.refPoints = dataset.(name){i}.refPoints(indexes{dataset.(name){i}.id},:);
+            end
+            if(isfield(dataset.(name){i}, 'rtMat') && ~isempty(dataset.(name){i}.rtMat))
+                dataset.(name){i}.rtMat = dataset.(name){i}.rtMat(indexes{dataset.(name){i}.id},:);
             end
             if(isfield(dataset.(name){i}, 'cameras') && ~isempty(dataset.(name){i}.cameras))
                 dataset.(name){i}.cameras = dataset.(name){i}.cameras(indexes{dataset.(name){i}.id},:);

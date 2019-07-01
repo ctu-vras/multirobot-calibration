@@ -64,8 +64,8 @@ function showModel(r, angles, varargin)
     %% TORSO
     robot.tor.name = 'torso';%'root_to_torso';
     robot.tor.H0 = r.structure.H0;
-    if isfield(r.structure,'torso')
-        torso_dh=r.structure.torso;
+    if isfield(r.structure.DH,'torso')
+        torso_dh=r.structure.DH.torso;
     else
        torso_dh=[0 0 0 0]; 
     end
@@ -86,6 +86,7 @@ function showModel(r, angles, varargin)
     %% Other joints
     structure=r.structure.DH;
     fnames=fieldnames(structure);
+    fnames(strcmp(fnames, 'torso')) = [];
     for i=1:length(fnames)
         name=fnames{i};
         jointNames = {};

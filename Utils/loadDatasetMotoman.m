@@ -25,10 +25,13 @@ end
         dataset.point = [];
         dataset.group = [];
         dataset.frame = {};
+        dataset.frame2 = {};
         dataset.joints = [];
         dataset.extCoords = [];
         dataset.cameras = [];
         dataset.pixels = [];
+        dataset.refPoints = [];
+        dataset.rtMat = [];
         if(used_datasets(k))      
             for i=indexes{k}
                 f = strsplit(source_files{i}, '.');
@@ -36,13 +39,17 @@ end
                 data2 = load(path);
                 data2 = data2.dataset;
                 data2(:,1) = data2(:,1) + i*1000;
-                dataset.point = [dataset.point; zeros(size(data2,1),3)];
+                dataset.point = [dataset.point; zeros(size(data2,1),6)];
                 dataset.group = [dataset.group; data2(:,1)];
                 dataset.frame = [dataset.frame;cellstr(strcat('EE',num2str(data2(:,3))))];
-                dataset.joints = [dataset.joints; data2(:, 7:19)];
+                dataset.frame2 = [dataset.frame2;cellstr(strcat('EE',num2str(3-data2(:,3))))];
+                dataset.joints = [dataset.joints; ...
+                    struct('rightArm',num2cell([data2(:, [7:13]),zeros(size(data2,1),1)],2),...
+                'leftArm',num2cell([data2(:, [7,14:19]),zeros(size(data2,1),1)],2))];
                 dataset.extCoords = [dataset.extCoords; data2(:,20:22)];
                 dataset.cameras = [dataset.cameras; data2(:,4)];
                 dataset.pixels = [dataset.pixels; data2(:,5:6)];
+%                 dataset.refPoints = [dataset.refPoints; zeros(size(data2,1),3)];
                 dataset.refDist = 0.116; 
             end     
             index = index + 1;

@@ -36,7 +36,7 @@ function [ name, structure, structure2 ] = loadICUBv1()
         {'rightEyeVergence',types.eye,26,2,1,group.rightEye}};  
         
         
-    structure2.torso = [0.032, 0.000, pi/2.0, 0.000; 
+    structure2.DH.torso = [0.032, 0.000, pi/2.0, 0.000; 
                         0.000, -0.0055, pi/2.0, -pi/2]; 
                     
     structure2.DH.leftArm = [0.0233647, -0.1433, -pi/2.0, 105.0*pi/180;
@@ -76,7 +76,7 @@ function [ name, structure, structure2 ] = loadICUBv1()
                              1, 1, 1, 1;
                              1, 1, 1, 1;
                              1, 1, 1, 1;
-                             1, 1, 1, 1];
+                             1, 1, 0, 1];
                             
             
     structure2.WL.rightArm = [0, 0, 0, 0;
@@ -86,9 +86,9 @@ function [ name, structure, structure2 ] = loadICUBv1()
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
-                              1, 1, 1, 1];
+                              1, 1, 0, 1];
            
-    structure2.WL.head = [1, 1, 1, 1;
+    structure2.WL.head = [0, 0, 0, 0;
                           1, 1, 1, 1;
                           1, 1, 1, 1;
                           1, 1, 1, 1];
