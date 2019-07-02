@@ -25,20 +25,20 @@ classdef joint < handle
         end
         
         %% Computes RT matrix to base
-        function [R,par]=computeRTMatrix(obj, DH, H0, angles, group)
-            R=eye(4);
+        function [R,par]=computeRTMatrix(obj, DH, H0, angles, group, R)
+%             R=eye(4);
             par = nan;
-            if ~strcmp(obj.parent.type,types.base) && strcmp(obj.parent.group,group)
-                [R, par]=obj.parent.computeRTMatrix(DH,H0, angles, group);
-            elseif strcmp(obj.parent.type,types.base)
+            paren = obj.parent;
+            if ~strcmp(paren.type,types.base) && strcmp(paren.group,group)
+                [R, par]=paren.computeRTMatrix(DH,H0, angles, group, R);
+            elseif strcmp(paren.type,types.base)
                 R = R*H0;
             else
-                par = obj.parent;
+                par = paren;
             end
-            curDH=DH.(obj.group);
             index=obj.DHindex;
             
-            M=evalDHMatrix(curDH(index,1),curDH(index,2),curDH(index,3),curDH(index,4)+angles.(obj.group)(index));
+            M=evalDHMatrix(DH(index,1),DH(index,2),DH(index,3),DH(index,4)+angles(index));
             R = R * M;
         end
         

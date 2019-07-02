@@ -1,4 +1,4 @@
-function [ opt_pars, min_pars, max_pars ] = createWhitelist( robot, dh_pars, lb_pars, ub_pars, optim,  funcname )
+function [ opt_pars, min_pars, max_pars, whitelist ] = createWhitelist( robot, dh_pars, lb_pars, ub_pars, optim,  funcname )
 %CREATEWHITELIST Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -21,14 +21,14 @@ if (isfield(robot.structure, 'skinDH'))
         count = count + length(whitelist.(skinNames{index})(whitelist.(skinNames{index})==1));
     end
 end
-opt_pars = inf(count, optim.repetitions, 1+length(optim.pert(optim.pert==1)));
-max_pars = inf(count, optim.repetitions, 1+length(optim.pert(optim.pert==1)));
-min_pars = inf(count, optim.repetitions, 1+length(optim.pert(optim.pert==1)));
+opt_pars = inf(count, optim.repetitions, optim.pert_levels);
+max_pars = inf(count, optim.repetitions, optim.pert_levels);
+min_pars = inf(count, optim.repetitions, optim.pert_levels);
 
 index = 1;
 for name = 1:size(names,1)
     b = whitelist.(names{name});
-    for pert = 1:(1+length(optim.pert(optim.pert==1)))
+    for pert = 1:(optim.pert_levels)
         for rep = 1:optim.repetitions
             a = dh_pars.(names{name})(:,:,rep,pert);
             lb = lb_pars.(names{name})(:,:,rep,pert);
@@ -46,7 +46,7 @@ if (isfield(robot.structure, 'skinDH'))
     skinNames = fieldnames(robot.structure.skinDH); 
     for name = 1:size(skinNames,1)
         b = whitelist.(skinNames{name});
-        for pert = 1:(1+length(optim.pert(optim.pert==1)))
+        for pert = 1:(optim.pert_levels)
             for rep = 1:optim.repetitions
                 a = dh_pars.(skinNames{name})(:,:,rep,pert);
                 lb = lb_pars.(skinNames{name})(:,:,rep,pert);

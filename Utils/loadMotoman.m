@@ -80,15 +80,16 @@ function [ name, structure, structure2 ] = loadMotoman()
                               0, 1, 0, 1];
      
                            
-%     structure2.WL.leftArm = [zeros(7,4);
-%                              0, 0, 0, 0];
-%        
-%     structure2.WL.rightArm = [zeros(7,4);
-%                              0, 1, 0, 0];
-%        
-%     structure2.WL.leftEye = zeros(2,4);
-%         
-%     structure2.WL.rightEye = zeros(2,4);
+    structure2.WL.leftArm = [zeros(6,4);
+                             0, 0, 0, 0;
+                             0, 1, 0, 0];
+       
+    structure2.WL.rightArm = [zeros(7,4);
+                             0, 1, 0, 0];
+       
+    structure2.WL.leftEye = zeros(2,4);
+        
+    structure2.WL.rightEye = zeros(2,4);
     
                           
         

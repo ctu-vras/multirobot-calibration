@@ -30,9 +30,11 @@ function [options, chains, optim, pert]=optimizationConfig
     optim.onlyOffsets=0;
     optim.skin=0;
     optim.bounds=0;
-    optim.repetitions=10;
+    optim.repetitions=5;
     optim.pert=[0,0,0];
     optim.multi_pose = 1;
+    optim.distribution = 'uniform';
+    optim.pert_levels = (1+length(optim.pert(optim.pert==1)));
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1];
     

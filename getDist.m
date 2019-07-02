@@ -17,7 +17,7 @@ function [ dist ] = getDist( dh_pars, robot, datasets, optim)
             RTarm1=eye(4);
             while isobject(obj)
                 if isempty(dataset.rtMat) ||  ~isfield(dataset.rtMat(index_pose(i)).matrices, obj.group)
-                    [RT,par] = obj.computeRTMatrix(dh_pars, robot.structure.H0, dataset.joints(index_pose(i)), obj.group);
+                    [RT,par] = obj.computeRTMatrix(dh_pars.(obj.group), robot.structure.H0, dataset.joints(index_pose(i)).(obj.group), obj.group, eye(4));
                     obj=par;
                 else
                     RT=dataset.rtMat(index_pose(i)).matrices.(obj.group);
@@ -32,7 +32,7 @@ function [ dist ] = getDist( dh_pars, robot, datasets, optim)
             RTarm2=eye(4);
             while isobject(obj)
                 if isempty(dataset.rtMat) ||  ~isfield(dataset.rtMat(index_pose(i)).matrices, obj.group)
-                    [RT,par] = obj.computeRTMatrix(dh_pars, robot.structure.H0, dataset.joints(index_pose(i)), obj.group);
+                    [RT,par] = obj.computeRTMatrix(dh_pars.(obj.group), robot.structure.H0, dataset.joints(index_pose(i)).(obj.group), obj.group, eye(4));
                     obj=par;
                 else
                     RT=dataset.rtMat(index_pose(i)).matrices.(obj.group);

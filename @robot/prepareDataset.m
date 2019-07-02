@@ -44,7 +44,7 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
             end
 
             % division of the dataset into training and testing set
-            pose_nums = dataset.group;
+            pose_nums = dataset.pose;
             % find lines with new poses
             [new_poses, ~, ~] = unique(pose_nums);
 

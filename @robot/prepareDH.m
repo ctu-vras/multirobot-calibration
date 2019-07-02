@@ -1,8 +1,8 @@
-function [init, lb, ub]=prepareDH(r, pert, distribution, optim)
+function [init, lb, ub]=prepareDH(r, pert, optim)
 
     %% pert
     fnames=fieldnames(pert);
-    perms=zeros(length(r.joints),4,length(optim.pert(optim.pert==1)));
+    perms=zeros(length(r.joints),4,optim.pert_levels-1);
     index=1;
     for i=1:3
         if optim.pert(i)
@@ -16,18 +16,18 @@ function [init, lb, ub]=prepareDH(r, pert, distribution, optim)
     
     for fname=1:size(fnames,1)
        lines=size(r.structure.DH.(fnames{fname}),1);
-       init.(fnames{fname})=zeros(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
-       lb.(fnames{fname})=-inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
-       ub.(fnames{fname})=inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1)));    
+       init.(fnames{fname})=zeros(lines,4,optim.repetitions,optim.pert_levels); 
+       lb.(fnames{fname})=-inf(lines,4,optim.repetitions,optim.pert_levels); 
+       ub.(fnames{fname})=inf(lines,4,optim.repetitions,optim.pert_levels);    
     end
     
     if isfield(r.structure,'skinDH')
         fnamesSkin=fieldnames(r.structure.skinDH);
         for fname=1:size(fnamesSkin,1)
            lines=size(r.structure.skinDH.(fnamesSkin{fname}),1);
-           init.(fnamesSkin{fname})=zeros(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
-           lb.(fnamesSkin{fname})=-inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
-           ub.(fnamesSkin{fname})=inf(lines,4,optim.repetitions,1+length(optim.pert(optim.pert==1))); 
+           init.(fnamesSkin{fname})=zeros(lines,4,optim.repetitions,optim.pert_levels); 
+           lb.(fnamesSkin{fname})=-inf(lines,4,optim.repetitions,optim.pert_levels); 
+           ub.(fnamesSkin{fname})=inf(lines,4,optim.repetitions,optim.pert_levels); 
         end
     end
     
