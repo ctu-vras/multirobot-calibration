@@ -1,1 +1,1 @@
-classdef types    enumeration        base, torso, joint, patch, triangle, mount, eye    endend
+classdef types    properties(Constant)        base = 'base';        torso = 'torso';        joint = 'joint';        patch = 'patch';        triangle = 'triangle';        mount = 'mount';        eye = 'eye';    endend

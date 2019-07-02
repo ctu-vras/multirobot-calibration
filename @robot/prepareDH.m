@@ -34,20 +34,20 @@ function [init, lb, ub]=prepareDH(r, pert, distribution, optim)
     %% start pars and bounds
     for jointId=1:length(r.joints)
        joint=r.joints{jointId};
-       if joint.type==types.joint || joint.type==types.eye 
+       if strcmp(joint.type,types.joint) || strcmp(joint.type,types.eye) 
           type='DH';
-       elseif joint.type~=types.base
+       elseif ~strcmp(joint.type,types.base)
           type='skinDH'; 
        else
            continue
        end
-       init.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:),1,1,optim.repetitions); 
+       init.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:),1,1,optim.repetitions); 
       for i=1:length(optim.pert(optim.pert==1))
-           init.(sprintf('%s',joint.group))(joint.DHindex,:,:,i+1)=init.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)+perms(jointId,:,i);
+           init.(joint.group)(joint.DHindex,:,:,i+1)=init.(joint.group)(joint.DHindex,:,:,1)+perms(jointId,:,i);
        end
        if optim.bounds
-        lb.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:)-r.structure.bounds.(sprintf('%s',joint.type)),1,1,optim.repetitions); 
-        ub.(sprintf('%s',joint.group))(joint.DHindex,:,:,1)=repmat(r.structure.(type).(sprintf('%s',joint.group))(joint.DHindex,:)+r.structure.bounds.(sprintf('%s',joint.type)),1,1,optim.repetitions);
+        lb.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)-r.structure.bounds.(joint.type),1,1,optim.repetitions); 
+        ub.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)+r.structure.bounds.(joint.type),1,1,optim.repetitions);
        end
     end
     

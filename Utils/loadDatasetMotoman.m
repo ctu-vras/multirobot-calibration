@@ -23,7 +23,7 @@ end
     index = 0;
     for k = 1:4
         dataset.point = [];
-        dataset.group = [];
+        dataset.pose = [];
         dataset.frame = {};
         dataset.frame2 = {};
         dataset.joints = [];
@@ -40,7 +40,7 @@ end
                 data2 = data2.dataset;
                 data2(:,1) = data2(:,1) + i*1000;
                 dataset.point = [dataset.point; zeros(size(data2,1),6)];
-                dataset.group = [dataset.group; data2(:,1)];
+                dataset.pose = [dataset.pose; data2(:,1)];
                 dataset.frame = [dataset.frame;cellstr(strcat('EE',num2str(data2(:,3))))];
                 dataset.frame2 = [dataset.frame2;cellstr(strcat('EE',num2str(3-data2(:,3))))];
                 dataset.joints = [dataset.joints; ...

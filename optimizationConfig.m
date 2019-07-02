@@ -24,7 +24,7 @@ function [options, chains, optim, pert]=optimizationConfig
 
     %% Calibration principle
     optim.type.eyes=0;%1;
-    optim.type.selftouch=1;
+    optim.type.selftouch=40000;
     optim.type.planes=0;%40000;
     optim.type.external=0;%40000;
     optim.onlyOffsets=0;

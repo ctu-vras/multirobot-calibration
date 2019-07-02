@@ -1,5 +1,14 @@
 classdef group
-    enumeration
-        leftArm, rightArm, head, torso, leftEye, rightEye, leftArmSkin, rightArmSkin, headSkin, torsoSkin
+    properties(Constant)
+        leftArm = 'leftArm';
+        rightArm = 'rightArm';
+        head = 'head';
+        torso = 'torso';
+        leftEye = 'leftEye';
+        rightEye = 'rightEye';
+        leftArmSkin = 'leftArmSkin'; 
+        rightArmSkin = 'rightArmSkin';
+        headSkin = 'headSkin';
+        torsoSkin = 'torsoSkin';
     end
 end

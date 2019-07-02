@@ -11,7 +11,7 @@ function showGraphModel(r)
     [x,y]=treelayout(treeVector);
     treeplot(treeVector);
     for i=1:length(x)
-        if r.joints{i}.type~=types.triangle
+        if ~strcmp(r.joints{i}.type,types.triangle)
             text(x(i)+0.015,y(i),r.joints{i}.name);
         end
     end

@@ -28,16 +28,18 @@ classdef joint < handle
         function [R,par]=computeRTMatrix(obj, DH, H0, angles, group)
             R=eye(4);
             par = nan;
-            if obj.parent.type~=types.base && obj.parent.group == group
+            if ~strcmp(obj.parent.type,types.base) && strcmp(obj.parent.group,group)
                 [R, par]=obj.parent.computeRTMatrix(DH,H0, angles, group);
-            elseif (obj.parent.type==types.base)
+            elseif strcmp(obj.parent.type,types.base)
                 R = R*H0;
             else
                 par = obj.parent;
             end
-            index = sprintf('%s',obj.group);
-            curDH=DH.(index);
-            R=R*evalDHMatrix(curDH(obj.DHindex,1),curDH(obj.DHindex,2),curDH(obj.DHindex,3),curDH(obj.DHindex,4)+angles.(index)(obj.DHindex));
+            curDH=DH.(obj.group);
+            index=obj.DHindex;
+            
+            M=evalDHMatrix(curDH(index,1),curDH(index,2),curDH(index,3),curDH(index,4)+angles.(obj.group)(index));
+            R = R * M;
         end
         
     end

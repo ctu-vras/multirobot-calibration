@@ -32,6 +32,5 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     error_vec = [(distances - refDist)*optim.type.selftouch, ...
         plane_distances*optim.type.planes, dist_from_ext*optim.type.external, ...
         marker_dist*optim.type.eyes];
-%     error_vec = [];
 end
 

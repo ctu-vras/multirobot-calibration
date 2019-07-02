@@ -94,7 +94,7 @@ function showModel(r, angles, varargin)
         %index = 1;
         for joint=1:size(joints,1)
             j=joints(joint);
-            if j{1}.type==types.joint || j{1}.type==types.eye
+            if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)
                 jointNames{end+1} = j{1}.name;
                 %structure.(name)(index,:)=j{1}.DH;
                 %index = index + 1;
@@ -131,7 +131,7 @@ function showModel(r, angles, varargin)
             index = 1;
             for joint=1:size(joints,1)
                 j=joints(joint);
-                if j{1}.type==types.joint || j{1}.type==types.eye
+                if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)
                     jointNames{end+1} = j{1}.name;
                     structure.(name)(index,:)=j{1}.DH;
                     index = index + 1;
