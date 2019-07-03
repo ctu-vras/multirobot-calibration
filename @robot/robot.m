@@ -121,7 +121,7 @@ classdef robot < handle
         showGraphModel(robot);
         
         %% Prepare DH, bounds and perts
-        [init, lb, ub]=prepareDH(robot, pert, optim);
+        [init, lb, ub]=prepareDH(robot, pert, optim, funcname);
         
         %% Prepare datasets
         [training_set_indexes, testing_set_indexes, datasets]=prepareDataset(r,optim, funcname, varargin)

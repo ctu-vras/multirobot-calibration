@@ -1,4 +1,11 @@
-function [init, lb, ub]=prepareDH(r, pert, optim)
+function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
+
+    if(nargin == 4)
+       func=str2func(funcname);
+       bounds = func(); 
+    else
+       bounds = []; 
+    end
 
     %% pert
     fnames=fieldnames(pert);
@@ -42,19 +49,32 @@ function [init, lb, ub]=prepareDH(r, pert, optim)
            continue
        end
        init.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:),1,1,optim.repetitions); 
-      for i=1:length(optim.pert(optim.pert==1))
+      for i=1:optim.pert_levels-1
            init.(joint.group)(joint.DHindex,:,:,i+1)=init.(joint.group)(joint.DHindex,:,:,1)+perms(jointId,:,i);
        end
-       if optim.bounds
-        lb.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)-r.structure.bounds.(joint.type),1,1,optim.repetitions); 
-        ub.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)+r.structure.bounds.(joint.type),1,1,optim.repetitions);
+       if optim.bounds          
+           if ~(isempty(bounds))
+              jointBounds=bounds.(joint.group)(joint.DHindex,:);
+              jointBounds(isnan(jointBounds))=r.structure.bounds.(joint.type)(isnan(jointBounds));
+           else
+              jointBounds=r.structure.bounds.(joint.type);
+           end
+           
+           lb.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)-jointBounds,1,1,optim.repetitions); 
+           ub.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)+jointBounds,1,1,optim.repetitions);     
        end
     end
     
     for f=1:size(fnames,1)
-        for i=1:length(optim.pert(optim.pert==1))
+        for i=1:optim.pert_levels-1
            lb.(fnames{f})(:,:,:,1+i)=min(lb.(fnames{f})(:,:,:,1),init.(fnames{f})(:,:,:,1+i));
-           ub.(fnames{f})(:,:,:,1+i)=max(ub.(fnames{f})(:,:,:,1),init.(fnames{f})(:,:,:,1+i));
+           ub.(fnames{f})(:,:,:,1+i)=max(ub.(fnames{f})(:,:,:,1),init.(fnames{f})(:,:,:,1+i)); 
+           for j = 1:size(lb.(fnames{f}),1)
+               if(any(any(lb.(fnames{f})(j,:,:,1+i)==init.(fnames{f})(j,:,:,1+i),3),2))
+                   warning('Perturbed DH parameters from line %d in field %s for perturbation level %d are outside the bounds!', j ,fnames{f}, i);
+               end
+           end
         end 
+        
     end  
 end

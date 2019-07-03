@@ -2,13 +2,14 @@ robot_fcn = 'loadMotoman';
 dataset_fcn = 'loadDatasetMotoman';
 config_fcn = 'optimizationConfig';
 whitelist_fcn = 'loadMotomanWL';
+bounds_fcn='loadMotomanBounds';
 folder = 'bla2';
 saveInfo = true;
 rob = robot(robot_fcn);
 [options, chains, optim, pert] = loadConfig(config_fcn);
 [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, dataset_fcn);
 %loadDHfromMat(rob, 'bla2', 'rep',1)
-[start_dh, lb_dh, ub_dh] = rob.prepareDH(pert, optim);
+[start_dh, lb_dh, ub_dh] = rob.prepareDH(pert, optim,bounds_fcn);
 
 [start_pars, min_pars, max_pars, whitelist] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim, whitelist_fcn);
 %%

@@ -78,7 +78,6 @@ function [ name, structure, structure2 ] = loadMotoman()
         
     structure2.WL.rightEye = [1, 1, 1, 1;
                               0, 1, 0, 1];
-     
                            
     structure2.H0 = [1 0 0 0;
                      0 1 0 0;
