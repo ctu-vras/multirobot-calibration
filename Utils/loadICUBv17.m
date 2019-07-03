@@ -102,7 +102,9 @@ function [ name, structure, structure2 ] = loadICUBv17()
                      0  0 -1  0;
                      1  0  0  0;
                      0  0  0  1];
-   
+                 
+    structure2.defaultDH = structure2.DH;
+    
     structure2.bounds.joint = [inf inf inf inf];
     structure2.bounds.eye = [inf inf inf inf];
         

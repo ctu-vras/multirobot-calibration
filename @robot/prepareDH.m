@@ -56,7 +56,5 @@ function [init, lb, ub]=prepareDH(r, pert, optim)
            lb.(fnames{f})(:,:,:,1+i)=min(lb.(fnames{f})(:,:,:,1),init.(fnames{f})(:,:,:,1+i));
            ub.(fnames{f})(:,:,:,1+i)=max(ub.(fnames{f})(:,:,:,1),init.(fnames{f})(:,:,:,1+i));
         end 
-    end
-
-    
+    end  
 end

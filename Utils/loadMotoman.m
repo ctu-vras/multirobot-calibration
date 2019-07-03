@@ -98,6 +98,7 @@ function [ name, structure, structure2 ] = loadMotoman()
                      0 0 1 0;
                      0 0 0 1];
                  
+    structure2.defaultDH = structure2.DH;
                  
     tf_mk_01 = [-0.79466465  0.0         0.60704867  0.03200057;
                         0.0         1.0         0.0         0.0;

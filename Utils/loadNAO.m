@@ -279,6 +279,8 @@ function [name, structure, structure2]=loadNAO()
                      0 1 0 0;
                      0 0 1 0;
                      0 0 0 1];
+    structure2.defaultDH = structure2.DH;
+    structure2.defaultskinDH = structure2.skinDH;
     structure2.bounds.joint=[inf, inf, inf, inf];
     structure2.bounds.mount=[15,15,pi,pi];
     structure2.bounds.patch=[1,1,pi/20,pi/20];

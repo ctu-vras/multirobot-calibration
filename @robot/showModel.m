@@ -116,8 +116,9 @@ function showModel(r, angles, varargin)
     
     if p.Results.dual
         fnames=fieldnames(r.structure.DH);
+        fnames(strcmp(fnames, 'torso')) = [];
         if size(p.Results.dualDH,1)==0
-            structure=r.structure.DH;
+            structure=r.structure.defaultDH;
         else
             for name=1:size(fnames,1)
                structure.(fnames{name})=p.Results.dualDH{name}; 
@@ -153,7 +154,7 @@ function showModel(r, angles, varargin)
     end
     %% MARKERS
     if MARKERS_ON
-        markers = r.structure.markers
+        markers = r.structure.markers;
 
         r_ee = robot.chain.rightArm.RFFrame{end};
         r_ee(1:3,4) = r_ee(1:3,4)./1000; % converting the translational part from mm back to m
