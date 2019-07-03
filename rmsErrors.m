@@ -1,10 +1,10 @@
 function [rms_errors] = rmsErrors(start_dh, robot, datasets, dataset_indexes, optim)
 %RMSERRORS Summary of this function goes here
 %   Detailed explanation goes here
-    rms_distances = zeros(1,optim.pert_levels*optim.repetitions);
-    rms_plane_distances = zeros(1,optim.pert_levels*optim.repetitions);
-    rms_dist_from_ext = zeros(1,optim.pert_levels*optim.repetitions);
-    rms_marker_dist = zeros(1,optim.pert_levels*optim.repetitions);
+    rms_distances = nan(1,optim.pert_levels*optim.repetitions);
+    rms_plane_distances = nan(1,optim.pert_levels*optim.repetitions);
+    rms_dist_from_ext = nan(1,optim.pert_levels*optim.repetitions);
+    rms_marker_dist = nan(1,optim.pert_levels*optim.repetitions);
     fnames = fieldnames(start_dh);
     for pert_level = 1:optim.pert_levels
         for rep = 1:optim.repetitions

@@ -2,7 +2,7 @@ function [ opt_pars, min_pars, max_pars, whitelist ] = createWhitelist( robot, d
 %CREATEWHITELIST Summary of this function goes here
 %   Detailed explanation goes here
 
-if(nargin == 4)
+if(nargin == 6)
    func=str2func(funcname);
    whitelist = func(); 
 else
