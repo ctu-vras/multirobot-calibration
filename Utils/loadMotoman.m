@@ -85,6 +85,19 @@ function [ name, structure, structure2 ] = loadMotoman()
                      0 0 0 1];
                  
     structure2.defaultDH = structure2.DH;
+    
+    structure2.eyes.leftEye.dist = [-0.023, -0.213, 0.662, 0.0, 0.0, 0.0]; % distortion coefficients
+    structure2.eyes.leftEye.tandist = [-0.001, -0.001]; % tangential distortion coefficients
+    structure2.eyes.leftEye.matrix = [ 8110.478,  0.000,  1949.921; % camera matrix
+                        0.000,  8098.218,  2991.727;
+                        0.000,   0.000,   1.000];
+    
+    structure2.eyes.rightEye.dist = [ -0.021, -0.206, 0.719, 0.0, 0.0, 0.0]; % distortion coefficients
+    structure2.eyes.rightEye.tandist = [ -0.002, -0.001]; % tangential distortion coefficients
+    structure2.eyes.rightEye.matrix = [ 8185.397,  0.000,  2009.318; % camera matrix
+                        0.000,  8170.401,  2963.960;
+                        0.000,   0.000,   1.000];
+
                  
     tf_mk_01 = [-0.79466465  0.0         0.60704867  0.03200057;
                         0.0         1.0         0.0         0.0;
