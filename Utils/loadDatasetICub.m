@@ -1,9 +1,8 @@
-function [ datasets, indexes ] = loadDatasetICub( varargin )
+function [ datasets, indexes ] = loadDatasetICub(varargin )
 %LOADDATASETICUB Summary of this function goes here
 %   Detailed explanation goes here
-
-    if(nargin == 1)
-        source_files = varargin{2};
+    if(length(varargin) == 2)
+        source_files = {varargin{2}};
     else
         source_files = {'selfTouchConfigs_ICRA2019.log'};
     end
@@ -21,7 +20,12 @@ function [ datasets, indexes ] = loadDatasetICub( varargin )
         distances = load(path);
         [~, idxs] = sort(distances.distances);
         data2 = data2(idxs,:);
-        data2(varargin{1}+1:end,:) = [];
+        if(isempty(varargin))
+            nmbPoses = length(idxs);
+        else
+            nmbPoses = varargin{1};
+        end
+        data2(nmbPoses+1:end,:) = [];
         dataset.point = zeros(size(data2,1),6);
         dataset.pose = [1:size(data2,1)]';
         C = cell(size(data2,1),1);

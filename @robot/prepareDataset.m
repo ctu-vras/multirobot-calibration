@@ -2,7 +2,7 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
     %% functions call
     if nargin>3
         func=str2func(funcname);
-        [datasets, indexes]=func((varargin{1}));
+        [datasets, indexes]=func((varargin{:}));
     else
         func=str2func(funcname);
         [datasets, indexes]=func();

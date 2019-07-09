@@ -45,34 +45,25 @@ classdef robot < handle
         %% Find joint by name
         function [joint,indexes]=findJoint(obj,name)
             %Returns instance of joints as cell array and coresponding indexes in robot.joints cell array
-            fun=cellfun(@(x) strcmp(x.name,name), obj.joints);
-            indexes=find(fun);
-            joint=cell(size(indexes,2),1);
-            for index=1:size(indexes,2)
-                joint{index}=obj.joints{indexes(index)};
-            end
+            objJoints = [obj.joints{:}];
+            indexes = strcmp({objJoints.name}, name);
+            joint = {obj.joints{indexes}};
         end
        
         %% Find joint by type
         function [joint,indexes]=findJointByType(obj,type)
             %Returns instance of joints as cell array and corresponding indexes in robot.joints cell array
-            fun=cellfun(@(x) x.type==types.(type), obj.joints);
-            indexes=find(fun);
-            joint=cell(size(indexes,2),1);
-            for index=1:size(indexes,2)
-                joint{index}=obj.joints{indexes(index)};
-            end
+            objJoints = [obj.joints{:}];
+            indexes = strcmp({objJoints.type}, type);
+            joint = {obj.joints{indexes}};
         end
         
         %% Find joint by group
-        function [joint,indexes]=findJointByGroup(obj,type)
+        function [joint,indexes]=findJointByGroup(obj,group)
             %Returns instance of joints as cell array and corresponding indexes in robot.joints cell array
-            fun=cellfun(@(x) x.group==group.(type), obj.joints);
-            indexes=find(fun);
-            joint=cell(size(indexes,2),1);
-            for index=1:size(indexes,2)
-                joint{index}=obj.joints{indexes(index)};
-            end
+            objJoints = [obj.joints{:}];
+            indexes = strcmp({objJoints.group}, group);
+            joint = {obj.joints{indexes}};
         end
         
         %% Function to print joints in format (name, index in cell array)
