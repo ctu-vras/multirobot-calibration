@@ -41,7 +41,7 @@ end
                 data2(:,1) = data2(:,1) + i*1000;
                 dataset.point = [dataset.point; zeros(size(data2,1),6)];
                 dataset.pose = [dataset.pose; data2(:,1)];
-                dataset.frame = [dataset.frame;cellstr(strcat('EE',num2str(data2(:,3))))];
+                dataset.frame = [dataset.frame;cellstr(strcat('MK',num2str(data2(:,3)),num2str(data2(:,2),'%02d')))];
                 dataset.frame2 = [dataset.frame2;cellstr(strcat('EE',num2str(3-data2(:,3))))];
                 dataset.joints = [dataset.joints; ...
                     struct('rightArm',num2cell([data2(:, [7:13]),zeros(size(data2,1),1)],2),...
