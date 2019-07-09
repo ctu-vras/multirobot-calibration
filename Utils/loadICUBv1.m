@@ -68,7 +68,9 @@ function [ name, structure, structure2 ] = loadICUBv1()
     structure2.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0]; 
                                      
-                   
+         
+    structure2.WL.torso = zeros(2,4);
+    
     structure2.WL.leftArm = [0, 0, 0, 0;
                              1, 1, 1, 1;
                              1, 1, 1, 1;
@@ -86,8 +88,8 @@ function [ name, structure, structure2 ] = loadICUBv1()
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
-                              1, 1, 0, 1];
-           
+                              1, 1, 0, 1]; 
+                          
     structure2.WL.head = [0, 0, 0, 0;
                           1, 1, 1, 1;
                           1, 1, 1, 1;
