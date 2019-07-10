@@ -21,11 +21,18 @@ classdef robot < handle
                 for jointId=1:size(structure,2)
                     curJoint=structure{jointId};
                     if ~isnan(curJoint{3})
-                        j=joints{curJoint{3}};
+                        parentName=curJoint{3};
+                        [j,parentId]=obj.findJoint(parentName);
+                        parentId=find(parentId==1);
+                        if isempty(j)
+                            fprintf('Joint %s does not exist\n',parentName);
+                        end
+                        j=j{1};
                     else
                         j=nan;
+                        parentId=0;
                     end
-                    joints{jointId}=joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},curJoint{6},curJoint{3});
+                    joints{jointId}=joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},curJoint{6},parentId);
                     obj.joints{end+1}=joints{jointId};
                 end
                 obj.name=name;
