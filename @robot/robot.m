@@ -49,6 +49,14 @@ classdef robot < handle
         %% Run optimization
         runOptimization(robot);
         
+        %% Find joint by id
+        function [joint,indexes]=findJointById(obj,id)
+            %Returns instance of joints as cell array and coresponding indexes in robot.joints cell array
+            objJoints = [obj.joints{:}];
+            indexes = find([objJoints.DHindex]==id);
+            joint = {obj.joints{indexes}};
+        end
+        
         %% Find joint by name
         function [joint,indexes]=findJoint(obj,name)
             %Returns instance of joints as cell array and coresponding indexes in robot.joints cell array
@@ -65,12 +73,23 @@ classdef robot < handle
             joint = {obj.joints{indexes}};
         end
         
+        %% Print tables with description
+        printTables(obj, tableType);
+        
         %% Find joint by group
-        function [joint,indexes]=findJointByGroup(obj,group)
+        function [joint,indexes]=findJointByGroup(obj,group,varargin)
             %Returns instance of joints as cell array and corresponding indexes in robot.joints cell array
-            objJoints = [obj.joints{:}];
+            if nargin>2
+                objJoints=[varargin{1}{:}];
+            else
+                objJoints = [obj.joints{:}];
+            end
             indexes = strcmp({objJoints.group}, group);
-            joint = {obj.joints{indexes}};
+            if nargin>2
+                joint=varargin{1}{indexes};
+            else
+                joint = {obj.joints{indexes}};
+            end
         end
         
         %% Function to print joints in format (name, index in cell array)

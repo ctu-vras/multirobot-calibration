@@ -46,7 +46,7 @@ function [ datasets, indexes ]= loadDatasetNao(robot,DH)
                         dh(:,4)=dh(:,4)+angles.rightArm';
                         matrices.rightArm=dhpars2tfmat(dh);
                         matrices.torso=eye(4);
-                        %datasetLocal.rtMat=[datasetLocal.rtMat;matrices];
+                        datasetLocal.rtMat=[datasetLocal.rtMat;matrices];
                     end
                 end
 

@@ -1,4 +1,4 @@
-function saveResults(outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, optim, varargin)
+function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, optim, varargin)
 %SAVERESULTS Summary of this function goes here
 %   Detailed explanation goes here
     errors = nan(16,optim.repetitions * optim.pert_levels);
@@ -27,10 +27,12 @@ function saveResults(outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, bef
         for rep = 1:optim.repetitions   
             file=fopen([outfolder,'DH-rep',num2str(rep), '-pert', num2str(pert_level),'.txt'],'w');
             for name=1:length(fnames)
-                fprintf(file, '%s\t a \t d \t alpha \t offset\n', fnames{name});
+                fprintf(file, '%-s\t a \t d \t alpha \t offset\n', fnames{name});
                 for line=1:size(res_dh.(fnames{name}),1)
-                    formatSpec='%s%d %5.8f %5.8f %5.8f %5.8f\n';
-                    fprintf(file,formatSpec, 'joint', [line, res_dh.(fnames{name})(line,1),res_dh.(fnames{name})(line,2),res_dh.(fnames{name})(line,3),res_dh.(fnames{name})(line,4)]');
+                    formatSpec='%-s %-5.8f %-5.8f %-5.8f %-5.8f\n';
+                    joint=robot.findJointById(line);
+                    joint=robot.findJointByGroup(fnames{name},joint);
+                    fprintf(file,formatSpec, joint.name, [res_dh.(fnames{name})(line,1),res_dh.(fnames{name})(line,2),res_dh.(fnames{name})(line,3),res_dh.(fnames{name})(line,4)]');
                 end
                 fprintf(file,'\n');
                 
