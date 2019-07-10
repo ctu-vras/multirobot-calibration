@@ -40,11 +40,13 @@ end
                 data2(:,1) = data2(:,1) + i*1000;              
                 dataset2.pose = [dataset2.pose; data2(:,1)];
                 dataset2.frame = [dataset2.frame;cellstr(strcat('MK',num2str(data2(:,3)),num2str(data2(:,2),'%02d')))];
-                dataset2.refPoints = [dataset2.refPoints; [data2(:,5:6),ones(size(data2,1),1)]];
+                dataset2.refPoints = [dataset2.refPoints; data2(:,5:6)];
                 dataset2.cameras = [dataset2.cameras; data2(:,4)];
                 dataset2.joints = [dataset2.joints; ...
                     struct('rightArm',num2cell([data2(:, [7:13]),zeros(size(data2,1),1)],2),...
-                'leftArm',num2cell([data2(:, [7,14:19]),zeros(size(data2,1),1)],2))];
+                'leftArm',num2cell([data2(:, [7,14:19]),zeros(size(data2,1),1)],2), ...,
+                'leftEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2), ...
+                'rightEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2))];
                 dataset2.extCoords = [dataset2.extCoords; data2(:,20:22)];
                 dataset2.point = [dataset2.point; zeros(size(data2,1),6)];
             end  

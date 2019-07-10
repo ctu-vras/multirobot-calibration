@@ -36,13 +36,7 @@ function [ dist ] = getDist( dh_pars, robot, datasets, optim)
                 else
                    arm2 = refPoints(index_pose(i),:)';
                 end
-%                 getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)
-% %                 points(index_pose(i),1:3)
-% %                 points(index_pose(i),4:6)
-% %                 refPoints(index_pose(i),:)'
-% %                 asd
                 distances{index}(i) = sqrt(sum((arm1(1:3)-arm2(1:3)).^2,1));
-                %distances{index}(i)=norm(arm1(1:3)-arm2(1:3),2);
             else
                 arm1 = getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)...
                     *[points(poses==unique_pose_nums(i),1:3), ones(length(poses(poses==unique_pose_nums(i))),1)]';

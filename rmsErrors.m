@@ -27,7 +27,7 @@ function [rms_errors] = rmsErrors(start_dh, robot, datasets, dataset_indexes, op
                 rms_dist_from_ext(rep+(pert_level-1)*optim.repetitions) = sqrt(sum(dist_from_ext.^2)/size(dist_from_ext, 2));
             end
             if(optim.type.eyes)
-                marker_dist = getPositionFromEyes(dh_pars, robot, dataset.markers, optim);
+                marker_dist = getProjectionDist(dh_pars, robot, dataset.markers, optim);
                 rms_marker_dist(rep+(pert_level-1)*optim.repetitions) = sqrt(sum(marker_dist.^2)/size(marker_dist, 2));
             end
         end
