@@ -7,9 +7,9 @@ function [results, corrs] = getResultDH(opt_pars, start_dh, whitelist, optim)
     fnames = fieldnames(start_dh);
     count = 1;
     for field=1:length(fnames)
-        if(any(any(whitelist.(fnames{field}) == 1)))
-            new_count = count + length(whitelist.(fnames{field})(whitelist.(fnames{field}) == 1));
-            wh = repmat(whitelist.(fnames{field})==1,1,1,optim.repetitions, optim.pert_levels);
+        if(any(any(whitelist.(fnames{field}))))
+            new_count = count + sum(sum(whitelist.(fnames{field})));
+            wh = repmat(whitelist.(fnames{field}),1,1,optim.repetitions, optim.pert_levels);
             results.(fnames{field})(wh) = opt_pars(count:new_count-1,:,:);
             count = new_count;
         end

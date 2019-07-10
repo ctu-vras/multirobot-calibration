@@ -34,8 +34,9 @@ function [options, chains, optim, pert]=optimizationConfig
     optim.pert=[0,0,0];
     optim.multi_pose = 1;
     optim.distribution = 'uniform';
-    optim.pert_levels = (1+length(optim.pert(optim.pert==1)));
+    optim.pert_levels = 1+sum(optim.pert);
     optim.splitPoint=0.7;
+    
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1];
     

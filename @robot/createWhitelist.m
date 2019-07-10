@@ -20,16 +20,17 @@ min_pars = inf(count, optim.repetitions, optim.pert_levels);
 
 index = 1;
 for name = 1:size(names,1)
+    whitelist.(names{name}) = logical(whitelist.(names{name}));
     b = whitelist.(names{name});
     for pert = 1:(optim.pert_levels)
         for rep = 1:optim.repetitions
             a = dh_pars.(names{name})(:,:,rep,pert);
             lb = lb_pars.(names{name})(:,:,rep,pert);
             ub = ub_pars.(names{name})(:,:,rep,pert);
-            new_index = index + length(a(b==1))-1;
-            opt_pars(index:new_index,rep,pert) = a(b==1);
-            min_pars(index:new_index,rep,pert) = lb(b==1);
-            max_pars(index:new_index,rep,pert) = ub(b==1);
+            new_index = index + length(a(b))-1;
+            opt_pars(index:new_index,rep,pert) = a(b);
+            min_pars(index:new_index,rep,pert) = lb(b);
+            max_pars(index:new_index,rep,pert) = ub(b);
         end
     end
     index = new_index+1;

@@ -16,8 +16,6 @@ x_ = [x_.*((1 + dc(1,cameras).*r_sq + dc(2,cameras).*r_sq.^2 + dc(3,cameras).*r_
         + [2*tdc(1,cameras).*x_(1,:).*x_(2,:) + tdc(2,cameras).*(r_sq + 2*x_(1,:).^2);...
         tdc(1,cameras).*(r_sq + 2*x_(2,:).^2) + 2*tdc(2,cameras).*x_(1,:).*x_(2,:)]; ...
         ones(1,size(points,2))];
-    
-for i = 1:size(points,2)
-    camera_points(:,i) = mat(:,:,cameras(i))*x_(:,i);
-end
+
+camera_points = squeeze(sum(mat(:,:,cameras).*reshape(x_,1,3,[]),2));
 end

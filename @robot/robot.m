@@ -14,7 +14,7 @@ classdef robot < handle
         %% Constructor
         function obj = robot(name)
             if nargin==1
-                addpath(genpath(pwd));
+%                 addpath(genpath(pwd));
                 func=str2func(name);
                 [name, structure, modelStructure]=func();
                 joints=cell(size(structure,2));
@@ -23,7 +23,7 @@ classdef robot < handle
                     if ~isnan(curJoint{3})
                         parentName=curJoint{3};
                         [j,parentId]=obj.findJoint(parentName);
-                        parentId=find(parentId==1);
+                        parentId=find(parentId);
                         if isempty(j)
                             fprintf('Joint %s does not exist\n',parentName);
                         end

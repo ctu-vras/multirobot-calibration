@@ -10,8 +10,8 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     fnames = fieldnames(dh_pars);
     count = 1;
     for field=1:length(fnames)
-        new_count = count + length(whitelist.(fnames{field})(whitelist.(fnames{field}) == 1));
-        dh_pars.(fnames{field})(whitelist.(fnames{field})==1) = opt_pars(count:new_count-1);
+        new_count = count + sum(sum(whitelist.(fnames{field})));
+        dh_pars.(fnames{field})(whitelist.(fnames{field})) = opt_pars(count:new_count-1);
         count = new_count;
     end
     
