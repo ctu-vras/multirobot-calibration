@@ -12,7 +12,7 @@ end
 names = fieldnames(dh_pars);
 count = 0;
 for index = 1:size(names,1)
-    count = count + length(whitelist.(names{index})(whitelist.(names{index})==1));
+    count = count + sum(sum(whitelist.(names{index})));
 end
 opt_pars = inf(count, optim.repetitions, optim.pert_levels);
 max_pars = inf(count, optim.repetitions, optim.pert_levels);

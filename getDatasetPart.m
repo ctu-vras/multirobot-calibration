@@ -5,26 +5,28 @@ function [ dataset ] = getDatasetPart(dataset, indexes)
     for name=dataset_names
         name = name{1};
         for i = 1:length(dataset.(name))
-            dataset.(name){i}.point = dataset.(name){i}.point(indexes{dataset.(name){i}.id},:);
-            dataset.(name){i}.pose = dataset.(name){i}.pose(indexes{dataset.(name){i}.id},:);
-            dataset.(name){i}.frame = dataset.(name){i}.frame(indexes{dataset.(name){i}.id},:);
-            dataset.(name){i}.frame2 = dataset.(name){i}.frame2(indexes{dataset.(name){i}.id},:);
-            dataset.(name){i}.joints = dataset.(name){i}.joints(indexes{dataset.(name){i}.id},:);
+            chosen_lines = ismember(dataset.(name){i}.pose, indexes{dataset.(name){i}.id});
+           
+            dataset.(name){i}.point = dataset.(name){i}.point(chosen_lines,:);
+            dataset.(name){i}.pose = dataset.(name){i}.pose(chosen_lines,:);
+            dataset.(name){i}.frame = dataset.(name){i}.frame(chosen_lines,:);
+            dataset.(name){i}.joints = dataset.(name){i}.joints(chosen_lines,:);
+            if(isfield(dataset.(name){i}, 'frame2') && ~isempty(dataset.(name){i}.frame2))
+                dataset.(name){i}.frame2 = dataset.(name){i}.frame2(chosen_lines,:);
+            end
             if(isfield(dataset.(name){i}, 'extCoords') && ~isempty(dataset.(name){i}.extCoords))
-                dataset.(name){i}.extCoords = dataset.(name){i}.extCoords(indexes{dataset.(name){i}.id},:);
+                dataset.(name){i}.extCoords = dataset.(name){i}.extCoords(chosen_lines,:);
             end
             if(isfield(dataset.(name){i}, 'refPoints') && ~isempty(dataset.(name){i}.refPoints))
-                dataset.(name){i}.refPoints = dataset.(name){i}.refPoints(indexes{dataset.(name){i}.id},:);
+                dataset.(name){i}.refPoints = dataset.(name){i}.refPoints(chosen_lines,:);
             end
             if(isfield(dataset.(name){i}, 'rtMat') && ~isempty(dataset.(name){i}.rtMat))
-                dataset.(name){i}.rtMat = dataset.(name){i}.rtMat(indexes{dataset.(name){i}.id},:);
+                dataset.(name){i}.rtMat = dataset.(name){i}.rtMat(chosen_lines,:);
             end
             if(isfield(dataset.(name){i}, 'cameras') && ~isempty(dataset.(name){i}.cameras))
-                dataset.(name){i}.cameras = dataset.(name){i}.cameras(indexes{dataset.(name){i}.id},:);
+                dataset.(name){i}.cameras = dataset.(name){i}.cameras(chosen_lines,:);
             end
-            if(isfield(dataset.(name){i}, 'pixels') && ~isempty(dataset.(name){i}.pixels))
-                dataset.(name){i}.pixels = dataset.(name){i}.pixels(indexes{dataset.(name){i}.id},:);
-            end
+            
         end 
     end
 end

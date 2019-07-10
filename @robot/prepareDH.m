@@ -43,7 +43,7 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
        joint=r.joints{jointId};
        if strcmp(joint.type,types.joint) || strcmp(joint.type,types.eye) 
           type='DH';
-       elseif ~strcmp(joint.type,types.base)
+       elseif ~strcmp(joint.type,types.base) && ~strcmp(joint.type, types.finger)
           type='skinDH'; 
        else
            continue

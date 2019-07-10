@@ -11,22 +11,30 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
     %% Assing joint to names and split
     for dataset=1:length(datasets)
         clear joints; 
-        clear joints2;
         joints(length(datasets{dataset}.frame), 1) = joint();
-        joints2(length(datasets{dataset}.frame), 1) = joint();
-        
         for name=1:length(datasets{dataset}.frame)
             j=findJoint(r,datasets{dataset}.frame{name});
-            j2=findJoint(r,datasets{dataset}.frame2{name});
             joints(name)=j{1};
-            joints2(name)=j2{1};
         end
         datasets{dataset}.frame=joints;
-        datasets{dataset}.frame2=joints2;
+        
+        if isfield(datasets{dataset},'frame2')
+            clear joints2;
+            joints2(length(datasets{dataset}.frame2), 1) = joint();
+            for name=1:length(datasets{dataset}.frame2)
+                j2=findJoint(r,datasets{dataset}.frame2{name});
+                joints2(name)=j2{1};
+            end
+            datasets{dataset}.frame2=joints2;
+        
+        end
         if ~isfield(datasets{dataset},'refDist')
             datasets{dataset}.refDist=0;
         end
-        datasets{dataset}.id = dataset;
+        if ~isfield(datasets{dataset},'id')
+            datasets{dataset}.id = dataset;
+        end
+        
     end
     
     %% split dataset
@@ -52,13 +60,9 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
             % randomly reorder poses
             random_order_poses = new_poses(randperm(size(new_poses, 1))); 
             % pick training set
-            training_poses = random_order_poses(1:splitting_point);
+            training_set_indexes_dataset{j} = random_order_poses(1:splitting_point);
             % pick testing set
-            testing_poses = random_order_poses((splitting_point + 1):end);
-            % find where pose numbers equal
-            training_set_indexes_dataset{j} = find(ismember(pose_nums', training_poses));
-            testing_set_indexes_dataset{j} = find(ismember(pose_nums', testing_poses));
-            
+            testing_set_indexes_dataset{j} = random_order_poses((splitting_point + 1):end);           
         end
         training_set_indexes{i} = training_set_indexes_dataset;
         testing_set_indexes{i} = testing_set_indexes_dataset;
