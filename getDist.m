@@ -30,10 +30,10 @@ function [ dist ] = getDist( dh_pars, robot, datasets, optim)
             if(optim.multi_pose)  %TODO: neni to zbytecny? pripadne bych jenom prepsal dataset motomana
                 arm1 =  getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)...
                     *[points(index_pose(i),1:3),1]';
-                if(isempty(dataset.refPoints))
+                if ~optim.refPoints || (isempty(dataset.refPoints))
                    arm2 =  getTF(dh_pars,frames2(i),rtMat, empty, joints(i), H0)...
                        *[points(index_pose(i),4:6),1]';
-                else
+                elseif optim.refPoints
                    arm2 = refPoints(index_pose(i),:)';
                 end
                 distances{index}(i) = sqrt(sum((arm1(1:3)-arm2(1:3)).^2,1));
@@ -43,7 +43,7 @@ function [ dist ] = getDist( dh_pars, robot, datasets, optim)
                 if(isempty(dataset.refPoints))
                     arm2 = getTF(dh_pars,frames2(i),rtMat, empty, joints(i), H0)...
                     *[points(poses==unique_pose_nums(i),4:6), ones(length(poses(poses==unique_pose_nums(i))),1)]';
-                else
+                elseif refPoint
                    arm2 = refPoints(poses==unique_pose_nums(i),:)'; 
                 end
                 distances{index} = [distances{index}, sqrt(sum((arm1(1:3,:)-arm2(1:3,:)).^2,1))];

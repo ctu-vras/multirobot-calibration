@@ -1,4 +1,4 @@
-function taxelStruct=prepareData(robot,chain1,chain2,DH)
+function taxelStruct=prepareData(robot,datasetName, chain1,chain2,DH)
 
 %tranformation from given tringles to centre, which is (0,0)...not needed
 %right now
@@ -25,7 +25,7 @@ fnames=fieldnames(DH);
 for name=1:length(fnames)
    DH.(fnames{name})=DH.(fnames{name})(:,:,1); 
 end
-datasetLocal=load(strcat('Dataset/',chain1,chain2,'.mat'));
+datasetLocal=load(strcat('Dataset/',datasetName,'.mat'));
 name1=strsplit(chain1,'Arm');
 name1=name1{1};
 name2=strsplit(chain2,'Arm');
@@ -39,9 +39,13 @@ dataset.(chain1).cop={};
 dataset.(chain2).cop={};
 dataset.angles=[];
 
+joints = containers.Map('KeyType','char','ValueType','double');
+matId=1;
+mats=cell(1,64);
+fprintf('%s\n',datasetName);
 for i=1:size(datasetLocal.(chain1),1)
     if rem(i,100)==0
-        disp(i)
+        fprintf('Completed %d out of %d\n',i,size(datasetLocal.(chain1),1))
     end
     ang=datasetLocal.(chain1)(i).angles;
     angles.rightArm=[0,ang.RShoulderPitch, ang.RShoulderRoll, ang.RElbowYaw,...
@@ -52,6 +56,7 @@ for i=1:size(datasetLocal.(chain1),1)
     angles.rightArmSkin=[0,0,0];
     angles.leftArmSkin=[0,0,0];
     angles.torsoSkin=[0,0,0];
+    angles.torso=[0];
     dataset.angles=[dataset.angles;angles];
     taxels=datasetLocal.(chain1)(i).activatedUn;
     newTaxels=cell(1,size(taxels,1));
@@ -59,9 +64,19 @@ for i=1:size(datasetLocal.(chain1),1)
         idx=taxels(j,4);
         taxel=chain1Original(idx+1,1:3);
         triangleId=floor(idx/12);
-        joint=robot.findJoint(strcat(name1,'Triangle',num2str(triangleId)));
-        joint=joint{1};
-        newTaxel=getTF(DH,joint,[],1,angles, robot.structure.H0)*[taxel(1:3).*1000,1]';
+        trName=strcat(name1,'Triangle',num2str(triangleId));
+        if ~isKey(joints, trName)
+            joint=robot.findJoint(trName);
+            joint=joint{1};
+            mat=getTF(DH,joint,[],1,angles, robot.structure.H0);
+            mats{matId}=mat;
+            newTaxel=mat*[taxel(1:3).*1000,1]';
+            joints(trName)=matId;
+            matId=matId+1;
+        else
+            newTaxel=mats{joints(trName)}*[taxel(1:3).*1000,1]';
+        end
+        
         newTaxels{j}=[newTaxel(1:3)',idx];
     end
     dataset.(chain1).newTaxels{end+1}=newTaxels;
@@ -72,10 +87,19 @@ for i=1:size(datasetLocal.(chain1),1)
         idx=taxels(j,4);
         taxel=chain2Original(idx+1,1:3);
         triangleId=floor(idx/12);
-        joint=robot.findJoint(strcat(name2,'Triangle',num2str(triangleId)));
-        joint=joint{1};
-
-        newTaxel=getTF(DH,joint,[],1,angles, robot.structure.H0)*[taxel(1:3).*1000,1]';
+        trName=strcat(name2,'Triangle',num2str(triangleId));
+        if ~isKey(joints, trName)
+            joint=robot.findJoint(trName);
+            joint=joint{1};
+            mat=getTF(DH,joint,[],1,angles, robot.structure.H0);
+            mats{matId}=mat;
+            newTaxel=mat*[taxel(1:3).*1000,1]';
+            joints(trName)=matId;
+            matId=matId+1;
+        else
+            newTaxel=mats{joints(trName)}*[taxel(1:3).*1000,1]';
+        end
+        
         newTaxels{j}=[newTaxel(1:3)',idx];
     end     
     dataset.(chain2).newTaxels{end+1}=newTaxels;
