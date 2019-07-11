@@ -1,13 +1,13 @@
 classdef joint < handle
     
     properties
-        name
-        parent
-        parentId
-        DHindex
-        type
-        endEffector
-        group
+        name char
+        parent 
+        parentId double
+        DHindex double
+        type 
+        endEffector double 
+        group 
     end
     
     methods
@@ -26,11 +26,14 @@ classdef joint < handle
         
         %% Computes RT matrix to base
         function [R,par]=computeRTMatrix(obj, DH, H0, angles, group)
-            idx = [];
+            idx = nan(1,size(DH,1));
+            id=1;
             while strcmp(obj.group,group) && ~strcmp(obj.type,types.base)
-               idx(end+1)=obj.DHindex;
+               idx(id)=obj.DHindex;
+               id=id+1;
                obj=obj.parent;
             end
+            idx(isnan(idx))=[];
             DH=DH(idx(end:-1:1),:);
             DH(:,4)=DH(:,4)+angles';
             R=dhpars2tfmat(DH);

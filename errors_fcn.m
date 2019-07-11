@@ -11,10 +11,11 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     count = 1;
     for field=1:length(fnames)
         new_count = count + sum(sum(whitelist.(fnames{field})));
-        dh_pars.(fnames{field})(whitelist.(fnames{field})) = opt_pars(count:new_count-1);
+        a=dh_pars.(fnames{field})';
+        a(whitelist.(fnames{field})') = opt_pars(count:new_count-1);
+        dh_pars.(fnames{field})=a';
         count = new_count;
     end
-    
     if(optim.type.selftouch)
         distances = getDist(dh_pars, robot, dataset.dist, optim);
         refDist = dataset.dist{end}.refDist;

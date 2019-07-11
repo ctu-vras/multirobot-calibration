@@ -2,11 +2,8 @@ classdef robot < handle
     
     properties
         name
-        optProperties
-        endEffectors={}
         joints={}
         structure={}
-        home=pwd;
     end
     
     
@@ -14,7 +11,7 @@ classdef robot < handle
         %% Constructor
         function obj = robot(name)
             if nargin==1
-%                 addpath(genpath(pwd));
+                addpath(genpath(pwd));
                 func=str2func(name);
                 [name, structure, modelStructure]=func();
                 joints=cell(size(structure,2));
@@ -25,7 +22,7 @@ classdef robot < handle
                         [j,parentId]=obj.findJoint(parentName);
                         parentId=find(parentId);
                         if isempty(j)
-                            fprintf('Joint %s does not exist\n',parentName);
+                            error('Joint %s does not exist\n',parentName);
                         end
                         j=j{1};
                     else
@@ -36,10 +33,9 @@ classdef robot < handle
                     obj.joints{end+1}=joints{jointId};
                 end
                 obj.name=name;
-                obj.optProperties=[];
                 obj.structure=modelStructure;                
             else
-                error(sprintf('Incorrect number of arguments inserted, expected 1, but got %d',nargin));
+                error('Incorrect number of arguments inserted, expected 1, but got %d',nargin);
             end
         end
         
@@ -77,19 +73,11 @@ classdef robot < handle
         printTables(obj, tableType);
         
         %% Find joint by group
-        function [joint,indexes]=findJointByGroup(obj,group,varargin)
+        function [joint,indexes]=findJointByGroup(obj,group)
             %Returns instance of joints as cell array and corresponding indexes in robot.joints cell array
-            if nargin>2
-                objJoints=[varargin{1}{:}];
-            else
-                objJoints = [obj.joints{:}];
-            end
+            objJoints = [obj.joints{:}];
             indexes = strcmp({objJoints.group}, group);
-            if nargin>2
-                joint=varargin{1}{indexes};
-            else
-                joint = {obj.joints{indexes}};
-            end
+            joint = {obj.joints{indexes}};
         end
         
         %% Function to print joints in format (name, index in cell array)

@@ -9,8 +9,10 @@ function [results, corrs] = getResultDH(opt_pars, start_dh, whitelist, optim)
     for field=1:length(fnames)
         if(any(any(whitelist.(fnames{field}))))
             new_count = count + sum(sum(whitelist.(fnames{field})));
-            wh = repmat(whitelist.(fnames{field}),1,1,optim.repetitions, optim.pert_levels);
-            results.(fnames{field})(wh) = opt_pars(count:new_count-1,:,:);
+            wh = repmat(whitelist.(fnames{field})',1,1,optim.repetitions, optim.pert_levels);
+            a=permute(results.(fnames{field}),[2,1,3,4]);
+            a(wh) = opt_pars(count:new_count-1,:,:);
+            results.(fnames{field})=permute(a,[2,1,3,4]);
             count = new_count;
         end
         corrs.(fnames{field}) = results.(fnames{field})-corrs.(fnames{field}); % TODO: wrap to pi

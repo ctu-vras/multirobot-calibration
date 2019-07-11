@@ -1,36 +1,42 @@
 function [options, chains, optim, pert]=optimizationConfig
     %% Solver options
     options = optimoptions('lsqnonlin');
-    %options.Algorithm = 'trust-region-reflective';
-    options.Algorithm = 'levenberg-marquardt';
-    options.Display = 'iter';
+    options.Algorithm = 'trust-region-reflective';
+    %options.Algorithm = 'levenberg-marquardt';
+    options.Display = 'iter-detailed';
     options.TolFun = 1e-10;
-    options.TolX = 1e-16;
-    options.MaxIter = 100;
+    options.TolX = 1e-12;
+    options.MaxIter = 300;
     options.InitDamping = 1000;
-    options.MaxFunctionEvaluations=999;    
+    options.MaxFunctionEvaluations=4999;    
+    options.UseParallel=1;
+    options.ScaleProblem='jacobian';
     
     
+    %% Chains
+    chains.rightArm=1;
+    chains.leftArm=0;
+    chains.torso=0;
+    chains.head=0;
+    chains.leftEye=0;
+    chains.rightEye=0;
+    optim.chains=chains;
     
-    %% Chains combinations
-    chains.lare=0;
-    chains.lale=0;
-    chains.rale=0;
-    chains.rare=0;
-    chains.lator=0;
-    chains.rator=0;
-    chains.lahead=0;
-    chains.rahead=0;
-
     %% Calibration principle
     optim.type.eyes=0;%1;
-    optim.type.selftouch=40000;
+    optim.type.selftouch=1;
     optim.type.planes=0;%40000;
     optim.type.external=0;%40000;
     optim.onlyOffsets=0;
-    optim.skin=0;
-    optim.bounds=0;
-    optim.repetitions=5;
+    optim.jointTypes.joint=0;
+    optim.jointTypes.eye=0;
+    optim.jointTypes.torso=0;
+    optim.jointTypes.patch=0;
+    optim.jointTypes.triangle=0;
+    optim.jointTypes.mount=1;
+    optim.jointTypes.finger=0;
+    optim.bounds=1;
+    optim.repetitions=2;
     optim.pert=[0,0,0];
     optim.multi_pose = 1;
     optim.distribution = 'uniform';

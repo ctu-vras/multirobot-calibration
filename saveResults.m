@@ -28,11 +28,11 @@ function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_er
             file=fopen([outfolder,'DH-rep',num2str(rep), '-pert', num2str(pert_level),'.txt'],'w');
             for name=1:length(fnames)
                 fprintf(file, '%-s\t a \t d \t alpha \t offset\n', fnames{name});
+                joints=robot.findJointByGroup(fnames{name});
                 for line=1:size(res_dh.(fnames{name}),1)
                     formatSpec='%-s %-5.8f %-5.8f %-5.8f %-5.8f\n';
-                    joint=robot.findJointById(line);
-                    joint=robot.findJointByGroup(fnames{name},joint);
-                    fprintf(file,formatSpec, joint.name, [res_dh.(fnames{name})(line,1),res_dh.(fnames{name})(line,2),res_dh.(fnames{name})(line,3),res_dh.(fnames{name})(line,4)]');
+                    
+                    fprintf(file,formatSpec, joints{line}.name, [res_dh.(fnames{name})(line,1),res_dh.(fnames{name})(line,2),res_dh.(fnames{name})(line,3),res_dh.(fnames{name})(line,4)]');
                 end
                 fprintf(file,'\n');
                 
