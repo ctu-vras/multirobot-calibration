@@ -6,11 +6,18 @@ config_fcn = 'optimizationConfig';
 whitelist_fcn = 'loadNaoWL';
 bounds_fcn='loadMotomanBounds';
 datasetsNames={'rightArm_torso'};
-% robot_fcn = 'loadMotoman';
-% dataset_fcn = 'loadDatasetMotoman';
-% config_fcn = 'optimizationConfig';
-% whitelist_fcn = 'loadMotomanWL';
-% bounds_fcn='loadMotomanBounds';
+robot_fcn = 'loadMotoman';
+robot_fcn = 'loadICUBv1';
+dataset_fcn = 'loadDatasetMotoman';
+dataset_fcn = 'loadDatasetICub';
+config_fcn = 'optimizationConfig';
+whitelist_fcn = 'loadMotomanWL';
+whitelist_fcn = 'loadICUBWL';
+bounds_fcn='loadMotomanBounds';
+dataset_params = {[0,0,1,1]};
+dataset_params = {100, 'selfTouchConfigs_ICRA2019.log'};
+folder = 'bla2';
+saveInfo = true;
 folder = 'bla3';
 saveInfo = true;
 rob = robot(robot_fcn);
@@ -22,7 +29,7 @@ rob = robot(robot_fcn);
 
 [start_pars, min_pars, max_pars, whitelist, start_dh] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim, whitelist_fcn);
 
-[training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, dataset_fcn,rob,start_dh,datasetsNames);
+[training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, dataset_fcn,dataset_params);
 
 %%
 

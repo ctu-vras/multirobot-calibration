@@ -1,8 +1,8 @@
-function [ datasets, indexes ] = loadDatasetMotoman( varargin )
+function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
 
-if(nargin == 1)
+if(nargin == 3)
     used_datasets = varargin{1};
 else
     used_datasets = [1,1,1,1];
@@ -36,12 +36,13 @@ end
                 f = strsplit(source_files{i}, '.');
                 path = sprintf('dataset/leica_dataset/%s_dataset.mat', f{1});
                 data2 = load(path);
-                data2 = data2.dataset;
+                data3 = data2.dataset;
+                [~, first_unique_index, first_indexInUnique] = unique(data3(:,[1,2,3]),'rows', 'first');
+%                 [~, last_unique_index, last_indexInUnique] = unique(data3(:,[1,2,3]),'rows', 'last');
+                data2 = data3(first_unique_index,:);
                 data2(:,1) = data2(:,1) + i*1000;              
                 dataset2.pose = [dataset2.pose; data2(:,1)];
                 dataset2.frame = [dataset2.frame;cellstr(strcat('MK',num2str(data2(:,3)),num2str(data2(:,2),'%02d')))];
-                dataset2.refPoints = [dataset2.refPoints; data2(:,5:6)];
-                dataset2.cameras = [dataset2.cameras; data2(:,4)];
                 dataset2.joints = [dataset2.joints; ...
                     struct('rightArm',num2cell([data2(:, [7:13]),zeros(size(data2,1),1)],2),...
                 'leftArm',num2cell([data2(:, [7,14:19]),zeros(size(data2,1),1)],2), ...,
@@ -49,6 +50,28 @@ end
                 'rightEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2))];
                 dataset2.extCoords = [dataset2.extCoords; data2(:,20:22)];
                 dataset2.point = [dataset2.point; zeros(size(data2,1),6)];
+                cams = zeros(size(data2,1),2);
+                refPoints = nan(size(data2,1),4);
+                cam_index = 1;
+%                 cams(first_unique_index,1) = 1;
+%                 cams(last_unique_index,2) = 1;
+%                 [inter_indexes,~,~] = intersect(first_unique_index, last_unique_index);
+%                 cams(inter_indexes,3-data3(inter_indexes,4)) = 0;
+                for j = 1:(size(data3,1))
+                    if(j > 1 && (first_indexInUnique(j-1) ~= first_indexInUnique(j)))
+                        cam_index = cam_index + 1;
+                    end
+                     cams(cam_index,data3(j,4)) = 1;
+                    if(data3(j,4) == 1)
+                        refPoints(cam_index,1:2) = data3(j,5:6);
+                    else
+                        refPoints(cam_index,3:4) = data3(j,5:6);
+                    end
+                    
+                end
+                dataset2.cameras = [dataset2.cameras;cams];
+                dataset2.refPoints = [dataset2.refPoints;refPoints];
+                
             end  
             [~, index_pose, ~] = unique(dataset2.pose);
             C = cell(size(index_pose, 1) ,1);

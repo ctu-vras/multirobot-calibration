@@ -2,12 +2,12 @@ function camera_points = projections(points, eyes, cameras)
 %PROJECTIONS(points, eyes, cameras) Project points given by 4x4xN transformation 
 %matrices array tfs to the cameras
 
-% % prealloc camera_points
-camera_points = zeros(2,size(points,2));
 dc = eyes.dist;
 tdc = eyes.tandist;
 mat = eyes.matrix(1:2,:,:);
-
+cameras = cameras.*[1,2];
+cameras = reshape(cameras',[],1);
+cameras(cameras==0) = [];
 x_ = points(1:2,:)./points(3,:);
 r_sq = sum(x_.^2);
 

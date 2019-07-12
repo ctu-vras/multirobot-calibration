@@ -2,7 +2,7 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
     %% functions call
     if nargin>3
         func=str2func(funcname);
-        [datasets, indexes]=func(optim, varargin{:});
+        [datasets, indexes]=func(r,optim, varargin{:});
     else
         func=str2func(funcname);
         [datasets, indexes]=func();
@@ -68,10 +68,10 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
         testing_set_indexes{i} = testing_set_indexes_dataset;
     end
 
-    datasetsStruct.dist={datasets{indexes{1}}};
-    datasetsStruct.plane={datasets{indexes{2}}};
-    datasetsStruct.ext={datasets{indexes{3}}};
-    datasetsStruct.markers={datasets{indexes{4}}};
+    datasetsStruct.dist=datasets(indexes{1});
+    datasetsStruct.plane=datasets(indexes{2});
+    datasetsStruct.ext=datasets(indexes{3});
+    datasetsStruct.markers=datasets(indexes{4});
     
 end
 
