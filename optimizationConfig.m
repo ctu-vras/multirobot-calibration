@@ -1,15 +1,15 @@
 function [options, chains, optim, pert]=optimizationConfig
     %% Solver options
     options = optimoptions('lsqnonlin');
-    options.Algorithm = 'trust-region-reflective';
-    %options.Algorithm = 'levenberg-marquardt';
-    options.Display = 'iter-detailed';
+    %options.Algorithm = 'trust-region-reflective';
+    options.Algorithm = 'levenberg-marquardt';
+    options.Display = 'iter';
     options.TolFun = 1e-10;
     options.TolX = 1e-12;
-    options.MaxIter = 300;
+    options.MaxIter = 10;
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=4999;    
-    options.UseParallel=1;
+    options.UseParallel=0;
     options.ScaleProblem='jacobian';
     
     
@@ -35,13 +35,14 @@ function [options, chains, optim, pert]=optimizationConfig
     optim.jointTypes.triangle=0;
     optim.jointTypes.mount=1;
     optim.jointTypes.finger=0;
-    optim.bounds=1;
+    optim.bounds=0;
     optim.repetitions=2;
-    optim.pert=[0,0,0];
+    optim.pert=[1,0,0];
     optim.multi_pose = 1;
-    optim.distribution = 'uniform';
+    optim.distribution = 'normal';
     optim.pert_levels = 1+sum(optim.pert);
     optim.splitPoint=0.7;
+    optim.refPoints=0;
     
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1];

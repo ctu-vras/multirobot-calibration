@@ -1,4 +1,4 @@
-function [ opt_pars, min_pars, max_pars, whitelist ] = createWhitelist( robot, dh_pars, lb_pars, ub_pars, optim,  funcname )
+function [ opt_pars, min_pars, max_pars, whitelist, dh_pars] = createWhitelist( robot, dh_pars, lb_pars, ub_pars, optim,  funcname )
 %CREATEWHITELIST Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,8 +11,13 @@ end
 
 for joint=robot.joints
    joint=joint{1};
-   if ~strcmp(joint.type,'base') && (~optim.jointTypes.(joint.type) || ~optim.chains.(strrep(joint.group,'Skin','')))
-      whitelist.(joint.group)(joint.DHindex,:)=zeros(1,4); 
+   if optim.onlyOffsets
+       whitelist.(joint.group)(joint.DHindex,1:3)=zeros(1,3);
+   end
+   if ~strcmp(joint.type,'base') 
+       if ~optim.jointTypes.(joint.type) || ~optim.chains.(strrep(joint.group,'Skin',''))
+            whitelist.(joint.group)(joint.DHindex,:)=zeros(1,4);
+       end
    end
 end
 
@@ -32,7 +37,10 @@ for name = 1:size(names,1)
     b = whitelist.(names{name})';
     for pert = 1:(optim.pert_levels)
         for rep = 1:optim.repetitions
-            a = dh_pars.(names{name})(:,:,rep,pert)';     
+            a = dh_pars.(names{name})(:,:,rep,pert)';  
+            c=dh_pars.(names{name})(:,:,1,1)';
+            a(~b)=c(~b);
+            dh_pars.(names{name})(:,:,rep,pert)=a';
             lb = lb_pars.(names{name})(:,:,rep,pert)';
             ub = ub_pars.(names{name})(:,:,rep,pert)';
             new_index = index + length(a(b))-1;

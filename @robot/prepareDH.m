@@ -13,7 +13,11 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     index=1;
     for i=1:3
         if optim.pert(i)
-            perms(:,:,index)=(rand(length(r.joints),4)*2-1).*repmat(pert.(fnames{i}).DH,length(r.joints),1);
+            if strcmp(optim.distribution,'uniform')
+                perms(:,:,index)=(rand(length(r.joints),4)*2-1).*repmat(pert.(fnames{i}).DH,length(r.joints),1);
+            elseif strcmp(optim.distribution,'normal')
+                perms(:,:,index)=randn(length(r.joints),4).*repmat(pert.(fnames{i}).DH,length(r.joints),1);
+            end
             index=index+1;
         end
     end

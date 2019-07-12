@@ -92,7 +92,7 @@ function showModel(r, angles, varargin)
         jointNames = {};
         joints=findJointByGroup(r,name);
         %index = 1;
-        for joint=1:size(joints,1)
+        for joint=1:size(joints,2)
             j=joints(joint);
             if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)
                 jointNames{end+1} = j{1}.name;
@@ -104,6 +104,16 @@ function showModel(r, angles, varargin)
         robot.(name).name = name;
         if((strcmp(name, 'leftEye') || strcmp(name, 'rightEye')) && isfield(structure,'head'))
             robot.(name).H0 = robot.chain.head.RFFrame{end};
+        elseif strcmp(name, 'leftLeg') 
+            robot.(name).H0=[1,0,0,0;
+                             0,0,1,-68.1;
+                             0,-1,0,-119.9;
+                             0,0,0,1];
+        elseif strcmp(name, 'rightLeg')
+            robot.(name).H0=[1,0,0,0;
+                             0,0,1,68.1;
+                             0,-1,0,-119.9;
+                             0,0,0,1];
         else
             robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
         end
@@ -130,7 +140,7 @@ function showModel(r, angles, varargin)
             jointNames = {};
             joints=findJointByGroup(r,name);
             index = 1;
-            for joint=1:size(joints,1)
+            for joint=1:size(joints,2)
                 j=joints(joint);
                 if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)
                     jointNames{end+1} = j{1}.name;
@@ -166,6 +176,7 @@ function showModel(r, angles, varargin)
     end
 
     view([90,0]);
+    axis tight;
     axis equal;
     
     %if nargin > 7

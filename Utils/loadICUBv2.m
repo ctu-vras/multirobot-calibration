@@ -34,7 +34,21 @@ function [ name, structure, structure2 ] = loadICUBv2()
         {'leftEyeVersion',types.joint,'eyesTilt',1,0,group.leftEye},...
         {'leftEyeVergence',types.eye,'leftEyeVersion',2,1,group.leftEye},...
         {'rightEyeVersion',types.joint,'eyesTilt',1,0,group.rightEye},...
-        {'rightEyeVergence',types.eye,'rightEyeVersion',2,1,group.rightEye}};  
+        {'rightEyeVergence',types.eye,'rightEyeVersion',2,1,group.rightEye},...
+        ...
+        {'leftHipPitch',types.joint,'torsoYaw',1,0,group.leftLeg},...
+        {'leftHipRoll',types.joint,'leftHipPitch',2,0,group.leftLeg},...
+        {'leftHipYaw',types.joint,'leftHipRoll',3,0,group.leftLeg},...
+        {'leftKnee',types.joint,'leftHipYaw',4,0,group.leftLeg},...
+        {'leftAnklePitch',types.joint,'leftKnee',5,0,group.leftLeg},...
+        {'leftAnkleRoll',types.joint,'leftAnklePitch',6,0,group.leftLeg},...
+        ...
+        {'rightHipPitch',types.joint,'torsoYaw',1,0,group.rightLeg},...
+        {'rightHipRoll',types.joint,'rightHipPitch',2,0,group.rightLeg},...
+        {'rightHipYaw',types.joint,'rightHipRoll',3,0,group.rightLeg},...
+        {'rightKnee',types.joint,'rightHipYaw',4,0,group.rightLeg},...
+        {'rightAnklePitch',types.joint,'rightKnee',5,0,group.rightLeg},...
+        {'rightAnkleRoll',types.joint,'rightAnklePitch',6,0,group.rightLeg}};   
         
         
     structure2.DH.torso = [0.032, 0.000, pi/2.0, 0.000; 
@@ -68,7 +82,19 @@ function [ name, structure, structure2 ] = loadICUBv2()
                     
     structure2.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0]; 
-    
+    structure2.DH.leftLeg=[0, 0, -pi/2, pi/2;
+                           0, 0, -pi/2, pi/2;
+                           0, -0.2236, pi/2, -pi/2;
+                           -0.213, 0, pi, pi/2;
+                           0, 0, -pi/2, 0;
+                           -0.041, 0, 0, 0];
+
+    structure2.DH.rightLeg=[0, 0, pi/2, pi/2;
+                            0, 0, pi/2, pi/2;
+                            0, 0.2236, -pi/2, -pi/2;
+                            -0.213, 0, pi, pi/2;
+                            0, 0, pi/2, 0;
+                            0, 0, pi, 0];
                    
     structure2.WL.torso = zeros(2,4);
     
@@ -111,5 +137,18 @@ function [ name, structure, structure2 ] = loadICUBv2()
                  
     structure2.bounds.joint = [inf inf inf inf];
     structure2.bounds.eye = [inf inf inf inf];
+
+    % distortion coefficients
+    structure2.eyes.dist = zeros(6,2);
+    % tangential distortion coefficients
+    structure2.eyes.tandist = zeros(2,2);
+    % right eye camera matrix                      
+    structure2.eyes.matrix(:,:,1) = [257.34,  0.000,  160.0;
+                                     0.000,  257.34,  120.0;
+                                     0.000, 0.000, 1.000];
+    % left eye camera matrix                             
+    structure2.eyes.matrix(:,:,2) = [257.34,  0.000,  160.0; 
+                                     0.000,  257.34,  120.0
+                                     0.000, 0.000, 1.000];
 end
 

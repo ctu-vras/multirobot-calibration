@@ -10,6 +10,8 @@ classdef group
         rightArmSkin = 'rightArmSkin';
         headSkin = 'headSkin';
         torsoSkin = 'torsoSkin';
+        leftLeg = 'leftLeg';
+        rightLeg = 'rightLeg';
         fingers = 'fingers';
     end
 end
