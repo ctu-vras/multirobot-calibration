@@ -10,6 +10,10 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets, optim )
         empty = isempty(dataset.rtMat);
         joints = dataset.joints;
         points = dataset.point;
+        secondFrames = isfield(dataset,'frame2') && ~isempty(dataset.frame2);
+        if(secondFrames)
+            frames2 = dataset.frame2;
+        end
         refPoints = dataset.refPoints';
         if(size(refPoints,1) ==2)
             refPoints = repelem(refPoints,1,2);
@@ -24,7 +28,7 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets, optim )
         refPoints(:,isnan(refPoints(1,:))) = [];
         poses = dataset.pose;
         cameras = dataset.cameras;
-        points2Cam = nan(4, 2*size(points, 1));
+        points2Cam = nan(4, (2*secondFrames+2)*size(points, 1));
         index = 1;
         for i = 1:size(points, 1)      
             if(empty)
@@ -33,20 +37,30 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets, optim )
                 rtMat = dataset.rtMat(i);
             end
             if(cameras(i,1))
-            points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{1},rtMat, empty, joints(i), H0))*...
-                (getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
-            index= index+1;
+                points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{1},rtMat, empty, joints(i), H0))*...
+                    (getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
+                index = index+1;
+                if(secondFrames)
+                    points2Cam(:,index+1) =  inversetf(getTF(dh_pars,cam_frames{1},rtMat, empty, joints(i), H0))*...
+                        (getTF(dh_pars,frames2(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
+                    index= index+1;
+                end
             end
             if(cameras(i,2))
                 points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{2},rtMat, empty, joints(i), H0))*...
                 (getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
                 index = index+1;
+                if(secondFrames)
+                    points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{2},rtMat, empty, joints(i), H0))*...
+                        (getTF(dh_pars,frames2(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
+                index = index+1;
+                end
+                
             end
         end
         points2Cam(:,isnan(points2Cam(1,:))) = [];
         projs = projections(points2Cam, robot.structure.eyes, cameras);
         dist = [dist, reshape(projs-refPoints, 1, 2*size(projs, 2))];
     end
-    hist(reshape(projs-refPoints, 1, 2*size(projs, 2)))
 end
 

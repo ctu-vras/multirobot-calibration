@@ -1,55 +1,37 @@
-function [ dist ] = getDist( dh_pars, robot, datasets, optim)
+function [ dist ] = getDist(dh_pars, robot, datasets, optim)
 %GETDIST Summary of this function goes here
 %   Detailed explanation goes here
     index = 0;
-    distances = cell(1,length(datasets));
+    dist = [];
     H0 = robot.structure.H0;
     for dataset=datasets
         index = index + 1;
         dataset = dataset{1};
-        [unique_pose_nums, index_pose, ~] = unique(dataset.pose);
-        if(optim.multi_pose)
-            distances{index} = zeros(1, size(unique_pose_nums, 1));
-        else
-            distances{index} = [];
-        end
-        frames = dataset.frame(index_pose);
-        frames2 = dataset.frame2(index_pose);
+        frames = dataset.frame;
+        frames2 = dataset.frame2;
         empty = isempty(dataset.rtMat);
-        joints = dataset.joints(index_pose);
+        joints = dataset.joints;
+        distances = zeros(1, size(joints, 1));
         points = dataset.point;
         refPoints = dataset.refPoints;
-        poses = dataset.pose;
-
-        for i = 1:size(unique_pose_nums, 1)      
+        
+        for i = 1:size(joints, 1)      
             if(empty)
                 rtMat = [];
             else
-                rtMat = dataset.rtMat(index_pose(i));
+                rtMat = dataset.rtMat(i);
             end
-            if(optim.multi_pose)  %TODO: neni to zbytecny? pripadne bych jenom prepsal dataset motomana
-                arm1 =  getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)...
-                    *[points(index_pose(i),1:3),1]';
-                if ~optim.refPoints || (isempty(dataset.refPoints))
-                   arm2 =  getTF(dh_pars,frames2(i),rtMat, empty, joints(i), H0)...
-                       *[points(index_pose(i),4:6),1]';
-                elseif optim.refPoints
-                   arm2 = refPoints(index_pose(i),:)';
-                end
-                distances{index}(i) = sqrt(sum((arm1(1:3)-arm2(1:3)).^2,1));
-            else
-                arm1 = getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)...
-                    *[points(poses==unique_pose_nums(i),1:3), ones(length(poses(poses==unique_pose_nums(i))),1)]';
-                if(isempty(dataset.refPoints))
-                    arm2 = getTF(dh_pars,frames2(i),rtMat, empty, joints(i), H0)...
-                    *[points(poses==unique_pose_nums(i),4:6), ones(length(poses(poses==unique_pose_nums(i))),1)]';
-                elseif refPoint
-                   arm2 = refPoints(poses==unique_pose_nums(i),:)'; 
-                end
-                distances{index} = [distances{index}, sqrt(sum((arm1(1:3,:)-arm2(1:3,:)).^2,1))];
-            end       
+            arm1 =  getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)...
+                *[points(i,1:3),1]';
+            if ~optim.refPoints || (isempty(dataset.refPoints))
+               arm2 =  getTF(dh_pars,frames2(i),rtMat, empty, joints(i), H0)...
+                   *[points(i,4:6),1]';
+            elseif optim.refPoints
+               arm2 = refPoints(i,:)';
+            end
+            distances(i) = sqrt(sum((arm1(1:3)-arm2(1:3)).^2,1));
         end
     end
-    dist = distances{:};
+    dist = [dist, distances];
 end
 

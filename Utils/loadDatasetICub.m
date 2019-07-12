@@ -7,11 +7,12 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
         source_files = {'selfTouchConfigs_ICRA2019.log'};
     end
     nmb_of_files = length(source_files);
-    datasets = cell(nmb_of_files,1);
+    datasets = cell(nmb_of_files*2,1);
     DEG2RAD = pi/180;
-    for k = 1:length(source_files)
+    for k = 1:nmb_of_files
         dataset.extCoords = [];
         dataset.rtMat = [];
+        dataset.cameras [];
         f = strsplit(source_files{k}, '.');
         data2 = load(['dual-icub-ICRA2019Rebuttal/dataset/',source_files{k}]);
         path = sprintf('dual-icub-ICRA2019Rebuttal/dataset/distances_%s.mat', f{1});
@@ -36,9 +37,24 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
             'rightArm',num2cell(data2(:, [6,17:23])*DEG2RAD,2), 'head',num2cell(data2(:, [6,24:26])*DEG2RAD,2),...
             'leftEye',num2cell([data2(:, 27),data2(:,28)+eyeAngle]*DEG2RAD,2), 'rightEye',num2cell([data2(:, 27),data2(:,28)-eyeAngle]*DEG2RAD,2));
         dataset.refPoints = data2(:,1:3);
-        dataset.cameras = ones(size(data2,1),2);
+        
+        
+        dataset2.frame = dataset.frame;
+        dataset2.frame2 = dataset.frame2;
+        dataset2.point = dataset.point;
+        dataset2.joints = dataset.joints;
+        dataset2.extCoords = dataset.extCoords;
+        dataset2.rtMat = dataset.rtMat;
+        dataset2.pose = dataset.pose;
+        dataset2.cameras = ones(size(data2,1),2);
+        dataset2.refPoints = ones(size(data2,1),2); % TODO: dopocitat projekce
+        
+        
         datasets{k} = dataset; 
+        datasets{k+nmb_of_files} = dataset2;
+        
+        
     end
-    indexes = {1:length(source_files), [] ,[], 1:length(source_files)};
+    indexes = {1:nmb_of_files, [] ,[], nmb_of_files+1:nmb_of_files*2};
 end
 
