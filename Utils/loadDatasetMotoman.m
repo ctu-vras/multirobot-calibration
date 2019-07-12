@@ -1,12 +1,12 @@
 function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
-
-if(nargin == 3)
-    used_datasets = varargin{1};
-else
-    used_datasets = [1,1,1,1];
-end
+    if(nargin == 3)
+        used_datasets = varargin{1}{1};
+    else
+        used_datasets = [1,1,1,1];
+    end
+    
     source_files = {'leica_wall_table1_5x5.csv', 'leica_wall_table2_5x5.csv', ...
         'no_leica_wall_table1_5x5.csv', 'no_leica_wall_table2_5x5.csv', ...
         'leica_higher_table1_5x5.csv',  'leica_higher_table2_5x5.csv', ...
@@ -29,8 +29,8 @@ end
         dataset2.joints = [];
         dataset2.extCoords = [];
         dataset2.refPoints = [];
-        dataset2.rtMat = [];
         dataset2.cameras = [];
+        dataset2.rtMat = [];
         if(used_datasets(k))      
             for i=indexes{k}
                 f = strsplit(source_files{i}, '.');
@@ -49,6 +49,7 @@ end
                 'leftEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2), ...
                 'rightEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2))];
                 dataset2.extCoords = [dataset2.extCoords; data2(:,20:22)];
+%                 dataset2.rtMat = struct('markers',num2cell(rob.structure.markers(:,:,data2(:,2)),4));
                 dataset2.point = [dataset2.point; zeros(size(data2,1),6)];
                 cams = zeros(size(data2,1),2);
                 refPoints = nan(size(data2,1),4);
@@ -57,6 +58,10 @@ end
 %                 cams(last_unique_index,2) = 1;
 %                 [inter_indexes,~,~] = intersect(first_unique_index, last_unique_index);
 %                 cams(inter_indexes,3-data3(inter_indexes,4)) = 0;
+                for j = 1:size(data2,1)
+                   matrices.markers = rob.structure.markers(:,:,data2(j,2));
+                   dataset2.rtMat = [dataset2.rtMat; matrices]; 
+                end
                 for j = 1:(size(data3,1))
                     if(j > 1 && (first_indexInUnique(j-1) ~= first_indexInUnique(j)))
                         cam_index = cam_index + 1;
@@ -67,7 +72,6 @@ end
                     else
                         refPoints(cam_index,3:4) = data3(j,5:6);
                     end
-                    
                 end
                 dataset2.cameras = [dataset2.cameras;cams];
                 dataset2.refPoints = [dataset2.refPoints;refPoints];

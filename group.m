@@ -12,6 +12,12 @@ classdef group
         torsoSkin = 'torsoSkin';
         leftLeg = 'leftLeg';
         rightLeg = 'rightLeg';
-        fingers = 'fingers';
+        markers = 'markers';
+        leftIndex = 'leftIndex';
+        rightIndex = 'rightIndex';
+        leftThumb = 'leftThumb';
+        rightThumb = 'rightThumb';
+        leftMiddle = 'leftMiddle';
+        rightMiddle = 'rightMiddle';
     end
 end
