@@ -16,7 +16,7 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
            matrices.(finger{1})=dhpars2tfmat(robot.structure.DH.(finger{1})); 
         end
         dataset.rtMat = repmat(matrices,size(data2,1),1);
-        dataset.cameras [];
+        dataset.cameras = [];
         f = strsplit(source_files{k}, '.');
         data2 = load(['dual-icub-ICRA2019Rebuttal/dataset/',source_files{k}]);
         path = sprintf('dual-icub-ICRA2019Rebuttal/dataset/distances_%s.mat', f{1});
@@ -30,7 +30,7 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
         end
         data2(nmbPoses+1:end,:) = [];
         dataset.point = zeros(size(data2,1),6);
-        dataset.pose = [1:size(data2,1)]';
+        dataset.pose = (1:size(data2,1))';
         C = cell(size(data2,1),1);
         C(:) = {'rightHandFinger'};
         dataset.frame = C;

@@ -20,7 +20,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
         'leica_right_hand_6x6x6.csv', 'leica_left_hand_6x6x6.csv'};
     dataset_count = sum(used_datasets);
     datasets = cell(dataset_count*2,1);
-    indexes = {1:4, [5:6,9:10], [7:8, 11:12], 13:20};
+    indexes = {1:4, [5:6,9:10], [7:8, 11:12], 13:13};
     index = 0; 
     for k = 1:4
         dataset2.point = [];
@@ -49,7 +49,6 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 'leftEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2), ...
                 'rightEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2))];
                 dataset2.extCoords = [dataset2.extCoords; data2(:,20:22)];
-%                 dataset2.rtMat = struct('markers',num2cell(rob.structure.markers(:,:,data2(:,2)),4));
                 dataset2.point = [dataset2.point; zeros(size(data2,1),6)];
                 cams = zeros(size(data2,1),2);
                 refPoints = nan(size(data2,1),4);
@@ -58,9 +57,33 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
 %                 cams(last_unique_index,2) = 1;
 %                 [inter_indexes,~,~] = intersect(first_unique_index, last_unique_index);
 %                 cams(inter_indexes,3-data3(inter_indexes,4)) = 0;
+                [unique_pose, index_pose, ~] = unique(data2(:,1));
+                preMatrixLeft = zeros(4,4,length(unique_pose));
+                preMatrixRight = zeros(4,4,length(unique_pose));
+                if (optim.chains.leftArm == 0)
+                    for j = 1:length(index_pose)
+                        dh=rob.structure.DH.leftArm;
+                        dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).leftArm';
+                        preMatrixLeft(:,:,j) = dhpars2tfmat(dh);
+                    end
+                end
+                if (optim.chains.rightArm == 0)
+                    for j = 1:length(index_pose)
+                        dh=rob.structure.DH.rightArm;
+                        dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).rightArm';
+                        preMatrixRight(:,:,j) = dhpars2tfmat(dh);
+                    end
+                end
                 for j = 1:size(data2,1)
-                   matrices.markers = rob.structure.markers(:,:,data2(j,2));
-                   dataset2.rtMat = [dataset2.rtMat; matrices]; 
+                matrices.markers = rob.structure.markers(:,:,data2(j,2));
+                matrices.torso = eye(4);
+                if(optim.chains.leftArm == 0)
+                    matrices.leftArm = preMatrixLeft(:,:,data2(j,1)-i*1000);
+                end
+                if(optim.chains.rightArm == 0)
+                    matrices.rightArm = preMatrixRight(:,:,data2(j,1)-i*1000);
+                end
+                dataset2.rtMat = [dataset2.rtMat; matrices]; 
                 end
                 for j = 1:(size(data3,1))
                     if(j > 1 && (first_indexInUnique(j-1) ~= first_indexInUnique(j)))
@@ -88,7 +111,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
             dataset.refPoints = [];
             dataset.point = zeros(size(index_pose, 1),6);
             dataset.extCoords = dataset2.extCoords(index_pose, :);
-            dataset.rtMat = [];         
+            dataset.rtMat = dataset2.rtMat(index_pose);         
             dataset.refDist = 0.116; 
             index = index + 1;
             dataset.id = index;

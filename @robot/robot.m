@@ -39,12 +39,6 @@ classdef robot < handle
             end
         end
         
-        %% load default paramaters and set joint etc.
-        setRobot(robot);   
-        
-        %% Run optimization
-        runOptimization(robot);
-        
         %% Find joint by id
         function [joint,indexes]=findJointById(obj,id)
             %Returns instance of joints as cell array and coresponding indexes in robot.joints cell array
