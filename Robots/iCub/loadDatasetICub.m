@@ -11,7 +11,11 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
     DEG2RAD = pi/180;
     for k = 1:nmb_of_files
         dataset.extCoords = [];
-        dataset.rtMat = [];
+        fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'};
+        for finger=fingers
+           matrices.(finger{1})=dhpars2tfmat(robot.structure.DH.(finger{1})); 
+        end
+        dataset.rtMat = repmat(matrices,size(data2,1),1);
         dataset.cameras [];
         f = strsplit(source_files{k}, '.');
         data2 = load(['dual-icub-ICRA2019Rebuttal/dataset/',source_files{k}]);

@@ -4,10 +4,10 @@ function WL = loadMotomanWL()
 
     WL.leftArm = [zeros(6,4);
                   0, 0, 0, 0;
-                  0, 1, 0, 0];
+                  0, 0, 0, 0];
        
     WL.rightArm = [zeros(7,4);
-                   0, 1, 0, 0];
+                   0, 0, 0, 0];
        
     WL.leftEye = zeros(2,4);
         

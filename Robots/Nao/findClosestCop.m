@@ -1,4 +1,4 @@
-function [ minCop1, minCop2 ] = findClosestCop(cops1,cops2 )
+function [ minCop1, minCop2, difs, actMin ] = findClosestCop(cops1,cops2 )
     actMin=inf;
     minCop1=zeros(1,3);
     minCop2=zeros(1,3);
@@ -20,7 +20,3 @@ function [ minCop1, minCop2 ] = findClosestCop(cops1,cops2 )
        end
     end
 end     
-% avgDiffs["x"].append(difs["x"])
-% avgDiffs["y"].append(difs["y"])
-% avgDiffs["z"].append(difs["z"])
-% mins.append(min)

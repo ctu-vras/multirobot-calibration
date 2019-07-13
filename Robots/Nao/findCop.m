@@ -1,8 +1,7 @@
 function finalCops= findCop(points,maxDist)
     cops={};
-    for i=1:size(points,2)
-        point=points{i};
-        point=point(1:3);
+    for i=1:size(points,1)
+        point=points(i,1:3);
         inRange=0;
         for j=1:size(cops,2)
            cop=cops{j};

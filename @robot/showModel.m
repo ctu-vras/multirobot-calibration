@@ -1,12 +1,12 @@
 function showModel(r, angles, varargin)
     % angles - cell array, {[th_1_chain1,...,th_n_chain1],...,[]}
     % 'skin' - 1/0 for skin/markers, 'dual' - 1/0 for dual robot
-    close all;
     p=inputParser;
     addRequired(p,'angles');
     addParameter(p,'skin',0,@isnumeric);
     addParameter(p,'dual',0,@isnumeric);
     addParameter(p,'dualDH',[]);
+    addParameter(p,'figName','');
 %     if  size(varargin,1)> 0
 %         if strcmp(varargin{1},'skin')
 %             MARKERS_ON=1;
@@ -52,11 +52,15 @@ function showModel(r, angles, varargin)
     % The plotting is done by the FwdKin function, which also outputs the chain
     % of the corresponding body part. This is needed as input to subsequent
     % chains (e.g. torso is needed for arm and head chains).
-
-    figure('Position', [1436 30 1300 750]);
+    fig = findobj( 'Type', 'Figure', 'Name', p.Results.figName);
+    if length(fig)>0
+        set(0, 'CurrentFigure', fig);
+    else
+        fig=figure('Name',p.Results.figName,'Position', [1436 30 1300 750]);
+    end
     axes  ('Position', [0 0 1 1]); hold on; grid on;
     xlabel('x (mm)'); ylabel('y (mm)'),zlabel('z (mm)');
-
+    hold on
     %% ROOT - plot the original root reference frame
     root = eye(4);
     DrawRefFrame(root,1,40,'hat','ROOT');
@@ -87,7 +91,7 @@ function showModel(r, angles, varargin)
     structure=r.structure.DH;
     fnames=fieldnames(structure);
     fnames(strcmp(fnames, 'torso')) = [];
-    for i=1:length(fnames)
+    for i=1:min(length(fnames),size(angles,2))
         name=fnames{i};
         jointNames = {};
         joints=findJointByGroup(r,name);
@@ -104,6 +108,10 @@ function showModel(r, angles, varargin)
         robot.(name).name = name;
         if((strcmp(name, 'leftEye') || strcmp(name, 'rightEye')) && isfield(structure,'head'))
             robot.(name).H0 = robot.chain.head.RFFrame{end};
+        elseif strcmp(name, 'leftThumb') || strcmp(name, 'leftIndex') || strcmp(name, 'leftMiddle')
+            robot.(name).H0=robot.chain.leftArm.RFFrame{end};
+        elseif strcmp(name, 'rightThumb') || strcmp(name, 'rightIndex') || strcmp(name, 'rightMiddle')
+            robot.(name).H0=robot.chain.rightArm.RFFrame{end};
         elseif strcmp(name, 'leftLeg') 
             robot.(name).H0=[1,0,0,0;
                              0,0,1,-68.1;
@@ -135,7 +143,7 @@ function showModel(r, angles, varargin)
             end
         end
             
-        for i=1:length(fnames)
+        for i=1:min(length(fnames),size(angles,2))
             name=fnames{i};
             jointNames = {};
             joints=findJointByGroup(r,name);
@@ -150,8 +158,22 @@ function showModel(r, angles, varargin)
             end 
             robot.(name).jointNames = jointNames;
             robot.(name).name = name;
-            if(strcmp(name, 'leftEye') || strcmp(name, 'rightEye'))
+            if((strcmp(name, 'leftEye') || strcmp(name, 'rightEye')) && isfield(structure,'head'))
                 robot.(name).H0 = robot.chain.head.RFFrame{end};
+            elseif strcmp(name, 'leftThumb') || strcmp(name, 'leftIndex') || strcmp(name, 'leftMiddle')
+                robot.(name).H0=robot.chain.leftArm.RFFrame{end};
+            elseif strcmp(name, 'rightThumb') || strcmp(name, 'rightIndex') || strcmp(name, 'rightMiddle')
+                robot.(name).H0=robot.chain.rightArm.RFFrame{end};
+            elseif strcmp(name, 'leftLeg') 
+                robot.(name).H0=[1,0,0,0;
+                                 0,0,1,-68.1;
+                                 0,-1,0,-119.9;
+                                 0,0,0,1];
+            elseif strcmp(name, 'rightLeg')
+                robot.(name).H0=[1,0,0,0;
+                                 0,0,1,68.1;
+                                 0,-1,0,-119.9;
+                                 0,0,0,1];
             else
                 robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
             end
@@ -176,7 +198,6 @@ function showModel(r, angles, varargin)
     end
 
     view([90,0]);
-    axis tight;
     axis equal;
     
     %if nargin > 7

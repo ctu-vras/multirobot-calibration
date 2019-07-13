@@ -25,9 +25,11 @@ function WL = loadNaoWL()
         [0, 0, 0, 0;
          0, 0, 0, 0;
          0,0,0,0];
-    WL.torsoSkin=zeros(3+size(torso_left,2)+size(torso_right,2),4);
-    WL.leftArmSkin=zeros(size(hands_upper,2)+size(hands_lower,2)+3,4);
+    WL.torsoSkin=[1,1,1,1;zeros(size(hands_upper,2)+size(hands_lower,2)+2,4)];
+    WL.leftArmSkin=[1,1,1,1;zeros(size(hands_upper,2)+size(hands_lower,2)+2,4)];
     %WL.rightArmSkin=ones(size(hands_upper,2)+size(hands_lower,2)+3,4);
-    WL.rightArmSkin=[1,1,1,1;zeros(size(hands_upper,2)+size(hands_lower,2)+2,4)];
+    WL.rightArmSkin=[1,1,1,1;
+        1,1,1,1;
+        zeros(size(hands_upper,2)+size(hands_lower,2)+1,4)];
     WL.headSkin=zeros(size(head_left,2)+size(head_right,2)+3,4);
 end

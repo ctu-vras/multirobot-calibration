@@ -4,26 +4,24 @@ robot_fcn = 'loadNAO';
 dataset_fcn = 'loadDatasetNao';
 config_fcn = 'optimizationConfig';
 whitelist_fcn = 'loadNaoWL';
-bounds_fcn='loadMotomanBounds';
-datasetsNames={'rightArm_torso'};
-robot_fcn = 'loadMotoman';
-robot_fcn = 'loadICUBv1';
-dataset_fcn = 'loadDatasetMotoman';
-dataset_fcn = 'loadDatasetICub';
-config_fcn = 'optimizationConfig';
-whitelist_fcn = 'loadMotomanWL';
-whitelist_fcn = 'loadICUBWL';
-bounds_fcn='loadMotomanBounds';
+% bounds_fcn='loadMotomanBounds';
+% datasetsNames={'rightArm_torso'};
+% robot_fcn = 'loadMotoman';
+% robot_fcn = 'loadICUBv1';
+% dataset_fcn = 'loadDatasetMotoman';
+% dataset_fcn = 'loadDatasetICub';
+% config_fcn = 'optimizationConfig';
+% whitelist_fcn = 'loadMotomanWL';
+% whitelist_fcn = 'loadICUBWL';
+% bounds_fcn='loadMotomanBounds';
 dataset_params = {[0,0,1,1]};
-dataset_params = {100, 'selfTouchConfigs_ICRA2019.log'};
-folder = 'bla2';
-saveInfo = true;
+dataset_params = {'rightArm_torso'};
 folder = 'bla3';
 saveInfo = true;
 rob = robot(robot_fcn);
 [options, chains, optim, pert] = loadConfig(config_fcn);
 
-%loadDHfromMat(rob, 'bla3', 'type','min')
+loadDHfromMat(rob, 'bla3', 'type','min')
 %loadDHfromTxt(rob,'bla3', 'DH-rep1-pert1');
 [start_dh, lb_dh, ub_dh] = rob.prepareDH(pert, optim);
 
