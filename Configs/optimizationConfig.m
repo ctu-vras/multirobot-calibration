@@ -20,6 +20,14 @@ function [options, chains, optim, pert]=optimizationConfig
     chains.head=0;
     chains.leftEye=0;
     chains.rightEye=0;
+    chains.leftLeg=0;
+    chains.rightLeg=0;
+    chains.leftIndex=0;
+    chains.rightIndex=0;
+    chains.leftThumb=0;
+    chains.rightThumb=0;
+    chains.leftMiddle=0;
+    chains.rightMiddle=0;
     optim.chains=chains;
     
     %% Calibration principle
@@ -28,12 +36,12 @@ function [options, chains, optim, pert]=optimizationConfig
     optim.type.planes=0;%40000;
     optim.type.external=0;%40000;
     optim.onlyOffsets=0;
-    optim.jointTypes.joint=0;
+    optim.jointTypes.joint=1;
     optim.jointTypes.eye=0;
     optim.jointTypes.torso=0;
     optim.jointTypes.patch=0;
     optim.jointTypes.triangle=0;
-    optim.jointTypes.mount=1;
+    optim.jointTypes.mount=0;
     optim.jointTypes.finger=0;
     optim.bounds=0;
     optim.repetitions=1;
@@ -43,6 +51,7 @@ function [options, chains, optim, pert]=optimizationConfig
     optim.pert_levels = 1+sum(optim.pert);
     optim.splitPoint=0.7;
     optim.refPoints=1;
+    optim.useNorm=1;
     
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1];

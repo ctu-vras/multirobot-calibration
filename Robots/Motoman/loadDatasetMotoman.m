@@ -1,7 +1,14 @@
 function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
-    if(nargin == 3)
+    
+%     p=inputParser;
+%     addRequired(p,'rob');
+%     addRequired(p,'optim');
+%     addParameter(p,'leica',{''});
+%     parse(p,rob,optim,varargin{:});
+    
+    if(nargin > 3)
         used_datasets = varargin{1}{1};
     else
         used_datasets = [1,1,1,1];
@@ -31,6 +38,16 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
         dataset2.refPoints = [];
         dataset2.cameras = [];
         dataset2.rtMat = [];
+        
+        dataset3.rtMat = [];
+        dataset3.refPoints = [];
+        dataset3.extCoords = [];
+        dataset3.joints = [];
+        dataset3.frame = {};
+        dataset3.pose = [];
+        dataset3.point = [];
+        dataset3.cameras = [];
+        
         if(used_datasets(k))      
             for i=indexes{k}
                 f = strsplit(source_files{i}, '.');
@@ -62,14 +79,14 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 preMatrixRight = zeros(4,4,length(unique_pose));
                 if (optim.chains.leftArm == 0)
                     for j = 1:length(index_pose)
-                        dh=rob.structure.DH.leftArm;
+                        dh=rob.structure.DH.leftArm(1:8,:);
                         dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).leftArm';
                         preMatrixLeft(:,:,j) = dhpars2tfmat(dh);
                     end
                 end
                 if (optim.chains.rightArm == 0)
                     for j = 1:length(index_pose)
-                        dh=rob.structure.DH.rightArm;
+                        dh=rob.structure.DH.rightArm(1:8,:);
                         dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).rightArm';
                         preMatrixRight(:,:,j) = dhpars2tfmat(dh);
                     end
@@ -99,6 +116,26 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 dataset2.cameras = [dataset2.cameras;cams];
                 dataset2.refPoints = [dataset2.refPoints;refPoints];
                 
+                 [~, index_pose, ~] = unique(data2(:,1));
+                data2 = data2(index_pose,:);
+                
+                leicaData = data2(~isnan(data2(:,end)), :);
+                dataset3.pose = [dataset3.pose; leicaData(:,1)];
+                C = cell(size(leicaData,1),1);
+                C(:) = {'LR1'};
+                dataset3.frame = [dataset3.frame;C];
+                dataset3.joints = [dataset3.joints; ...
+                    struct('rightArm',num2cell([leicaData(:, [7:13]),zeros(size(leicaData,1),1)],2),...
+                'leftArm',num2cell([leicaData(:, [7,14:19]),zeros(size(leicaData,1),1)],2), ...,
+                'leftEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2), ...
+                'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2))];
+                dataset3.extCoords = [dataset3.extCoords; leicaData(:,20:22)];
+                dataset3.point = [dataset3.point; zeros(size(leicaData,1),6)];
+                dataset3.refPoints = [dataset3.refPoints; leicaData(:,20:22)];
+                
+                
+                
+                
             end  
             [~, index_pose, ~] = unique(dataset2.pose);
             C = cell(size(index_pose, 1) ,1);
@@ -116,10 +153,17 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
             index = index + 1;
             dataset.id = index;
             dataset2.id = index;
+            dataset3.id = index;
             datasets{index} = dataset; 
+            
             datasets{index+dataset_count} = dataset2;
+            datasets{index+dataset_count*2} = dataset3;
         end
+     
+        
     end
-    indexes = {index, 1:index-1 ,1:index, index+1:dataset_count*2};
+    
+    
+    indexes = {index, 1:index-1 ,dataset_count*2+1:length(datasets), index+1:dataset_count*2};
 end
 
