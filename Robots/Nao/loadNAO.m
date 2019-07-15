@@ -79,7 +79,7 @@ function [name, structure, structure2]=loadNAO()
          0, 0, -pi/2, 0;
          0,0,0,0];
     structure2.skinDH.torsoSkin=zeros(3+size(torso_left,2)+size(torso_right,2),4);
-    structure2.skinDH.leftArmSkin=zeros(size(hands_upper,2)+size(hands_lower,2)+3,4);
+    structure2.skinDH.leftArmSkin=[0,0,0,0;zeros(size(hands_upper,2)+size(hands_lower,2)+2,4)];
     structure2.skinDH.rightArmSkin=zeros(size(hands_upper,2)+size(hands_lower,2)+3,4);
     structure2.skinDH.headSkin=zeros(size(head_left,2)+size(head_right,2)+3,4);
     structure2.H0 = [1 0 0 0;

@@ -7,16 +7,10 @@ function [dist] = getDistFromExt(dh_pars, robot, datasets, optim)
         index = index + 1;
         dataset = dataset{1};
         frames = dataset.frame;
-        frames2 = dataset.frame2;
         empty = isempty(dataset.rtMat);
         joints = dataset.joints;
         ext=dataset.extCoords;
         
-        
-        frames(any(isnan(ext), 2),:)=[];
-        frames2(any(isnan(ext), 2),:)=[];
-        joints(any(isnan(ext), 2),:)=[];
-        ext(any(isnan(ext), 2),:)=[];
         
         if optim.useNorm
             distances = zeros(1, size(joints, 1));
