@@ -1,0 +1,28 @@
+Dataset Structure
+-----------------
+Pose ID: monotonic integer
+Face ID: 1 to 20
+Arm number: 1 or 2
+Camera number: 1 or 2
+Position of the marker center in the camera: u [px]
+Position of the marker center in the camera: v [px]
+rotation of the external axis                 (E [rad])
+rotation of the first joint of the right arm  (S [rad])
+rotation of the second joint of the right arm (L [rad])
+rotation of the third joint of the right arm  (U [rad])
+rotation of the fourth joint of the right arm (R [rad])
+rotation of the fifth joint of the right arm  (B [rad])
+rotation of the sixth joint of the right arm  (T [rad])
+rotation of the first joint of the left arm   (S [rad])
+rotation of the second joint of the left arm  (L [rad])
+rotation of the third joint of the left arm   (U [rad])
+rotation of the fourth joint of the left arm  (R [rad])
+rotation of the fifth joint of the left arm   (B [rad])
+rotation of the sixth joint of the left arm   (T [rad])
+position of Leica reflector: X [m]
+position of Leica reflector: Y [m]
+position of Leica reflector: Z [m]
+uncertainty of Leica reflector position: [m]
+uncertainty of Leica reflector position: X [m]
+uncertainty of Leica reflector position: Y [m]
+uncertainty of Leica reflector position: Z [m]

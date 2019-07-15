@@ -34,7 +34,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
         if(used_datasets(k))      
             for i=indexes{k}
                 f = strsplit(source_files{i}, '.');
-                path = sprintf('dataset/leica_dataset/%s_dataset.mat', f{1});
+                path = sprintf('leica_dataset/%s_dataset.mat', f{1});
                 data2 = load(path);
                 data3 = data2.dataset;
                 [~, first_unique_index, first_indexInUnique] = unique(data3(:,[1,2,3]),'rows', 'first');
