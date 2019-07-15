@@ -1,13 +1,7 @@
 function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
-    
-%     p=inputParser;
-%     addRequired(p,'rob');
-%     addRequired(p,'optim');
-%     addParameter(p,'leica',{''});
-%     parse(p,rob,optim,varargin{:});
-    
+
     if(nargin > 3)
         used_datasets = varargin{1}{1};
     else
@@ -23,8 +17,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
         'leica_self_upper1_4x4.csv', 'leica_self_upper2_4x4.csv', ...
         'leica_self_lower1_4x4.csv',  'leica_self_lower2_4x4.csv', ...
         'no_leica_self_upper1_4x4.csv', 'no_leica_self_upper2_4x4.csv', ...
-        'no_leica_self_lower1_4x4.csv', 'no_leica_self_lower2_4x4.csv', ...     
-        'leica_right_hand_6x6x6.csv', 'leica_left_hand_6x6x6.csv'};
+        'no_leica_self_lower1_4x4.csv', 'no_leica_self_lower2_4x4.csv'};
     dataset_count = sum(used_datasets);
     datasets = cell(dataset_count*2,1);
     indexes = {1:4, [5:6,9:10], [7:8, 11:12], 13:13};
@@ -131,11 +124,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2))];
                 dataset3.extCoords = [dataset3.extCoords; leicaData(:,20:22)];
                 dataset3.point = [dataset3.point; zeros(size(leicaData,1),6)];
-                dataset3.refPoints = [dataset3.refPoints; leicaData(:,20:22)];
-                
-                
-                
-                
+                dataset3.refPoints = [dataset3.refPoints; leicaData(:,20:22)];            
             end  
             [~, index_pose, ~] = unique(dataset2.pose);
             C = cell(size(index_pose, 1) ,1);
@@ -158,10 +147,58 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
             
             datasets{index+dataset_count} = dataset2;
             datasets{index+dataset_count*2} = dataset3;
-        end
-     
-        
+        end  
     end
+    
+    
+    dataset3.rtMat = [];
+    dataset3.cameras = [];
+    
+    data2 = load('leica_dataset/leica_right_hand_6x6x6_dataset.mat');
+    data2 = data2.dataset;
+    
+    [~, index_pose, ~] = unique(data2(:,1));
+    data2 = data2(index_pose,:);
+
+    leicaData = data2(~isnan(data2(:,end)), :);
+    dataset3.pose = leicaData(:,1);
+    C = cell(size(leicaData,1),1);
+    C(:) = {'LR1'};
+    dataset3.frame = C;
+    dataset3.joints = struct('rightArm',num2cell([leicaData(:, [7:13]),zeros(size(leicaData,1),1)],2),...
+    'leftArm',num2cell([leicaData(:, [7,14:19]),zeros(size(leicaData,1),1)],2), ...,
+    'leftEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2), ...
+    'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2));
+
+    dataset3.extCoords = leicaData(:,20:22);
+    dataset3.point = zeros(size(leicaData,1),6);
+    dataset3.refPoints = leicaData(:,20:22);
+    datasets{end+1} = dataset3;
+    
+    
+    dataset3.rtMat = [];
+    dataset3.cameras = [];
+    
+    data2 = load('leica_dataset/leica_left_hand_6x6x6_dataset.mat');
+    data2 = data2.dataset;
+    
+    [~, index_pose, ~] = unique(data2(:,1));
+    data2 = data2(index_pose,:);
+
+    leicaData = data2(~isnan(data2(:,end)), :);
+    dataset3.pose = leicaData(:,1);
+    C = cell(size(leicaData,1),1);
+    C(:) = {'LR2'};
+    dataset3.frame = C;
+    dataset3.joints = struct('rightArm',num2cell([leicaData(:, [7:13]),zeros(size(leicaData,1),1)],2),...
+    'leftArm',num2cell([leicaData(:, [7,14:19]),zeros(size(leicaData,1),1)],2), ...,
+    'leftEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2), ...
+    'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2));
+
+    dataset3.extCoords = leicaData(:,20:22);
+    dataset3.point = zeros(size(leicaData,1),6);
+    dataset3.refPoints = leicaData(:,20:22);
+    datasets{end+1} = dataset3;
     
     
     indexes = {index, 1:index-1 ,dataset_count*2+1:length(datasets), index+1:dataset_count*2};

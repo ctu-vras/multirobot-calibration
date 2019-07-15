@@ -105,7 +105,8 @@ function [ name, structure, structure2 ] = loadMotoman()
                              1, 1, 1, 1;
                              1, 1, 1, 1;
                              1, 0, 1, 0;
-                             0, 1, 0, 1];
+                             0, 1, 0, 1;
+                             1, 1, 0, 1];
        
     structure2.WL.rightArm = [0, 0, 0, 0;
                               1, 0, 1, 0;
@@ -114,7 +115,8 @@ function [ name, structure, structure2 ] = loadMotoman()
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 0, 1, 0;
-                              0, 1, 0, 1];
+                              0, 1, 0, 1;
+                              1, 1, 0, 1];
        
     structure2.WL.leftEye = [1, 1, 1, 1;
                              0, 1, 0, 1];
