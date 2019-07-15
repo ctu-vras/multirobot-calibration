@@ -1,4 +1,4 @@
-function [ datasets, indexes ]= loadDatasetNao(robot,optim, datasetsNames)
+function [ datasets, indexes]= loadDatasetNao(robot,optim, datasetsNames)
     DH=robot.structure.DH;
     DH.torso=[0,0,0,0];
     fnames=fieldnames(robot.structure.skinDH);
@@ -37,9 +37,9 @@ function [ datasets, indexes ]= loadDatasetNao(robot,optim, datasetsNames)
         dataset.newTaxelsNA=[];
         dataset.newTaxels=[];
         dataset.name=strcat(chain1,'_',chain2);
-        firstLocal = importdata(strcat('Dataset/',chain1,'.txt'),' ',4);
+        firstLocal = importdata(strcat('Dataset/Points/',chain1,'.txt'),' ',4);
         chain1Original=firstLocal.data;
-        firstLocal = importdata(strcat('Dataset/',chain2,'.txt'),' ',4);
+        firstLocal = importdata(strcat('Dataset/Points/',chain2,'.txt'),' ',4);
         chain2Original=firstLocal.data;
         poseID=1;
         for triangleId=0:31
@@ -89,7 +89,9 @@ function [ datasets, indexes ]= loadDatasetNao(robot,optim, datasetsNames)
                             dh(:,4)=dh(:,4)+angles.(chain2)';
                             matrices.(chain2)=dhpars2tfmat(dh);
                             
-                            datasetLocal.rtMat=[datasetLocal.rtMat;matrices];
+                            matrices.torso=eye(4);
+                            
+                            %datasetLocal.rtMat=[datasetLocal.rtMat;matrices];
                             datasetLocal.cops=[datasetLocal.cops;taxelStruct.(strcat('s',num2str(index))).cops{i}];
                             datasetLocal.cop=[datasetLocal.cop;taxelStruct.(strcat('s',num2str(index))).cop{i}];
                             datasetLocal.newTaxelsNA=[datasetLocal.newTaxelsNA;taxelStruct.(strcat('s',num2str(index))).newTaxelsNA{i}];

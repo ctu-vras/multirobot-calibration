@@ -23,8 +23,8 @@ function showFig(robot,idx,dataset)
     scatter3(dataset.newTaxels{idx,2}(:,1),dataset.newTaxels{idx,2}(:,2),dataset.newTaxels{idx,2}(:,3),'filled','blue')
     scatter3(dataset.cops{idx,1}(:,1),dataset.cops{idx,1}(:,2),dataset.cops{idx,1}(:,3),'filled','black')
     scatter3(dataset.cops{idx,2}(:,1),dataset.cops{idx,2}(:,2),dataset.cops{idx,2}(:,3),'filled','black')
-    scatter3(dataset.cop{idx,1}(:,1),dataset.cop{idx,1}(:,2),dataset.cop{idx,1}(:,3),150,'blue','filled')
-    scatter3(dataset.cop{idx,2}(:,1),dataset.cop{idx,2}(:,2),dataset.cop{idx,2}(:,3),150,'red','filled')
+    scatter3(dataset.cop{idx,1}(:,1),dataset.cop{idx,1}(:,2),dataset.cop{idx,1}(:,3),150,'red','filled')
+    scatter3(dataset.cop{idx,2}(:,1),dataset.cop{idx,2}(:,2),dataset.cop{idx,2}(:,3),150,'blue','filled')
     %Right names from parts names
     C=strsplit(dataset.name,'_');
     chain1=C{1};

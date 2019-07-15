@@ -16,13 +16,13 @@ tic
 %     999,999;
 %     -3.627,-5.66];
 
-firstLocal = importdata(strcat('Dataset/',chain1,'.txt'),' ',4);
+firstLocal = importdata(strcat('Dataset/Points/',chain1,'.txt'),' ',4);
 chain1Original=firstLocal.data;
-firstLocal = importdata(strcat('Dataset/',chain2,'.txt'),' ',4);
+firstLocal = importdata(strcat('Dataset/Points/',chain2,'.txt'),' ',4);
 chain2Original=firstLocal.data;
 
 
-datasetLocal=load(strcat('Dataset/',datasetName,'.mat'));
+datasetLocal=load(strcat('Dataset/Datasets/',datasetName,'.mat'));
 name1=strsplit(chain1,'Arm');
 name1=name1{1};
 name2=strsplit(chain2,'Arm');
@@ -74,6 +74,7 @@ for i=1:size(datasetLocal.(chain1),1)
     angles.rightArmSkin=[0,0,0];
     angles.leftArmSkin=[0,0,0];
     angles.torsoSkin=[0,0,0];
+    angles.headSkin=[0,0,0];
     angles.torso=[0];
     dataset.angles=[dataset.angles;angles];
     
@@ -130,6 +131,7 @@ for i=1:384
     taxelStruct.(strcat('s',num2str(i))).secondTaxel=[];
     taxelStruct.(strcat('s',num2str(i))).secondTaxelId=[];
     taxelStruct.(strcat('s',num2str(i))).angles=[];
+    taxelStruct.(strcat('s',num2str(i))).distances=[];
     taxelStruct.(strcat('s',num2str(i))).mins=[];
     taxelStruct.(strcat('s',num2str(i))).difs=[];
     taxelStruct.(strcat('s',num2str(i))).cops={};
@@ -176,6 +178,7 @@ for i=1:size(dataset.(chain1).cop,2)
        taxelStruct.(strcat('s',num2str(taxelIdx))).newTaxels{end+1}={dataset.(chain1).newTaxels{i},dataset.(chain2).newTaxels{i}};
        taxelStruct.(strcat('s',num2str(taxelIdx))).newTaxelsNA{end+1}={dataset.(chain1).newTaxelsNA{i},dataset.(chain2).newTaxelsNA{i}};
        taxelStruct.(strcat('s',num2str(taxelIdx))).cop{end+1}={dataset.(chain1).cop{i},dataset.(chain2).cop{i}};
+       taxelStruct.(strcat('s',num2str(taxelIdx))).distances=[taxelStruct.(strcat('s',num2str(taxelIdx))).distances;minDist];
    end
    
 end

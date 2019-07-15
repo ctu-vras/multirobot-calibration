@@ -5,6 +5,7 @@ function [rms_errors] = rmsErrors(start_dh, robot, datasets, dataset_indexes, op
     rms_plane_distances = nan(1,optim.pert_levels*optim.repetitions);
     rms_dist_from_ext = nan(1,optim.pert_levels*optim.repetitions);
     rms_marker_dist = nan(1,optim.pert_levels*optim.repetitions);
+    optim.useNorm=1;
     fnames = fieldnames(start_dh);
     for pert_level = 1:optim.pert_levels
         for rep = 1:optim.repetitions
@@ -17,6 +18,7 @@ function [rms_errors] = rmsErrors(start_dh, robot, datasets, dataset_indexes, op
                 distances = getDist(dh_pars, robot, dataset.dist, optim);
                 refDist = dataset.dist{end}.refDist;
                 rms_distances(rep+(pert_level-1)*optim.repetitions) = sqrt(sum((distances-refDist).^2)/size(distances, 2));
+
             end
             if(optim.type.planes)
                 plane_distances = getDistFromPlane(dh_pars, robot, dataset.plane, optim);

@@ -11,7 +11,11 @@ function [ dist ] = getDist(dh_pars, robot, datasets, optim)
         frames2 = dataset.frame2;
         empty = isempty(dataset.rtMat);
         joints = dataset.joints;
-        distances = zeros(1, size(joints, 1));
+        if optim.useNorm
+            distances = zeros(1, size(joints, 1));
+        else
+            distances = zeros(3, size(joints, 1));
+        end
         points = dataset.point;
         refPoints = dataset.refPoints;
         
@@ -29,9 +33,13 @@ function [ dist ] = getDist(dh_pars, robot, datasets, optim)
             elseif optim.refPoints
                arm2 = refPoints(i,:)';
             end
-            distances(i) = sqrt(sum((arm1(1:3)-arm2(1:3)).^2,1));
+            if optim.useNorm
+                distances(i) = sqrt(sum((arm1(1:3)-arm2(1:3)).^2,1));
+            else
+                distances(:,i) = arm1(1:3)-arm2(1:3);
+            end
         end
-    end
     dist = [dist, distances];
+    end
 end
 
