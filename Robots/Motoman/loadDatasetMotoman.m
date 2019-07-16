@@ -1,13 +1,16 @@
 function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
-
-    if(nargin > 3)
-        used_datasets = varargin{1}{1};
+    varargin = varargin{1};
+    if(nargin >= 3)
+        used_datasets = varargin{1};
     else
         used_datasets = [1,1,1,1];
     end
-    
+    leica = '';
+    if(length(varargin) == 2)
+        leica = varargin{2};
+    end
     source_files = {'leica_wall_table1_5x5.csv', 'leica_wall_table2_5x5.csv', ...
         'no_leica_wall_table1_5x5.csv', 'no_leica_wall_table2_5x5.csv', ...
         'leica_higher_table1_5x5.csv',  'leica_higher_table2_5x5.csv', ...
@@ -151,6 +154,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
     end
     
     
+    if(strcmp(leica, 'right') && optim.chains.rightArm)
     dataset3.rtMat = [];
     dataset3.cameras = [];
     
@@ -174,11 +178,13 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
     dataset3.point = zeros(size(leicaData,1),6);
     dataset3.refPoints = leicaData(:,20:22);
     datasets{end+1} = dataset3;
-    
+    end
     
     dataset3.rtMat = [];
     dataset3.cameras = [];
     
+    
+    if(strcmp(leica, 'left') && optim.chains.leftArm)
     data2 = load('leica_dataset/leica_left_hand_6x6x6_dataset.mat');
     data2 = data2.dataset;
     
@@ -199,8 +205,13 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
     dataset3.point = zeros(size(leicaData,1),6);
     dataset3.refPoints = leicaData(:,20:22);
     datasets{end+1} = dataset3;
+    end
     
-    
-    indexes = {index, 1:index-1 ,dataset_count*2+1:length(datasets), index+1:dataset_count*2};
+    if(index == 0)
+        idx = [];
+    else
+        idx = index;
+    end
+    indexes = {idx, 1:index-1 ,dataset_count*2+1:length(datasets), index+1:dataset_count*2};
 end
 
