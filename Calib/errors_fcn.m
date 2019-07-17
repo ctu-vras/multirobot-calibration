@@ -17,11 +17,11 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
         count = new_count;
     end
     if(optim.type.selftouch)
-        distances = getDist(dh_pars, robot, dataset.dist, optim);
+        distances = getDist(dh_pars, robot, dataset.markers, optim);
         refDist = dataset.dist{end}.refDist;
     end
     if(optim.type.planes)
-        plane_distances = getDistFromPlane(dh_pars, robot, dataset.plane, optim);
+        plane_distances = getPlaneDist(dh_pars, robot, dataset.plane, optim);
     end
     if(optim.type.external)
         dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim);

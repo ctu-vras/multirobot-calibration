@@ -12,7 +12,7 @@ function [RTarm] = getTF(dh_pars,obj,rtMat,empty, joints, H0)
             while isobject(obj) && strcmp(obj.group,gr)
                obj=obj.parent; 
             end
-            if(strcmp(obj.type, types.base))
+            if(isobject(obj) && strcmp(obj.type, types.base))
                 RTarm = H0*RT*RTarm;
                 break;
             end

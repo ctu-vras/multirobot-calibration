@@ -22,8 +22,8 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
         'no_leica_self_upper1_4x4.csv', 'no_leica_self_upper2_4x4.csv', ...
         'no_leica_self_lower1_4x4.csv', 'no_leica_self_lower2_4x4.csv'};
     dataset_count = sum(used_datasets);
-    datasets = cell(dataset_count*2,1);
-    indexes = {1:4, [5:6,9:10], [7:8, 11:12], 13:13};
+    datasets = cell(1,dataset_count*2); %datasets cell array MUST BE ROW VECTOR
+    indexes = {1:4, [5:6,9:10], [7:8, 11:12], 13:20};
     index = 0; 
     for k = 1:4
         dataset2.point = [];
