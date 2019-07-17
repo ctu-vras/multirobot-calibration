@@ -1,5 +1,6 @@
 function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder)
-    assert(~any(isnan(robot_fcn)) || ~any(isnan(config_fcn)) || ~any(isnan(dataset_fcn)),'Empty name of robot, config or dataset function')
+
+    assert(~isempty(robot_fcn) && ~isempty(config_fcn) && ~isempty(dataset_fcn),'Empty name of robot, config or dataset function')
     rob = robot(robot_fcn);
     
     [options, chains, optim, pert] = loadConfig(config_fcn);
@@ -8,18 +9,18 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
     loadDHfunc=str2func(loadDHfunc);
     loadDHfunc(rob, loadDHfolder, loadDHargs{:});
     
-    if ~isnan(bounds_fcn)
+    if ~isempty(bounds_fcn)
         [start_dh, lb_dh, ub_dh] = rob.prepareDH(pert, optim,bounds_fcn);
     else
         [start_dh, lb_dh, ub_dh] = rob.prepareDH(pert, optim);
     end
     
-    if ~isnan(whitelist_fcn)
+    if ~isempty(whitelist_fcn)
         [start_pars, min_pars, max_pars, whitelist, start_dh] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim, whitelist_fcn);
     else
         [start_pars, min_pars, max_pars, whitelist, start_dh] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim);
     end
-    if iscell(dataset_params)
+    if ~isempty(dataset_fcn) && iscell(dataset_params)
         [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, dataset_fcn,dataset_params);
     else
         [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, dataset_fcn);
