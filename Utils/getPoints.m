@@ -2,13 +2,14 @@ function [ arm1, arm2 ] = getPoints(dh_pars, dataset, H0, compute_arm2)
 %GETPOINTS Summary of this function goes here
 %   Detailed explanation goes here
     frames = dataset.frame;
-    frames2 = dataset.frame2;
+    
     empty = isempty(dataset.rtMat);
     joints = dataset.joints;
     points = dataset.point;
     arm1 = zeros(4, size(joints, 1));
     if(compute_arm2) 
         arm2 = zeros(4, size(joints, 1)); 
+        frames2 = dataset.frame2;
     else
         arm2 = [];
     end
