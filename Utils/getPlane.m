@@ -6,7 +6,5 @@ function [ plane ] = getPlane( points )
     centered_points = points - t;
     [U,~,~] = svd(centered_points);
     plane = [U(:,3).' -t' * U(:,3)];
-    
-  
 end
 
