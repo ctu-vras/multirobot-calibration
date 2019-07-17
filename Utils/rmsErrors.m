@@ -26,6 +26,7 @@ function [rms_errors] = rmsErrors(start_dh, robot, datasets, dataset_indexes, op
             end
             if(optim.type.external)
                 dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim);
+                hist(dist_from_ext)
                 rms_dist_from_ext(rep+(pert_level-1)*optim.repetitions) = sqrt(sum(dist_from_ext.^2)/size(dist_from_ext, 2));
             end
             if(optim.type.eyes)

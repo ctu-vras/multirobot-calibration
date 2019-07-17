@@ -1,0 +1,4 @@
+robot_fcn;config_fcn;dataset_fcn;whitelist_fcn;bounds_fcn;dataset_params;folder;saveInfo;loadDH_Folder;loadDH_Args;;;;;
+loadNAO;optimizationConfig;loadDatasetNao;loadNaoWL;;rightArm_torso!leftArm_torso;pokus;1;pokus;DH-rep1-pert1;dfg;sdf;654dg;dsg;
+loadNAO;optimizationConfig;loadDatasetNao;loadNaoWL;ll;rightArm_torso!leftArm_torso;pokus;1;pokus;DH-rep1-pert1;dfg;sdf;654dg;55;sdf
+;;;;;;;fdsdf;;;;;;;

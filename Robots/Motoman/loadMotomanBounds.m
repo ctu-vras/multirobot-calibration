@@ -8,16 +8,18 @@ function bounds = loadMotomanBounds()
                              inf, nan, nan, nan;
                              nan, nan, nan, nan;
                              nan, nan, nan, nan;
+                             nan, nan, nan, nan;
                              nan, nan, nan, nan];
        
-    bounds.rightArm = [nan, nan, nan, nan;
-                              nan, nan, nan, nan;
-                              nan, nan, nan, nan;
-                              nan, nan, nan, nan;
-                              nan, nan, nan, nan;
-                              nan, nan, nan, nan;
-                              nan, nan, nan, nan;
-                              nan, nan, nan, nan];
+    bounds.rightArm = [inf, inf, 0.05, 0.05;
+                              inf, inf, 0.05, 0.05;
+                              inf, inf, 0.05, 0.05;
+                              inf, inf, 0.05, 0.05;
+                              inf, inf, 0.05, 0.05;
+                              inf, inf, 0.05, 0.05;
+                              0.005, inf, 0.05, 0.05;
+                              inf, inf, 0.05, 0.05;
+                              inf, inf, 0.05, 0.05];
        
     bounds.leftEye = [nan, nan, nan, nan;
                              nan, nan, nan, nan];

@@ -126,6 +126,7 @@ function showModel(r, angles, varargin)
             robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
         end
         robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
+        structure.(name)(8,:)=[];
         robot.(name).DH = structure.(name);
         robot.(name).Th = [angles{i}];   % TODO: vyresit nulu navic
         robot.(name).LinkColor = LINK_COLOR;
@@ -147,13 +148,13 @@ function showModel(r, angles, varargin)
             name=fnames{i};
             jointNames = {};
             joints=findJointByGroup(r,name);
-            index = 1;
+%             index = 1;
             for joint=1:size(joints,2)
                 j=joints(joint);
                 if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)
                     jointNames{end+1} = j{1}.name;
-                    structure.(name)(index,:)=j{1}.DH;
-                    index = index + 1;
+%                     structure.(name)(index,:)=j{1}.DH;
+%                     index = index + 1;
                 end
             end 
             robot.(name).jointNames = jointNames;
@@ -178,6 +179,7 @@ function showModel(r, angles, varargin)
                 robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
             end
             robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
+            structure.(name)(8,:)=[];
             robot.(name).DH = structure.(name);
             robot.(name).Th = [angles{i}];   % TODO: vyresit nulu navic
             robot.(name).LinkColor = LINK_COLOR_2;
