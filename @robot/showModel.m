@@ -139,7 +139,7 @@ function showModel(r, angles, varargin)
         if size(p.Results.dualDH,1)==0
             structure=r.structure.defaultDH;
         else
-            for name=1:size(fnames,1)
+            for name=1:size(fnames,2)
                structure.(fnames{name})=p.Results.dualDH{name}; 
             end
         end

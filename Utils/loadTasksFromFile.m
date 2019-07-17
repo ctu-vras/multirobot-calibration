@@ -42,6 +42,9 @@ for lineId=1:size(file,1)
             loadDHfunc='loadDHfromTxt';
             args=spl;
         end
+    else
+        loadDHfunc='';
+        args='';
     end
     
     varArgsRaw=line(11:end);

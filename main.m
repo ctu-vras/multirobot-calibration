@@ -5,9 +5,10 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
     
     [options, chains, optim, pert] = loadConfig(config_fcn);
 
-
-    loadDHfunc=str2func(loadDHfunc);
-    loadDHfunc(rob, loadDHfolder, loadDHargs{:});
+    if ~isempty(loadDHfolder)
+        loadDHfunc=str2func(loadDHfunc);
+        loadDHfunc(rob, loadDHfolder, loadDHargs{:});
+    end
     
     if ~isempty(bounds_fcn)
         [start_dh, lb_dh, ub_dh] = rob.prepareDH(pert, optim,bounds_fcn);
