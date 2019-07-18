@@ -30,14 +30,12 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
         dataset2.pose = [];
         dataset2.frame = {};
         dataset2.joints = [];
-        dataset2.extCoords = [];
         dataset2.refPoints = [];
         dataset2.cameras = [];
         dataset2.rtMat = [];
         
         dataset3.rtMat = [];
         dataset3.refPoints = [];
-        dataset3.extCoords = [];
         dataset3.joints = [];
         dataset3.frame = {};
         dataset3.pose = [];
@@ -61,7 +59,6 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 'leftArm',num2cell([data2(:, [7,14:19]),zeros(size(data2,1),1)],2), ...,
                 'leftEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2), ...
                 'rightEye', num2cell([data2(:, 7),zeros(size(data2,1),1)],2))];
-                dataset2.extCoords = [dataset2.extCoords; data2(:,20:22)];
                 dataset2.point = [dataset2.point; zeros(size(data2,1),6)];
                 cams = zeros(size(data2,1),2);
                 refPoints = nan(size(data2,1),4);
@@ -125,7 +122,6 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 'leftArm',num2cell([leicaData(:, [7,14:19]),zeros(size(leicaData,1),1)],2), ...,
                 'leftEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2), ...
                 'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2))];
-                dataset3.extCoords = [dataset3.extCoords; leicaData(:,20:22)];
                 dataset3.point = [dataset3.point; zeros(size(leicaData,1),6)];
                 dataset3.refPoints = [dataset3.refPoints; leicaData(:,20:22)];            
             end  
@@ -139,7 +135,6 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
             dataset.pose = dataset2.pose(index_pose);
             dataset.refPoints = [];
             dataset.point = zeros(size(index_pose, 1),6);
-            dataset.extCoords = dataset2.extCoords(index_pose, :);
             dataset.rtMat = dataset2.rtMat(index_pose);         
             dataset.refDist = 0.116; 
             index = index + 1;
@@ -174,7 +169,6 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
     'leftEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2), ...
     'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2));
 
-    dataset3.extCoords = leicaData(:,20:22);
     dataset3.point = zeros(size(leicaData,1),6);
     dataset3.refPoints = leicaData(:,20:22);
     datasets{end+1} = dataset3;
@@ -201,7 +195,6 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
     'leftEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2), ...
     'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2));
 
-    dataset3.extCoords = leicaData(:,20:22);
     dataset3.point = zeros(size(leicaData,1),6);
     dataset3.refPoints = leicaData(:,20:22);
     datasets{end+1} = dataset3;

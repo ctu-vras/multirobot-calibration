@@ -9,10 +9,8 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
     nmb_of_files = length(source_files);
     datasets = cell(1,nmb_of_files*2);  %datasets cell array MUST BE ROW VECTOR
     DEG2RAD = pi/180;
-    
+    fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'};
     for k = 1:nmb_of_files
-        dataset.extCoords = [];
-        fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'};
         for finger=fingers
            matrices.(finger{1})=dhpars2tfmat(robot.structure.DH.(finger{1})); 
         end
@@ -68,7 +66,6 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
         dataset2.frame =  reshape([dataset.frame'; dataset.frame2'],[],1);
         dataset2.point =  reshape([dataset.point'; dataset.point'],[],6);
         dataset2.joints = reshape([dataset.joints'; dataset.joints'],[],1);
-        dataset2.extCoords = reshape([dataset.extCoords'; dataset.extCoords'],[],1);
         dataset2.rtMat = reshape([dataset.rtMat'; dataset.rtMat'],[],1);
         dataset2.pose = reshape([dataset.pose'; dataset.pose'],[],1);
         dataset2.cameras = ones(2*size(data2,1),2);

@@ -27,7 +27,7 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
         dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim);
     end
     if(optim.type.eyes)
-        proj_dist = getProjectionDist(dh_pars, robot, dataset.markers, optim);
+        proj_dist = getProjectionDist(dh_pars, robot, dataset.proj, optim);
     end
     
     error_vec = [(distances - refDist)*optim.type.selftouch, ...

@@ -1,7 +1,7 @@
 function [ dataset ] = getDatasetPart(dataset, indexes)
 %GETDATASET Summary of this function goes here
 %   Detailed explanation goes here
-    dataset_names = {'dist', 'plane', 'ext', 'markers'};
+    dataset_names = {'dist', 'plane', 'ext', 'proj'};
     for name=dataset_names
         name = name{1};
         for i = 1:length(dataset.(name))
@@ -13,9 +13,6 @@ function [ dataset ] = getDatasetPart(dataset, indexes)
             dataset.(name){i}.joints = dataset.(name){i}.joints(chosen_lines,:);
             if(isfield(dataset.(name){i}, 'frame2') && ~isempty(dataset.(name){i}.frame2))
                 dataset.(name){i}.frame2 = dataset.(name){i}.frame2(chosen_lines,:);
-            end
-            if(isfield(dataset.(name){i}, 'extCoords') && ~isempty(dataset.(name){i}.extCoords))
-                dataset.(name){i}.extCoords = dataset.(name){i}.extCoords(chosen_lines,:);
             end
             if(isfield(dataset.(name){i}, 'refPoints') && ~isempty(dataset.(name){i}.refPoints))
                 dataset.(name){i}.refPoints = dataset.(name){i}.refPoints(chosen_lines,:);
