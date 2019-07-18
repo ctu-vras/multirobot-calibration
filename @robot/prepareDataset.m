@@ -71,7 +71,7 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
     datasetsStruct.dist=datasets(indexes{1});
     datasetsStruct.plane=datasets(indexes{2});
     datasetsStruct.ext=datasets(indexes{3});
-    datasetsStruct.markers=datasets(indexes{4});
+    datasetsStruct.proj=datasets(indexes{4});
     
 end
 

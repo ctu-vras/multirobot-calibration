@@ -1,5 +1,5 @@
-function [ name, structure, structure2 ] = loadMotoman()
-%LOADMOTOMAN Summary of this function goes here
+function [ name, structure, structure2 ] = loadMotomanLeica()
+%LOADMOTOMANLEICA Summary of this function goes here
 %   Detailed explanation goes here
     name='motoman';
     %% Robot structure
@@ -11,7 +11,7 @@ function [ name, structure, structure2 ] = loadMotoman()
         {'R2',types.joint,'U2',5,0,group.leftArm},...
         {'B2',types.joint,'R2',6,0,group.leftArm},...
         {'T2',types.joint,'B2',7,0,group.leftArm},...
-        {'EE2',types.joint,'T2',8,1,group.leftArm},...
+        {'LR2', types.joint,'T2',9,1,group.leftArm},...
         ...
         {'TT1',types.joint,'base',1,0,group.rightArm},...
         {'S1',types.joint,'TT1',2,0,group.rightArm},...
@@ -20,7 +20,7 @@ function [ name, structure, structure2 ] = loadMotoman()
         {'R1',types.joint,'U1',5,0,group.rightArm},...
         {'B1',types.joint,'R1',6,0,group.rightArm},...
         {'T1',types.joint,'B1',7,0,group.rightArm},...
-        {'EE1',types.joint,'T1',8,1,group.rightArm},...
+        {'LR1', types.joint,'T1',9,1,group.rightArm},...
         ...
         {'rightHead',types.joint,'base',1,0,group.rightEye},...
         {'rightEye',types.eye,'rightHead',2,1,group.rightEye},...
@@ -76,7 +76,7 @@ function [ name, structure, structure2 ] = loadMotoman()
            0.000, -0.640,  pi/2, 0.000;
            0.030,  0.000,  pi/2, -pi/2;
            0.000,  0.200, 0.000, 0.000;
-           0.000,  0.354, 0.000, 0.000];
+           0.02,  0.25, 0, pi/2];
        
     structure2.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
@@ -85,7 +85,7 @@ function [ name, structure, structure2 ] = loadMotoman()
            0.000, -0.640,  pi/2, 0.000;
            0.030,  0.000,  pi/2, -pi/2;
            0.000,  0.200, 0.000, 0.000;
-           0.000,  0.354, 0.000, 0.000];
+           0.05,  0.25, 0, 0];
        
     structure2.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
             0.0, -0.445,    0.0,  pi];
@@ -100,8 +100,8 @@ function [ name, structure, structure2 ] = loadMotoman()
                              1, 1, 1, 1;
                              1, 1, 1, 1;
                              1, 1, 1, 1;
-                             1, 0, 1, 0;
-                             0, 1, 0, 1];
+                             0, 0, 1, 0;
+                             1, 1, 0, 1];
        
     structure2.WL.rightArm = [0, 0, 0, 0;
                               1, 0, 1, 0;
@@ -109,8 +109,8 @@ function [ name, structure, structure2 ] = loadMotoman()
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
-                              1, 0, 1, 0;
-                              0, 1, 0, 1];
+                              0, 0, 1, 0;
+                              1, 1, 0, 1];
        
     structure2.WL.leftEye = [1, 1, 1, 1;
                              0, 1, 0, 1];
