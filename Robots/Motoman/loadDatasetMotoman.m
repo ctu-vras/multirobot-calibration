@@ -2,7 +2,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
     varargin = varargin{1};
-    if(nargin >= 3)
+    if(nargin >= 4)
         used_datasets = varargin{1};
     else
         used_datasets = [1,1,1,1];

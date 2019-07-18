@@ -4,7 +4,7 @@ function plotErrorsBoxplots(folders,varargin)
     p=inputParser;
     addRequired(p,'folders');
     addParameter(p,'pert',0);
-    addParameter(p,'symLog',0);
+    addParameter(p,'log',0);
     addParameter(p,'const',1, @(x) ismember(x,[1,1000]));
     addParameter(p,'errorsType','errors');
     addParameter(p,'location','northwest');
@@ -12,7 +12,7 @@ function plotErrorsBoxplots(folders,varargin)
     
     pert=p.Results.pert+1;
     location=p.Results.location;
-    symLog=p.Results.symLog;
+    symLog=p.Results.log;
     errorsType=p.Results.errorsType;
     const=p.Results.const;
     if const==1

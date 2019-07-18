@@ -63,19 +63,19 @@ function [name, structure, structure2]=loadNAO()
     for triangleId=1:size(torso_right,2)
         structure{end+1}={strcat('torsoTriangle',num2str(torso_right(triangleId))),types.triangle,'torsoRightPatch',triangleId+3+size(torso_left,2),1,group.torsoSkin};
     end
-    structure2.DH.leftArm=[0, 0.1*1000, -pi/2, 0;
-               0, 0.098*1000, pi/2, 0;
+    structure2.DH.leftArm=[0, 0.1, -pi/2, 0;
+               0, 0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
-               0, 0.105*1000, -pi/2, 0.0;
+               0, 0.105, -pi/2, 0.0;
                0, 0.0, pi/2, 0;
                0, 0, -pi/2, pi];
-    structure2.DH.rightArm=[0, 0.1*1000, -pi/2, 0; 
-               0, -0.098*1000, pi/2, 0;
+    structure2.DH.rightArm=[0, 0.1, -pi/2, 0; 
+               0, -0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
-               0, 0.105*1000, -pi/2, 0.0;
+               0, 0.105, -pi/2, 0.0;
                0, 0, pi/2, 0;
                0, 0, -pi/2, pi];
-    structure2.DH.head=[0, 0.1265*1000, 0, 0.0;
+    structure2.DH.head=[0, 0.1265, 0, 0.0;
          0, 0, -pi/2, 0;
          0,0,0,0];
     structure2.skinDH.torsoSkin=zeros(3+size(torso_left,2)+size(torso_right,2),4);

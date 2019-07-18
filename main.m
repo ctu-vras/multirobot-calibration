@@ -26,8 +26,9 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
     else
         [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, chains, dataset_fcn);
     end
+    
     %%
-
+    options=weightParameters(whitelist, options, size(start_pars, 1),optim);
     opt_pars = zeros(size(start_pars, 1), optim.repetitions, optim.pert_levels);
     jacobians = cell(1, optim.repetitions, optim.pert_levels);
     fnames = fieldnames(start_dh);
@@ -50,8 +51,6 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
             end
              % objective function setup
              pars=start_pars(:,rep,pert_level)';
-             %options.TypicalX=  ones(20,1);%[0.01,0.01,1,1];
-             %options.TypicalX([2,3,6,7,10,11,14,15,17,20]) = 0.01;
              obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach);
              sprintf('%f percent done', 100*((pert_level-1)*optim.repetitions + rep - 1)/(optim.pert_levels*optim.repetitions))
              % optimization        

@@ -85,13 +85,13 @@ for i=1:size(datasetLocal.(chain1),1)
         joint=chain1Joints(triangleId);
         if ~isempty(joint.parent)
             mat=getTF(DH,joint,[],1,angles, robot.structure.H0);
-            points=mat*[chain1Original((triangleId-1)*12+1:triangleId*12,1:3).*1000,ones(12,1)]';
+            points=mat*[chain1Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
             chain1Points((triangleId-1)*12+1:triangleId*12,1:3)=points(1:3,:)';
         end
         joint=chain2Joints(triangleId);
         if ~isempty(joint.parent)
             mat=getTF(DH,joint,[],1,angles, robot.structure.H0);
-            points=mat*[chain2Original((triangleId-1)*12+1:triangleId*12,1:3).*1000,ones(12,1)]';
+            points=mat*[chain2Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
             chain2Points((triangleId-1)*12+1:triangleId*12,1:3)=points(1:3,:)';
         end
     end
@@ -106,8 +106,8 @@ for i=1:size(datasetLocal.(chain1),1)
     chain2Points(taxelsIds',:)=[];
     dataset.(chain2).newTaxels{end+1}=newTaxels;
     
-    cops1=findCop(dataset.(chain1).newTaxels{end},10);
-    cops2=findCop(dataset.(chain2).newTaxels{end},10);
+    cops1=findCop(dataset.(chain1).newTaxels{end},0.01); %10
+    cops2=findCop(dataset.(chain2).newTaxels{end},0.01); %10
     dataset.(chain1).cops{end+1}=cops1;
     dataset.(chain2).cops{end+1}=cops2;
     [cop1,cop2, difs, actMin]=findClosestCop(cops1,cops2);

@@ -55,6 +55,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     optim.splitPoint=0.7;
     optim.refPoints=0;
     optim.useNorm=1;
+    optim.parametersWeights=[1000,1,1000,1];
     
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1];

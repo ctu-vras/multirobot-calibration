@@ -68,9 +68,9 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, datasetsNames
                             a=taxelStruct.(strcat('s',num2str(index))).secondTaxelId(i);
                             if optim.refPoints && ~all([chains.(chain1),chains.(chain2)])
                                 datasetLocal.refPoints=[datasetLocal.refPoints;taxelStruct.(strcat('s',num2str(index))).secondTaxel(i,:)];
-                                datasetLocal.point=[datasetLocal.point;chain1Original(index,1:3).*1000];
+                                datasetLocal.point=[datasetLocal.point;chain1Original(index,1:3)];%.*1000
                             else
-                                datasetLocal.point=[datasetLocal.point;chain1Original(index,1:3).*1000,chain2Original(a,1:3).*1000];
+                                datasetLocal.point=[datasetLocal.point;chain1Original(index,1:3),chain2Original(a,1:3)];%.*1000,.*1000
                             end
                             datasetLocal.joints=[datasetLocal.joints;angles];
                             datasetLocal.frame{end+1}=strcat(name1,'Triangle',num2str(triangleId));

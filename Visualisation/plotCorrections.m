@@ -2,10 +2,10 @@ function plotCorrections(folder, varargin)
     p=inputParser;
     addRequired(p,'folder');
     addParameter(p,'noiseLevel',0);
-    addParameter(p,'symLog',1);
+    addParameter(p,'log',1);
     parse(p,folder,varargin{:});
     noiseLevel=p.Results.noiseLevel;
-    symLog=p.Results.symLog;
+    symLog=p.Results.log;
 	close all
     corrections=load(['results/',folder,'/corrections.mat']);
     corrections=corrections.corrs_dh;

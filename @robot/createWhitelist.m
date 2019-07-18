@@ -2,7 +2,7 @@ function [ opt_pars, min_pars, max_pars, whitelist, dh_pars] = createWhitelist( 
 %CREATEWHITELIST Summary of this function goes here
 %   Detailed explanation goes here
 
-if(nargin == 6)
+if(nargin == 8)
    func=str2func(funcname);
    whitelist = func(); 
 else
