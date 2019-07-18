@@ -1,4 +1,4 @@
-function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
+function [ datasets, indexes ] = loadDatasetICub(robot,optim, chains, varargin )
 %LOADDATASETICUB Summary of this function goes here
 %   Detailed explanation goes here
     if(length(varargin) == 2)
@@ -37,12 +37,12 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, varargin )
             dhtorso=robot.structure.DH.torso;
             dhtorso(:,4)=dhtorso(:,4)+dataset.joints(i).torso';
             mat.torso = robot.structure.H0 * dhpars2tfmat(dhtorso);
-            if(optim.chains.leftArm == 0)
+            if(chains.leftArm == 0)
                 dhleft=robot.structure.DH.leftArm;
                 dhleft(:,4)=dhleft(:,4)+dataset.joints(i).leftArm';
                 mat.leftArm = dhpars2tfmat(dhleft);
             end
-            if(optim.chains.rightArm == 0)
+            if(chains.rightArm == 0)
                 dhright=robot.structure.DH.rightArm;
                 dhright(:,4)=dhright(:,4)+dataset.joints(i).rightArm';
                 mat.rightArm = dhpars2tfmat(dhright);

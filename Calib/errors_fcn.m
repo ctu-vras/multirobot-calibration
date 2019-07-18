@@ -1,4 +1,4 @@
-function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, dataset, optim)
+function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, dataset, optim, approach)
 %ERRORS_FCN Summary of this function goes here
 %   Detailed explanation goes here
     distances = [];
@@ -16,22 +16,22 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
         dh_pars.(fnames{field})=a';
         count = new_count;
     end
-    if(optim.type.selftouch)
+    if(approach.selftouch)
         distances = getDist(dh_pars, robot, dataset.dist, optim);
         refDist = dataset.dist{end}.refDist;
     end
-    if(optim.type.planes)
+    if(approach.planes)
         plane_distances = getPlaneDist(dh_pars, robot, dataset.plane, optim);
     end
-    if(optim.type.external)
+    if(approach.external)
         dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim);
     end
-    if(optim.type.eyes)
+    if(approach.eyes)
         proj_dist = getProjectionDist(dh_pars, robot, dataset.proj, optim);
     end
     
-    error_vec = [(distances - refDist)*optim.type.selftouch, ...
-        plane_distances*optim.type.planes, dist_from_ext*optim.type.external, ...
-        proj_dist*optim.type.eyes];
+    error_vec = [(distances - refDist)*approach.selftouch, ...
+        plane_distances*approach.planes, dist_from_ext*approach.external, ...
+        proj_dist*approach.eyes];
 end
 

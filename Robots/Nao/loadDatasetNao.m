@@ -1,4 +1,4 @@
-function [ datasets, indexes]= loadDatasetNao(robot,optim, datasetsNames)
+function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, datasetsNames)
     DH=robot.structure.DH;
     DH.torso=[0,0,0,0];
     fnames=fieldnames(robot.structure.skinDH);
@@ -11,7 +11,7 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, datasetsNames)
         spl=strsplit(datasetsNames{name},'_');
         chain1=spl{1};
         chain2=spl{2};
-        if ~optim.chains.(chain1)
+        if ~chains.(chain1)
            chain1=spl{2};
            chain2=spl{1};
         end
@@ -66,7 +66,7 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, datasetsNames)
                         for i=1:size(taxelStruct.(strcat('s',num2str(index))).secondTaxel,1)
                             angles=taxelStruct.(strcat('s',num2str(index))).angles(i);
                             a=taxelStruct.(strcat('s',num2str(index))).secondTaxelId(i);
-                            if optim.refPoints && ~all([optim.chains.(chain1),optim.chains.(chain2)])
+                            if optim.refPoints && ~all([chains.(chain1),chains.(chain2)])
                                 datasetLocal.refPoints=[datasetLocal.refPoints;taxelStruct.(strcat('s',num2str(index))).secondTaxel(i,:)];
                                 datasetLocal.point=[datasetLocal.point;chain1Original(index,1:3).*1000];
                             else

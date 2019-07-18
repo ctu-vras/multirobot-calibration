@@ -1,8 +1,8 @@
-function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareDataset(r,optim, funcname, varargin)
+function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareDataset(r,optim, chains, funcname, varargin)
     %% functions call
     if nargin>3
         func=str2func(funcname);
-        [datasets, indexes]=func(r,optim, varargin{:});
+        [datasets, indexes]=func(r,optim, chains, varargin{:});
     else
         func=str2func(funcname);
         [datasets, indexes]=func();

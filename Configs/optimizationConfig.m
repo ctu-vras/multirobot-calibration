@@ -1,15 +1,16 @@
-function [options, chains, optim, pert]=optimizationConfig
+function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     %% Solver options
     options = optimoptions('lsqnonlin');
     %options.Algorithm = 'trust-region-reflective';
     options.Algorithm = 'levenberg-marquardt';
     options.Display = 'iter';
-    options.TolFun = 1e-10;
+    options.TolFun = 5e-7;
     options.TolX = 1e-12;
     options.MaxIter = 150;
     options.InitDamping = 1000;
-    options.MaxFunctionEvaluations=4999;    
+    options.MaxFunctionEvaluations=49999;    
     options.UseParallel=0;
+    %options.SpecifyObjectiveGradient=true
     %options.ScaleProblem='jacobian';
     
     
@@ -28,29 +29,31 @@ function [options, chains, optim, pert]=optimizationConfig
     chains.rightThumb=0;
     chains.leftMiddle=0;
     chains.rightMiddle=0;
-    optim.chains=chains;
     
-    %% Calibration principle
-    optim.type.eyes=0;%1;
-    optim.type.selftouch=1;
-    optim.type.planes=0;%40000;
-    optim.type.external=0;%40000;
-    optim.onlyOffsets=0;
-    optim.jointTypes.joint=1;
-    optim.jointTypes.eye=0;
-    optim.jointTypes.torso=0;
-    optim.jointTypes.patch=0;
-    optim.jointTypes.triangle=0;
-    optim.jointTypes.mount=0;
-    optim.jointTypes.finger=0;
+    %% Calibration approaches
+    approach.eyes=0;%1;
+    approach.selftouch=0;
+    approach.planes=0;%40000;
+    approach.external=1;%40000;
+    
+    %% Calibration joint types
+    jointTypes.onlyOffsets=0;
+    jointTypes.joint=1;
+    jointTypes.eye=0;
+    jointTypes.torso=0;
+    jointTypes.patch=0;
+    jointTypes.triangle=0;
+    jointTypes.mount=0;
+    jointTypes.finger=0;
+    
+    %% Calibration settings
     optim.bounds=0;
     optim.repetitions=1;
     optim.pert=[0,0,0];
-    optim.multi_pose = 1;
     optim.distribution = 'normal';
     optim.pert_levels = 1+sum(optim.pert);
     optim.splitPoint=0.7;
-    optim.refPoints=1;
+    optim.refPoints=0;
     optim.useNorm=1;
     
     %% Perturbations   

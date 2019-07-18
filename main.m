@@ -3,7 +3,7 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
     assert(~isempty(robot_fcn) && ~isempty(config_fcn) && ~isempty(dataset_fcn),'Empty name of robot, config or dataset function')
     rob = robot(robot_fcn);
     
-    [options, chains, optim, pert] = loadConfig(config_fcn);
+    [options, chains, approach, jointTypes, optim, pert] = loadConfig(config_fcn);
 
     if ~isempty(loadDHfolder)
         loadDHfunc=str2func(loadDHfunc);
@@ -17,14 +17,14 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
     end
     
     if ~isempty(whitelist_fcn)
-        [start_pars, min_pars, max_pars, whitelist, start_dh] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim, whitelist_fcn);
+        [start_pars, min_pars, max_pars, whitelist, start_dh] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim, chains, jointTypes, whitelist_fcn);
     else
-        [start_pars, min_pars, max_pars, whitelist, start_dh] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim);
+        [start_pars, min_pars, max_pars, whitelist, start_dh] = rob.createWhitelist(start_dh, lb_dh, ub_dh, optim, chains, jointTypes);
     end
     if ~isempty(dataset_fcn) && iscell(dataset_params)
-        [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, dataset_fcn,dataset_params);
+        [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, chains, dataset_fcn,dataset_params);
     else
-        [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, dataset_fcn);
+        [training_set_indexes, testing_set_indexes, datasets] = rob.prepareDataset(optim, chains, dataset_fcn);
     end
     %%
 
@@ -52,7 +52,7 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
              pars=start_pars(:,rep,pert_level)';
              %options.TypicalX=  ones(20,1);%[0.01,0.01,1,1];
              %options.TypicalX([2,3,6,7,10,11,14,15,17,20]) = 0.01;
-             obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim);
+             obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach);
              sprintf('%f percent done', 100*((pert_level-1)*optim.repetitions + rep - 1)/(optim.pert_levels*optim.repetitions))
              % optimization        
              [opt_result, RESNORM, RESIDUAL, EXITFLAG, OUTPUT, LAMBDA, jacobians{1,rep, pert_level}] = ...
@@ -64,10 +64,10 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
     toc
     %%
     [res_dh, corrs_dh] = getResultDH(opt_pars, start_dh, whitelist, optim);
-    [before_tr_err,before_tr_err_all] = rmsErrors(start_dh, rob, datasets, training_set_indexes, optim);
-    [after_tr_err,after_tr_err_all] = rmsErrors(res_dh, rob, datasets, training_set_indexes, optim);
-    [before_ts_err,before_ts_err_all] = rmsErrors(start_dh, rob, datasets, testing_set_indexes, optim);
-    [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, rob, datasets, testing_set_indexes, optim);
+    [before_tr_err,before_tr_err_all] = rmsErrors(start_dh, rob, datasets, training_set_indexes, optim, approach);
+    [after_tr_err,after_tr_err_all] = rmsErrors(res_dh, rob, datasets, training_set_indexes, optim, approach);
+    [before_ts_err,before_ts_err_all] = rmsErrors(start_dh, rob, datasets, testing_set_indexes, optim, approach);
+    [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, rob, datasets, testing_set_indexes, optim, approach);
     %%
     outfolder = ['results/', folder, '/'];
     saveResults(rob, outfolder, res_dh, corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, optim);

@@ -1,4 +1,4 @@
-function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
+function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin )
 %LOADDATASETMOTOMAN Summary of this function goes here
 %   Detailed explanation goes here
     varargin = varargin{1};
@@ -70,14 +70,14 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 [unique_pose, index_pose, ~] = unique(data2(:,1));
                 preMatrixLeft = zeros(4,4,length(unique_pose));
                 preMatrixRight = zeros(4,4,length(unique_pose));
-                if (optim.chains.leftArm == 0)
+                if (chains.leftArm == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.leftArm(1:8,:);
                         dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).leftArm';
                         preMatrixLeft(:,:,j) = dhpars2tfmat(dh);
                     end
                 end
-                if (optim.chains.rightArm == 0)
+                if (chains.rightArm == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.rightArm(1:8,:);
                         dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).rightArm';
@@ -87,10 +87,10 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
                 for j = 1:size(data2,1)
                 matrices.markers = rob.structure.markers(:,:,data2(j,2));
                 matrices.torso = eye(4);
-                if(optim.chains.leftArm == 0)
+                if(chains.leftArm == 0)
                     matrices.leftArm = preMatrixLeft(:,:,data2(j,1)-i*1000);
                 end
-                if(optim.chains.rightArm == 0)
+                if(chains.rightArm == 0)
                     matrices.rightArm = preMatrixRight(:,:,data2(j,1)-i*1000);
                 end
                 dataset2.rtMat = [dataset2.rtMat; matrices]; 
@@ -149,7 +149,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
     end
     
     
-    if(strcmp(leica, 'right') && optim.chains.rightArm)
+    if(strcmp(leica, 'right') && chains.rightArm)
     dataset3.rtMat = [];
     dataset3.cameras = [];
     
@@ -178,7 +178,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, varargin )
     dataset3.cameras = [];
     
     
-    if(strcmp(leica, 'left') && optim.chains.leftArm)
+    if(strcmp(leica, 'left') && chains.leftArm)
     data2 = load('leica_dataset/leica_left_hand_6x6x6_dataset.mat');
     data2 = data2.dataset;
     

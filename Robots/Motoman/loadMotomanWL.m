@@ -6,8 +6,17 @@ function WL = loadMotomanWL()
                   0, 0, 0, 0;
                   0, 1, 0, 0];
        
-    WL.rightArm = [zeros(7,4);
-                   0, 1, 0, 0];
+%     WL.rightArm = [zeros(7,4);
+%                    0, 1, 0, 0];
+    WL.rightArm = [0, 0, 0, 0;
+                  0, 0, 0, 0;
+                  1, 0, 1, 1;
+                  1, 1, 1, 1;
+                  1, 1, 1, 1;
+                  1, 1, 1, 1;
+                  1, 0, 1, 0;
+                  1, 1, 0, 1];
+       
        
     WL.leftEye = zeros(2,4);
         

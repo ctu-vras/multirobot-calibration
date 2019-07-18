@@ -1,4 +1,4 @@
-function [ opt_pars, min_pars, max_pars, whitelist, dh_pars] = createWhitelist( robot, dh_pars, lb_pars, ub_pars, optim,  funcname )
+function [ opt_pars, min_pars, max_pars, whitelist, dh_pars] = createWhitelist( robot, dh_pars, lb_pars, ub_pars, optim, chains, jointTypes,  funcname )
 %CREATEWHITELIST Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,11 +11,11 @@ end
 
 for joint=robot.joints
    joint=joint{1};
-   if optim.onlyOffsets
+   if jointTypes.onlyOffsets
        whitelist.(joint.group)(joint.DHindex,1:3)=zeros(1,3);
    end
    if ~strcmp(joint.type,'base') 
-       if ~optim.jointTypes.(joint.type) || ~optim.chains.(strrep(joint.group,'Skin',''))
+       if ~jointTypes.(joint.type) || ~chains.(strrep(joint.group,'Skin',''))
             whitelist.(joint.group)(joint.DHindex,:)=zeros(1,4);
        end
    end
