@@ -5,16 +5,16 @@ function loadDHfromMat(robot,folder,varargin)
     addRequired(p,'robot');
     addRequired(p,'folder');
     addParameter(p,'rep',1);
-    addParameter(p,'pert',1);
+    addParameter(p,'pert',0);
     addParameter(p,'type','');
     parse(p,robot,folder,varargin{:});
     
     res_dh=load(['results/',folder,'/results.mat']);
     res_dh=res_dh.res_dh;
     if ischar(p.Results.pert)
-        pert=str2double(p.Results.pert);
+        pert=str2double(p.Results.pert)+1;
     else
-        pert=p.Results.pert;
+        pert=p.Results.pert+1;
     end
     if strcmp(p.Results.type,'')
         if ischar(p.Results.rep)

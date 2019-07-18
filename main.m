@@ -64,13 +64,13 @@ function main(robot_fcn, config_fcn, dataset_fcn, whitelist_fcn, bounds_fcn, dat
     toc
     %%
     [res_dh, corrs_dh] = getResultDH(opt_pars, start_dh, whitelist, optim);
-    before_tr_err = rmsErrors(start_dh, rob, datasets, training_set_indexes, optim);
-    after_tr_err = rmsErrors(res_dh, rob, datasets, training_set_indexes, optim);
-    before_ts_err = rmsErrors(start_dh, rob, datasets, testing_set_indexes, optim);
-    after_ts_err = rmsErrors(res_dh, rob, datasets, testing_set_indexes, optim);
+    [before_tr_err,before_tr_err_all] = rmsErrors(start_dh, rob, datasets, training_set_indexes, optim);
+    [after_tr_err,after_tr_err_all] = rmsErrors(res_dh, rob, datasets, training_set_indexes, optim);
+    [before_ts_err,before_ts_err_all] = rmsErrors(start_dh, rob, datasets, testing_set_indexes, optim);
+    [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, rob, datasets, testing_set_indexes, optim);
     %%
     outfolder = ['results/', folder, '/'];
-    saveResults(rob, outfolder, res_dh, corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, optim);
+    saveResults(rob, outfolder, res_dh, corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, optim);
     vars_to_save = {'start_dh', 'rob', 'whitelist', 'options', 'pert', 'chains', 'robot_fcn', 'dataset_fcn', ...
         'config_fcn', 'training_set_indexes', 'testing_set_indexes', 'optim'};
     if(saveInfo)

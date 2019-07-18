@@ -1,4 +1,4 @@
-function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, optim, varargin)
+function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, optim, varargin)
 %SAVERESULTS Summary of this function goes here
 %   Detailed explanation goes here
     errors = nan(16,optim.repetitions * optim.pert_levels);
@@ -15,11 +15,13 @@ function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_er
         errors(13:16,:) = after_ts_err;
     end
 
+    errorsAll=[before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all];
+    
     s = mkdir(outfolder);
     assert(s, 'Could not make folder');
     save([outfolder, 'results.mat'], 'res_dh');
     save([outfolder, 'corrections.mat'], 'corrs_dh');
-    save([outfolder, 'errors.mat'], 'errors');
+    save([outfolder, 'errors.mat'], 'errors','errorsAll');
     save([outfolder, 'info.mat'], 'optim');
 
     fnames=fieldnames(res_dh);

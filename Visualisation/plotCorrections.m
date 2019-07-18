@@ -1,11 +1,16 @@
-function plotCorrections(robot, folder, noiseLevel, symLog)
-    if nargin~=4
-        symLog=1;
-    end
+function plotCorrections(folder, varargin)
+    p=inputParser;
+    addRequired(p,'folder');
+    addParameter(p,'noiseLevel',0);
+    addParameter(p,'symLog',1);
+    parse(p,folder,varargin{:});
+    noiseLevel=p.Results.noiseLevel;
+    symLog=p.Results.symLog;
 	close all
     corrections=load(['results/',folder,'/corrections.mat']);
     corrections=corrections.corrs_dh;
     info = load(['results/',folder,'/info.mat']);
+    robot=info.rob;
     whitelist=info.whitelist;
     fnames=fieldnames(corrections);
     params={'a','d','$\alpha$','$\theta$'};

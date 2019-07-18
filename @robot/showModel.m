@@ -126,7 +126,7 @@ function showModel(r, angles, varargin)
             robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
         end
         robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
-        structure.(name)(8,:)=[];
+        %structure.(name)(8,:)=[];
         robot.(name).DH = structure.(name);
         robot.(name).Th = [angles{i}];   % TODO: vyresit nulu navic
         robot.(name).LinkColor = LINK_COLOR;
@@ -179,7 +179,7 @@ function showModel(r, angles, varargin)
                 robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
             end
             robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
-            structure.(name)(8,:)=[];
+            %structure.(name)(8,:)=[];
             robot.(name).DH = structure.(name);
             robot.(name).Th = [angles{i}];   % TODO: vyresit nulu navic
             robot.(name).LinkColor = LINK_COLOR_2;
