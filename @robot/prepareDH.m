@@ -35,7 +35,7 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     %% start pars and bounds
     for jointId=1:length(r.joints)
        joint=r.joints{jointId};
-       if strcmp(joint.type,types.base)
+       if strcmp(joint.type,types.base) || strcmp(joint.type,types.finger)
           continue 
        end
        init.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.DH.(joint.group)(joint.DHindex,:),1,1,optim.repetitions); 
