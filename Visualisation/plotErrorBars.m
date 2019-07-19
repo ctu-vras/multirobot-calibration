@@ -25,15 +25,17 @@ function plotErrorBars(folders,varargin)
     
     lines = [5,13,6,14,7,15,8,16];
     numLines = length(lines);
+
+    lenFolders = length(folders);
+    if(lenFolders == 1)
+        lenFolders = 2;
+    end
     
-%     mins = zeros(numLines*pert, length(folders));
-%     maxs = zeros(numLines*pert, length(folders));
-%     means = zeros(numLines*pert, length(folders));
-%     stds = zeros(numLines*pert, length(folders));
-    mins = zeros(numLines, length(folders));
-    maxs = zeros(numLines, length(folders));
-    means = zeros(numLines, length(folders));
-    stds = zeros(numLines, length(folders));
+    
+    mins = zeros(numLines, lenFolders);
+    maxs = zeros(numLines, lenFolders);
+    means = zeros(numLines, lenFolders);
+    stds = zeros(numLines, lenFolders);
     
     optTypes={'Selftouch Train', 'Selftouch Test', 'Planes Train', 'Planes Test', 'External Train', 'External Test', 'Projection Train', 'Projection Test'};
     colors=[[33,114,177]; [233,114,77];[14,215,39]; [214,215,39];[0,0,0]; [149,196,243]; [255,0,255]; [121,204,179]]./255;
@@ -44,18 +46,12 @@ function plotErrorBars(folders,varargin)
         info = load(['results/',folder,'/info.mat']);
         errors=errors.errors;
         optim = info.optim;
-        for k = 1:pert
-            for l = 1:numLines
-%                 mins(l + numLines*(k-1), fi) = min(errors(lines(l),  optim.repetitions*(k-1)+(1:optim.repetitions)));
-%                 maxs(l + numLines*(k-1), fi) = max(errors(lines(l), optim.repetitions*(k-1)+(1:optim.repetitions)));
-%                 means(l + numLines*(k-1), fi) = mean(errors(lines(l), optim.repetitions*(k-1)+(1:optim.repetitions)));
-%                 stds(l + numLines*(k-1), fi) = std(errors(lines(l),  optim.repetitions*(k-1)+(1:optim.repetitions)));
-                mins(l, fi) = min(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)));
-                maxs(l, fi) = max(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)));
-                means(l, fi) = mean(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)));
-                stds(l, fi) = std(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)));
-            end
-        end  
+        for l = 1:numLines
+            mins(l, fi) = min(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)));
+            maxs(l, fi) = max(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)));
+            means(l, fi) = mean(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)));
+            stds(l, fi) = std(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)));
+        end
     end
     
     figure('Position', [10 10 1200 1200]);

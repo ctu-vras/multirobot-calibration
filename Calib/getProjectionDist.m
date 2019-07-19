@@ -16,21 +16,20 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets, optim )
         cameras = dataset.cameras;
         points2Cam = nan(4, 2*size(points, 1));
         index = 1;    
-        
+        rtMats = dataset.rtMat;
         for i = 1:size(points, 1)      
             if(empty)
                 rtMat = [];
             else
-                rtMat = dataset.rtMat(i);
+                rtMat = rtMats(i);
             end
+            point = (getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
             if(cameras(i,1))
-                points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{1},rtMat, empty, joints(i), H0))*...
-                    (getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
+                points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{1},rtMat, empty, joints(i), H0))*point;
                 index = index+1;
             end
             if(cameras(i,2))
-                points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{2},rtMat, empty, joints(i), H0))*...
-                (getTF(dh_pars,frames(i),rtMat, empty, joints(i), H0)*[points(i,1:3),1]');
+                points2Cam(:,index) =  inversetf(getTF(dh_pars,cam_frames{2},rtMat, empty, joints(i), H0))*point;
                 index = index+1;
             end
         end
