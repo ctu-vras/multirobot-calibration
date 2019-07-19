@@ -1,10 +1,6 @@
 function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, datasetsNames)
     DH=robot.structure.DH;
     DH.torso=[0,0,0,0];
-    fnames=fieldnames(robot.structure.skinDH);
-    for name=1:length(fnames)
-        DH.(fnames{name})=robot.structure.skinDH.(fnames{name});
-    end
     datasets=cell(1,length(datasetsNames));
     indexes={1:length(datasetsNames),[],[],[]};
     for name=1:length(datasetsNames)

@@ -39,10 +39,6 @@ function loadDHfromMat(robot,folder,varargin)
     end
     fnames=fieldnames(res_dh);
     for name=1:length(fnames)
-        if strfind(fnames{name},'Skin')
-            robot.structure.skinDH.(fnames{name})=res_dh.(fnames{name})(:,:,rep,pert);
-        else
-            robot.structure.DH.(fnames{name})=res_dh.(fnames{name})(:,:,rep,pert);
-        end
+        robot.structure.DH.(fnames{name})=res_dh.(fnames{name})(:,:,rep,pert);
     end
 end

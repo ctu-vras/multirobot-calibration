@@ -1,9 +1,8 @@
-function [results, corrs] = getResultDH(opt_pars, start_dh, whitelist, optim)
+function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, optim)
 %SAVERESULTS Summary of this function goes here
 %   Detailed explanation goes here
     % log result
     results = start_dh;
-    corrs = start_dh;
     fnames = fieldnames(start_dh);
     count = 1;
     for field=1:length(fnames)
@@ -14,10 +13,9 @@ function [results, corrs] = getResultDH(opt_pars, start_dh, whitelist, optim)
             a(wh) = opt_pars(count:new_count-1,:,:);
             results.(fnames{field})=permute(a,[2,1,3,4]);
             results.(fnames{field})(:,3:4,:,:)=wrapToPi(results.(fnames{field})(:,3:4,:,:));
-            corrs.(fnames{field})(:,3:4,:,:)=wrapToPi(corrs.(fnames{field})(:,3:4,:,:));
             count = new_count;
         end
-        corrs.(fnames{field}) = results.(fnames{field})-corrs.(fnames{field}); 
+        corrs.(fnames{field}) = results.(fnames{field})-robot.structure.DH.(fnames{field})(:,:,1); 
         corrs.(fnames{field})(:,3:4,:,:)=wrapToPi(corrs.(fnames{field})(:,3:4,:,:));
     end
 end

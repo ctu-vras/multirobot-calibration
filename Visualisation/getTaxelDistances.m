@@ -1,10 +1,6 @@
 function getTaxelDistances(robot, datasetsNames)
     DH=robot.structure.DH;
     DH.torso=[0,0,0,0];
-    fnames=fieldnames(robot.structure.skinDH);
-    for name=1:length(fnames)
-        DH.(fnames{name})=robot.structure.skinDH.(fnames{name});
-    end
     close all;
     for name=1:length(datasetsNames)
         spl=strsplit(datasetsNames{name},'_');
