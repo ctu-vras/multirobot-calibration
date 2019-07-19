@@ -27,13 +27,14 @@ function loadDHfromMat(robot,folder,varargin)
         info = load(['results/',folder,'/info.mat']);
         errors=errors.errors;
         optim = info.optim;
+        approach=info.approach;
         dists = errors(13:16,(pert-1)*optim.repetitions+(1:optim.repetitions));
         dists(isnan(dists))=0;
         
         if strcmp(p.Results.type,'min')
-            [~,rep]=min(optim.type.selftouch*dists(1,:)+optim.type.planes*dists(2,:)+optim.type.external*dists(3,:)+optim.type.eyes*dists(4,:));
+            [~,rep]=min(approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.eyes*dists(4,:));
         elseif strcmp(p.Results.type,'max')
-            [~,rep]=max(optim.type.selftouch*dists(1,:)+optim.type.planes*dists(2,:)+optim.type.external*dists(3,:)+optim.type.eyes*dists(4,:));
+            [~,rep]=max(approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.eyes*dists(4,:));
         end
     end
     fnames=fieldnames(res_dh);

@@ -47,6 +47,7 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
        joint=r.joints{jointId};
        if strcmp(joint.type,types.joint) || strcmp(joint.type,types.eye) 
           type='DH';
+
        elseif ~strcmp(joint.type,types.base) && ~strcmp(joint.type, types.finger)
           type='skinDH'; 
        else
@@ -63,7 +64,9 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
            else
               jointBounds=r.structure.bounds.(joint.type);
            end
-           
+           if optim.boundsFromDefault
+                type=['default',type];
+           end
            lb.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)-jointBounds,1,1,optim.repetitions); 
            ub.(joint.group)(joint.DHindex,:,:,1)=repmat(r.structure.(type).(joint.group)(joint.DHindex,:)+jointBounds,1,1,optim.repetitions);     
        end

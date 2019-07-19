@@ -89,9 +89,9 @@ function [name, structure, structure2]=loadNAO()
     structure2.defaultDH = structure2.DH;
     structure2.defaultskinDH = structure2.skinDH;
     structure2.bounds.joint=[inf, inf, inf, inf];
-    structure2.bounds.mount=[15,15,pi,pi];
-    structure2.bounds.patch=[1,1,pi/20,pi/20];
-    structure2.bounds.triangle=[1,1,pi/20,pi/20];
+    structure2.bounds.mount=[0.15,0.15,pi,pi];
+    structure2.bounds.patch=[0.007,0.007,pi/20,pi/20];
+    structure2.bounds.triangle=[0.001,0.001,pi/20,pi/20];
     
     structure2.WL.leftArm= ...
               [0, 0, 0, 0;
