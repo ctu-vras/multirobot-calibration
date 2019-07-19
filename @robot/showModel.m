@@ -90,7 +90,7 @@ function showModel(r, angles, varargin)
     %% Other joints
     structure=r.structure.DH;
     fnames=fieldnames(structure);
-    fnames(strcmp(fnames, 'torso')) = [];
+    fnames(contains(fnames,'Skin') | strcmp(fnames, 'torso')) = [];
     for i=1:min(length(fnames),size(angles,2))
         name=fnames{i};
         jointNames = {};
@@ -135,7 +135,7 @@ function showModel(r, angles, varargin)
     
     if p.Results.dual
         fnames=fieldnames(r.structure.DH);
-        fnames(strcmp(fnames, 'torso')) = [];
+        fnames(contains(fnames,'Skin') | strcmp(fnames, 'torso')) = [];
         if size(p.Results.dualDH,1)==0
             structure=r.structure.defaultDH;
         else

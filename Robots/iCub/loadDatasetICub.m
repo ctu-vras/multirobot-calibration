@@ -47,6 +47,21 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, chains, varargin )
                 dhright(:,4)=dhright(:,4)+dataset.joints(i).rightArm';
                 mat.rightArm = dhpars2tfmat(dhright);
             end
+            if(chains.leftEye == 0)
+                dhleft=robot.structure.DH.leftEye;
+                dhleft(:,4)=dhleft(:,4)+dataset.joints(i).leftEye';
+                mat.leftEye = dhpars2tfmat(dhleft);
+            end
+            if(chains.rightEye == 0)
+                dhright=robot.structure.DH.rightEye;
+                dhright(:,4)=dhright(:,4)+dataset.joints(i).rightEye';
+                mat.rightEye = dhpars2tfmat(dhright);
+            end
+            if(chains.head == 0)
+                dhleft=robot.structure.DH.head;
+                dhleft(:,4)=dhleft(:,4)+dataset.joints(i).head';
+                mat.head = dhpars2tfmat(dhleft);
+            end
             for finger=fingers
                 mat.(finger{1})=matrices.(finger{1}); 
             end

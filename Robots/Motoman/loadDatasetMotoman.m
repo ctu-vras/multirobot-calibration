@@ -76,21 +76,21 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                 if (chains.leftArm == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.leftArm;
-                        dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).leftArm';
+                        dh(:,4)=dh(:,4)+[data2(index_pose(j), [7,14:19]),0]';
                         preMatrixLeft(:,:,j) = dhpars2tfmat(dh);
                     end
                 end
                 if (chains.rightArm == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.rightArm;
-                        dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).rightArm';
+                        dh(:,4)=dh(:,4)+[data2(index_pose(j), [7:13]),0]';
                         preMatrixRight(:,:,j) = dhpars2tfmat(dh);
                     end
                 end
                 if (chains.rightEye == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.rightEye;
-                        dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).rightEye';
+                        dh(:,4)=dh(:,4)+[data2(index_pose(j), 7),0]';
                         preMatrixRightEye(:,:,j) = dhpars2tfmat(dh);
                     end
                 end
@@ -98,27 +98,27 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                 if (chains.leftEye == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.leftEye;
-                        dh(:,4)=dh(:,4)+dataset2.joints(index_pose(j)).leftEye';
+                        dh(:,4)=dh(:,4)+[data2(index_pose(j), 7),0]';
                         preMatrixLeftEye(:,:,j) = dhpars2tfmat(dh);
                     end
                 end
                 
                 for j = 1:size(data2,1)
-                matrices.markers = rob.structure.markers(:,:,data2(j,2));
-                matrices.torso = eye(4);
-                if(chains.leftArm == 0)
-                    matrices.leftArm = preMatrixLeft(:,:,data2(j,1)-i*1000);
-                end
-                if(chains.rightArm == 0)
-                    matrices.rightArm = preMatrixRight(:,:,data2(j,1)-i*1000);
-                end
-                if(chains.rightEye == 0)
-                    matrices.rightEye = preMatrixRightEye(:,:,data2(j,1)-i*1000);
-                end
-                if(chains.leftEye == 0)
-                    matrices.leftEye = preMatrixLeftEye(:,:,data2(j,1)-i*1000);
-                end
-                dataset2.rtMat = [dataset2.rtMat; matrices]; 
+                    matrices.markers = rob.structure.markers(:,:,data2(j,2));
+                    matrices.torso = eye(4);
+                    if(chains.leftArm == 0)
+                        matrices.leftArm = preMatrixLeft(:,:,data2(j,1)-i*1000);
+                    end
+                    if(chains.rightArm == 0)
+                        matrices.rightArm = preMatrixRight(:,:,data2(j,1)-i*1000);
+                    end
+                    if(chains.rightEye == 0)
+                        matrices.rightEye = preMatrixRightEye(:,:,data2(j,1)-i*1000);
+                    end
+                    if(chains.leftEye == 0)
+                        matrices.leftEye = preMatrixLeftEye(:,:,data2(j,1)-i*1000);
+                    end
+                    dataset2.rtMat = [dataset2.rtMat; matrices]; 
                 end
                 for j = 1:(size(data3,1))
                     if(j > 1 && (first_indexInUnique(j-1) ~= first_indexInUnique(j)))
