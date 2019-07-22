@@ -1,9 +1,19 @@
-function [ name, structure, structure2 ] = loadMotoman()
-%LOADMOTOMAN Summary of this function goes here
-%   Detailed explanation goes here
+function [ name, jointStructure, structure ] = loadMotoman()
+%LOADMOTOMAN Motoman robot configuration function
+%Custom function for Motoman robot configuration with original end effector.
+% OUTPUT - name - robot name
+%        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
+%        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
+%                    - WL - logical array of whitelisted parameters for calibration 
+%                    - H0 - initial robot transformation 
+%                    - defaultDH - stores robot DH 
+%                    - bounds - bounds for DH parameters (a, d, alpha, offset)
+%                    - eyes - cameras and their instrinsic parameters
+%                    (camera matrix, distortion coefficents - radial and tangential)
+%                    - markers - transformation matrices of ArUco markers
     name='motoman';
-    %% Robot structure
-    structure={{'base',types.base,nan,0,0,group.torso},...
+    %% Robot joints
+    jointStructure={{'base',types.base,nan,0,0,group.torso},...
         {'TT2',types.joint,'base',1,0,group.leftArm},...
         {'S2',types.joint,'TT2',2,0,group.leftArm},...
         {'L2',types.joint,'S2',3,0,group.leftArm},...
@@ -68,8 +78,8 @@ function [ name, structure, structure2 ] = loadMotoman()
         {'MK219', types.finger, 'EE2', 19, 1,group.markers},...
         {'MK220', types.finger, 'EE2', 20, 1,group.markers}};
     
-    
-    structure2.DH.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
+    %% robot initial DH
+    structure.DH.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -78,7 +88,7 @@ function [ name, structure, structure2 ] = loadMotoman()
            0.000,  0.200, 0.000, 0.000;
            0.000,  0.354, 0.000, 0.000];
        
-    structure2.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
+    structure.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -87,14 +97,15 @@ function [ name, structure, structure2 ] = loadMotoman()
            0.000,  0.200, 0.000, 0.000;
            0.000,  0.354, 0.000, 0.000];
        
-    structure2.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
+    structure.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
             0.0, -0.445,    0.0,  pi];
         
-    structure2.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
+    structure.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
             0.0, -0.445,     0.0,  0.0];
         
-        
-    structure2.WL.leftArm = [1, 0, 1, 0;
+     
+    %% robot initial whitelist    
+    structure.WL.leftArm = [1, 0, 1, 0;
                              1, 1, 1, 1;
                              1, 0, 1, 1;
                              1, 1, 1, 1;
@@ -103,8 +114,8 @@ function [ name, structure, structure2 ] = loadMotoman()
                              1, 0, 1, 0;
                              0, 1, 0, 1];
        
-    structure2.WL.rightArm = [0, 0, 0, 0;
-                              1, 0, 1, 0;
+    structure.WL.rightArm = [0, 0, 0, 0;
+                              0, 0, 0, 0;
                               1, 0, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
@@ -112,34 +123,41 @@ function [ name, structure, structure2 ] = loadMotoman()
                               1, 0, 1, 0;
                               0, 1, 0, 1];
        
-    structure2.WL.leftEye = [1, 1, 1, 1;
+    structure.WL.leftEye = [1, 1, 1, 1;
                              0, 1, 0, 1];
         
-    structure2.WL.rightEye = [1, 1, 1, 1;
+    structure.WL.rightEye = [1, 1, 1, 1;
                               0, 1, 0, 1];
-                           
-    structure2.H0 = [1 0 0 0;
+    
+    %% robot H0 transformation                      
+    structure.H0 = [1 0 0 0;
                      0 1 0 0;
                      0 0 1 0;
                      0 0 0 1];
                  
-    structure2.defaultDH = structure2.DH;
+    %% robot default DH (permanent)             
+    structure.defaultDH = structure.DH;
     
+    %% robot bounds for DH parameters
+    structure.bounds.joint = [0.05, 0.05, 0.05, 0.1];
+    structure.bounds.eye = [0.15, 0.15, 0.05, 0.1];
+    
+    %% robot cameras and their instrinsic parameters
     % distortion coefficients
-    structure2.eyes.dist = [-0.021, -0.206, 0.719, 0.0, 0.0, 0.0; % right eye
+    structure.eyes.dist = [-0.021, -0.206, 0.719, 0.0, 0.0, 0.0; % right eye
                             -0.023, -0.213, 0.662, 0.0, 0.0, 0.0]'; % left eye
     % tangential distortion coefficients
-    structure2.eyes.tandist = [-0.002, -0.001; % right eye
+    structure.eyes.tandist = [-0.002, -0.001; % right eye
                                -0.001, -0.001]'; % left eye 
     % right eye camera matrix                      
-    structure2.eyes.matrix(:,:,1) = [8185.397,  0.000,  2009.318;
+    structure.eyes.matrix(:,:,1) = [8185.397,  0.000,  2009.318;
                                      0.000,  8170.401,  2963.960;
                                      0.000,     0.000,     1.000];
     % left eye camera matrix                             
-    structure2.eyes.matrix(:,:,2) = [8110.478,  0.000,  1949.921; 
+    structure.eyes.matrix(:,:,2) = [8110.478,  0.000,  1949.921; 
                                      0.000,  8098.218,  2991.727;
                                      0.000,     0.000,     1.000];
-                 
+    %% robot ArUco markers on the end effectors             
     tf_mk_01 = [-0.79466465  0.0         0.60704867  0.03200057;
                         0.0         1.0         0.0         0.0;
                 -0.60704867  0.0        -0.79466465 -0.04189075;
@@ -220,15 +238,10 @@ function [ name, structure, structure2 ] = loadMotoman()
                 -0.06035608  0.81426316 -0.57734967 -0.03043499;
                  0.18761256  0.57734967  0.79465016  0.04188998;
                  0.0         0.0         0.0         1.0       ];
-
                  
-    structure2.markers =  reshape([tf_mk_01, tf_mk_02, tf_mk_03, tf_mk_04, tf_mk_05, ...
+    structure.markers =  reshape([tf_mk_01, tf_mk_02, tf_mk_03, tf_mk_04, tf_mk_05, ...
             tf_mk_06, tf_mk_07, tf_mk_08, tf_mk_09, tf_mk_10, ...
             tf_mk_11, tf_mk_12, tf_mk_13, tf_mk_14, tf_mk_15, ...
             tf_mk_16, tf_mk_17, tf_mk_18, tf_mk_19, tf_mk_20], 4,4,20);
-        
-    structure2.bounds.joint = [0.05, 0.05, 0.05, 0.1];
-    structure2.bounds.eye = [0.15, 0.15, 0.05, 0.1];
-    
 end
 

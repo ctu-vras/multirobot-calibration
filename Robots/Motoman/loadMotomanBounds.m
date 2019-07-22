@@ -1,6 +1,11 @@
 function bounds = loadMotomanBounds()
-%LOADMOTOMANBOUNDS Summary of this function goes here
-%   Detailed explanation goes here
+%LOADMOTOMANBOUNDS Motoman DH parameters bounds configuration function
+%   Custom function for bounds of individual DH parameter. Position in
+%   bounds matrix corresponds with the position in DH matrix. The inf value
+%   means the parameters in unbounded, the double value is a relative bound
+%   for a parameter and parameters with nan use the initial bounds from
+%   robot configuration function. 
+%OUTPUT - bounds - structure of bounds for individual DH parameter
     bounds.leftArm = [nan, nan, nan, nan;
                              nan, nan, nan, nan;
                              nan, nan, nan, nan;

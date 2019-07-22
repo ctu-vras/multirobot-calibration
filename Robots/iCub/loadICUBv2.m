@@ -1,10 +1,19 @@
-function [ name, structure, structure2 ] = loadICUBv2()
-%LOADMOTOMAN Summary of this function goes here
-%   Detailed explanation goes here
+function [ name, jointStructure, structure ] = loadICUBv2()
+%LOADICUBV2 Function for loading iCub version 2 robot 
+% Custom function for loading iCub version 2 robot.
+% OUTPUT - name - robot name
+%        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
+%        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
+%                    - WL - logical array of whitelisted parameters for calibration 
+%                    - H0 - initial robot transformation 
+%                    - defaultDH - stores robot DH 
+%                    - bounds - bounds for DH parameters (a, d, alpha, offset)
+%                    - eyes - cameras and their instrinsic parameters
+%                    (camera matrix, distortion coefficents - radial and tangential)
     name='icub';
     
     %% Robot structure
-    structure={{'torsoYaw',types.base,nan,0,0,group.torso},...
+    jointStructure={{'torsoYaw',types.base,nan,0,0,group.torso},...
         {'torsoRoll',types.joint,'torsoYaw',1,0,group.torso},... % link from 1st to 2nd torso joint
         {'torsoPitch',types.joint,'torsoRoll',2,0,group.torso},... % link from 2nd to 3rd torso joint 
         ...
@@ -80,11 +89,11 @@ function [ name, structure, structure2 ] = loadICUBv2()
         {'rightMiddle2',types.joint,'rightMiddle1',2,0,group.rightMiddle},...
         {'rightMiddle3',types.joint,'rightMiddle2',3,0,group.rightMiddle}};  
         
-        
-    structure2.DH.torso = [0.032, 0.000, pi/2.0, 0.000; 
+    %% robot initial DH     
+    structure.DH.torso = [0.032, 0.000, pi/2.0, 0.000; 
                         0.000, -0.0055, pi/2.0, -pi/2]; 
                     
-    structure2.DH.leftArm = [0.0233647, -0.1433, -pi/2.0, 105.0*pi/180;
+    structure.DH.leftArm = [0.0233647, -0.1433, -pi/2.0, 105.0*pi/180;
                              0.000, 0.10774, -pi/2.0, pi/2.0;
                              0.000, 0.000, pi/2.0, -pi/2.0;
                              0.015, 0.15228, -pi/2.0, 75.0*pi/180;
@@ -93,7 +102,7 @@ function [ name, structure, structure2 ] = loadICUBv2()
                              0.000, 0.000, pi/2.0, pi/2;
                             0.0625, -0.02598, 0.000, 0.000 ];
             
-    structure2.DH.rightArm =  [-0.0233647, -0.1433, pi/2.0, -105.0*pi/180;  
+    structure.DH.rightArm =  [-0.0233647, -0.1433, pi/2.0, -105.0*pi/180;  
                                  0.000, -0.10774, pi/2.0, -pi/2;
                                  0.000, 0.000, -pi/2.0, -pi/2;
                                 -0.015, -0.15228, -pi/2.0, -105.0*pi/180;
@@ -102,61 +111,63 @@ function [ name, structure, structure2 ] = loadICUBv2()
                                  0.000, 0.000, pi/2.0, pi/2;
                                 0.0625, 0.02598, 0, pi ]; 
            
-    structure2.DH.head = [0.000, -0.2233, -pi/2.0, -pi/2.0;  
+    structure.DH.head = [0.000, -0.2233, -pi/2.0, -pi/2.0;  
                        0.0095, 0.000,  pi/2.0,  pi/2.0;
                        0.000, 0.000, -pi/2.0, -pi/2.0;
                        -0.059, 0.08205, -pi/2.0,  pi/2.0];
                 
-    structure2.DH.leftEye = [0.000, -0.034, -pi/2.0,   0.000;  
+    structure.DH.leftEye = [0.000, -0.034, -pi/2.0,   0.000;  
                        0.000,  0.000,  pi/2.0,  -pi/2.0];
                     
-    structure2.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
+    structure.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0]; 
-    structure2.DH.leftLeg=[0, 0, -pi/2, pi/2;
+    structure.DH.leftLeg=[0, 0, -pi/2, pi/2;
                            0, 0, -pi/2, pi/2;
                            0, -0.2236, pi/2, -pi/2;
                            -0.213, 0, pi, pi/2;
                            0, 0, -pi/2, 0;
                            -0.041, 0, 0, 0];
 
-    structure2.DH.rightLeg=[0, 0, pi/2, pi/2;
+    structure.DH.rightLeg=[0, 0, pi/2, pi/2;
                             0, 0, pi/2, pi/2;
                             0, 0.2236, -pi/2, -pi/2;
                             -0.213, 0, pi, pi/2;
                             0, 0, pi/2, 0;
                             0, 0, pi, 0];
-    structure2.DH.leftThumb=[0, 0, pi/2, 0;
+    structure.DH.leftThumb=[0, 0, pi/2, 0;
                                    0.021, -0.0056, 0, 0;
                                    0.026, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                             
-    structure2.DH.leftIndex=[0.0148, 0, -pi/2, 0;
+    structure.DH.leftIndex=[0.0148, 0, -pi/2, 0;
                                    0.0259, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                            
-    structure2.DH.leftMiddle=[0.0285, 0, 0, 0;
+    structure.DH.leftMiddle=[0.0285, 0, 0, 0;
                                    0.024, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                                    
-   structure2.DH.rightThumb=[0, 0, -pi/2, 0;
+   structure.DH.rightThumb=[0, 0, -pi/2, 0;
                                    0.021, 0.0056, 0, 0;
                                    0.026, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                             
-    structure2.DH.rightIndex=[0.0148, 0, pi/2, 0;
+    structure.DH.rightIndex=[0.0148, 0, pi/2, 0;
                                    0.0259, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                            
-    structure2.DH.rightMiddle=[0.0285, 0, 0, 0;
+    structure.DH.rightMiddle=[0.0285, 0, 0, 0;
                                    0.024, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];             
-    structure2.WL.torso = zeros(2,4);
     
-    structure2.WL.leftArm = [0, 0, 0, 0;
+    %% robot initial whitelist                              
+    structure.WL.torso = zeros(2,4);
+    
+    structure.WL.leftArm = [0, 0, 0, 0;
                              1, 1, 1, 1;
                              1, 1, 1, 1;
                              1, 1, 1, 1;
@@ -166,89 +177,93 @@ function [ name, structure, structure2 ] = loadICUBv2()
                              1, 1, 0, 1];
                             
             
-    structure2.WL.rightArm = [0, 0, 0, 0;
+    structure.WL.rightArm = [0, 0, 0, 0;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
-                              1, 1, 0, 1];
-           
-    structure2.WL.head = [0, 0, 0, 0;
+                              1, 1, 0, 1]; 
+                          
+    structure.WL.head = [0, 0, 0, 0;
                           1, 1, 1, 1;
                           1, 1, 1, 1;
                           1, 1, 1, 1];
                 
-    structure2.WL.leftEye = [1, 1, 1, 1;
+    structure.WL.leftEye = [1, 1, 1, 1;
                              1, 1, 1, 1];
                     
-    structure2.WL.rightEye = [1, 1, 1, 1;
-                              1, 1, 1, 1];               
-    structure2.WL.leftLeg=[0, 0, 0, 0;
+    structure.WL.rightEye = [1, 1, 1, 1;
+                              1, 1, 1, 1];
+    structure.WL.leftLeg=[0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0];
 
-    structure2.WL.rightLeg=[0, 0, 0, 0;
+    structure.WL.rightLeg=[0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0];
                             
-    structure2.WL.leftThumb=[0, 0, 0, 0;
+    structure.WL.leftThumb=[0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0];
                             
-    structure2.WL.leftIndex=[0, 0, 0, 0;
+    structure.WL.leftIndex=[0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0];
                            
-    structure2.WL.leftMiddle=[0, 0, 0, 0;
+    structure.WL.leftMiddle=[0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0];
                                    
-   structure2.WL.rightThumb=[0, 0, 0, 0;
+    structure.WL.rightThumb=[0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0];
                             
-    structure2.WL.rightIndex=[0, 0, 0, 0;
+    structure.WL.rightIndex=[0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0;
                            0, 0, 0, 0];
                            
-    structure2.WL.rightMiddle=[0, 0, 0, 0;
+    structure.WL.rightMiddle=[0, 0, 0, 0;
                            0, 0, 0, 0;
-                           0, 0, 0, 0];               
-    structure2.H0 = [0 -1  0  0;
+                           0, 0, 0, 0];
+     
+    %% robot H0 transformation                    
+    structure.H0 = [0 -1  0  0;
                      0  0 -1  0;
                      1  0  0  0;
                      0  0  0  1];
-                 
-    structure2.defaultDH = structure2.DH;
-                 
-    structure2.bounds.joint = [inf inf inf inf];
-    structure2.bounds.eye = [inf inf inf inf];
+       
+    %% robot default DH (permanent)    
+    structure.defaultDH = structure.DH;
+    
+    %% robot bounds for DH parameters
+    structure.bounds.joint = [inf inf inf inf];
+    structure.bounds.eye = [inf inf inf inf];
 
+    %% robot cameras and their instrinsic parameters
     % distortion coefficients
-    structure2.eyes.dist = zeros(6,2);
+    structure.eyes.dist = zeros(6,2);
     % tangential distortion coefficients
-    structure2.eyes.tandist = zeros(2,2);
+    structure.eyes.tandist = zeros(2,2);
     % right eye camera matrix                      
-    structure2.eyes.matrix(:,:,1) = [257.34,  0.000,  160.0;
+    structure.eyes.matrix(:,:,1) = [257.34,  0.000,  160.0;
                                      0.000,  257.34,  120.0;
                                      0.000, 0.000, 1.000];
     % left eye camera matrix                             
-    structure2.eyes.matrix(:,:,2) = [257.34,  0.000,  160.0; 
+    structure.eyes.matrix(:,:,2) = [257.34,  0.000,  160.0; 
                                      0.000,  257.34,  120.0
                                      0.000, 0.000, 1.000];
 end
-

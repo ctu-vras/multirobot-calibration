@@ -1,9 +1,19 @@
-function [ name, structure, structure2 ] = loadMotomanLeica()
-%LOADMOTOMANLEICA Summary of this function goes here
-%   Detailed explanation goes here
+function [ name, jointStructure, structure ] = loadMotomanLeica()
+%LOADMOTOMANLEICA Motoman robot configuration function
+%   Custom function for Motoman robot configuration with leica end effector.
+% OUTPUT - name - robot name
+%        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
+%        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
+%                    - WL - logical array of whitelisted parameters for calibration 
+%                    - H0 - initial robot transformation 
+%                    - defaultDH - stores robot DH 
+%                    - bounds - bounds for DH parameters (a, d, alpha, offset)
+%                    - eyes - cameras and their instrinsic parameters
+%                    (camera matrix, distortion coefficents - radial and tangential)
+%                    - markers - transformation matrices of ArUco markers
     name='motoman';
     %% Robot structure
-    structure={{'base',types.base,nan,0,0,group.torso},...
+    jointStructure={{'base',types.base,nan,0,0,group.torso},...
         {'TT2',types.joint,'base',1,0,group.leftArm},...
         {'S2',types.joint,'TT2',2,0,group.leftArm},...
         {'L2',types.joint,'S2',3,0,group.leftArm},...
@@ -27,8 +37,8 @@ function [ name, structure, structure2 ] = loadMotomanLeica()
         {'leftHead',types.joint,'base',1,0,group.leftEye},...
         {'leftEye',types.eye,'leftHead',2,1,group.leftEye}};
     
-    
-    structure2.DH.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
+    %% robot initial DH
+    structure.DH.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -37,7 +47,7 @@ function [ name, structure, structure2 ] = loadMotomanLeica()
            0.000,  0.200, 0.000, 0.000;
            0.02,  0.25, 0, pi/2];
        
-    structure2.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
+    structure.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -46,14 +56,14 @@ function [ name, structure, structure2 ] = loadMotomanLeica()
            0.000,  0.200, 0.000, 0.000;
            0.05,  0.25, 0, 0];
        
-    structure2.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
+    structure.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
             0.0, -0.445,    0.0,  pi];
         
-    structure2.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
+    structure.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
             0.0, -0.445,     0.0,  0.0];
         
-        
-    structure2.WL.leftArm = [1, 0, 1, 0;
+    %% robot initial whitelist      
+    structure.WL.leftArm = [1, 0, 1, 0;
                              1, 1, 1, 1;
                              1, 0, 1, 1;
                              1, 1, 1, 1;
@@ -62,7 +72,7 @@ function [ name, structure, structure2 ] = loadMotomanLeica()
                              0, 0, 1, 0;
                              1, 1, 0, 1];
        
-    structure2.WL.rightArm = [0, 0, 0, 0;
+    structure.WL.rightArm = [0, 0, 0, 0;
                               1, 0, 1, 0;
                               1, 0, 1, 1;
                               1, 1, 1, 1;
@@ -71,36 +81,39 @@ function [ name, structure, structure2 ] = loadMotomanLeica()
                               0, 0, 1, 0;
                               1, 1, 0, 1];
        
-    structure2.WL.leftEye = [1, 1, 1, 1;
+    structure.WL.leftEye = [1, 1, 1, 1;
                              0, 1, 0, 1];
         
-    structure2.WL.rightEye = [1, 1, 1, 1;
+    structure.WL.rightEye = [1, 1, 1, 1;
                               0, 1, 0, 1];
-                           
-    structure2.H0 = [1 0 0 0;
+    
+    %% robot H0 transformation                      
+    structure.H0 = [1 0 0 0;
                      0 1 0 0;
                      0 0 1 0;
                      0 0 0 1];
                  
-    structure2.defaultDH = structure2.DH;
+    %% robot default DH (permanent)              
+    structure.defaultDH = structure.DH;
     
+    %% robot bounds for DH parameters
+    structure.bounds.joint = [0.05, 0.05, 0.05, 0.1];
+    structure.bounds.eye = [0.15, 0.15, 0.05, 0.1];
+    
+    %% robot cameras and their instrinsic parameters
     % distortion coefficients
-    structure2.eyes.dist = [-0.021, -0.206, 0.719, 0.0, 0.0, 0.0; % right eye
+    structure.eyes.dist = [-0.021, -0.206, 0.719, 0.0, 0.0, 0.0; % right eye
                             -0.023, -0.213, 0.662, 0.0, 0.0, 0.0]'; % left eye
     % tangential distortion coefficients
-    structure2.eyes.tandist = [-0.002, -0.001; % right eye
+    structure.eyes.tandist = [-0.002, -0.001; % right eye
                                -0.001, -0.001]'; % left eye 
     % right eye camera matrix                      
-    structure2.eyes.matrix(:,:,1) = [8185.397,  0.000,  2009.318;
+    structure.eyes.matrix(:,:,1) = [8185.397,  0.000,  2009.318;
                                      0.000,  8170.401,  2963.960;
                                      0.000,     0.000,     1.000];
     % left eye camera matrix                             
-    structure2.eyes.matrix(:,:,2) = [8110.478,  0.000,  1949.921; 
+    structure.eyes.matrix(:,:,2) = [8110.478,  0.000,  1949.921; 
                                      0.000,  8098.218,  2991.727;
                                      0.000,     0.000,     1.000];
-        
-    structure2.bounds.joint = [0.05, 0.05, 0.05, 0.1];
-    structure2.bounds.eye = [0.15, 0.15, 0.05, 0.1];
-    
 end
 
