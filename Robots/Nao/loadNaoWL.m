@@ -1,6 +1,5 @@
 function WL = loadNaoWL()
-%LOADMOTOMANWL Summary of this function goes here
-%   Detailed explanation goes here
+%LOADNAOWL returns new whitelist
     hands_upper=[7,8,9,10,11,14,15,0,13,12,1,2,3,4,5,6];
     hands_lower=[19,22,23,25,26,20,21,31];
     head_left=[0,1,2,3,4,5,6,7,8,12,13,15];
