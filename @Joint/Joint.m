@@ -8,7 +8,7 @@ classdef Joint < handle
     %   parent - Pointer to parent
     %   parentId - Int id of parent
     %   DHindex - Int id in DH/WL/Bounds table for given 'group'
-    %   type - 'type' of the joints...see type.m
+    %   type - 'type' of the joints...see types.m
     %   endEffector - true/false if joint is endEffector
     %   group - 'group' of the joint...see group.m
     %

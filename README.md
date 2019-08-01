@@ -14,9 +14,9 @@
 Found in the [@Robot](@Robot) folder. This directory includes the main class file for the robots [Robot.m](@Robot/Robot.m).
 This file includes the constructor, which calls robot-specific functions (see [Robots](Robots)) to set up the robot.
 ## Properties
-    - _name_ - String name of the robot 
-    - _joints_ - Cell array of [Joint](#joint) classes
-    - _structure_ - Structure containing DH, WL and bounds
+    - name - String name of the robot 
+    - joints - Cell array of [Joint](#joint) classes
+    - structure - Structure containing DH, WL and bounds
 ## Methods
  - findJoint - Returns instance of joints with given name
  - findJointById - Returns instance of joints with given Id
@@ -43,6 +43,26 @@ Found in the [@Joint](@Joint) folder. This directory includes the main class fil
  - group - 'group' of the joint...see [group.m](Utils/group.m)
 ## Methods
  - computeRTMatrix - iterates over the parents of the input Joint and returns RT matrix
+# Datasets
+All of the datasets must be structure with these fields (some of them may be voluntary):
+(unless otherwise stated, all fields have N rows, where N represent number of training/testing values)
+ - point - Each value represent point in 3D space(x,y,z) and the field can be:
+   - Nx3 array of doubles
+   - Nx6 array of double, when two points are used (x1,y2,z1,x2,y2,z2)
+ - frame - Nx1 array of strings, where each value is name of the joint from which the TF matrix will be computed	
+ - frame2 (voluntary) - Nx1 array of strings, where each value is name of the joint from which the TF matrix for second point will be computed
+ - joints - Nx1 array of structures, where each structure include joint angles for each group  
+   - each field of the inner structure is 1xM array of doubles
+   - e.g. joints(1).leftArm=[...], joints(1).rightArmSkin=[...]
+ - refPoints (voluntary) - Nx3 array of doubles, where each line represents point in 3D (x,y,z, which will be used as reference to point computed from optimized values
+   - used for example in selftouch, when we calculate position of the finger, but we know where the finger was supposed to touch
+ - rtMat (voluntary) - Nx1 array of structures, where each structure include RT matrices for each group
+   - not all group must be included
+   - used for example when we know, we want only calibrate the skin and so we can pre-compute RT matrix for arm to speed up
+   - e.g. rmMat(1).leftArm=4x4 array
+ - cameras (voluntary) - 
+ - pose - Nx1 array of any (almost) type, used to assing points from one 'pose'
+   - e.g. when camera has more photos of one touch 
 
 # Configs
  - [optimizationConfig.m](Configs/optimizationConfig.m) - settings for the calibration
@@ -95,10 +115,14 @@ Folder with functions designed for repetitive tasks.
  - [weightParameters.m](Utils/weightParameters.m) - changes the optimized parameters weight
 
 # Robots
-Folder with folders for different robots. Right now, these are available: [Nao](Robots/Nao), [Motoman](Robots/Motoman), [iCub](Robots/iCub).
+Folder with folders for different robots. Right now, these robots are available: [Nao](Robots/Nao), [Motoman](Robots/Motoman), [iCub](Robots/iCub).
 The folders usually includes Datasets for given robot, robot-specific funtions and robot-specific configuration files.
 Mandatory are configs with structure of the robot (see [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m](Robots/Nao/loadMotoman.m), [loadICUBv1.m](Robots/Nao/loadICUBv1.m))
 and function to change dataset to format, which uses the toolbox (see [Datasets](#datasets) and [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m)).
+
+Voluntary configs are for load of whitelist (see [loadNaoWL.m](Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](Robots/Nao/loadMotomanWL.m), [loadICUBWL.m](Robots/Nao/loadICUBWL.m))
+and bounds (see [loadMotomanBounds.m](Robots/Nao/loadMotomanBounds.m)).
+
 
 # Schema
 ![Calibration diagram](calibAll.jpg)
