@@ -1,4 +1,2 @@
-robot_fcn;config_fcn;dataset_fcn;whitelist_fcn;bounds_fcn;dataset_params;folder;saveInfo;loadDH_Folder;loadDH_Args;;;;;
-loadNAO;optimizationConfig;loadDatasetNao;loadNaoWL;;rightArm_torso!leftArm_torso;pokus;1;pokus;DH-rep1-pert1;dfg;sdf;654dg;dsg;
-loadNAO;optimizationConfig;loadDatasetNao;loadNaoWL;ll;rightArm_torso!leftArm_torso;pokus;1;pokus;DH-rep1-pert1;dfg;sdf;654dg;55;sdf
-;;;;;;;fdsdf;;;;;;;
+Timestamp;robot_fcn;config_fcn;dataset_fcn;whitelist_fcn;bounds_fcn;folder;saveInfo;loadDHfolder;loadDHargs;dataset_params
+14:45:43.903;loadNAO;optimizationConfig;loadDatasetNao;loadNaoWL;;joints;1;joints;min;rightArm_torso
