@@ -1,16 +1,13 @@
 function [R,T] = fitSets(set1,set2)
 %FITSETS 
-% set1,set2 ... Nx3 matrices with corresponding 3D points
-%
+% INPUT - set1,set2 ... Nx3 matrices with corresponding 3D points
 % set2 = R*set1 + T
-% R ... 3x3 rotation matrix
-% T ... 3x1 translation vector
+% OUTPUT - R ... 3x3 rotation matrix
+%        - T ... 3x1 translation vector
 %
 % This is done according to the paper:
 % "Least-Squares Fitting of Two 3-D Point Sets"
 % by K.S. Arun, T. S. Huang and S. D. Blostein
-
-%set1,set2 řádka - leica, robot
     set1=set1';
     set2=set2';
     meanSet1=mean(set1,2);

@@ -1,4 +1,5 @@
 classdef group
+% group is static class of enumerated type containing string names of all part of robot body and skin
     properties(Constant)
         leftArm = 'leftArm';
         rightArm = 'rightArm';

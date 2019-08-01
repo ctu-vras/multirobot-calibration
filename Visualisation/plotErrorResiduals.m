@@ -36,5 +36,12 @@ function plotErrorResiduals( computed_points, real_points )
     quiver(computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:), 1, 'Color', 'b');
     xlabel('Y [mm]')
     ylabel('Z [mm]')
+    
+    figure()
+    quiver3(real_points(1,:), real_points(2,:), real_points(3,:), computed_points(1,:)-real_points(1,:), computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:), 1, 'Color', 'b');
+    xlabel('X [mm]')
+    ylabel('Y [mm]')
+    zlabel('Z [mm]')
+    title('Residuals of end effector position error')
 end
 
