@@ -1,5 +1,9 @@
 function WL = loadNaoWL()
-%LOADNAOWL returns new whitelist
+% LOADNAOWL  Nao whitelist configuration function
+%     Custom function for robot whitelist configuration. Position in
+%     whitelist logical matrix corresponds with the position in DH matrix. 
+%     Value 1 means the parameter will be calibrated. 
+%  OUTPUT - WL - whitelist structure
     hands_upper=[7,8,9,10,11,14,15,0,13,12,1,2,3,4,5,6];
     hands_lower=[19,22,23,25,26,20,21,31];
     head_left=[0,1,2,3,4,5,6,7,8,12,13,15];

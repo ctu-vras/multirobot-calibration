@@ -1,4 +1,4 @@
-function [name, joints, joints]=loadNAO()
+function [name, joints, structure]=loadNAO()
     %LOADNAO returns structure of the NAO robot
     %   OUTPUT - name - string name of the robot
     %          - joints - joint structure of the robot

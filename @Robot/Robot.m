@@ -21,7 +21,11 @@ classdef Robot < handle
     %               with bounds
     %   prepareDataset - Returns datasets in universal format, together with
     %                    training/testing indexes
-    %   
+    %   getResultDH - Returns final DH parameters and correction of each
+    %                 run
+    %   createWhitelist - selects whitelist and returns selected parameters based 
+    %                on the whitelist, together with lower/upper bounds for the
+    %                parameters.
     properties
         name 
         joints={} 
