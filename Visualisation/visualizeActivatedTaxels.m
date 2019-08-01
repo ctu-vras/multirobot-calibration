@@ -1,17 +1,25 @@
 function visualizeActivatedTaxels(datasetsNames)
-    % datasetsNames = cell array stringů
+    % VISUALIZEACTIVATEDTAXELS shows activated taxels on all chains and 
+    % number of actiated taxels/triangles for given datasets.
+    %   INPUT - datasetNames - 1xN cellArray of strings
+    %                        - e.g. {'rightArm_torso'}
     close all;
     for name=1:length(datasetsNames)
+        % get chain names from dataset name
         spl=strsplit(datasetsNames{name},'_');
         chain1=spl{1};
         chain2=spl{2};
+        %import points in local frames
         firstLocal = importdata(strcat('Dataset/Points/',chain1,'.txt'),' ',4);
         secondLocal = importdata(strcat('Dataset/Points/',chain2,'.txt'),' ',4);
+        %load daatset
         data=load(strcat('Dataset/Datasets/',datasetsNames{name})); 
+        % put first taxels into the array
         activated1Idx=data.(chain1)(1).activatedUn(:,4);    
         activated2Idx=data.(chain2)(1).activatedUn(:,4);
         for i=2:size(data.(chain1),1)
            for j=1:size(data.(chain1)(i).activatedUn(:,4),1)
+                %if taxel Id is not already in activated, add them
                 if ~ismember(data.(chain1)(i).activatedUn(j,4),activated1Idx)
                     activated1Idx=[activated1Idx;data.(chain1)(i).activatedUn(j,4)];
                 end
@@ -29,13 +37,17 @@ function visualizeActivatedTaxels(datasetsNames)
         activated1=[];
         actTri1=zeros(1,32);
         for triangle=0:31
+            % if any activated taxel on the triangle
             if any(any(firstLocal.data(triangle*12+1:triangle*12+12,1:3)))
                 numTri1=numTri1+1;
                 for i=1:12
                     index=triangle*12+i;
+                    % if not (0,0,0)
                     if all(firstLocal.data(index,1:3))
+                        % if not in activated => add point to non-activated
                         if ~ismember(index-1,activated1Idx)
                             nonActivated1=[nonActivated1;firstLocal.data(index,:)];
+                        % else add to activated and set triangle as active
                         else 
                             actTri1(triangle+1)=1;
                             activated1=[activated1;firstLocal.data(index,:)];

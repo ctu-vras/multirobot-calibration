@@ -19,7 +19,7 @@ function [rms_errors, errors_all] = rmsErrors(dh, robot, datasets, dataset_index
     marker_dist_all = {};
     
     optim.useNorm=1;
-    fnames = fieldnames(start_dh);
+    fnames = fieldnames(dh);
     for pert_level = 1:optim.pert_levels
         for rep = 1:optim.repetitions
             % slice dataset

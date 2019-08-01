@@ -1,18 +1,27 @@
 function getTaxelDistances(robot, datasetsNames)
+    % GETTAXELDISTANCES shows distribution of distances between
+    % taxels/triangles.
+    %   INPUT - robot - instance of @Robot class
+    %         - datasetsNames - 1xN cellArray of strings
+    
+    
     DH=robot.structure.DH;
     DH.torso=[0,0,0,0];
     close all;
     for name=1:length(datasetsNames)
+        % split dataset name to get chain names
         spl=strsplit(datasetsNames{name},'_');
         chain1=spl{1};
         chain2=spl{2};
+        % get taxelStruct
         taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH);
         
-        dataX=[];
-        dataY=[];
-        xTicks=[];
-        xValue=1;
-        xTic=[];
+        %Allocate matrices
+        dataX=[]; %X index
+        dataY=[]; % Y index
+        xTicks=[]; % X tick names
+        xValue=1; % x index
+        xTic=[]; %x tick values
 
         dataXT=[];
         dataYT=[];
@@ -20,9 +29,11 @@ function getTaxelDistances(robot, datasetsNames)
         xTicksT=[];
         xTicT=[];
         activated=false;
+        % iterate over all triangle
         for triangleId=0:31
             for taxelId=1:12
                 index=triangleId*12+taxelId;
+                % if more than X activations on one taxel
                 if size(taxelStruct.(strcat('s',num2str(index))).distances,1)>=5
                     for j=1:size(taxelStruct.(strcat('s',num2str(index))).distances,1)
                        dataX=[dataX;xValue];
@@ -50,7 +61,7 @@ function getTaxelDistances(robot, datasetsNames)
         xtickangle(90);
         grid on;
         xlabel('Taxel numbers')
-        ylabel('Error [mm]')
+        ylabel('Error [m]')
         title('Error distribution for taxels')
         % savefig(a,strcat(home,'/../Visualization/Figs/FIG/New/',name,'Taxels.fig'));
         % saveas(a,strcat(home,'/../Visualization/Figs/PNG/New/',name,'Taxels.png'));
@@ -61,7 +72,7 @@ function getTaxelDistances(robot, datasetsNames)
         set(gca,'xticklabel',xTicksT);
         grid on;
         xlabel('Triangle numbers')
-        ylabel('Error  [mm]')
+        ylabel('Error  [m]')
         title('Error distribution for triangles')
         % savefig(b,strcat(home,'/../Visualization/Figs/FIG/New/',name,'Triangles.fig'));
         % saveas(b,strcat(home,'/../Visualization/Figs/PNG/New/',name,'Triangles.png'));
