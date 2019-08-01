@@ -1,6 +1,18 @@
-function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, optim, varargin)
-%SAVERESULTS Summary of this function goes here
-%   Detailed explanation goes here
+function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, chains, approach, jointTypes, optim)
+%SAVERESULTS Save results to mat files
+%   Saving inputed variables to mat files
+%INPUT - robot - Robot object
+%      - outfolder - save folder name
+%      - res_dh - robot result DH
+%      - corrs_dh - corrections from nominal DH
+%      - before_tr_err, after_tr_err, before_ts_err, after_ts_err - before/after training rms errors, before/after testing rms errors
+%      - before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all - before/after training individual errors, before/after testing individual errors
+%      - chains - chains to calibrate
+%      - approach - calibration approaches
+%      - jointTypes -joint types to calibrate
+%      - optim - calibration settings
+
+    %% merge all rms errors
     errors = nan(16,optim.repetitions * optim.pert_levels);
     if(~isempty(before_tr_err))
         errors(1:4,:) = before_tr_err;
@@ -16,14 +28,14 @@ function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_er
     end
 
     errorsAll=[before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all];
-    
+    %% save variables
     s = mkdir(outfolder);
     assert(s, 'Could not make folder');
     save([outfolder, 'results.mat'], 'res_dh');
     save([outfolder, 'corrections.mat'], 'corrs_dh');
     save([outfolder, 'errors.mat'], 'errors','errorsAll');
-    save([outfolder, 'info.mat'], 'optim');
-
+    save([outfolder, 'info.mat'], 'optim', 'chains', 'approach', 'jointTypes', 'robot');
+    %% save DH to text files
     fnames=fieldnames(res_dh);
     for pert_level = 1:optim.pert_levels
         for rep = 1:optim.repetitions   
@@ -32,12 +44,10 @@ function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_er
                 fprintf(file, '%-s\t a \t d \t alpha \t offset\n', fnames{name});
                 joints=robot.findJointByGroup(fnames{name});
                 for line=1:size(res_dh.(fnames{name}),1)
-                    formatSpec='%-s %-5.8f %-5.8f %-5.8f %-5.8f\n';
-                    
+                    formatSpec='%-s %-5.8f %-5.8f %-5.8f %-5.8f\n';                    
                     fprintf(file,formatSpec, joints{line}.name, [res_dh.(fnames{name})(line,1),res_dh.(fnames{name})(line,2),res_dh.(fnames{name})(line,3),res_dh.(fnames{name})(line,4)]');
                 end
-                fprintf(file,'\n');
-                
+                fprintf(file,'\n');             
             end
             fclose(file);
         end
