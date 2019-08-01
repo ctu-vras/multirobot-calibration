@@ -1,9 +1,13 @@
 function plotErrorResiduals( computed_points, real_points )
-%PLOT Summary of this function goes here
-%   Detailed explanation goes here
+%PLOTERRORRESIDUALS Function for plotting error residuals
+%INPUT - computed_points - 2xN vector of points in metres
+%      - real_points - 2xN vector of points in metres
+
+    %% convert points to mm
     real_points = real_points*1000;
     computed_points = computed_points*1000;
     
+    %% scatter plot of residuals in 2D
     figure()
     subplot(2,1,1)     
     scatter(computed_points(1,:)-real_points(1,:), computed_points(2,:)-real_points(2,:))
@@ -15,6 +19,7 @@ function plotErrorResiduals( computed_points, real_points )
     xlabel('error in Y [mm]') 
     ylabel('error in Z [mm]')
     
+    %% quiver plot of residuals in 2D
     figure()
     subplot(2,1,1)
     quiver(real_points(1,:), real_points(2,:), computed_points(1,:)-real_points(1,:), computed_points(2,:)-real_points(2,:), 1, 'Color', 'b');
@@ -26,6 +31,7 @@ function plotErrorResiduals( computed_points, real_points )
     xlabel('Y [mm]')
     ylabel('Z [mm]')
     
+    %% quiver plot of residuals in 2D without position
     figure()
     subplot(2,1,1)
     quiver(computed_points(1,:)-real_points(1,:), computed_points(2,:)-real_points(2,:), 1, 'Color', 'b');
@@ -37,6 +43,7 @@ function plotErrorResiduals( computed_points, real_points )
     xlabel('Y [mm]')
     ylabel('Z [mm]')
     
+    %% quiver plot of residuals in 3D
     figure()
     quiver3(real_points(1,:), real_points(2,:), real_points(3,:), computed_points(1,:)-real_points(1,:), computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:), 1, 'Color', 'b');
     xlabel('X [mm]')

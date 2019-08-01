@@ -1,9 +1,10 @@
-function [ output_args ] = plotJacobian(robot, whitelist, Jacobians, titles)
-%PLOTJACOBIAN Summary of this function goes here
-%   Detailed explanation goes here
-
-%     h = figure('Position', [10 10 2400 1600]);
-    hold on;
+function plotJacobian(robot, whitelist, jacobians, titles)
+%PLOTJACOBIAN Function for plotting jacobians
+%INPUT - robot - Robot object
+%      - whitelist - whitelist structure to gain the parameters names
+%      - jacobians - cell array of jacobians
+%      - titles - subplot titles
+    %% xt contains the parameters names
     fnames=fieldnames(robot.structure.DH);
     params={'a','d','$\alpha$','$\theta$'};
     xt = {};
@@ -16,14 +17,13 @@ function [ output_args ] = plotJacobian(robot, whitelist, Jacobians, titles)
            for i=1:size(whitelist.(fnames{name}),1)
               for j=col(row==i)'
                   xt{end+1}=[joints{i}.name,' ',params{j}];
-              end
-           
+              end       
            end
         end  
     end
-    Jacobians = reshape(Jacobians, [],1,1);
-    
-    count = length(Jacobians);
+    %% choose subplots grid
+    jacobians = reshape(jacobians, [],1,1);
+    count = length(jacobians);
     if(count < 4)
         rows = count;
         cols = 1;
@@ -46,13 +46,15 @@ function [ output_args ] = plotJacobian(robot, whitelist, Jacobians, titles)
         rows = 4;
         cols = 4;
     end
-    
-    for j= 1:length(Jacobians)
+    h = figure();
+    hold on;
+    %% plot normalized jacobians
+    for j= 1:length(jacobians)
         subplot(rows,cols,j);
-        maxs = max(max(abs(Jacobians{j})));
+        maxs = max(max(abs(jacobians{j})));
         maxs(maxs == 0) = 1;
-        Jac = Jacobians{j}./maxs;
-        boxplot(Jac)
+        jac = jacobians{j}./maxs;
+        boxplot(jac)
         set(gca,'XTickLabel',xt, 'FontSize',16)
         ylim([-1,1])
         bp = gca;
