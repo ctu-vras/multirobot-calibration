@@ -1,4 +1,4 @@
-function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig(approaches, inputChains)
+function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(approaches, inputChains)
     %% Solver options
     options = optimoptions('lsqnonlin');
     %options.Algorithm = 'trust-region-reflective';
@@ -15,8 +15,8 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     
     
     %% Chains
-    chains.rightArm=1;
-    chains.leftArm=1;
+    chains.rightArm=0;
+    chains.leftArm=0;
     chains.torso=0;
     chains.head=0;
     chains.leftEye=0;
