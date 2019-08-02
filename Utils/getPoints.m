@@ -1,7 +1,13 @@
 function [ arm1, arm2 ] = getPoints(dh_pars, dataset, H0, compute_arm2)
-%GETPOINTS Compute a plane fitted to set of given points using svd.
-%INPUT - points - (4,X) or (3,X) row vector of points
-%OUTPUT - plane - fitted plane
+%GETPOINTS Compute points coordinates to base.
+%INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
+%                      the 'groups' in robot. Each group is matrix.
+%      - dataset - dataset structure in common format
+%      - H0 - H0 robot transformation
+%      - compute_arm2 - wheather compute second end effector or use
+%      refPoints
+%OUTPUT - arm1 - points coordinates of first end effector
+%       - arm2 - points coordinates of second end effector
     frames = dataset.frame;  
     joints = dataset.joints;
     points = dataset.point;
@@ -27,6 +33,5 @@ function [ arm1, arm2 ] = getPoints(dh_pars, dataset, H0, compute_arm2)
                *[points(i,4:6),1]';
         end
     end
-
 end
 

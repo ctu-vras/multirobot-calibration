@@ -1,7 +1,7 @@
 function [ dist ] = getDist(dh_pars, robot, datasets, optim)
 %GETDIST returns errors from selftouch configurations
 %   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
-%                      the 'groups' in robot. Each group is 4D array.
+%                      the 'groups' in robot. Each group is matrix.
 %         - robot - instance of @Robot class
 %         - datasets - 1xN cellarray of datasets for selftouch;
 %                       each dataset is structure in common format
@@ -11,7 +11,7 @@ function [ dist ] = getDist(dh_pars, robot, datasets, optim)
 %                   N is number of errors from selftouch
     dist = [];
     H0 = robot.structure.H0;
-    %terate over datasets
+    %iterate over datasets
     for dataset=datasets
         dataset = dataset{1};
         refPoints = dataset.refPoints;

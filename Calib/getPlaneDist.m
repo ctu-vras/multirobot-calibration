@@ -1,7 +1,7 @@
 function [ dist ] = getPlaneDist( dh_pars, robot, datasets)
 %GETPLANEDIST returns errors from selftouch configurations
 %   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
-%                      the 'groups' in robot. Each group is 4D array.
+%                      the 'groups' in robot. Each group is matrix.
 %         - robot - instance of @Robot class
 %         - datasets - 1xN cellarray of datasets for selftouch;
 %                       each dataset is structure in common format
