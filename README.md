@@ -15,10 +15,10 @@ Recommended steps (the order is optional):
 
  - prepare fuctions for your robot (or use one of the existing)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
-   - mandatory are functions with robot structures and DH (see [loading functions](##loading-functions)) and 
+   - mandatory are functions with robot structures and DH (see [loading functions](#loading-functions)) and 
      functions to prepare datasets (see [Datasets](#datasets) and functions for existing robots)
-   - voluntary are whitelist (see [Whitelist](##whitelist)), bounds (see [bounds](##bounds)) functions
- - set up calibration config file (see [Calibration config](##calibration-config))
+   - voluntary are whitelist (see [Whitelist](#whitelist)), bounds (see [bounds](#bounds)) functions
+ - set up calibration config file (see [Calibration config](#calibration-config))
  - select config files, output folders and run calibration 
    - look at [Examples](example.m)
    - or use csv file as input (see [Loading from csv](#loading-from-csv))
@@ -98,7 +98,7 @@ All of the datasets must be structure with these fields (some of them may be vol
  - chains - set which chains will be calibrated
    - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Main example](example.m))
    - if chains is set to 0, it does not matter if there are any 1 in the whitelist in given chain (this is superior over whitelist)
- - approaches - set which approch will be used (see [Calibration approches](##calibration-approches)
+ - approaches - set which approch will be used (see [Calibration approches](#calibration-approches)
    - more than one approches at a time can be used
    - value does not have to be 1/0, but any non-zero number will enable the approche and values from thsi approach will be scaled by given value
    - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Main example](example.m))
