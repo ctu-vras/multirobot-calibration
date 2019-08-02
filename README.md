@@ -274,11 +274,11 @@ and function to change dataset to format, which uses the toolbox (see [Datasets]
 Voluntary configs are for load of whitelist (see [loadNaoWL.m](Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](Robots/Nao/loadMotomanWL.m), [loadICUBWL.m](Robots/Nao/loadICUBWL.m))
 and bounds (see [loadMotomanBounds.m](Robots/Nao/loadMotomanBounds.m)).
 
-#Types
+# Types
 
 Each joint has defined its type. The types are defined in [types.m](Utils/types.m) and are used to create structure of the robot in [loading functions](#loading-functions). Types are some kind of substitute for body parts. And with this, we can calibrate and visualize the right joints.
 
-#Groups
+# Groups
 
 Each joint has defined its group. The types are defined in [group.m](Utils/group.m) and are used to create structure of the robot in [loading functions](#loading-functions). Groups help to select right DH, bounds and WL for each joint. Difference between groups and types is that, groups are more complex. E.g. type is joint, but group will be right arm and left arm. Simply it is substitute for chains.
 Also it helps to divide skin from other things.
@@ -298,6 +298,5 @@ Fields:
 If you have everything prepared just type in matlab console 'loadTasksFromFile('tasks.csv')'. (You must have at least [Utils](Utils) folder in Matlab path).
 
 # Schema
-
 ![Calibration diagram](calibAll.jpg)
 ![Structure](structure.jpg)
