@@ -10,20 +10,36 @@
  - [Visualization](#visualization)
  - [Schema](#schema)
 
+# How to run
+Recommended steps (the order is optional):
+
+ - prepare fuctions for your robot (or use one of the existing)
+   - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
+   - mandatory are functions with robot structures and DH (see [loading functions](##loading-functions)) and 
+     functions to prepare datasets (see [Datasets](#datasets) and functions for existing robots)
+   - voluntary are whitelist (see [Whitelist](##whitelist)), bounds (see [bounds](##bounds)) functions
+ - set up calibration config file (see [Calibration config](##calibration-config))
+ - select config files, output folders and run calibration 
+   - look at [Examples](example.m)
+   - or use csv file as input (see [Loading from csv](#loading-from-csv))
+ - visualize and evaluate results (see [Visualization](#visualization))
+
 # Robot
 Found in the [@Robot](@Robot) folder. This directory includes the main class file for the robots [Robot.m](@Robot/Robot.m).
 This file includes the constructor, which calls robot-specific functions (see [Robots](Robots)) to set up the robot.
+
 ## Properties
-    - name - String name of the robot 
-    - joints - Cell array of [Joint](#joint) classes
-    - structure - Structure containing DH, WL and bounds
+ - name - String name of the robot 
+ - joints - Cell array of [Joint](#joint) classes
+ - structure - Structure containing DH, WL and bounds
+
 ## Methods
  - findJoint - Returns instance of joints with given name
  - findJointById - Returns instance of joints with given Id
  - findJointByType - Returns instance of joints with given type
  - findJointByGroup - Returns instance of joints with given group
  - print - Displays Robot.joints as 'jointName jointId'
- - [printTables](@Robot/printTables) - Displays tables from Robot.structure as 'a, d, alpha, theta jointName'
+ - [printTables](@Robot/printTables.m) - Displays tables from Robot.structure as 'a, d, alpha, theta jointName'
  - [showModel](@Robot/showModel.m) - Shows virtual model of the robot based on input joint angles.
  - [showGraphModel](@Robot/showGraphModel.m) - Shows tree-based graph of given robot
  - [prepareDH](@Robot/prepareDH.m) - Returns DH tables with/without perturbations and tables with bounds
@@ -41,8 +57,10 @@ Found in the [@Joint](@Joint) folder. This directory includes the main class fil
  - type - 'type' of the joints...see [types.m](Utils/types.m)
  - endEffector - true/false if joint is endEffector
  - group - 'group' of the joint...see [group.m](Utils/group.m)
+
 ## Methods
  - computeRTMatrix - iterates over the parents of the input Joint and returns RT matrix
+
 # Datasets
 All of the datasets must be structure with these fields (some of them may be voluntary):
 (unless otherwise stated, all fields have N rows, where N represent number of training/testing values)
@@ -65,10 +83,31 @@ All of the datasets must be structure with these fields (some of them may be vol
    - e.g. when camera has more photos of one touch 
 
 # Configs
- - [optimizationConfig.m](Configs/optimizationConfig.m) - settings for the calibration
 
+## Calibration config
+ See [optimizationConfig.m](Configs/optimizationConfig.m) for default settings and examples 
+
+### Description of parameters
+
+ - solver options - mostly no parameter needs to be changed, but few important settings are:
+   - Algorithm - if you want to use bounds, change to 'trust-region-reflective'
+   - TolFun - if problem converges too soon, change to lower value (higher if it doest not converges)
+   - MaxIter - if problem does not converges, set higher value (too high value may results into overfitting)
+   - UseParallel - set to 1, if you want to use more cores of CPU
+   - ScaleProblem - set to 'jacobian' if differences in calibrated parameters are too high (e.g. lengths in thousands of mm and angles in units of rad)
+ - chains - set which chains will be calibrated
+   - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Main example](example.m))
+   - if chains is set to 0, it does not matter if there are any 1 in the whitelist in given chain (this is superior over whitelist)
+ - approaches - set which approch will be used (see [Calibration approches](##calibration-approches)
+   - more than one approches at a time can be used
+   - value does not have to be 1/0, but any non-zero number will enable the approche and values from thsi approach will be scaled by given value
+   - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Main example](example.m))
+ - 
 # Calib
 Folder with functions designed for calibration
+
+## Calibration approches
+
 ## Files
  - [errors_fcn.m](Calib/errors_fcn.m) - returns vector of vector of errors for all types of calibration
  - [getDist.m](Calib/getDist.m) - returns errors from selftouch configurations
@@ -116,7 +155,7 @@ Folder with functions designed for repetitive tasks.
 
 # Robots
 Folder with folders for different robots. Right now, these robots are available: [Nao](Robots/Nao), [Motoman](Robots/Motoman), [iCub](Robots/iCub).
-The folders usually includes Datasets for given robot, robot-specific funtions and robot-specific configuration files.
+The folders usually includes Datasets for given robot, robot-specific funtions and robot-specific configuration files.  
 Mandatory are configs with structure of the robot (see [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m](Robots/Nao/loadMotoman.m), [loadICUBv1.m](Robots/Nao/loadICUBv1.m))
 and function to change dataset to format, which uses the toolbox (see [Datasets](#datasets) and [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m)).
 
