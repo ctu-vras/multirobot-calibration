@@ -1,20 +1,23 @@
 function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig(approaches, inputChains)
     %% Solver options
     options = optimoptions('lsqnonlin');
-    %options.Algorithm = 'trust-region-reflective';
+    %options.Algorithm = 'trust-region-reflective'; %Use for bounds
     options.Algorithm = 'levenberg-marquardt';
     options.Display = 'iter';
-    options.TolFun = 5e-7;
+    options.TolFun = 5e-7; %If problem does not converges, set lower values (and vice-versa)
     options.TolX = 1e-12;
-    options.MaxIter = 150;
+    options.MaxIter = 150; %Set higher value if problem does not converges (but too big value can results in overfitting)
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
-    options.UseParallel=0;
+    options.UseParallel=0; % set to use parallel computing on more cores
     %options.SpecifyObjectiveGradient=true
-    %options.ScaleProblem='jacobian';
+    %options.ScaleProblem='jacobian'; %Set if problem is badly scaled
     
     
     %% Chains
+    % set which chains will be calibrated
+    % superior over whitelist
+    % can be set by an argument into the function
     chains.rightArm=1;
     chains.leftArm=1;
     chains.torso=0;
@@ -35,6 +38,9 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     end
     
     %% Calibration approaches
+    % set which approach will be used
+    % value is used for scaling
+    % see README for details
     approach.eyes=0;
     approach.selftouch=0;
     approach.planes=0;
@@ -49,6 +55,10 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     end
     
     %% Calibration joint types
+    % set which parts of the body will be calibrated
+    % superior over chains
+    % can be set by an argument into the function
+    % depends on each other - 'onlyOffsets' without anything else will do nothing
     jointTypes.onlyOffsets=0;
     jointTypes.joint=1;
     jointTypes.eye=1;
@@ -59,21 +69,21 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     jointTypes.finger=0;
     
     %% Calibration settings
-    optim.bounds=0;
-    optim.repetitions=1;
-    optim.pert=[0,0,0];
-    optim.distribution = 'normal';
-    optim.pert_levels = 1+sum(optim.pert);
-    optim.splitPoint=0.7;
-    optim.refPoints=0;
-    optim.useNorm=1;
-    optim.parametersWeights=[1,1,1,1];
-    optim.boundsFromDefault=1;
+    optim.bounds=0; % set to use bounds
+    optim.repetitions=1; % number of training repetitions
+    optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
+    optim.distribution = 'normal'; % or 'uniform'
+    optim.pert_levels = 1+sum(optim.pert); % do not change!
+    optim.splitPoint=0.7; % training dataset ratio
+    optim.refPoints=0; % set to use 'refPoints' field in dataset
+    optim.useNorm=1; % set to compute errors as norm of two points
+    optim.parametersWeights=[1,1,1,1]; % set to scale parameters - [body lengths, body angles, skin lengths, skin angles]
+    optim.boundsFromDefault=1; % set to compute bounds from default values
     
     %% Perturbations   
-    pert.mild.DH=[0.01,0.01,0.01,0.1];
+    pert.mild.DH=[0.01,0.01,0.01,0.1]; %[a,d,alpha,theta]
     
-    pert.mild.camera=[0.05,0.05,0.05,0.05];
+    pert.mild.camera=[0.05,0.05,0.05,0.05]; %camera is optional
     
     pert.fair.DH=[0.03,0.03,0.03,0.3];
     

@@ -64,6 +64,7 @@ Found in the [@Joint](@Joint) folder. This directory includes the main class fil
 # Datasets
 All of the datasets must be structure with these fields (some of them may be voluntary):
 (unless otherwise stated, all fields have N rows, where N represent number of training/testing values)
+
  - point - Each value represent point in 3D space(x,y,z) and the field can be:
    - Nx3 array of doubles
    - Nx6 array of double, when two points are used (x1,y2,z1,x2,y2,z2)
@@ -102,7 +103,33 @@ All of the datasets must be structure with these fields (some of them may be vol
    - more than one approches at a time can be used
    - value does not have to be 1/0, but any non-zero number will enable the approche and values from thsi approach will be scaled by given value
    - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Main example](example.m))
- - 
+ - joint types - determine which part of the body will be calibrated
+   - onlyOffsets - will calibrate only offsets of each link (the last DH parameter)
+   - joint - will calibrate everything which is not skin, eye or finger
+   - the settings are superior over chains (see above). So in case you enable 'rightArm' but does not enable 'joint' or 'finger', nothing will be calibrated
+   - the settings are also depending on each other. If you enable 'onlyOffsets', you still need to enable for example 'mount' to calibrate
+ - perturbations - set the perturbations ranges
+   - each field indicates other level of perturbation
+   - element in vector are the 4 DH parameters - [a, d, alpha, theta] 
+   - mainly the 'DH' subfield is used and 'camera' subfield is optional 
+ - other settings - other setings for the calibration
+   - bounds - set to enable bounds (Algorithm in solver options needs to be set to 'trust-region-reflective' !)
+   - repetitions - number of repetitions of the training
+   - pert - default is 1x3 vector, where each element indicates which perturbation level (see perturbations above) will be used
+     - can changed to any length depending on your 'pert' struct settings
+     - it will take fields in order as they are written in the code
+   - distribution - distribution of perturbation values
+     - can be 'normal' or 'uniform'
+   - pert_levels - just help varible, do not change!
+   - splitPoint - the ratio of traing part of the dataset (default 70%)
+   - refPoints - set to use 'refPoints' field in dataset
+   - useNorm - set if you want to compute errors in calibration as 'distance' between two points (Euclidean)
+     - else difference in each coordinate of the points will be used
+   - parameterWeights - 1x4 vector of doubles, where the number indicates how will be the parameters scaled in calibration
+     - [lengths of body, angles of body, lengths of skin, angles of skin]
+   - boundsFromDefault - set if the bounds are considering the latest DH or the default DH
+     - useful in sequential calibration 
+
 # Calib
 Folder with functions designed for calibration
 
