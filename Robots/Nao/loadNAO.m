@@ -1,7 +1,7 @@
-function [name, joints, structure]=loadNAO()
+function [name, jointStructure, structure]=loadNAO()
     %LOADNAO returns structure of the NAO robot
     %   OUTPUT - name - string name of the robot
-    %          - joints - joint structure of the robot
+    %          - jointStructure - joint structure of the robot
     %          - structure - DH,WL and bounds of the robot
     
     %% Patches
@@ -13,7 +13,7 @@ function [name, joints, structure]=loadNAO()
     torso_right=[16,17,18,24,25,26,27,28,29,30,31];
     
     %% Robot structure
-    joints={{'base',types.base,nan,0,0,group.torso},...
+    jointStructure={{'base',types.base,nan,0,0,group.torso},...
         ...
         {'headYaw',types.joint,'base',1,0,group.head},...
         {'headPitch',types.joint,'headYaw',2,0,group.head},...
@@ -50,24 +50,24 @@ function [name, joints, structure]=loadNAO()
         {'torsoRightPatch',types.patch,'torsoPlastic',3,1,group.torsoSkin}};
     %% Assign triangles into the structure
     for triangleId=1:size(hands_upper,2)
-        joints{end+1}={strcat('rightTriangle',num2str(hands_upper(triangleId))),types.triangle,'rightUpperPatch',triangleId+3,1,group.rightArmSkin};
-        joints{end+1}={strcat('leftTriangle',num2str(hands_upper(triangleId))),types.triangle,'leftUpperPatch',triangleId+3,1,group.leftArmSkin};
+        jointStructure{end+1}={strcat('rightTriangle',num2str(hands_upper(triangleId))),types.triangle,'rightUpperPatch',triangleId+3,1,group.rightArmSkin};
+        jointStructure{end+1}={strcat('leftTriangle',num2str(hands_upper(triangleId))),types.triangle,'leftUpperPatch',triangleId+3,1,group.leftArmSkin};
     end
     for triangleId=1:size(hands_lower,2)
-        joints{end+1}={strcat('rightTriangle',num2str(hands_lower(triangleId))),types.triangle,'rightLowerPatch',triangleId+3+size(hands_upper,2),1,group.rightArmSkin};
-        joints{end+1}={strcat('leftTriangle',num2str(hands_lower(triangleId))),types.triangle,'leftLowerPatch',triangleId+3+size(hands_upper,2),1,group.leftArmSkin};
+        jointStructure{end+1}={strcat('rightTriangle',num2str(hands_lower(triangleId))),types.triangle,'rightLowerPatch',triangleId+3+size(hands_upper,2),1,group.rightArmSkin};
+        jointStructure{end+1}={strcat('leftTriangle',num2str(hands_lower(triangleId))),types.triangle,'leftLowerPatch',triangleId+3+size(hands_upper,2),1,group.leftArmSkin};
     end
     for triangleId=1:size(head_left,2)
-        joints{end+1}={strcat('headTriangle',num2str(head_left(triangleId))),types.triangle,'headLeftPatch',triangleId+3,1,group.headSkin};
+        jointStructure{end+1}={strcat('headTriangle',num2str(head_left(triangleId))),types.triangle,'headLeftPatch',triangleId+3,1,group.headSkin};
     end
     for triangleId=1:size(head_right,2)
-        joints{end+1}={strcat('headTriangle',num2str(head_right(triangleId))),types.triangle,'headRightPatch',triangleId+3+size(head_left,2),1,group.headSkin};
+        jointStructure{end+1}={strcat('headTriangle',num2str(head_right(triangleId))),types.triangle,'headRightPatch',triangleId+3+size(head_left,2),1,group.headSkin};
     end
     for triangleId=1:size(torso_left,2)
-        joints{end+1}={strcat('torsoTriangle',num2str(torso_left(triangleId))),types.triangle,'torsoLeftPatch',triangleId+3,1,group.torsoSkin};
+        jointStructure{end+1}={strcat('torsoTriangle',num2str(torso_left(triangleId))),types.triangle,'torsoLeftPatch',triangleId+3,1,group.torsoSkin};
     end
     for triangleId=1:size(torso_right,2)
-        joints{end+1}={strcat('torsoTriangle',num2str(torso_right(triangleId))),types.triangle,'torsoRightPatch',triangleId+3+size(torso_left,2),1,group.torsoSkin};
+        jointStructure{end+1}={strcat('torsoTriangle',num2str(torso_right(triangleId))),types.triangle,'torsoRightPatch',triangleId+3+size(torso_left,2),1,group.torsoSkin};
     end
     %% DH
     structure.DH.leftArm=[0, 0.1, -pi/2, 0;

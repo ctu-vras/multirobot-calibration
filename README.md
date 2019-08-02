@@ -5,6 +5,8 @@
  - [Datasets](#datasets)
  - [Confings](#configs)
  - [Robots](#robots)
+ - [Types](#types)
+ - [Groups](#groups)
  - [Calib](#calib)
  - [Utils](#utils)
  - [Visualization](#visualization)
@@ -70,7 +72,7 @@ All of the datasets must be structure with these fields (some of them may be vol
    - Nx6 array of double, when two points are used (x1,y2,z1,x2,y2,z2)
  - frame - Nx1 array of strings, where each value is name of the joint from which the TF matrix will be computed	
  - frame2 (voluntary) - Nx1 array of strings, where each value is name of the joint from which the TF matrix for second point will be computed
- - joints - Nx1 array of structures, where each structure include joint angles for each group  
+ - joints - Nx1 array of structures, where each structure include joint angles for each group
    - each field of the inner structure is 1xM array of doubles
    - e.g. joints(1).leftArm=[...], joints(1).rightArmSkin=[...]
  - refPoints (voluntary) - Nx3 array of doubles, where each line represents point in 3D (x,y,z, which will be used as reference to point computed from optimized values
@@ -85,6 +87,37 @@ All of the datasets must be structure with these fields (some of them may be vol
 
 # Configs
 
+## Loading functions
+These functions serve to create the structure of the robot and set default DH, whitelist and bounds.
+Take a look at existing robots [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m](Robots/Nao/loadMotoman.m), [loadICUBv1.m](Robots/Nao/loadICUBv1.m)
+### Output variables
+ - name - name of the robot, any string to distinguish the robots
+ - jointStructure - the structure of the robot, created by joints
+
+   - 1xN cellArray
+   - each element is another cellArray in mandatory format: {'nameOfJoint',jointType,'nameOfParent',indexInArrays,isEndEffector,group}
+
+     - 'nameOfJoint' - string name of the joint
+     - jointType - in format types.'type', where types. is enumeration class (see [Types](#Types))
+     - 'nameOfParent' - string name of parent joint (parent must already exist!)
+     - indexInArrays - index into DH, WL and bounds arrays (number of line corresponding to the joint)
+     - isEndEffector - 1/0 to set if joint is end-effector
+     - group - in froamt group.'group', where group. is enumeration class (see [Groups](#groups))
+   - the strucure can contain optional number of joints
+ - structure - is Matlab struct with all other informations
+   - H0 - transformation matrix before DH links (mostly identity matrix)
+   - DH - Matlab struct with field named after groups ([Groups](#groups)) contained in jointStructure
+     - each line corresponds to one DH link and is linked with the jointStructure with its indexInArrays parameter 
+   - defaultDH - defaultDH of the robot
+     - the DH can be replaced with another one and it is useful to save the default one
+   - bounds - bounds for each body part
+     - fields are named after body parts (see struct jointTypes in [optimizationConfig.m](Configs/optimizationConfig.m) for all possibilities) 
+     - each field contain 4 values (a,d,alpha,theta)
+     - bounds are set relatively = 0.1 means that lower bound will be (DH-0.1) and upper bound (DH+0.1)
+   - WL - Matlab struct with field named after groups ([Groups](#groups)) contained in jointStructure
+     - each line corresponds to one DH link and is linked with the jointStructure with its indexInArrays parameter
+     - parameters with '1' on their place can be calibrated 
+
 ## Calibration config
  See [optimizationConfig.m](Configs/optimizationConfig.m) for default settings and examples 
 
@@ -92,14 +125,14 @@ All of the datasets must be structure with these fields (some of them may be vol
 
  - solver options - mostly no parameter needs to be changed, but few important settings are:
    - Algorithm - if you want to use bounds, change to 'trust-region-reflective'
-   - TolFun - if problem converges too soon, change to lower value (higher if it doest not converges)
-   - MaxIter - if problem does not converges, set higher value (too high value may results into overfitting)
+   - TolFun - if problem converges too soon, change to lower value (higher if it does not converge)
+   - MaxIter - if problem does not converge, set higher value (too high value may results into overfitting)
    - UseParallel - set to 1, if you want to use more cores of CPU
    - ScaleProblem - set to 'jacobian' if differences in calibrated parameters are too high (e.g. lengths in thousands of mm and angles in units of rad)
  - chains - set which chains will be calibrated
    - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Main example](example.m))
    - if chains is set to 0, it does not matter if there are any 1 in the whitelist in given chain (this is superior over whitelist)
- - approaches - set which approch will be used (see [Calibration approches](#calibration-approches)
+ - approaches - set which approch will be used (see [Calibration approaches](#calibration-approaches)
    - more than one approches at a time can be used
    - value does not have to be 1/0, but any non-zero number will enable the approche and values from thsi approach will be scaled by given value
    - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Main example](example.m))
@@ -130,10 +163,28 @@ All of the datasets must be structure with these fields (some of them may be vol
    - boundsFromDefault - set if the bounds are considering the latest DH or the default DH
      - useful in sequential calibration 
 
+## Whitelist
+
+Whitelist functions serve to load customized whitelists. Whitelist is structure with multiple fields and each field contains Nx4 array with 1 or 0. 
+Each column represent one DH parameter (a,d,alpha,theta). Parameters with 1 can be calibrated. (depends on another settings from [Calibration config](#calibration-config).
+See already created files [loadNaoWL.m](Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](Robots/Nao/loadMotomanWL.m), [loadICUBWL.m](Robots/Nao/loadICUBWL.m).  
+  
+Output is 'WL' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any joint of the robot). 
+
+## Bounds
+
+This functions serve when you want to have bounds different for any parameter, not just divided by body parts.
+See already created files [loadMotomanBounds.m](Robots/Nao/loadMotomanBounds.m). Output is 'bounds' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any joint of the robot). Where each field is 4xN array of doubles. Each column represent one DH parameter (a,d,alpha,theta) and lines are connected to joints with 'indexInArrays' paremeter (see [Loading functions](#loading-functions))  
+  
+ - if value is 'nan' - default value from [Loading functions](#loading-functions) will be used
+ - if value is 'inf' - there will be no bounds for this parameter
+ - if value is any other number, it will be relative bound for the parameter
+
+
 # Calib
 Folder with functions designed for calibration
 
-## Calibration approches
+## Calibration approaches
 
 ## Files
  - [errors_fcn.m](Calib/errors_fcn.m) - returns vector of vector of errors for all types of calibration
