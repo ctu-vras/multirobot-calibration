@@ -13,7 +13,8 @@ classdef group
         torsoSkin = 'torsoSkin';
         leftLeg = 'leftLeg';
         rightLeg = 'rightLeg';
-        markers = 'markers';
+        rightMarkers = 'rightMarkers';
+        leftMarkers = 'leftMarkers';
         leftIndex = 'leftIndex';
         rightIndex = 'rightIndex';
         leftThumb = 'leftThumb';

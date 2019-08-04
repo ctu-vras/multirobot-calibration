@@ -178,7 +178,8 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                   
                 %% assign corresponding tf matrices to each pose
                 for j = length(dataset.pose):-1:1
-                    matrices.markers = rob.structure.markers(:,:,projData(j,2));
+                    matrices.rightMarkers = rob.structure.rightMarkers(:,:,projData(j,2));
+                    matrices.leftMarkers = rob.structure.leftMarkers(:,:,projData(j,2));
                     matrices.torso = eye(4);
                     if(chains.leftArm == 0)
                         matrices.leftArm = preMatrixLeft(:,:,dataset.pose(j));
@@ -195,7 +196,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                     dataset.rtMat(j) = matrices; 
                 end   
                 dataset.rtMat = reshape(dataset.rtMat, length(dataset.pose),1);
-                
+
                 %% dataset2 is a part of dataset where poses are unique
                 C = cell(size(index_pose, 1) ,1);
                 C(:) = {'EE1'}; % right end effector
@@ -208,7 +209,6 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                 dataset2.point = zeros(size(index_pose, 1),6);
                 dataset2.refDist = 0.116; 
                 dataset2.rtMat = dataset.rtMat(index_pose);    
-                
                 % index must be same for touch and projections datasets
                 % because of splitting into training and testing parts
                 index = index+1;

@@ -63,8 +63,8 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
             0.0, -0.445,     0.0,  0.0];
         
     %% robot initial whitelist      
-    structure.WL.leftArm = [1, 0, 1, 0;
-                             1, 1, 1, 1;
+    structure.WL.leftArm = [0, 0, 0, 0;
+                             0, 0, 0, 0;
                              1, 0, 1, 1;
                              1, 1, 1, 1;
                              1, 1, 1, 1;
@@ -73,7 +73,7 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
                              1, 1, 0, 1];
        
     structure.WL.rightArm = [0, 0, 0, 0;
-                              1, 0, 1, 0;
+                              0, 0, 0, 0;
                               1, 0, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;

@@ -19,17 +19,19 @@ function [ arm1, arm2 ] = getPoints(dh_pars, dataset, H0, compute_arm2)
         arm2 = [];
     end 
     empty = isempty(dataset.rtMat);
-    if (empty) % if no precomputed matrices -> fill up the array with []
+    if (empty && ~isempty(joints)) % if no precomputed matrices -> fill up the array with []
         rtMats{size(joints,1)} = [];
     else
         rtMats = dataset.rtMat;
     end
+    DHindexes = dataset.DHindexes;
+    parents = dataset.parents;
     %% compute end effectors coordinates
     for i = 1:size(joints, 1)      
-        arm1(:,i) =  getTF(dh_pars,frames(i),rtMats(i), empty, joints(i), H0)...
+        arm1(:,i) =  getTF(dh_pars,frames(i),rtMats(i), joints(i), H0, DHindexes.(frames(i).name), parents)...
             *[points(i,1:3),1]';
         if compute_arm2
-           arm2(:,i) =  getTF(dh_pars,frames2(i),rtMats(i), empty, joints(i), H0)...
+           arm2(:,i) =  getTF(dh_pars,frames2(i),rtMats(i), joints(i), H0, DHindexes.(frames2(i).name), parents)...
                *[points(i,4:6),1]';
         end
     end
