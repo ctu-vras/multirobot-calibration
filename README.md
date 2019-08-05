@@ -31,7 +31,7 @@ Recommended steps (the order is optional):
 
 # Examples
 
-Examples how to run calibration and use visualization and models can be found in [Examples folder](Examples) as .m files ([Calibration examples](Examples/calibration.m),[Models examples](Examples/models.m),[Visualization examples](Examples/visualization.m)) or livescripts .mlx files ([Calibration examples](Examples/calibration.mlx),[Models examples](Examples/models.mlx),[Visualization examples](Examples/visualization.mlx))
+Examples how to run calibration and use visualization and models can be found in [Examples folder](Examples) as .m files ([Calibration examples](Examples/calibration.m),[Models examples](Examples/models.m),[Visualization examples](Examples/visualization.m), [Utils examples](Examples/utils.m)) or livescripts .mlx files ([Calibration examples](Examples/calibration.mlx),[Models examples](Examples/models.mlx),[Visualization examples](Examples/visualization.mlx), [Utils examples](Examples/utils.m))
 
 # Robot
 
@@ -266,6 +266,7 @@ Folder with functions designed for repetitive tasks.
  - [types.m](Utils/types.m) - static class of enumerated type containing string names of all possible type of joints
  - [symlog.m](Utils/symlog.m) - bi-symmetric logarithmic axes scaling
  - [weightParameters.m](Utils/weightParameters.m) - changes the optimized parameters weight
+ - [getIndexes.m](Utils/getIndexes.m) - computes indexes and parents needed to find transformations
 
 # Robots
 

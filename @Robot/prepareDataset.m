@@ -57,22 +57,7 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
         for name=1:length(uniqueFrames)
             joint = r.findJoint(uniqueFrames{name});
             joint = joint{1};
-            gr = joint.group;
-            idx = [];
-            id=1;
-            while isobject(joint) 
-                while strcmp(joint.group,gr) && ~strcmp(joint.type,types.base) % save indexes into DH table for all joints of the group
-                   idx(id)=joint.DHindex;
-                   id=id+1;
-                   joint=joint.parent;
-                end
-                datasets{dataset}.DHindexes.(uniqueFrames{name}).(gr) = idx(end:-1:1);
-                datasets{dataset}.parents.(gr) = joint; % joint.group differs from gr
-                gr = joint.group;
-                idx = joint.DHindex; 
-                id=2;
-                joint=joint.parent; 
-            end
+            datasets{dataset}=getIndexes(datasets{dataset},joint);
         end
     
         % Default refDist=0
