@@ -72,7 +72,7 @@ function plotCorrections(folder, varargin)
                    values=permute(values,[3,2,1]);
                    fig=figure();
                    bp=axes();
-                   boxplot(values);
+                   boxplot(values,xt);
                    set(bp,'xticklabel',xt)
                    xtickangle(bp,90)
                    bp.XAxis.TickLabelInterpreter = 'latex';

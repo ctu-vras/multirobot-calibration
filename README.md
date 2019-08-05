@@ -17,7 +17,6 @@
 # How to run
 
 Recommended steps (the order is optional):
-
  - prepare fuctions for your robot (or use one of the existing)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
    - mandatory are functions with robot structures and DH (see [loading functions](#loading-functions)) and 
@@ -25,7 +24,7 @@ Recommended steps (the order is optional):
    - voluntary are whitelist (see [Whitelist](#whitelist)), bounds (see [bounds](#bounds)) functions
  - set up calibration config file (see [Calibration config](#calibration-config))
  - select config files, output folders and run calibration 
-   - look at [Examples](example.m)
+   - look at [Calibration examples](Examples/calibration.mlx)
    - or use csv file as input (see [Loading from csv](#loading-from-csv))
  - visualize and evaluate results (see [Visualization](#visualization))
 
@@ -146,12 +145,12 @@ Take a look at existing robots [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m
    - UseParallel - set to 1, if you want to use more cores of CPU
    - ScaleProblem - set to 'jacobian' if differences in calibrated parameters are too high (e.g. lengths in thousands of mm and angles in units of rad)
  - chains - set which chains will be calibrated
-   - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Main example](example.m))
+   - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Calibration examples](Examples/calibration.mlx))
    - if chains is set to 0, it does not matter if there are any 1 in the whitelist in given chain (this is superior over whitelist)
  - approaches - set which approch will be used (see [Calibration approaches](#calibration-approaches))
    - more than one approches at a time can be used
    - value does not have to be 1/0, but any non-zero number will enable the approche and values from thsi approach will be scaled by given value
-   - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Main example](example.m))
+   - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Calibration examples](Examples/calibration.mlx))
  - joint types - determine which part of the body will be calibrated
    - onlyOffsets - will calibrate only offsets of each link (the last DH parameter)
    - joint - will calibrate everything which is not skin, eye or finger
@@ -223,6 +222,7 @@ Approaches can be combined at one time. To set them, see [Calibration config](#c
 # Visualization
 
 Folder with functions designed for visualization of the results
+Exampes of function use can be found [Visualization examples](Examples/visualization.mlx) or [Models examples](Examples/models.mlx).
 
 ## Files
 

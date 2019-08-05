@@ -2,10 +2,10 @@ function plotJointDistribution(robot, dataset, dataset2, group, plotTitle, legen
 %PLOTJOINTDISTRIBUTION Function for plotting joint distribution
 %INPUT - robot - Robot object
 %      - dataset - first dataset structure
-%      - dataset2 - second dataset structure
+%      - dataset2 - second dataset structure, can be empty ([])
 %      - group - group of joints
-%      - plotTitle - plot title
-%      - legends - cell array of legend labels
+%      - plotTitle - plot title, can be empty ('')
+%      - legends - cell array of legend labels, can be empty ('')
 %      - type - 1 - two independent datasets; 2 - first dataset is part of second dataset
 %      - skipIndexes - vector of joint indexes which should be skipped
     if(nargin <8)
@@ -72,13 +72,16 @@ function plotJointDistribution(robot, dataset, dataset2, group, plotTitle, legen
         index = index + 1;
         hold on;
         grid on;
-        if(~isempty(dataset))
-            histogram(joint_angles(:,i),'BinWidth',0.1, 'FaceAlpha',transparency, 'FaceColor', 'b');
+        histogram(joint_angles(:,i),'BinWidth',0.1, 'FaceAlpha',transparency, 'FaceColor', [0.4660 0.6740 0.1880]);
+        if(~isempty(dataset2))
+            histogram(joint_angles2(:,i),'BinWidth',0.1, 'FaceAlpha',transparency, 'FaceColor', 'b');  
         end
-        histogram(joint_angles2(:,i),'BinWidth',0.1, 'FaceAlpha',transparency, 'FaceColor', [0.4660 0.6740 0.1880]);  
         title(names{i});
         xlabel('joint angle [rad]');
         ylabel('# of poses');
+    end
+    if isempty(legends)
+        legends={'dataset1','dataset2'};
     end
     legend(legends,'Location','east');
     axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');

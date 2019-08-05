@@ -106,12 +106,12 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, datasetsNames
                             end
                             datasetLocal.joints=[datasetLocal.joints;angles];
                             %Find frame from string, e.g. rightTriangle15
-                            datasetLocal.frame{end+1}=strcat(name1,'Triangle',num2str(triangleId));
+                            datasetLocal.frame{end+1,1}=strcat(name1,'Triangle',num2str(triangleId));
                             % Find frame of second taxel...integer division of (a-1)/12
                             % a-1 because a is in matlab indexing and
                             % triangles are numbered from 0
                             %e.g. a=12...a//12=1, but we need (a-1)//12=0
-                            datasetLocal.frame2{end+1} = strcat(name2,'Triangle',num2str(floor((a-1)/12)));
+                            datasetLocal.frame2{end+1,1} = strcat(name2,'Triangle',num2str(floor((a-1)/12)));
                             datasetLocal.pose=[datasetLocal.pose;poseID];
                             % Assing mins and difs...just for visualization
                             datasetLocal.mins=[datasetLocal.mins;taxelStruct.(strcat('s',num2str(index))).mins(i)];
@@ -149,8 +149,8 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, datasetsNames
                     dataset.refPoints=[dataset.refPoints;datasetLocal.refPoints];
                     dataset.point=[dataset.point;datasetLocal.point];
                     dataset.joints=[dataset.joints;datasetLocal.joints];
-                    dataset.frame=[dataset.frame,datasetLocal.frame];
-                    dataset.frame2=[dataset.frame2,datasetLocal.frame2];
+                    dataset.frame=[dataset.frame;datasetLocal.frame];
+                    dataset.frame2=[dataset.frame2;datasetLocal.frame2];
                     dataset.pose=[dataset.pose;datasetLocal.pose];
                     dataset.rtMat=[dataset.rtMat;datasetLocal.rtMat];
                     dataset.mins=[dataset.mins;datasetLocal.mins];

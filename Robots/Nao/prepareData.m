@@ -90,7 +90,24 @@ for i=1:size(datasetLocal.(chain1),1)
         % If parent is not empty == not 'nan'
         if ~isempty(joint.parent)
             % compute RT matrix
-            mat=getTF(DH,joint,[],1,angles, robot.structure.H0);
+            gr = joint.group;
+            idx = [];
+            id=1;
+            j2=joint;
+            while isobject(j2) 
+                while strcmp(j2.group,gr) && ~strcmp(j2.type,types.base) % save indexes into DH table for all joints of the group
+                   idx(id)=j2.DHindex;
+                   id=id+1;
+                   j2=j2.parent;
+                end
+                DHindexes.(joint.name).(gr) = idx(end:-1:1);
+                parents.(gr) = j2; % joint.group differs from gr
+                gr = j2.group;
+                idx = j2.DHindex; 
+                id=2;
+                j2=j2.parent; 
+            end
+            mat=getTF(DH,joint,[],angles, robot.structure.H0,DHindexes.(joint.name),parents);
             % transform all points for given frame
             points=mat*[chain1Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
             % assign 1:3 component of the vectors
@@ -98,7 +115,24 @@ for i=1:size(datasetLocal.(chain1),1)
         end
         joint=chain2Joints(triangleId);
         if ~isempty(joint.parent)
-            mat=getTF(DH,joint,[],1,angles, robot.structure.H0);
+            gr = joint.group;
+            idx = [];
+            id=1;
+            j2=joint;
+            while isobject(j2) 
+                while strcmp(j2.group,gr) && ~strcmp(j2.type,types.base) % save indexes into DH table for all joints of the group
+                   idx(id)=j2.DHindex;
+                   id=id+1;
+                   j2=j2.parent;
+                end
+                DHindexes.(joint.name).(gr) = idx(end:-1:1);
+                parents.(gr) = j2; % joint.group differs from gr
+                gr = j2.group;
+                idx = j2.DHindex; 
+                id=2;
+                j2=j2.parent; 
+            end
+            mat=getTF(DH,joint,[],angles, robot.structure.H0,DHindexes.(joint.name),parents);
             points=mat*[chain2Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
             chain2Points((triangleId-1)*12+1:triangleId*12,1:3)=points(1:3,:)';
         end

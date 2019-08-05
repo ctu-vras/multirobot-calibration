@@ -1,7 +1,7 @@
-function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, chains, approach, jointTypes, optim)
+function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, chains, approach, jointTypes, optim)
 %SAVERESULTS Save results to mat files
 %   Saving inputed variables to mat files
-%INPUT - robot - Robot object
+%INPUT - rob - Robot object
 %      - outfolder - save folder name
 %      - res_dh - robot result DH
 %      - corrs_dh - corrections from nominal DH
@@ -34,7 +34,7 @@ function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_er
     save([outfolder, 'results.mat'], 'res_dh');
     save([outfolder, 'corrections.mat'], 'corrs_dh');
     save([outfolder, 'errors.mat'], 'errors','errorsAll');
-    save([outfolder, 'info.mat'], 'optim', 'chains', 'approach', 'jointTypes', 'robot');
+    save([outfolder, 'info.mat'], 'optim', 'chains', 'approach', 'jointTypes', 'rob');
     %% save DH to text files
     fnames=fieldnames(res_dh);
     for pert_level = 1:optim.pert_levels
@@ -42,7 +42,7 @@ function saveResults(robot,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_er
             file=fopen([outfolder,'DH-rep',num2str(rep), '-pert', num2str(pert_level),'.txt'],'w');
             for name=1:length(fnames)
                 fprintf(file, '%-s\t a \t d \t alpha \t offset\n', fnames{name});
-                joints=robot.findJointByGroup(fnames{name});
+                joints=rob.findJointByGroup(fnames{name});
                 for line=1:size(res_dh.(fnames{name}),1)
                     formatSpec='%-s %-5.8f %-5.8f %-5.8f %-5.8f\n';                    
                     fprintf(file,formatSpec, joints{line}.name, [res_dh.(fnames{name})(line,1),res_dh.(fnames{name})(line,2),res_dh.(fnames{name})(line,3),res_dh.(fnames{name})(line,4)]');

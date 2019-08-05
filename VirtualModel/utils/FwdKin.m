@@ -89,7 +89,7 @@ function [chain] = FwdKin(body_part,varargin)
             points_new=[];
             if strcmp(body_part.name,'leftArm') || strcmp(body_part.name,'rightArm')
                for i=1:length(points)
-                   p=[points(i,1);points(i,2);points(i,3)].*1000; %tranfser from row to column vector
+                   p=[points(i,1);points(i,2);points(i,3)];%.*1000; %tranfser from row to column vector
                    %p=[0 0 -1;0 1 0;1 0 0]*p; % -90deg roration y
                    %p=[0 1 0;-1 0 0; 0 0 1]*p; % -90deg rotation z
 
@@ -104,7 +104,7 @@ function [chain] = FwdKin(body_part,varargin)
                end
             elseif strcmp(body_part.name,'head')
                for i=1:length(points)
-                   p=[points(i,1);points(i,2);points(i,3)].*1000;
+                   p=[points(i,1);points(i,2);points(i,3)];%.*1000;
                    p=[1 0 0;0 0 -1; 0 1 0]*p; % 90deg roration x
                    p=[p;1];
                    point_new=RFFrame{end-1}*p;
@@ -113,7 +113,7 @@ function [chain] = FwdKin(body_part,varargin)
                end
             else %Torso
                 for i=1:length(points)
-                    p=[points(i,1);points(i,2);points(i,3);1].*1000;
+                    p=[points(i,1);points(i,2);points(i,3);1];%.*1000;
                     point_new=RFFrame{end}*p;
                     point_new=[point_new(1) point_new(2) point_new(3)];
                     points_new=[points_new;point_new];

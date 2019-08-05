@@ -151,8 +151,8 @@ function showModel(r, angles, varargin)
             structure=r.structure.defaultDH;
          %else use input DH
         else
-            for name=1:size(fnames,2)
-               structure.(fnames{name})=p.Results.dualDH{name}; 
+            for name=1:size(fnames,1)
+               structure.(fnames{name})=p.Results.dualDH.(fnames{name}); 
             end
         end
             

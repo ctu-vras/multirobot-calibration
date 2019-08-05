@@ -64,7 +64,9 @@ function plotJacobian(robot, whitelist, jacobians, titles)
 
         bp.XAxis.FontSize = 15;
         set(findobj(gca,'Type','text'),'FontSize')
-        if(iscell(titles))
+        if nargin==3
+            title(['Rep ',num2str(j)])
+        else if(iscell(titles))
             title(titles{j})
         else
             title(titles)
