@@ -62,7 +62,8 @@ classdef Robot < handle
                         parentId=0;
                     end
                     %Call Joint constructor
-                    joints{jointId}=Joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},curJoint{6},parentId);
+                    
+                    joints{jointId}=Joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},parentId);
                     %Add new joint to cellarray
                     obj.joints{end+1}=joints{jointId};
                 end

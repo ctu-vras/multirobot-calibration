@@ -1,7 +1,7 @@
 function loadDHfromMat(robot,folder,varargin)
 %LOADDHFROMMAT Loading robot DH from mat file
 %   Function for loading robot DH from mat file saved in a subfolder in
-%   folder results
+%   folder Results
 %INPUT - robot - Robot object to store DH 
 %      - folder - folder with required DH mat file
 %      - varargin - rep - selects DH of the given repetititon
@@ -15,7 +15,7 @@ function loadDHfromMat(robot,folder,varargin)
     addParameter(p,'type','');
     parse(p,robot,folder,varargin{:});
     
-    res_dh=load(['results/',folder,'/results.mat']);
+    res_dh=load(['Results/',folder,'/results.mat']);
     res_dh=res_dh.res_dh; % load result DH
     %% pert level is +1 (indexing from 1)
     if ischar(p.Results.pert)
@@ -32,8 +32,8 @@ function loadDHfromMat(robot,folder,varargin)
         end
     else 
         %% loading testing rms errors
-        errors=load(['results/',folder,'/errors.mat']);
-        info = load(['results/',folder,'/info.mat']);
+        errors=load(['Results/',folder,'/errors.mat']);
+        info = load(['Results/',folder,'/info.mat']);
         errors=errors.errors;
         optim = info.optim;
         approach=info.approach;

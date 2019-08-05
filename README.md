@@ -25,7 +25,7 @@ Recommended steps (the order is optional):
    - voluntary are whitelist (see [Whitelist](#whitelist)), bounds (see [bounds](#bounds)) functions
  - set up calibration config file (see [Calibration config](#calibration-config))
  - select config files, output folders and run calibration 
-   - look at [Calibration examples](Examples/calibration.mlx)
+   - look at [Calibration examples](Examples/calibration.m)
    - or use csv file as input (see [Loading from csv](#loading-from-csv))
  - visualize and evaluate results (see [Visualization](#visualization))
 
@@ -69,7 +69,6 @@ Found in the [@Joint](@Joint) folder. This directory includes the main class fil
  - parentId - Int id of parent
  - DHindex - Int id in DH/WL/Bounds table for given 'group'
  - type - 'type' of the joints...see [types.m](Utils/types.m)
- - endEffector - true/false if joint is endEffector
  - group - 'group' of the joint...see [group.m](Utils/group.m)
 
 ## Methods
@@ -114,13 +113,12 @@ Take a look at existing robots [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m
  - jointStructure - the structure of the robot, created by joints
 
    - 1xN cellArray
-   - each element is another cellArray in mandatory format: {'nameOfJoint',jointType,'nameOfParent',indexInArrays,isEndEffector,group}
+   - each element is another cellArray in mandatory format: {'nameOfJoint',jointType,'nameOfParent',indexInArrays,group}
 
      - 'nameOfJoint' - string name of the joint
      - jointType - in format types.'type', where types. is enumeration class (see [Types](#Types))
      - 'nameOfParent' - string name of parent joint (parent must already exist!)
      - indexInArrays - index into DH, WL and bounds arrays (number of line corresponding to the joint)
-     - isEndEffector - 1/0 to set if joint is end-effector
      - group - in froamt group.'group', where group. is enumeration class (see [Groups](#groups))
    - the strucure can contain optional number of joints
  - structure - is Matlab struct with all other informations
@@ -150,12 +148,12 @@ Take a look at existing robots [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m
    - UseParallel - set to 1, if you want to use more cores of CPU
    - ScaleProblem - set to 'jacobian' if differences in calibrated parameters are too high (e.g. lengths in thousands of mm and angles in units of rad)
  - chains - set which chains will be calibrated
-   - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Calibration examples](Examples/calibration.mlx))
+   - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Calibration examples](Examples/calibration.m))
    - if chains is set to 0, it does not matter if there are any 1 in the whitelist in given chain (this is superior over whitelist)
  - approaches - set which approch will be used (see [Calibration approaches](#calibration-approaches))
    - more than one approches at a time can be used
    - value does not have to be 1/0, but any non-zero number will enable the approche and values from thsi approach will be scaled by given value
-   - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Calibration examples](Examples/calibration.mlx))
+   - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Calibration examples](Examples/calibration.m))
  - joint types - determine which part of the body will be calibrated
    - onlyOffsets - will calibrate only offsets of each link (the last DH parameter)
    - joint - will calibrate everything which is not skin, eye or finger
@@ -227,7 +225,7 @@ Approaches can be combined at one time. To set them, see [Calibration config](#c
 # Visualization
 
 Folder with functions designed for visualization of the results
-Exampes of function use can be found [Visualization examples](Examples/visualization.mlx) or [Models examples](Examples/models.mlx).
+Exampes of function use can be found [Visualization examples](Examples/visualization.m) or [Models examples](Examples/models.m).
 
 ## Files
 

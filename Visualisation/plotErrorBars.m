@@ -52,8 +52,8 @@ function plotErrorBars(folders,varargin)
     %% compute min, max, mean and std for each error file
     for fi=1:length(folders)
         folder=folders{fi};
-        errors=load(['results/',folder,'/errors.mat']);
-        info = load(['results/',folder,'/info.mat']);
+        errors=load(['Results/',folder,'/errors.mat']);
+        info = load(['Results/',folder,'/info.mat']);
         errors=errors.errors;
         optim = info.optim;
         for l = 1:numLines

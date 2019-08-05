@@ -31,9 +31,9 @@ function plotCorrections(folder, varargin)
     end
 	close all
     % load saved variables
-    corrections=load(['results/',folder,'/corrections.mat']);
+    corrections=load(['Results/',folder,'/corrections.mat']);
     corrections=corrections.corrs_dh;
-    info = load(['results/',folder,'/info.mat']);
+    info = load(['Results/',folder,'/info.mat']);
     robot=info.rob;
     whitelist=info.whitelist;
     

@@ -6,7 +6,7 @@
 rob=Robot('loadNAO');
 %%
 % Or you can load robot from results
-load('results/exampleNao/info.mat');
+load('Results/exampleNao/info.mat');
 
 %% Graph model
 

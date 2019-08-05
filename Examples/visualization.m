@@ -32,7 +32,7 @@ plotErrorBars({'exampleNao','exampleNao2'})
 % Shows residual errors using quiver plot
 % We need two set of points, which can be computed for example like this
 
-load('results/leica-motoman/info'); %Load saved data
+load('Results/leica-motoman/info'); %Load saved data
 dataset = datasets.ext{1};
 extPoints=dataset.refPoints;
 robPoints = getPoints(rob.structure.defaultDH, dataset, rob.structure.H0, false); % Transform all point to base frame
@@ -47,7 +47,7 @@ plotErrorResiduals(extPoints, robPoints(1:3,:))
 % Shows comparison of joint distributions
 % Function takes 2 datasets, where both of them are cellArray of structs
 close all
-load('results/exampleNao3/info');
+load('Results/exampleNao3/info');
 % This example does not 'make sense', it just for demonstration of input.
 % Argument with 'rightArm' determines which chain to show.
 plotJointDistribution(rob, {datasets.dist{1},datasets.dist{2}},{datasets.dist{2}}, 'rightArm', '', '', 1);
@@ -55,7 +55,7 @@ plotJointDistribution(rob, {datasets.dist{1},datasets.dist{2}},{datasets.dist{2}
 %%
 % Alternatively you can pass just one dataset
 close all
-load('results/exampleNao3/info');
+load('Results/exampleNao3/info');
 % This example shows also title and legend settings
 plotJointDistribution(rob, {datasets.dist{1}},[], 'leftArm', 'myFig', {'myDataset'}, 1);
 
@@ -64,19 +64,19 @@ plotJointDistribution(rob, {datasets.dist{1}},[], 'leftArm', 'myFig', {'myDatase
 %% Jacobian
 % Shows Jacobians computed in each repetition of calibration. All the
 % mandatory arguments can be loaded from results
-load('results/exampleNao2/info');
+load('Results/exampleNao2/info');
 plotJacobian(rob, whitelist, jacobians)
 
 %% Moveable model
 % This model uses 'showModel' method of Robot and allows to change
 % activations by 'left' and 'right' arrow keys.
 % You need to have datasets from calibration, which can be easile loaded
-load('results/exampleNao2/info');
+load('Results/exampleNao2/info');
 activationsView(rob,{datasets.dist{:}})
 
 %%
 % For Nao robot it allows to show skin and info about activations
-load('results/exampleNao2/info');
+load('Results/exampleNao2/info');
 activationsView(rob,{datasets.dist{:}},'info',1,'skin',1)
 
 
@@ -86,10 +86,10 @@ activationsView(rob,{datasets.dist{:}},'info',1,'skin',1)
 
 %% Distances between taxels
 % Shows distribution of distances between taxels for each taxel or triangle
-load('results/exampleNao2/info');
+load('Results/exampleNao2/info');
 getTaxelDistances(rob,{'rightArm_torso'})
 
 %% Activated taxels
 % Shows activated taxels in the dataset
-load('results/exampleNao2/info');
+load('Results/exampleNao2/info');
 visualizeActivatedTaxels({'rightArm_torso'})

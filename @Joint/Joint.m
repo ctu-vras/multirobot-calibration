@@ -21,20 +21,18 @@ classdef Joint < handle
         parentId double 
         DHindex double
         type 
-        endEffector double 
         group 
     end
     
     methods
         %% Constructor
-        function obj = Joint(name, type, parent, DHindex, endEffector, group,  parentId)
+        function obj = Joint(name, type, parent, DHindex, group,  parentId)
             % Constructor assings variables to class properties
-               if(nargin == 7)
+               if(nargin == 6)
                    obj.type=type;
                    obj.name=name;
                    obj.parent=parent;
                    obj.DHindex=DHindex;
-                   obj.endEffector=endEffector;
                    obj.group=group;
                    obj.parentId=parentId;
                end

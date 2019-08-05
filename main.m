@@ -71,7 +71,7 @@ function main(robot_fcn, config_fcn, approaches, chains, dataset_fcn, whitelist_
     [before_ts_err,before_ts_err_all] = rmsErrors(start_dh, rob, datasets, testing_set_indexes, optim, approach);
     [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, rob, datasets, testing_set_indexes, optim, approach);
     %% saving results
-    outfolder = ['results/', folder, '/'];
+    outfolder = ['Results/', folder, '/'];
     saveResults(rob, outfolder, res_dh, corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, chains, approach, jointTypes, optim);
     vars_to_save = {'start_dh', 'rob', 'whitelist', 'options', 'pert', 'chains', 'robot_fcn', 'dataset_fcn', ...
         'config_fcn', 'training_set_indexes', 'testing_set_indexes', 'datasets', 'jacobians', 'calibOut'};

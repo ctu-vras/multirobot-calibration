@@ -1,11 +1,11 @@
 function loadDHfromTxt(robot, folder, file)
 %LOADDHFROMTXT Loading robot DH from a text file
 %   Function for loading robot DH from a text file saved in a subfolder in
-%   folder results
+%   folder Results
 %INPUT - robot - Robot object to store DH 
 %      - folder - folder with the required txt file
 %      - file - file with the required DH
-fileID = fopen(['results/',folder,'/',file,'.txt']);
+fileID = fopen(['Results/',folder,'/',file,'.txt']);
 % load the columns with values
 C = textscan(fileID,'%s %s %s %s %s');
 % convert values to double

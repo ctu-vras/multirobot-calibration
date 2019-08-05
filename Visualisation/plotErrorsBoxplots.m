@@ -52,8 +52,8 @@ function plotErrorsBoxplots(folders,varargin)
     for folder=folders
         folder=folder{1};
         % load saved variables
-        errors=load(['results/',folder,'/errors.mat']);
-        info = load(['results/',folder,'/info.mat']);
+        errors=load(['Results/',folder,'/errors.mat']);
+        info = load(['Results/',folder,'/info.mat']);
         errors=errors.(errorsType);
         optim = info.optim;
         robot=info.rob;
