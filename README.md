@@ -1,6 +1,7 @@
 # Contents
 
  - [How to run](#how-to-run)
+ - [Examples](#examples)
  - [Robot](#robot)
  - [Joint](#joint)
  - [Datasets](#datasets)
@@ -27,6 +28,10 @@ Recommended steps (the order is optional):
    - look at [Calibration examples](Examples/calibration.mlx)
    - or use csv file as input (see [Loading from csv](#loading-from-csv))
  - visualize and evaluate results (see [Visualization](#visualization))
+
+# Examples
+
+Examples how to run calibration and use visualization and models can be found in [Examples folder](Examples) as .m files ([Calibration examples](Examples/calibration.m),[Models examples](Examples/models.m),[Visualization examples](Examples/visualization.m)) or livescripts .mlx files ([Calibration examples](Examples/calibration.mlx),[Models examples](Examples/models.mlx),[Visualization examples](Examples/visualization.mlx))
 
 # Robot
 
