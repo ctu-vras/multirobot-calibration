@@ -29,7 +29,16 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
     
     %% calibration
     options=weightParameters(whitelist, options, size(start_pars, 1),optim);
-    opt_pars = zeros(size(start_pars, 1), optim.repetitions, optim.pert_levels);
+    whitelist.planes=0;
+    whitelist.external=0;
+    if approach.planes
+        whitelist.planes=length(datasets.planes)*4;
+    end
+    if approach.external
+       whitelist.external=length(datasets.ext)*6;
+    end
+    options.TypicalX=[options.TypicalX,ones(1,whitelist.planes+whitelist.external)];
+    opt_pars = zeros(size(start_pars, 1)+whitelist.planes+whitelist.external, optim.repetitions, optim.pert_levels);
     jacobians = cell(1, optim.repetitions, optim.pert_levels);
     calibOut.resnorms = cell(1, optim.repetitions, optim.pert_levels);
     calibOut.residuals = cell(1, optim.repetitions, optim.pert_levels);
@@ -54,6 +63,10 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
             end
              % objective function setup
             pars=start_pars(:,rep,pert_level)';
+            if approach.planes || approach.external
+               params=initialGuess(rob, tr_datasets, dh, approach);
+               pars=[pars,params];
+            end
             obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach);
             sprintf('%f percent done', 100*((pert_level-1)*optim.repetitions + rep - 1)/(optim.pert_levels*optim.repetitions))
             % optimization        

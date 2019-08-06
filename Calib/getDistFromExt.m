@@ -1,4 +1,4 @@
-function [dist] = getDistFromExt(dh_pars, robot, datasets, optim)
+function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
 %GETDISTFROMEXT returns errors from configurations with external camera
 %   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is matrix.
@@ -6,18 +6,26 @@ function [dist] = getDistFromExt(dh_pars, robot, datasets, optim)
 %         - datasets - 1xN cellarray of datasets for selftouch;
 %                       each dataset is structure in common format
 %         - optim - structure of calibration settings
+%         - extParams - 1xN array of parameters to be optimized
 %   OUTPUT - dist - MxN array of distance;
 %                   M=1 if optim.useNorm, M=3 if ~optim.useNorm;
 %                   N is number of errors computed from external cameras
     dist = [];
     H0 = robot.structure.H0;
-    for dataset=datasets 
-        dataset = dataset{1};
+    for datasetId=1:length(datasets) 
+        dataset = datasets{datasetId};
         extPoints=dataset.refPoints;
         % compute points in the base frame
         robPoints = getPoints(dh_pars, dataset, H0, false);
-        % fint transformation between external camera and robot
-        [R,T]=fitSets(extPoints,robPoints(1:3,:)'); 
+        if isempty(extParams)
+            % find transformation between external camera and robot
+            [R,T]=fitSets(extPoints,robPoints(1:3,:)'); 
+        else
+            actParams=extParams((datasetId-1)*6+1:datasetId*6);
+            T=actParams(4:6);
+            R=rotationVectorToMatrix(actParams(1:3));
+        end
+
         % transform ext point to robot's base frame
         extPoints = R*extPoints' + T;
         % returns RMS distances

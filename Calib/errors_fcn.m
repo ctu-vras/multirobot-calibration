@@ -20,7 +20,8 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     dist_from_ext = [];
     proj_dist = [];
     refDist = 0;
-    
+    planeParams=[];
+    extParams=[];
     % Add optimized parameters from solver back to dh_pars
     fnames = fieldnames(dh_pars);
     count = 1;
@@ -34,16 +35,25 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
         dh_pars.(fnames{field})=a';
         count = new_count;
     end
+    if (count-1)~=length(opt_pars)
+        if whitelist.planes
+           planeParams=opt_pars(count:whitelist.planes-1);
+           count=count+whitelist.planes;
+        end
+        if whitelist.external
+           extParams=opt_pars(count:count+whitelist.external-1); 
+        end
+    end
     %% Call appropriate functions if given approach is enabled
     if(approach.selftouch)
         distances = getDist(dh_pars, robot, dataset.dist, optim);
         refDist = dataset.dist{end}.refDist;
     end
     if(approach.planes)
-        plane_distances = getPlaneDist(dh_pars, robot, dataset.plane);
+        plane_distances = getPlaneDist(dh_pars, robot, dataset.plane, planeParams);
     end
     if(approach.external)
-        dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim);
+        dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim, extParams);
     end
     if(approach.eyes)
         proj_dist = getProjectionDist(dh_pars, robot, dataset.proj);
