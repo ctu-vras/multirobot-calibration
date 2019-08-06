@@ -15,15 +15,15 @@ function loadTasksFromFile(fileName)
     for lineId=1:size(file,1)
         line=table2cell(file(lineId,:));
         %% save info switch
-        if strcmpi(line{10},'true')
-            line{10}=1;
-        elseif strcmpi(line{10},'false')
-            line{10}=0;
+        if strcmpi(line{11},'true')
+            line{11}=1;
+        elseif strcmpi(line{11},'false')
+            line{11}=0;
         end
 
         %% loadDH
-        if ~isempty(line{11})
-            spl=strsplit(line{12},','); 
+        if ~isempty(line{12})
+            spl=strsplit(line{13},','); 
             mat=0;
             % If type {min,max,median} selected -> use loadDHfromMat
             for key=1:length(keyWords)
@@ -53,7 +53,7 @@ function loadTasksFromFile(fileName)
             args='';
         end
         %% dataset params as varargs
-        varArgsRaw=line(13:end);
+        varArgsRaw=line(14:end);
         varArgs={};
         for i=1:size(varArgsRaw,2)
             try
@@ -68,9 +68,10 @@ function loadTasksFromFile(fileName)
         %% config params
         approaches = strsplit(line{4},','); 
         chains = strsplit(line{5},','); 
+        jointTypes = strsplit(line{6},','); 
         
         %% run the main script and write timestamp after end of program
-        main(line{2},line{3},approaches, chains, line{6},line{7},line{8},varArgs,num2str(line{9}),str2double(line{10}),loadDHfunc,args, line{11});
+        main(line{2},line{3},approaches, chains, jointTypes, line{7},line{8},line{9},varArgs,num2str(line{10}),str2double(line{11}),loadDHfunc,args, line{12});
         stamp=datestr(now,'HH:MM:SS.FFF');
         file.Timestamp{lineId,1}=stamp;
         writetable(file,fileName,'Delimiter',';')

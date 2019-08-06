@@ -1,4 +1,4 @@
-function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig(approaches, inputChains)
+function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig(approaches, inputChains, jointType)
     %% Solver options
     options = optimoptions('lsqnonlin');
     %options.Algorithm = 'trust-region-reflective'; %Use for bounds
@@ -18,8 +18,8 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     % set which chains will be calibrated
     % superior over whitelist
     % can be set by an argument into the function
-    chains.rightArm=1;
-    chains.leftArm=1;
+    chains.rightArm=0;
+    chains.leftArm=0;
     chains.torso=0;
     chains.head=0;
     chains.leftEye=0;
@@ -33,8 +33,10 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     chains.leftMiddle=0;
     chains.rightMiddle=0;
     
-    for i = 1:length(inputChains)
-        chains.(inputChains{i}) = 1;
+    if ~isempty(inputChains{1})
+        for i = 1:length(inputChains)
+            chains.(inputChains{i}) = 1;
+        end
     end
     
     %% Calibration approaches
@@ -45,8 +47,10 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     approach.selftouch=0;
     approach.planes=0;
     approach.external=0;
-    for i = 1:length(approaches)
-        approach.(approaches{i}) = 1;
+    if ~isempty(approaches{1})
+        for i = 1:length(approaches)
+            approach.(approaches{i}) = 1;
+        end
     end
     if(approach.eyes)
         approach.selftouch=approach.selftouch*40000;
@@ -60,23 +64,29 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     % can be set by an argument into the function
     % depends on each other - 'onlyOffsets' without anything else will do nothing
     jointTypes.onlyOffsets=0;
-    jointTypes.joint=1;
-    jointTypes.eye=1;
+    jointTypes.joint=0;
+    jointTypes.eye=0;
     jointTypes.torso=0;
     jointTypes.patch=0;
     jointTypes.triangle=0;
     jointTypes.mount=0;
     jointTypes.finger=0;
     
+    if ~isempty(jointType{1})
+        for i = 1:length(jointType)
+            jointTypes.(jointType{i}) = 1;
+        end
+    end
+    
     %% Calibration settings
     optim.bounds=0; % set to use bounds
-    optim.repetitions=1; % number of training repetitions
+    optim.repetitions=5; % number of training repetitions
     optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
     optim.distribution = 'normal'; % or 'uniform'
     optim.pert_levels = 1+sum(optim.pert); % do not change!
     optim.splitPoint=0.7; % training dataset ratio
     optim.refPoints=0; % set to use 'refPoints' field in dataset
-    optim.useNorm=1; % set to compute errors as norm of two points
+    optim.useNorm=0; % set to compute errors as norm of two points
     optim.parametersWeights=[1,1,1,1]; % set to scale parameters - [body lengths, body angles, skin lengths, skin angles]
     optim.boundsFromDefault=1; % set to compute bounds from default values
     

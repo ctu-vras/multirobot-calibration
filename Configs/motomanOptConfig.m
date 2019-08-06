@@ -1,4 +1,4 @@
-function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(approaches, inputChains)
+function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(approaches, inputChains, jointType)
     %% Solver options
     options = optimoptions('lsqnonlin');
     %options.Algorithm = 'trust-region-reflective';
@@ -30,8 +30,10 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     chains.leftMiddle=0;
     chains.rightMiddle=0;
     
-    for i = 1:length(inputChains)
-        chains.(inputChains{i}) = 1;
+    if ~isempty(inputChains{1})
+        for i = 1:length(inputChains)
+            chains.(inputChains{i}) = 1;
+        end
     end
     
     %% Calibration approaches
@@ -39,19 +41,26 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     approach.selftouch=0;
     approach.planes=0;
     approach.external=0;
-    for i = 1:length(approaches)
-        approach.(approaches{i}) = 1;
+    if ~isempty(approaches{1})
+        for i = 1:length(approaches)
+            approach.(approaches{i}) = 1;
+        end
     end
     if(approach.eyes)
         approach.selftouch=approach.selftouch*40000;
         approach.planes=approach.planes*40000;
         approach.external=approach.planes*40000;
     end
+    if ~isempty(jointType{1})
+        for i = 1:length(jointType)
+            jointTypes.(jointType{i}) = 1;
+        end
+    end
     
     %% Calibration joint types
     jointTypes.onlyOffsets=0;
     jointTypes.joint=1;
-    jointTypes.eye=1;
+    jointTypes.eye=0;
     jointTypes.torso=0;
     jointTypes.patch=0;
     jointTypes.triangle=0;

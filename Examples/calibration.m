@@ -8,6 +8,7 @@ robot_fcn = 'loadMotoman'; % Name of the function with robot structure
 config_fcn = 'motomanOptConfig'; % Name of the function with calibration config
 approaches = {'selftouch'}; % Used approaches, delimited by comma (,)
 chains = {'rightArm'}; % Used chains, delimited by comma (,) 
+jointTypes={''}; % Used body parts, delimited by comma (,), in 'motomanOptConfig' joint is set by default
 dataset_fcn = 'loadDatasetMotoman'; % Name of the function for loading of the dataset
 whitelist_fcn = 'loadMotomanWL'; % Name of the function with custom whitelist
 bounds_fcn = ''; % Name of the funtion with custom bounds
@@ -18,13 +19,14 @@ loadDHfunc = ''; % name of function to load DH ('loadDHfromMat','loadDHfromTxt')
 loadDHargs = ''; % arguments for the function above
 loadDHfolder = ''; % folder from which to load DH
 
-main(robot_fcn, config_fcn, approaches, chains, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% motoman leica calibration - only right arm using DH from self touch (with min rms errors) as initial
 robot_fcn = 'loadMotomanLeica';
 config_fcn = 'motomanOptConfig';
 approaches = {'external'};
 chains = {'rightArm'};
+jointTypes={''}; 
 dataset_fcn = 'loadDatasetMotoman';
 whitelist_fcn = 'loadMotomanWL';
 bounds_fcn = '';
@@ -35,13 +37,14 @@ loadDHfunc = 'loadDHfromMat'; % Here load from '.mat' files is used
 loadDHargs = {'type', 'min'}; % this means: load the DH params which has the lowest RMS error
 loadDHfolder = 'self-touch-motoman'; %load DH from this file
 
-main(robot_fcn, config_fcn, approaches, chains, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% motoman hand-eye calibration - right arm and right eye using DH from rep1 and pert1 of self touch as initial
 robot_fcn = 'loadMotoman';
 config_fcn = 'motomanOptConfig';
 approaches = {'eyes'};
 chains = {'rightArm', 'rightEye'};
+jointTypes={'eye'}; 
 dataset_fcn = 'loadDatasetMotoman';
 whitelist_fcn = ''; %Whitelist does not have to be specified, the default will be used
 bounds_fcn = '';
@@ -51,13 +54,14 @@ saveInfo = 1;
 loadDHfunc = 'loadDHfromTxt'; %load from txt files
 loadDHargs = {'DH-rep1-pert1'}; % name of the file
 loadDHfolder = '';
-main(robot_fcn, config_fcn, approaches, chains, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% iCub selftouch calibration - only right arm, using first 100 point from dataset
 robot_fcn = 'loadICUBv1';
 config_fcn = 'motomanOptConfig';
 approaches = {'selftouch'};
 chains = {'rightArm'};
+jointTypes={''}; 
 dataset_fcn = 'loadDatasetICub';
 whitelist_fcn = '';
 bounds_fcn = '';
@@ -67,7 +71,7 @@ saveInfo = 1;
 loadDHfunc = '';
 loadDHargs = '';
 loadDHfolder = '';
-main(robot_fcn, config_fcn, approaches, chains, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% load task from CSV
 addpath(genpath('Utils')); % At first run, this folder needs to be loaded manually

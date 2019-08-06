@@ -137,7 +137,7 @@ Take a look at existing robots [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m
 
 ## Calibration config
 
- See [optimizationConfig.m](Configs/optimizationConfig.m) for default settings and examples 
+ See [optimizationConfig.m](Configs/optimizationConfig.m) for default settings and examples. This file has only the default settings and can be used for your calibration (with passing right arguments).
 
 ### Description of parameters
 
@@ -159,6 +159,7 @@ Take a look at existing robots [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m
    - joint - will calibrate everything which is not skin, eye or finger
    - the settings are superior over chains (see above). So in case you enable 'rightArm' but does not enable 'joint' or 'finger', nothing will be calibrated
    - the settings are also depending on each other. If you enable 'onlyOffsets', you still need to enable for example 'mount' to calibrate
+   - can be edited in the config file or passed in as an argument (e.g. {'mount'}, see [Calibration examples](Examples/calibration.m))
  - perturbations - set the perturbations ranges
    - each field indicates other level of perturbation
    - element in vector are the 4 DH parameters - [a, d, alpha, theta] 
@@ -254,6 +255,7 @@ Folder with functions designed for repetitive tasks.
  - [getPlane.m](Utils/getPlane.m) - computes a plane fitted to set of given points using svd
  - [getPoints.](Utils/getPoints.m) - computes a plane fitted to set of given points using svd
  - [getTF.m](Utils/getTF.m) - computes transformation from given joint to base 
+ - [getTFtoFrame.m](Utils/getTFtoFrame.m) - computes transformation from given joint to given joint 
  - [group.m](Utils/group.m) - static class of enumerated type containing string names of all part of robot body and skin
  - [inversetf.m](Utils/inversetf.m) - invers transformation matrix
  - [loadConfig.m](Utils/loadConfig.m) - loads Config file function
@@ -296,7 +298,7 @@ Fields:
 
  - robot_fcn, config_fcn, dataset_fcn, folder and saveInfo are mandatory and each takes one argument
  - bounds_fcn, loadDHFolder are optional and take one argument
- - approaches, chains, loadDHArgs are optinal and takes multiple argument delimited by ',' (comma)
+ - approaches, chains, jointTypes, loadDHArgs are optinal and takes multiple argument delimited by ',' (comma)
  - dataset_params is optional and takes one argument. But if you want more arguments just write them in another columns (each argument in new column)
 
 If you have everything prepared just type in matlab console 'loadTasksFromFile('tasks.csv')'. (You must have at least [Utils](Utils) folder in Matlab path).

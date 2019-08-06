@@ -32,12 +32,29 @@ str=getIndexes(str, joint);
 % The last thing needed are the joint angles, for this example we can use
 % zeros
 angles.rightArmSkin=[0,0,0];
-angles.rightArm=[0,0,0,0,0,0];
+angles.rightArm=[0,1,0.5,0.3,0,0.5];
 
 %% 
 % With this, we can compute the RT matrix
-mat=getTF(rob.structure.defaultDH,joint,[],angles, rob.structure.H0,str.DHindexes.(joint.name),str.parents);
+mat=getTF(rob.structure.DH,joint,[],angles, rob.structure.H0,str.DHindexes.(joint.name),str.parents);
 
+
+%% 
+% You can also get transformation to given frame
+mat2=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'rightShoulderPitch');
+
+%%
+% And easily compute the rest then
+joint=rob.findJoint('rightShoulderPitch');
+joint=joint{1};
+mat3=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'base');
+
+
+%%
+% We can test it
+disp(norm(mat-mat3*mat2,'fro')<eps)
+% Frobenius norm of matrix should be very low number (not 0 in most cases 
+% beacuse of floating point numbers errors) 
 
 %% Mass transformation of points
 % If you need to tranform more points to the base frame, you can use

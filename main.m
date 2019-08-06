@@ -1,9 +1,9 @@
-function main(robot_fcn, config_fcn, approaches, chains, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder)
+function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder)
     %% preparation
     assert(~isempty(robot_fcn) && ~isempty(config_fcn) && ~isempty(dataset_fcn),'Empty name of robot, config or dataset function')
     rob = Robot(robot_fcn);
     
-    [options, chains, approach, jointTypes, optim, pert] = loadConfig(config_fcn, approaches, chains);
+    [options, chains, approach, jointTypes, optim, pert] = loadConfig(config_fcn, approaches, chains, jointTypes);
 
     if ~isempty(loadDHfolder)
         loadDHfunc=str2func(loadDHfunc);

@@ -1,2 +1,2 @@
-Timestamp;robot_fcn;config_fcn;approaches;chains;dataset_fcn;whitelist_fcn;bounds_fcn;folder;saveInfo;loadDHfolder;loadDHargs;dataset_params
-14:45:43.903;loadNAO;motomanOptConfig;selftouch;rightArm,torso;loadDatasetNao;loadNaoWL;;joints;1;;;rightArm_torso
+Timestamp;robot_fcn;config_fcn;approaches;chains;jointTypes;dataset_fcn;whitelist_fcn;bounds_fcn;folder;saveInfo;loadDHfolder;loadDHargs;dataset_params
+13:20:49.612;loadNAO;optimizationConfig;selftouch;rightArm;mount;loadDatasetNao;loadNaoWL;;example;1;;;rightArm_torso
