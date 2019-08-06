@@ -36,7 +36,6 @@ saveInfo = 1;
 loadDHfunc = 'loadDHfromMat'; % Here load from '.mat' files is used
 loadDHargs = {'type', 'min'}; % this means: load the DH params which has the lowest RMS error
 loadDHfolder = 'self-touch-motoman'; %load DH from this file
-loadDHfolder='';
 main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% motoman hand-eye calibration - right arm and right eye using DH from rep1 and pert1 of self touch as initial

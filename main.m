@@ -29,16 +29,8 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
     
     %% calibration
     options=weightParameters(whitelist, options, size(start_pars, 1),optim);
-    whitelist.planes=0;
-    whitelist.external=0;
-    if approach.planes
-        whitelist.planes=length(datasets.planes)*4;
-    end
-    if approach.external
-       whitelist.external=length(datasets.ext)*6;
-    end
-    options.TypicalX=[options.TypicalX,ones(1,whitelist.planes+whitelist.external)];
-    opt_pars = zeros(size(start_pars, 1)+whitelist.planes+whitelist.external, optim.repetitions, optim.pert_levels);
+    options.TypicalX=[options.TypicalX,ones(1,length(datasets.plane)*4+length(datasets.ext)*6)];
+    opt_pars = zeros(size(start_pars, 1)+length(datasets.plane)*4+length(datasets.ext)*6, optim.repetitions, optim.pert_levels);
     jacobians = cell(1, optim.repetitions, optim.pert_levels);
     calibOut.resnorms = cell(1, optim.repetitions, optim.pert_levels);
     calibOut.residuals = cell(1, optim.repetitions, optim.pert_levels);

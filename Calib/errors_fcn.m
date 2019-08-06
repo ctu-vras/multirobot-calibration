@@ -36,12 +36,12 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
         count = new_count;
     end
     if (count-1)~=length(opt_pars)
-        if whitelist.planes
-           planeParams=opt_pars(count:whitelist.planes-1);
+        if approach.planes
+           planeParams=opt_pars(count:length(dataset.plane)*4-1);
            count=count+whitelist.planes;
         end
-        if whitelist.external
-           extParams=opt_pars(count:count+whitelist.external-1); 
+        if approach.external
+           extParams=opt_pars(count:count+length(dataset.ext)*6-1); 
         end
     end
     %% Call appropriate functions if given approach is enabled

@@ -22,7 +22,7 @@ function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
             [R,T]=fitSets(extPoints,robPoints(1:3,:)'); 
         else
             actParams=extParams((datasetId-1)*6+1:datasetId*6);
-            T=actParams(4:6);
+            T=actParams(4:6)';
             R=rotationVectorToMatrix(actParams(1:3));
         end
 
