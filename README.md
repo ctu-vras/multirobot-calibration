@@ -305,4 +305,3 @@ If you have everything prepared just type in matlab console 'loadTasksFromFile('
 
 # Schema
 ![Calibration diagram](calibAll.jpg)
-![Structure](structure.jpg)
