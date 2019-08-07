@@ -38,7 +38,7 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     if (count-1)~=length(opt_pars)
         if approach.planes
            planeParams=opt_pars(count:length(dataset.plane)*4-1);
-           count=count+whitelist.planes;
+           count=count+length(dataset.plane)*4;
         end
         if approach.external
            extParams=opt_pars(count:count+length(dataset.ext)*6-1); 

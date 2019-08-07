@@ -6,7 +6,7 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     options.Display = 'iter';
     options.TolFun = 5e-7;
     options.TolX = 1e-12;
-    options.MaxIter = 150;
+    options.MaxIter = 50;
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
     options.UseParallel=0;
@@ -51,15 +51,10 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
         approach.planes=approach.planes*40000;
         approach.external=approach.planes*40000;
     end
-    if ~isempty(jointType{1})
-        for i = 1:length(jointType)
-            jointTypes.(jointType{i}) = 1;
-        end
-    end
     
     %% Calibration joint types
     jointTypes.onlyOffsets=0;
-    jointTypes.joint=1;
+    jointTypes.joint=0;
     jointTypes.eye=0;
     jointTypes.torso=0;
     jointTypes.patch=0;
@@ -67,13 +62,19 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     jointTypes.mount=0;
     jointTypes.finger=0;
     
+    if ~isempty(jointType{1})
+        for i = 1:length(jointType)
+            jointTypes.(jointType{i}) = 1;
+        end
+    end
+    
     %% Calibration settings
     optim.bounds=0;
     optim.repetitions=1;
     optim.pert=[0,0,0];
     optim.distribution = 'normal';
     optim.pert_levels = 1+sum(optim.pert);
-    optim.splitPoint=0.7;
+    optim.splitPoint=1;
     optim.refPoints=0;
     optim.useNorm=1;
     optim.parametersWeights=[1,1,1,1];
