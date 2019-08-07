@@ -12,7 +12,7 @@ function [RTarm] = getTF(dh_pars,joint,rtMat, joints, H0, indexes, parents, stop
     if nargin<8
         stopGroup='';
     end
-    RTarm=eye(4);
+    RTarm= [1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1]; 
     while isobject(joint)
         gr = joint.group;
         if isfield(rtMat, gr) % we have precomputed matrix for joint group

@@ -5,7 +5,7 @@ function tfmat = dhpars2tfmat(dhpars)
 %OUTPUT - tfmat - transformation matrix from end effector to the first
 %joint of group.
 
-    tfmat = eye(4);
+    tfmat = [1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1]; 
     as = dhpars(:,1);
     ds = dhpars(:,2);
     cos_als = cos(dhpars(:,3));

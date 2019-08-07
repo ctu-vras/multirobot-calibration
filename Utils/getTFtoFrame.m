@@ -10,8 +10,7 @@ function RT = getTFtoFrame(dh_pars,joint, joints, H0, stopJoint)
         dh_pars.torso=[0,0,0,0];
         joints.torso=[0];
     end
-    RT=eye(4);
-    i=0;
+    RT=[1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1];
     while ~strcmp(joint.name,stopJoint)
         group=joint.group;
         DH=dh_pars.(group);
@@ -33,7 +32,7 @@ function RT = getTFtoFrame(dh_pars,joint, joints, H0, stopJoint)
         idx=idx(end:-1:1);
         DH=DH(idx,:);
         %Add joint angles
-        idx(find(idx>length(joints.(group))))=find(idx>length(joints.(group))); % skin can have index bigger than size of joints
+        idx(idx>length(joints.(group)))=find(idx>length(joints.(group))); % skin can have index bigger than size of joints
         DH(:,4)=DH(:,4)+joints.(group)(idx)';
         %compute RT matrix
         RT=dhpars2tfmat(DH)*RT;
