@@ -9,15 +9,13 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
     %   OUTPUT - datasets - 1xN cell array of datasets
     %          - indexes - 1x4 cell array with numbers of datasets, which belongs
     %            given group...[dist, planes, ext, proj]
-    varargin=varargin{1};
-    if length(varargin)==1
+    
+    if length(varargin)==4
         alt='';
         robot.structure=rmfield(robot.structure, 'matrices');
-    else
-        alt=varargin{2};
+        datasets
     end
     
-    datasetsNames=varargin{1};
     % Assign robot's DH into new variable
     DH=robot.structure.DH;
     % Add 'dummy' torso link to precompute RT matrices
@@ -139,8 +137,8 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
                                 % error in getTF
                                 matrices.torso=eye(4);
                                 if strcmp(alt,'Alt')
-                                    matrices.([chain1,'Skin','Mats'])=robot.structure.matrices.([chain1,'Skin']);
-                                    matrices.([chain2,'Skin','Mats'])=robot.structure.matrices.([chain2,'Skin']);
+                                    matrices.([chain1,'Skin','Mats'])=robot.structure.([chain1,'Skin']);
+                                    matrices.([chain2,'Skin','Mats'])=robot.structure.([chain2,'Skin']);
                                 end
                             %end
                             

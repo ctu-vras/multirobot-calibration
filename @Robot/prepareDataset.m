@@ -22,7 +22,6 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
         func=str2func(funcname);
         [datasets, indexes]=func(r,optim, chains);
     end
-    
     %% Assing joint to names and split
     for dataset=1:length(datasets)
         clear joints; 
@@ -57,7 +56,7 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
         for name=1:length(uniqueFrames)
             joint = r.findJoint(uniqueFrames{name});
             joint = joint{1};
-            datasets{dataset}=getIndexes(datasets{dataset},joint);
+            datasets{dataset}=getIndexes(datasets{dataset},joint,isfield(r.structure,'matrices'));
         end
     
         % Default refDist=0

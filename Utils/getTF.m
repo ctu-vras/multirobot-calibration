@@ -18,10 +18,23 @@ function [RTarm] = getTF(dh_pars,joint,rtMat, joints, H0, indexes, parents, stop
         if isfield(rtMat, gr) % we have precomputed matrix for joint group
             RT=rtMat.(gr);
         else 
-            DH=dh_pars.(gr)(indexes.(gr),:);
-            DH(:,4)=DH(:,4)+joints.(gr)';
-            % returns RT for the group
-            RT=dhpars2tfmat(DH);
+            if ~iscell(indexes.(gr))
+                DH=dh_pars.(gr)(indexes.(gr),:);
+                DH(:,4)=DH(:,4)+joints.(gr)';
+                % returns RT for the group
+                RT=dhpars2tfmat(DH);
+            else
+                RT=[1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1];
+                mat=rtMat.([gr,'Mats']);
+                for id=1:size(indexes.(gr),2)
+                    idx=indexes.(gr){id};
+                    RT=RT*mat(:,:,idx);
+                    DH=dh_pars.(gr)(idx,:);
+                    %idx(idx>length(joints.(gr)))=find(idx>length(joints.(gr)));
+                    DH(:,4)=DH(:,4)+joints.(gr)(id)';
+                    RT=RT*dhpars2tfmat(DH);
+                end
+            end
         end
         joint = parents.(gr);
         RTarm = RT*RTarm;
