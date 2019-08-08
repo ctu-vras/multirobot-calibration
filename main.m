@@ -28,9 +28,13 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
     end
     
     %% calibration
-    options=weightParameters(whitelist, options, size(start_pars, 1),optim);
-    options.TypicalX=[options.TypicalX,ones(1,length(datasets.plane)*4+length(datasets.ext)*6)];
-    opt_pars = zeros(size(start_pars, 1)+length(datasets.plane)*4+length(datasets.ext)*6, optim.repetitions, optim.pert_levels);
+    parsCount = size(start_pars, 1);
+    if optim.optimizeInitialGuess
+        parsCount = parsCount+length(datasets.plane)*optim.planeParams+length(datasets.ext)*optim.externalParams;
+    end
+    options = weightRobotParameters(whitelist, options, parsCount,optim);
+    opt_pars = zeros(parsCount, optim.repetitions, optim.pert_levels);
+        
     jacobians = cell(1, optim.repetitions, optim.pert_levels);
     calibOut.resnorms = cell(1, optim.repetitions, optim.pert_levels);
     calibOut.residuals = cell(1, optim.repetitions, optim.pert_levels);
@@ -55,9 +59,10 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
             end
              % objective function setup
             pars=start_pars(:,rep,pert_level)';
-            if approach.planes || approach.external
-               params=initialGuess(rob, tr_datasets, dh, approach);
+            if optim.optimizeInitialGuess && (approach.planes || approach.external) 
+               [params, typicalX]=initialGuess(rob, tr_datasets, dh, approach, optim);
                pars=[pars,params];
+               options.TypicalX(end-length(params)+1:end) = typicalX;
             end
             obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach);
             sprintf('%f percent done', 100*((pert_level-1)*optim.repetitions + rep - 1)/(optim.pert_levels*optim.repetitions))

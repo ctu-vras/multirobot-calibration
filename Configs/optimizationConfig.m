@@ -83,12 +83,19 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     optim.repetitions=5; % number of training repetitions
     optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
     optim.distribution = 'normal'; % or 'uniform'
+    optim.units = 'm'; % 'm' or 'mm' 
     optim.pert_levels = 1+sum(optim.pert); % do not change!
     optim.splitPoint=0.7; % training dataset ratio
     optim.refPoints=0; % set to use 'refPoints' field in dataset
     optim.useNorm=0; % set to compute errors as norm of two points
-    optim.parametersWeights=[1,1,1,1]; % set to scale parameters - [body lengths, body angles, skin lengths, skin angles]
+    optim.parametersWeights.body=[1,1]; % set to scale parameters - [body lengths, body angles]
+    optim.parametersWeights.skin=[1,1]; % set to scale parameters - [skin lengths, skin angles]
     optim.boundsFromDefault=1; % set to compute bounds from default values
+    optim.optimizeInitialGuess=1; % set to include plane or external transformation parameters into optimized parameters
+    optim.planeParams = 3;  % how many plane parameters should be optimized
+    optim.externalParams = 6;   % how many external transform parameters should be optimized
+    optim.parametersWeights.planes=ones(1,optim.planeParams); % set to scale parameters - plane parameters
+    optim.parametersWeights.external=ones(1,optim.externalParams); % set to scale parameters - external transformation parameters
     
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1]; %[a,d,alpha,theta]

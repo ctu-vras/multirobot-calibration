@@ -4,14 +4,14 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     %options.Algorithm = 'trust-region-reflective';
     options.Algorithm = 'levenberg-marquardt';
     options.Display = 'iter';
-    options.TolFun = 5e-7;
-    options.TolX = 1e-12;
-    options.MaxIter = 50;
+    options.TolFun =  5e-18;
+    options.TolX = 1e-30;
+    options.MaxIter = 100;
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
     options.UseParallel=0;
     %options.SpecifyObjectiveGradient=true
-    %options.ScaleProblem='jacobian';
+    options.ScaleProblem='jacobian';
     
     
     %% Chains
@@ -73,12 +73,19 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     optim.repetitions=1;
     optim.pert=[0,0,0];
     optim.distribution = 'normal';
+    optim.units = 'm';
     optim.pert_levels = 1+sum(optim.pert);
-    optim.splitPoint=1;
+    optim.splitPoint=0.7;
     optim.refPoints=0;
-    optim.useNorm=1;
-    optim.parametersWeights=[1,1,1,1];
-    optim.boundsFromDefault=1;
+    optim.useNorm=0;
+    optim.parametersWeights.body=[1,1]; % set to scale parameters - [body lengths, body angles]
+    optim.parametersWeights.skin=[1,1]; % set to scale parameters - [skin lengths, skin angles]
+    optim.boundsFromDefault=1; % set to compute bounds from default values
+    optim.optimizeInitialGuess=1; % set to include plane or external transformation parameters into optimized parameters
+    optim.planeParams = 3;  % how many plane parameters should be optimized
+    optim.externalParams = 6;   % how many external transform parameters should be optimized
+    optim.parametersWeights.planes=ones(1,optim.planeParams); % set to scale parameters - plane parameters
+    optim.parametersWeights.external=ones(1,optim.externalParams)*10; % set to scale parameters - external transformation parameters
     
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1];

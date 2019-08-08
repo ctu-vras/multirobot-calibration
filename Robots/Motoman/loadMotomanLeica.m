@@ -45,7 +45,7 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
            0.000, -0.640,  pi/2, 0.000;
            0.030,  0.000,  pi/2, -pi/2;
            0.000,  0.200, 0.000, 0.000;
-           0.02,  0.25, 0, pi/2];
+            0.05,  0.25, 0, 0];
        
     structure.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
@@ -54,7 +54,7 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
            0.000, -0.640,  pi/2, 0.000;
            0.030,  0.000,  pi/2, -pi/2;
            0.000,  0.200, 0.000, 0.000;
-           0.05,  0.25, 0, 0];
+           0.045,  0.24, 0, -0.45];  %  0.05,  0.25, 0, 0];
        
     structure.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
             0.0, -0.445,    0.0,  pi];
@@ -69,7 +69,7 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
                              1, 1, 1, 1;
                              1, 1, 1, 1;
                              1, 1, 1, 1;
-                             0, 0, 1, 0;
+                             0, 0, 0, 0;
                              1, 1, 0, 1];
        
     structure.WL.rightArm = [0, 0, 0, 0;
@@ -78,7 +78,7 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
                               1, 1, 1, 1;
                               1, 1, 1, 1;
                               1, 1, 1, 1;
-                              0, 0, 1, 0;
+                              0, 0, 0, 0;
                               1, 1, 0, 1];
        
     structure.WL.leftEye = [1, 1, 1, 1;

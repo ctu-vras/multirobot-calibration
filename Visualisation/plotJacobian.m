@@ -4,9 +4,9 @@ function plotJacobian(robot, whitelist, jacobians, titles)
 %      - whitelist - whitelist structure to gain the parameters names
 %      - jacobians - cell array of jacobians
 %      - titles - subplot titles
-    %% xt contains the parameters names
     fnames=fieldnames(robot.structure.DH);
     params={'a','d','$\alpha$','$\theta$'};
+    %% xt contains the parameters names
     xt = {};
     for name=1:length(fnames)
         if any(any(whitelist.(fnames{name})))
@@ -66,7 +66,7 @@ function plotJacobian(robot, whitelist, jacobians, titles)
         set(findobj(gca,'Type','text'),'FontSize')
         if nargin==3
             title(['Rep ',num2str(j)])
-        else if(iscell(titles))
+        elseif(iscell(titles))
             title(titles{j})
         else
             title(titles)

@@ -1,10 +1,10 @@
-function options= weightParameters(whitelist, options, paramsLength, optim)
+function options= weightRobotParameters(whitelist, options, paramsLength, optim, approach)
 %WEIGHTPARAMETERS Change the optimized parameters weight
 %   Change the optimized parameters weight for the calibration
 %INPUT - whitelist - whitelist structure
 %      - options - lsqnonlin settings
 %      - paramsLength - number of optimized parameters 
-%      - optim - number of poses in poses set
+%      - optim - structure of calibration settings
 %OUTPUT - options - lsqnonlin settings with updated TypicalX (weights)
     options.TypicalX=ones(1,paramsLength);
     paramNumber=1;
@@ -18,18 +18,14 @@ function options= weightParameters(whitelist, options, paramsLength, optim)
             end
             idx=find(whitelist.(fnames{name})')-1;
             params=mod(idx,4)+1;  
-            % parametersWeights is (1,4) vector - (lengths, angles, skinLengths, skinAngles)
+            % parametersWeights is structure -.body (lengths, angles); .skin (skinLengths, skinAngles);
             for i=1:size(params,1)
-               if params(i)==1 || params(i)==2 % params(i) is a or d
-                    id=1;
-               else % params(i) is alpha or offset
-                    id=2;
-               end
-               if skin
-                   id=id+2;
-               end
-               options.TypicalX(paramNumber)=options.TypicalX(paramNumber)*optim.parametersWeights(id);
-               paramNumber=paramNumber+1;
+                if skin
+                    options.TypicalX(paramNumber)=options.TypicalX(paramNumber)*optim.parametersWeights.skin(1+(params(i)>2)); % if params(i) is 3 or 4 -> index is 2, else index is 1
+                else
+                    options.TypicalX(paramNumber)=options.TypicalX(paramNumber)*optim.parametersWeights.body(1+(params(i)>2)); % if params(i) is 3 or 4 -> index is 2, else index is 1
+                end
+                paramNumber=paramNumber+1;
             end
         end
     end
