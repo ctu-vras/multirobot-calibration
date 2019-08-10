@@ -31,22 +31,20 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets)
         poses = dataset.pose;
         [unique_poses, index_poses, ~] = unique(poses);
         %% precompute transformation from base to cameras
-        Cam1TF = zeros(4,4,unique_poses(end));
-        Cam2TF = zeros(4,4,unique_poses(end));
+        CamTF = zeros(4,4,unique_poses(end), length(cam_frames));
         for i = 1:length(index_poses)
-            Cam1TF(:,:,unique_poses(i)) =  inversetf(getTF(dh_pars,cam_frames{1},rtMats(index_poses(i)), joints(index_poses(i)), H0, DHindexes.(cam_frames{1}.name), parents));
-            Cam2TF(:,:,unique_poses(i)) =  inversetf(getTF(dh_pars,cam_frames{2},rtMats(index_poses(i)), joints(index_poses(i)), H0, DHindexes.(cam_frames{2}.name), parents));
+            for j = 1:length(cam_frames)
+                CamTF(:,:,unique_poses(i), j) =  inversetf(getTF(dh_pars,cam_frames{j},rtMats(index_poses(i)), joints(index_poses(i)), H0, DHindexes.(cam_frames{j}.name), parents));
+            end
         end
         %% Compute point coordinates to cameras
         for i = 1:size(points, 1)      
             point = getTF(dh_pars,frames(i),rtMats(i), joints(i), H0, DHindexes.(frames(i).name), parents)*[points(i,1:3),1]';
-            if(cameras(i,1))
-                points2Cam(:,index) = Cam1TF(:,:,poses(i))*point;
-                index = index+1;
-            end
-            if(cameras(i,2))
-                points2Cam(:,index) = Cam2TF(:,:,poses(i))*point;
-                index = index+1;
+            for j = 1:size(cameras,2)
+                if(cameras(i,j))
+                    points2Cam(:,index) = CamTF(:,:,poses(i),j)*point;
+                    index = index+1;
+                end
             end
         end
         points2Cam(:,isnan(points2Cam(1,:))) = [];

@@ -21,9 +21,13 @@ function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
             % find transformation between external camera and robot
             [R,T]=fitSets(extPoints,robPoints(1:3,:)'); 
         else
-            actParams=extParams((datasetId-1)*6+1:datasetId*6);
-            T=actParams(4:6)';
-            R=rotationVectorToMatrix(actParams(1:3));
+            actParams=extParams((datasetId-1)*optim.externalParams+1:datasetId*optim.externalParams);
+            T=actParams(optim.externalParams-2:end)';
+            if(optim.externalParams == 6)
+                R=rotationVectorToMatrix(actParams(1:3));
+            else
+                R=quat2matrix(actParams(1:4));
+            end
         end
 
         % transform ext point to robot's base frame

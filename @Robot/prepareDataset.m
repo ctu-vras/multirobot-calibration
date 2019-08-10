@@ -23,6 +23,11 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
         [datasets, indexes]=func(r,optim, chains);
     end
     %% Assing joint to names and split
+    if strcmp(optim.units, 'm')
+        units = 1;       
+    else
+        units = 1000;
+    end
     for dataset=1:length(datasets)
         clear joints; 
         uniqueFrames = unique(datasets{dataset}.frame); % unique (end effector) joint names
@@ -31,15 +36,22 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
             camFrames = [camFrames{:}];
             uniqueFrames = [uniqueFrames; {camFrames.name}'];
         end
-        
+        rtFields = fieldnames(datasets{dataset}.rtMat)';
         % Preallocate arrays
         joints(length(datasets{dataset}.frame), 1) = Joint();
         for name=1:length(datasets{dataset}.frame)
             % find joint by name
             j=findJoint(r,datasets{dataset}.frame{name});
             joints(name)=j{1};
+            for field = rtFields
+                datasets{dataset}.rtMat(name).(field{1})(1:3,4) = datasets{dataset}.rtMat(name).(field{1})(1:3,4) * units;
+            end
         end
         datasets{dataset}.frame=joints;
+        
+        if(~ismember(dataset, indexes{4}))
+           datasets{dataset}.refPoints = datasets{dataset}.refPoints * units;
+        end
         
         if isfield(datasets{dataset},'frame2')
             uniqueFrames = [uniqueFrames; unique(datasets{dataset}.frame2)];

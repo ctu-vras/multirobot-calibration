@@ -19,6 +19,11 @@ function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, op
     %get all fields
     fnames = fieldnames(start_dh);
     count = 1;
+    if strcmp(optim.units, 'm')
+        units = 1;       
+    else
+        units = 1000;
+    end
     for field=1:length(fnames)
         % if field in whitelist has any 1 (anything was calibrated) 
         if(any(any(whitelist.(fnames{field}))))
@@ -36,6 +41,7 @@ function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, op
             results.(fnames{field})(:,3:4,:,:)=ezwraptopi(results.(fnames{field})(:,3:4,:,:));
             count = new_count;
         end
+        results.(fnames{field})(:,1:2,:,:) = results.(fnames{field})(:,1:2,:,:)/units;
         % corrections = results - default 
         corrs.(fnames{field}) = results.(fnames{field})-robot.structure.DH.(fnames{field})(:,:,1); 
         % wrap to [-pi,pi]

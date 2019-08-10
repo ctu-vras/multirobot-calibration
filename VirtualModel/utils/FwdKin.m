@@ -29,7 +29,7 @@ function [chain] = FwdKin(body_part,varargin)
 
         JntColor   = [.7 .7 .7];  % RGB color of the joints
         
-        refFrameSize = 20;
+        refFrameSize = 100;
 
     %% PARAMETERS
 
