@@ -35,10 +35,12 @@ angles.rightArmSkin=[0,0,0];
 angles.rightArm=[0,1,0.5,0.3,0,0.5];
 
 %% 
-% With this, we can compute the RT matrix
-mat=getTF(rob.structure.DH,joint,[],angles, rob.structure.H0,str.DHindexes.(joint.name),str.parents);
+% With this, we can compute the RT matrix as it is in the calibration
+matInt=getTFIntern(rob.structure.DH,joint,[],angles, rob.structure.H0,str.DHindexes.(joint.name),str.parents, []);
 
-
+%%
+% or you can use the simplier function to compute the transformation
+mat=getTF(rob.structure.DH,joint,[],angles, rob.structure.H0);
 %% 
 % You can also get transformation to given frame
 mat2=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'rightShoulderPitch');

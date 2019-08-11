@@ -15,6 +15,9 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets)
         frames = dataset.frame;
         empty = isempty(dataset.rtMat);
         joints = dataset.joints;
+        if(isempty(joints))
+            continue
+        end
         points = dataset.point;
         DHindexes = dataset.DHindexes;
         parents = dataset.parents;
@@ -23,10 +26,12 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets)
         cameras = dataset.cameras;
         points2Cam = nan(4, 2*size(points, 1));
         index = 1;    
-        if (empty && ~isempty(joints)) % if no precomputed matrices -> fill up the array with []
+        if (empty) % if no precomputed matrices -> fill up the array with []
             rtMats{size(joints,1)} = [];
+            rtFields = [];
         else
             rtMats = dataset.rtMat;
+            rtFields = fieldnames(rtMats(1));
         end
         poses = dataset.pose;
         [unique_poses, index_poses, ~] = unique(poses);
@@ -34,12 +39,15 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets)
         CamTF = zeros(4,4,unique_poses(end), length(cam_frames));
         for i = 1:length(index_poses)
             for j = 1:length(cam_frames)
-                CamTF(:,:,unique_poses(i), j) =  inversetf(getTF(dh_pars,cam_frames{j},rtMats(index_poses(i)), joints(index_poses(i)), H0, DHindexes.(cam_frames{j}.name), parents));
+                CamTF(:,:,unique_poses(i), j) =  getTFIntern(dh_pars,cam_frames{j},rtMats(index_poses(i)), joints(index_poses(i)), H0, DHindexes.(cam_frames{j}.name), parents, rtFields);
             end
+        end
+        for j = 1:length(cam_frames)
+            CamTF(:,:,:, j) =  inversetf(CamTF(:,:,:,j));
         end
         %% Compute point coordinates to cameras
         for i = 1:size(points, 1)      
-            point = getTF(dh_pars,frames(i),rtMats(i), joints(i), H0, DHindexes.(frames(i).name), parents)*[points(i,1:3),1]';
+            point = getTFIntern(dh_pars,frames(i),rtMats(i), joints(i), H0, DHindexes.(frames(i).name), parents, rtFields)*[points(i,1:3),1]';
             for j = 1:size(cameras,2)
                 if(cameras(i,j))
                     points2Cam(:,index) = CamTF(:,:,poses(i),j)*point;
