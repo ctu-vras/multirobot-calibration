@@ -8,7 +8,7 @@ function camera_points = projections(points, eyes, cameras)
     dc = eyes.dist; % radial distortion coeffs
     tdc = eyes.tandist; % tangential distortion coeffs
     mat = eyes.matrix(1:2,:,:); % camera matrix
-    cameras = cameras.*[1,2]; % convert logical array to array of used cameras
+    cameras = cameras.*(1:size(cameras,2)); % convert logical array to array of used cameras
     cameras = reshape(cameras',[],1);
     cameras(cameras==0) = [];
 

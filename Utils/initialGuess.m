@@ -15,7 +15,7 @@ function [params, typicalX] = initialGuess(rob, datasets, dh_pars, approaches, o
                     extPoints = dataset.refPoints;
                     [R,T] = fitSets(extPoints,robPoints(1:3,:)');
                     if(optim.externalParams == 6)
-                        newParams = [rotationMatrixToVector(R),T'];
+                        newParams = [rotMatrix2rotVector(R)',T'];
                     else
                         newParams = [matrix2quat(R),T'];
                     end

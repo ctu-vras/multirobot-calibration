@@ -1,4 +1,4 @@
-function [ dist ] = getProjectionDist( dh_pars, robot, datasets)
+function [ dist, coeffs ] = getProjectionDist( dh_pars, robot, datasets)
 %GETPROJECTIONDIST returns errors from projections
 %   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is 4D array.
@@ -9,6 +9,7 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets)
 %                   N is number of errors from projections
     H0 = robot.structure.H0;
     dist = [];
+    coeffs = [];
     cam_frames = robot.findJointByType('eye');
     for dataset=datasets
         dataset = dataset{1};
@@ -59,5 +60,6 @@ function [ dist ] = getProjectionDist( dh_pars, robot, datasets)
         %% compute projections
         projs = projections(points2Cam, robot.structure.eyes, cameras);
         dist = [dist, reshape(projs-refPoints, 1, 2*size(projs, 2))];
+        coeffs = [coeffs, dist2projCoef(points2Cam, robot.structure.eyes, cameras)];
     end
 end

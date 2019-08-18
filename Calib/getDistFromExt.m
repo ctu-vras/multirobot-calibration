@@ -24,7 +24,7 @@ function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
             actParams=extParams((datasetId-1)*optim.externalParams+1:datasetId*optim.externalParams);
             T=actParams(optim.externalParams-2:end)';
             if(optim.externalParams == 6)
-                R=rotationVectorToMatrix(actParams(1:3));
+                R=rotVector2rotMatrix(actParams(1:3));
             else
                 R=quat2matrix(actParams(1:4));
             end

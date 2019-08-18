@@ -19,12 +19,15 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     plane_distances = [];
     dist_from_ext = [];
     proj_dist = [];
+    coeffs = [];
+    usePxCoeffs = 0;
     refDist = 0;
     planeParams=[];
     extParams=[];
     % Add optimized parameters from solver back to dh_pars
     fnames = fieldnames(dh_pars);
     count = 1;
+    optim.useNorm = 1;
     for field=1:length(fnames)
         % find indexes of params
         new_count = count + sum(sum(whitelist.(fnames{field})));
@@ -48,17 +51,22 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     if(approach.selftouch)
         distances = getDist(dh_pars, robot, dataset.dist, optim);
         refDist = dataset.dist{end}.refDist;
+        usePxCoeffs = 1;
     end
     if(approach.planes)
         plane_distances = getPlaneDist(dh_pars, robot, dataset.plane, planeParams);
+        usePxCoeffs = 1;
     end
     if(approach.external)
         dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim, extParams);
+        usePxCoeffs = 1;
     end
     if(approach.eyes)
-        proj_dist = getProjectionDist(dh_pars, robot, dataset.proj);
+        [proj_dist,coeffs] = getProjectionDist(dh_pars, robot, dataset.proj);
+        if(usePxCoeffs)
+            proj_dist = proj_dist .* coeffs;
+        end
     end
-    
     % concat all results into output variable, with right scalling
     error_vec = [(distances - refDist)*approach.selftouch, ...
         plane_distances*approach.planes, dist_from_ext*approach.external, ...
