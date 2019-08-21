@@ -1,4 +1,4 @@
-function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, dataset, optim, approach)
+function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, dataset, optim, approach, paramValues)
 %ERRORS_FCN returns vector of vector of errors for all types of calibration
 %   INPUT - opt_pars - 1xN vector of optimized parameters
 %         - dh_pars - structure with DH parameters, where field names corresponding to names of
@@ -19,7 +19,6 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     plane_distances = [];
     dist_from_ext = [];
     proj_dist = [];
-    coeffs = [];
     usePxCoeffs = 0;
     refDist = 0;
     planeParams=[];
@@ -27,24 +26,33 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     % Add optimized parameters from solver back to dh_pars
     fnames = fieldnames(dh_pars);
     count = 1;
-    optim.useNorm = 1;
     for field=1:length(fnames)
         % find indexes of params
         new_count = count + sum(sum(whitelist.(fnames{field})));
         a=dh_pars.(fnames{field})';
         % append pars to their place
-        a(whitelist.(fnames{field})') = opt_pars(count:new_count-1);
+        a(whitelist.(fnames{field})') = opt_pars(count:new_count-1)' + optim.optimizeDifferences * a(whitelist.(fnames{field})');
         % append back to dh_pars
         dh_pars.(fnames{field})=a';
         count = new_count;
     end
     if (count-1)~=length(opt_pars)
+        index = 0;
         if approach.planes
-           planeParams=opt_pars(count:length(dataset.planes)*optim.planeParams-1);
-           count=count+length(dataset.planes)*optim.planeParams;
+            index = length(dataset.planes)*optim.planeParams-1;
+            if(optim.optimizeDifferences)
+                planeParams=opt_pars(count:index+count) + paramValues(1:index+1);
+            else
+                planeParams=opt_pars(count:index+count);
+            end
+            count=count+index+1;
         end
         if approach.external
-           extParams=opt_pars(count:count+length(dataset.external)*optim.externalParams-1); 
+            if(optim.optimizeDifferences)
+                extParams=opt_pars(count:count+length(dataset.external)*optim.externalParams-1) + paramValues(index+1:end); 
+            else
+                extParams=opt_pars(count:count+length(dataset.external)*optim.externalParams-1);
+            end
         end
     end
     %% Call appropriate functions if given approach is enabled

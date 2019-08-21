@@ -29,7 +29,7 @@ function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, op
             % permute columns in given field
             a=permute(results.(fnames{field}),[2,1,3,4]);
             % add optimized params to their place
-            a(wh) = opt_pars(count:new_count-1,:,:);
+            a(wh) = reshape(opt_pars(count:new_count-1,:,:),[],1) + optim.optimizeDifferences * a(wh);
             % append to results
             results.(fnames{field})=permute(a,[2,1,3,4]);
             % wrap ti [-pi,pi];

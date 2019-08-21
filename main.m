@@ -62,14 +62,24 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
             for field = 1:length(fnames)
                dh.(fnames{field}) = start_dh.(fnames{field})(:,:, rep, pert_level);
             end
-             % objective function setup
-            pars=start_pars(:,rep,pert_level)';
-            if optim.optimizeInitialGuess && (approach.planes || approach.external) 
-               [params, typicalX]=initialGuess(rob, tr_datasets, dh, approach, optim);
-               pars=[pars,params];
-               options.TypicalX(end-length(params)+1:end) = typicalX;
+            % objective function setup
+            if(optim.optimizeDifferences)
+                pars = zeros(1, parsCount);
+            else
+                pars=start_pars(:,rep,pert_level)';
             end
-            obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach);
+            initialParamValues = [];
+            if optim.optimizeInitialGuess && (approach.planes || approach.external) 
+                [params, typicalX]=initialGuess(rob, tr_datasets, dh, approach, optim);
+                options.TypicalX(end-length(params)+1:end) = typicalX;
+                if(optim.optimizeDifferences)
+                    initialParamValues = params;
+                else
+                    pars=[pars,params];
+                end
+            end
+            
+            obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach, initialParamValues);
             sprintf('%f percent done', 100*((pert_level-1)*optim.repetitions + rep - 1)/(optim.pert_levels*optim.repetitions))
             % optimization        
             [opt_result, calibOut.resnorms{1,rep, pert_level}, calibOut.residuals{1,rep, pert_level},...
