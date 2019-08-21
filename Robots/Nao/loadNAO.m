@@ -263,9 +263,7 @@ function [name, jointStructure, structure]=loadNAO()
     structure.WL.leftArmSkin=ones(size(hands_upper,2)+size(hands_lower,2)+3,4);
     structure.WL.rightArmSkin=ones(size(hands_upper,2)+size(hands_lower,2)+3,4);
     structure.WL.headSkin=ones(size(head_left,2)+size(head_right,2)+3,4);
-    
-    structure.torsoSkin=repmat(eye(4),1,1,3+size(torso_left,2)+size(torso_right,2),1);
-    
+%     structure.torsoSkin=repmat(eye(4),1,1,3+size(torso_left,2)+size(torso_right,2),1);
     %% Name
     name='nao';
 end

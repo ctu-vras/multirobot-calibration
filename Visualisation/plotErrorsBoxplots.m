@@ -7,8 +7,8 @@ function plotErrorsBoxplots(folders,varargin)
 %                                      - Default: 0
 %                       - 'log' - 1/0 to use logarithmic scale
 %                               - Default: 0
-%                       - 'const' - 1 or 1000, to use m or mm
-%                                 - Default: 1
+%                       - 'units' - 'm' or 'mm'
+%                                 - Default: mm
 %                       - 'errorsType' - 'errors'/'errorsAll'
 %                                      - Default: 'errors'
 %                       - 'location' - string, location of the legend
@@ -20,7 +20,7 @@ function plotErrorsBoxplots(folders,varargin)
     addRequired(p,'folders');
     addParameter(p,'pert',0);
     addParameter(p,'log',0);
-    addParameter(p,'const',1, @(x) ismember(x,[1,1000]));
+    addParameter(p,'units','mm', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'errorsType','errors');
     addParameter(p,'location','northwest');
     parse(p,folders,varargin{:});
@@ -30,13 +30,7 @@ function plotErrorsBoxplots(folders,varargin)
     location=p.Results.location;
     symLog=p.Results.log;
     errorsType=p.Results.errorsType;
-    const=p.Results.const;
-    % assing string based on const
-    if const==1
-        constName='m';
-    elseif const==1000
-        constName='mm';
-    end
+    units=p.Results.units;
     figure();
     ax=axes();
     data=[];
@@ -56,6 +50,13 @@ function plotErrorsBoxplots(folders,varargin)
         info = load(['Results/',folder,'/info.mat']);
         errors=errors.(errorsType);
         optim = info.optim;
+        if strcmp(units,'m') &&  strcmp(optim.units,'mm')
+            const = 0.001;
+        elseif strcmp(units,'mm') &&  strcmp(optim.units,'m')
+            const = 1000;
+        else
+            const = 1;
+        end
         robot=info.rob;
         if strcmp(errorsType,'errors')
             % get cellArray from arrays
@@ -145,7 +146,7 @@ function plotErrorsBoxplots(folders,varargin)
     % get them in reverse order and cut the last one
     c=c(end-1:-1:1,:);
     xlabel('Dataset');
-    ylabel(['Error [',constName,']']);
+    ylabel(['Error [',units,']']);
     title('Comparison of RMS errors')
     %get y limits for lines
     yl=ylim;

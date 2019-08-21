@@ -60,6 +60,7 @@ classdef Robot < handle
                     else
                         j=nan;
                         parentId=0;
+                        assert(strcmp(curJoint{2}, types.base), 'Joint without parent must be of type: ''base''')
                     end
                     %Call Joint constructor
                     
@@ -68,6 +69,9 @@ classdef Robot < handle
                     obj.joints{end+1}=joints{jointId};
                 end
                 obj.name=name;
+                assert(isfield(structure, 'DH') && isfield(structure, 'WL') && isfield(structure, 'H0') ...
+                    && isfield(structure, 'defaultDH') && isfield(structure, 'bounds'), ...
+                    'Robot structure is incomplete, it must contains: DH, WL, H0, defaultDH and bounds')
                 obj.structure=structure;                
             else
                 error('Incorrect number of arguments inserted, expected 1, but got %d',nargin);

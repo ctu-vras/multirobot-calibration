@@ -29,8 +29,13 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
     
     %% calibration
     parsCount = size(start_pars, 1);
-    if optim.optimizeInitialGuess
-        parsCount = parsCount+length(datasets.plane)*optim.planeParams+length(datasets.ext)*optim.externalParams;
+    if optim.optimizeInitialGuess 
+        if (approach.external)
+            parsCount = parsCount+length(datasets.external)*optim.externalParams;
+        end
+        if(approach.planes)
+            parsCount = parsCount+length(datasets.planes)*optim.planeParams;
+        end
     end
     options = weightRobotParameters(whitelist, options, parsCount,optim);
     opt_pars = zeros(parsCount, optim.repetitions, optim.pert_levels);
@@ -42,7 +47,7 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
     calibOut.outputs = cell(1, optim.repetitions, optim.pert_levels);
     calibOut.lambdas = cell(1, optim.repetitions, optim.pert_levels);
     fnames = fieldnames(start_dh);
-    for pert_level = 1:optim.pert_levels
+    for pert_level = 1+optim.skipNoPert:optim.pert_levels
         for rep = 1:optim.repetitions    
             % levenberg-marquardt is incompatible with constrains, remove them
             if ~optim.bounds || strcmpi(options.Algorithm, 'levenberg-marquardt')

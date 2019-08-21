@@ -18,11 +18,6 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     else
        bounds = []; 
     end
-    if strcmp(optim.units, 'm')
-        units = 1;       
-    else
-        units = 1000;
-    end
     %% Perturbation
     % get perturbation ranges
     fnames=fieldnames(pert);
@@ -37,10 +32,10 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
             if strcmp(optim.distribution,'uniform')
                 % if 'uniform' distribution - use rand*2 - 1, to get values
                 % from -1 to 1
-                perms(:,:,index)=(rand(length(r.joints),4)*2-1).*[repmat(pert.(fnames{i}).DH(1:2),length(r.joints),1)*units, repmat(pert.(fnames{i}).DH(3:4),length(r.joints),1)];
+                perms(:,:,index)=(rand(length(r.joints),4)*2-1).*[repmat(pert.(fnames{i}).DH(1:2),length(r.joints),1)*optim.unitsCoef, repmat(pert.(fnames{i}).DH(3:4),length(r.joints),1)];
             elseif strcmp(optim.distribution,'normal')
                 % if 'normal' distribution - just use randn function
-                perms(:,:,index)=randn(length(r.joints),4).*[repmat(pert.(fnames{i}).DH(1:2),length(r.joints),1)*units, repmat(pert.(fnames{i}).DH(3:4),length(r.joints),1)];
+                perms(:,:,index)=randn(length(r.joints),4).*[repmat(pert.(fnames{i}).DH(1:2),length(r.joints),1)*optim.unitsCoef, repmat(pert.(fnames{i}).DH(3:4),length(r.joints),1)];
             end
             index=index+1;
         end
@@ -70,7 +65,7 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
             continue 
         end
         % copy non-perturbed parameters for each repetition to preallocated matrix  
-        init.(joint.group)(joint.DHindex,:,:,1)=repmat([r.structure.DH.(joint.group)(joint.DHindex,1:2)*units,r.structure.DH.(joint.group)(joint.DHindex,3:4)],1,1,optim.repetitions); 
+        init.(joint.group)(joint.DHindex,:,:,1)=repmat([r.structure.DH.(joint.group)(joint.DHindex,1:2)*optim.unitsCoef,r.structure.DH.(joint.group)(joint.DHindex,3:4)],1,1,optim.repetitions); 
         % add perturbations to the DH parameters and copy them to
         % preallocated matrices
         for i=1:optim.pert_levels-1
@@ -96,8 +91,8 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
             end
             % create bounds by add/substract them to DH pars and copy them
             % to right indexes in prealocated matrices
-            lb.(joint.group)(joint.DHindex,:,:,1)=repmat([(r.structure.(type).(joint.group)(joint.DHindex,1:2)-jointBounds(1:2))*units, r.structure.(type).(joint.group)(joint.DHindex,3:4)-jointBounds(3:4)],1,1,optim.repetitions); 
-            ub.(joint.group)(joint.DHindex,:,:,1)=repmat([(r.structure.(type).(joint.group)(joint.DHindex,1:2)+jointBounds(1:2))*units, r.structure.(type).(joint.group)(joint.DHindex,3:4)+jointBounds(3:4)],1,1,optim.repetitions);
+            lb.(joint.group)(joint.DHindex,:,:,1)=repmat([(r.structure.(type).(joint.group)(joint.DHindex,1:2)-jointBounds(1:2))*optim.unitsCoef, r.structure.(type).(joint.group)(joint.DHindex,3:4)-jointBounds(3:4)],1,1,optim.repetitions); 
+            ub.(joint.group)(joint.DHindex,:,:,1)=repmat([(r.structure.(type).(joint.group)(joint.DHindex,1:2)+jointBounds(1:2))*optim.unitsCoef, r.structure.(type).(joint.group)(joint.DHindex,3:4)+jointBounds(3:4)],1,1,optim.repetitions);
         end
     end
     

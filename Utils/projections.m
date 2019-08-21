@@ -1,7 +1,7 @@
 function camera_points = projections(points, eyes, cameras)
 %PROJECTIONS Project points to the cameras
 % Project points given by 4x4xN transformation matrices array tfs to the cameras
-%INPUT - points - jacobian obtained via optimization process
+%INPUT - points - points in cameras coordinate system
 %      - eyes - cameras intrinsic parameters (dist coeffs and camera matrix)
 %      - cameras - number of poses in poses set
 %OUTPUT - camera_points - row vector of projection coords (u,v)

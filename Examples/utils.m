@@ -66,4 +66,4 @@ disp(norm(mat-mat3*mat2,'fro')<eps)
 load('Results/exampleNao/info.mat');
 
 % And easily transform all point from local frame to the base frame
-newPoints=getPoints(rob.structure.DH, datasets.dist{:}, rob.structure.H0, 0);
+newPoints=getPoints(rob.structure.DH, datasets.selftouch{:}, rob.structure.H0, 0);

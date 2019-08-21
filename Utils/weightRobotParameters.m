@@ -1,4 +1,4 @@
-function options= weightRobotParameters(whitelist, options, paramsLength, optim, approach)
+function options= weightRobotParameters(whitelist, options, paramsLength, optim)
 %WEIGHTPARAMETERS Change the optimized parameters weight
 %   Change the optimized parameters weight for the calibration
 %INPUT - whitelist - whitelist structure

@@ -11,7 +11,12 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err,
 %      - approach - calibration approaches
 %      - jointTypes -joint types to calibrate
 %      - optim - calibration settings
-
+        
+    if strcmp(optim.units, 'm')
+        units = 1;       
+    else
+        units = 1000;
+    end
     %% merge all rms errors
     errors = nan(16,optim.repetitions * optim.pert_levels);
     if(~isempty(before_tr_err))
@@ -28,6 +33,11 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err,
     end
 
     errorsAll=[before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all];
+    %% convert DH to metres
+    fnames=fieldnames(res_dh);
+    for name=1:length(fnames)
+       res_dh.(fnames{name})(:,1:2,:,:) =  res_dh.(fnames{name})(:,1:2,:,:)/units;
+    end
     %% save variables
     s = mkdir(outfolder);
     assert(s, 'Could not make folder');
@@ -35,8 +45,7 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err,
     save([outfolder, 'corrections.mat'], 'corrs_dh');
     save([outfolder, 'errors.mat'], 'errors','errorsAll');
     save([outfolder, 'info.mat'], 'optim', 'chains', 'approach', 'jointTypes', 'rob');
-    %% save DH to text files
-    fnames=fieldnames(res_dh);
+    %% save DH to text files   
     for pert_level = 1:optim.pert_levels
         for rep = 1:optim.repetitions   
             file=fopen([outfolder,'DH-rep',num2str(rep), '-pert', num2str(pert_level),'.txt'],'w');

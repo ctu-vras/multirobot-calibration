@@ -6,8 +6,8 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
 %         - robot - instance of @Robot class
 %         - whitelist - structure with 1/0, where field names corresponding to names of
 %                       the 'groups' in robot. Each group is matrix.
-%         - dataset - structure of dataset, where field names are {dist,
-%                     plane, ext, proj} and and each field is 1xN cellArray
+%         - dataset - structure of dataset, where field names are {selftouch,
+%                     planes, external, projection} and and each field is 1xN cellArray
 %         - optim - structure of calibration settings
 %         - approach - structure of settings for each calibration approach
 %   OUTPUT - error_vec - MxN array of distance;
@@ -40,36 +40,36 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     end
     if (count-1)~=length(opt_pars)
         if approach.planes
-           planeParams=opt_pars(count:length(dataset.plane)*optim.planeParams-1);
-           count=count+length(dataset.plane)*optim.planeParams;
+           planeParams=opt_pars(count:length(dataset.planes)*optim.planeParams-1);
+           count=count+length(dataset.planes)*optim.planeParams;
         end
         if approach.external
-           extParams=opt_pars(count:count+length(dataset.ext)*optim.externalParams-1); 
+           extParams=opt_pars(count:count+length(dataset.external)*optim.externalParams-1); 
         end
     end
     %% Call appropriate functions if given approach is enabled
     if(approach.selftouch)
-        distances = getDist(dh_pars, robot, dataset.dist, optim);
-        refDist = dataset.dist{end}.refDist;
+        distances = getDist(dh_pars, robot, dataset.selftouch, optim);
+        refDist = dataset.selftouch{end}.refDist;
         usePxCoeffs = 1;
     end
     if(approach.planes)
-        plane_distances = getPlaneDist(dh_pars, robot, dataset.plane, planeParams);
+        plane_distances = getPlaneDist(dh_pars, robot, dataset.planes, planeParams);
         usePxCoeffs = 1;
     end
     if(approach.external)
-        dist_from_ext = getDistFromExt(dh_pars, robot, dataset.ext, optim, extParams);
+        dist_from_ext = getDistFromExt(dh_pars, robot, dataset.external, optim, extParams);
         usePxCoeffs = 1;
     end
-    if(approach.eyes)
-        [proj_dist,coeffs] = getProjectionDist(dh_pars, robot, dataset.proj);
-        if(usePxCoeffs)
+    if(approach.projection)
+        [proj_dist,coeffs] = getProjectionDist(dh_pars, robot, dataset.projection);
+        if(optim.usePxCoef && usePxCoeffs)
             proj_dist = proj_dist .* coeffs;
         end
     end
     % concat all results into output variable, with right scalling
     error_vec = [(distances - refDist)*approach.selftouch, ...
         plane_distances*approach.planes, dist_from_ext*approach.external, ...
-        proj_dist*approach.eyes];
+        proj_dist*approach.projection];
 end
 

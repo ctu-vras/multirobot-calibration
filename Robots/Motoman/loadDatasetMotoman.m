@@ -50,8 +50,8 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
         'leica_lower_table1_5x5_dataset.mat', 'leica_lower_table2_5x5_dataset.mat', ...
         'no_leica_lower_table1_5x5_dataset.mat', 'no_leica_lower_table2_5x5_dataset.mat'};
     datasets_leica = {};
-    datasets_projs = {};
-    datasets_dist = {};
+    datasets_projection = {};
+    datasets_selftouch = {};
     datasets_planes = {};
     index = 0; 
     
@@ -217,17 +217,17 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                 dataset2.id = index;
                 if(k == 1)
                     dataset2.name = ['Dist ', num2str(index)];
-                    datasets_dist{1} = dataset2;
+                    datasets_selftouch{1} = dataset2;
                 else
                     dataset2.name = ['Plane ', num2str(index)];
                     datasets_planes{end+1} = dataset2;
                 end
-                datasets_projs{index} = dataset;                   
+                datasets_projection{index} = dataset;                   
             end
         end        
     end
     
-    indexes = {1:length(datasets_dist), (1:length(datasets_planes))+length(datasets_dist),...
-        1:length(datasets_leica), (1:length(datasets_projs))+sum(used_datasets)};
-    datasets = [datasets_dist, datasets_planes, datasets_leica, datasets_projs];
+    indexes = {1:length(datasets_selftouch), (1:length(datasets_planes))+length(datasets_selftouch),...
+        1:length(datasets_leica), (1:length(datasets_projection))+sum(used_datasets)};
+    datasets = [datasets_selftouch, datasets_planes, datasets_leica, datasets_projection];
 end

@@ -42,11 +42,11 @@ function loadDHfromMat(robot,folder,varargin)
         
         %% finding the {min,max,median} argument
         if strcmp(p.Results.type,'min')
-            [~,rep]=min(approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.eyes*dists(4,:));
+            [~,rep]=min(approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.projection*dists(4,:));
         elseif strcmp(p.Results.type,'max')
-            [~,rep]=max(approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.eyes*dists(4,:));
+            [~,rep]=max(approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.projection*dists(4,:));
         elseif strcmp(p.Results.type,'median')
-            values = approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.eyes*dists(4,:);
+            values = approach.selftouch*dists(1,:)+approach.planes*dists(2,:)+approach.external*dists(3,:)+approach.projection*dists(4,:);
             sortedValues = sort(values);
             rep = find(sortedValues(ceil(length(sortedValues)/2)) == values);
         end

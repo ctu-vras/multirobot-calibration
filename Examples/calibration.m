@@ -41,7 +41,7 @@ main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whiteli
 %% motoman hand-eye calibration - right arm and right eye using DH from rep1 and pert1 of self touch as initial
 robot_fcn = 'loadMotoman';
 config_fcn = 'motomanOptConfig';
-approaches = {'eyes'};
+approaches = {'projection'};
 chains = {'rightArm', 'rightEye'};
 jointTypes={'joint','eye'}; 
 dataset_fcn = 'loadDatasetMotoman';

@@ -11,7 +11,7 @@ plotCorrections('exampleNao');
 %%
 % The function also supporst more arguments. For example, to use length in
 % mm
-plotCorrections('exampleNao','const',1000);
+plotCorrections('exampleNao','units','mm');
 
 %% Error boxplots
 % Boxplots of errors work very similar, but you can pass more than one
@@ -33,7 +33,7 @@ plotErrorBars({'exampleNao','exampleNao2'})
 % We need two set of points, which can be computed for example like this
 
 load('Results/leica-motoman/info'); %Load saved data
-dataset = datasets.ext{1};
+dataset = datasets.external{1};
 extPoints=dataset.refPoints;
 robPoints = getPoints(rob.structure.defaultDH, dataset, rob.structure.H0, false); % Transform all point to base frame
 [R,T]=fitSets(extPoints,robPoints(1:3,:)'); % Fit sets from different origin
@@ -50,14 +50,14 @@ close all
 load('Results/exampleNao3/info');
 % This example does not 'make sense', it just for demonstration of input.
 % Argument with 'rightArm' determines which chain to show.
-plotJointDistribution(rob, {datasets.dist{1},datasets.dist{2}},{datasets.dist{2}}, 'rightArm', '', '', 1);
+plotJointDistribution(rob, {datasets.selftouch{1},datasets.selftouch{2}},{datasets.selftouch{2}}, 'rightArm', '', '', 1);
 
 %%
 % Alternatively you can pass just one dataset
 close all
 load('Results/exampleNao3/info');
 % This example shows also title and legend settings
-plotJointDistribution(rob, {datasets.dist{1}},[], 'leftArm', 'myFig', {'myDataset'}, 1);
+plotJointDistribution(rob, {datasets.selftouch{1}},[], 'leftArm', 'myFig', {'myDataset'}, 1);
 
 %% Projections
 
@@ -72,12 +72,12 @@ plotJacobian(rob, whitelist, jacobians)
 % activations by 'left' and 'right' arrow keys.
 % You need to have datasets from calibration, which can be easile loaded
 load('Results/exampleNao2/info');
-activationsView(rob,{datasets.dist{:}})
+activationsView(rob,{datasets.selftouch{:}})
 
 %%
 % For Nao robot it allows to show skin and info about activations
 load('Results/exampleNao2/info');
-activationsView(rob,{datasets.dist{:}},'info',1,'skin',1)
+activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
 
 
 %% Robots equipped with skin

@@ -8,27 +8,22 @@ function plotCorrections(folder, varargin)
 %                                      - Default: 0
 %                       - 'log' - 1/0 to use logarithmic scale
 %                               - Default: 1
-%                       - 'const' - 1 or 1000, to use m or mm
-%                                 - Default: 1
+%                       - 'units' - 'm' or 'mm'
+%                                 - Default: units from the calibration
 
     % Argument parser
     p=inputParser;
     addRequired(p,'folder');
     addParameter(p,'noiseLevel',0);
     addParameter(p,'log',1);
-    addParameter(p,'const',1, @(x) ismember(x,[1,1000]));
+    addParameter(p,'units','x', @(x) any(validatestring(x,{'m','mm'})));
+    
     parse(p,folder,varargin{:});
     
     % get values from parser
     noiseLevel=p.Results.noiseLevel;
     symLog=p.Results.log;
-    const=p.Results.const;
-    % assing string based on const
-    if const==1
-        constName='m';
-    elseif const==1000
-        constName='mm';
-    end
+    units=p.Results.units;
 	close all
     % load saved variables
     corrections=load(['Results/',folder,'/corrections.mat']);
@@ -36,6 +31,15 @@ function plotCorrections(folder, varargin)
     info = load(['Results/',folder,'/info.mat']);
     robot=info.rob;
     whitelist=info.whitelist;
+    
+    % assigning string based on const
+    if strcmp(units,'m')
+        coef=1;
+    elseif strcmp(units,'mm')
+        coef=1000;
+    else
+        coef = info.optim.unitsCoef;
+    end
     
     fnames=fieldnames(corrections);
     params={'a','d','$\alpha$','$\theta$'};
@@ -58,12 +62,13 @@ function plotCorrections(folder, varargin)
            % for each DH parameter
            for i=1:4
               % for every parameter, where column index is 'i' (1-4)
-              if i>2
-                  const=1;
-              end
               for j=row(col==i)'
                   % assign values 
-                  values=[values,corrections.(fnames{name})(j,i,:,noiseLevel+1).*const];
+                  if(i > 2)
+                      values=[values,corrections.(fnames{name})(j,i,:,noiseLevel+1)];
+                  else
+                      values=[values,corrections.(fnames{name})(j,i,:,noiseLevel+1).*coef];
+                  end
                   % get name of parameter
                   xt{end+1}=[joints{j}.name,' ',params{i}];
               end
@@ -82,7 +87,7 @@ function plotCorrections(folder, varargin)
                    xlabel(bp,'Joints')
                    % lengths
                    if i==2
-                    ylabel(bp,['Corrections [',constName,']']);
+                    ylabel(bp,['Corrections [',units,']']);
                     if symLog
                         symlog(bp,'y');
                     end

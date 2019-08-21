@@ -60,6 +60,6 @@ function [ dist, coeffs ] = getProjectionDist( dh_pars, robot, datasets)
         %% compute projections
         projs = projections(points2Cam, robot.structure.eyes, cameras);
         dist = [dist, reshape(projs-refPoints, 1, 2*size(projs, 2))];
-        coeffs = [coeffs, dist2projCoef(points2Cam, robot.structure.eyes, cameras)];
+        coeffs = [coeffs, proj2distCoef(points2Cam, robot.structure.eyes, cameras)];
     end
 end

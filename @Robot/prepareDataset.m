@@ -23,11 +23,6 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
         [datasets, indexes]=func(r,optim, chains);
     end
     %% Assing joint to names and split
-    if strcmp(optim.units, 'm')
-        units = 1;       
-    else
-        units = 1000;
-    end
     for dataset=1:length(datasets)
         clear joints; 
         uniqueFrames = unique(datasets{dataset}.frame); % unique (end effector) joint names
@@ -44,13 +39,13 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
             j=findJoint(r,datasets{dataset}.frame{name});
             joints(name)=j{1};
             for field = rtFields
-                datasets{dataset}.rtMat(name).(field{1})(1:3,4) = datasets{dataset}.rtMat(name).(field{1})(1:3,4) * units;
+                datasets{dataset}.rtMat(name).(field{1})(1:3,4) = datasets{dataset}.rtMat(name).(field{1})(1:3,4) * optim.unitsCoef;
             end
         end
         datasets{dataset}.frame=joints;
         
         if(~ismember(dataset, indexes{4}))
-           datasets{dataset}.refPoints = datasets{dataset}.refPoints * units;
+           datasets{dataset}.refPoints = datasets{dataset}.refPoints * optim.unitsCoef;
         end
         
         if isfield(datasets{dataset},'frame2')
@@ -113,10 +108,10 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
     end
 
     % Assigning datasets to the right groups
-    datasetsStruct.dist=datasets(indexes{1});
-    datasetsStruct.plane=datasets(indexes{2});
-    datasetsStruct.ext=datasets(indexes{3});
-    datasetsStruct.proj=datasets(indexes{4});
+    datasetsStruct.selftouch=datasets(indexes{1});
+    datasetsStruct.planes=datasets(indexes{2});
+    datasetsStruct.external=datasets(indexes{3});
+    datasetsStruct.projection=datasets(indexes{4});
     
 end
 

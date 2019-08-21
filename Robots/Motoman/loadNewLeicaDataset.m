@@ -15,7 +15,7 @@ function [ datasets, indexes ] = loadNewLeicaDataset(rob,~, ~, ~ )
     assert(~isempty(rob.findJoint('LR1')))
     datasets_leica = {};
     
-    dataset.rtMat = [];
+    
     dataset.cameras = [];
     data= load('leica_dataset/updated_leica_dataset.mat');
     leicaData = data.dataset;
@@ -33,7 +33,14 @@ function [ datasets, indexes ] = loadNewLeicaDataset(rob,~, ~, ~ )
     'rightEye', num2cell([leicaData(:, 7),zeros(size(leicaData,1),1)],2)); 
     dataset.point = zeros(size(leicaData,1),6);
     dataset.refPoints = leicaData(:,20:22);  
+    for j = length(dataset.pose):-1:1
+        matrices.torso = eye(4);
+        dataset.rtMat(j) = matrices; 
+    end   
+    dataset.rtMat = reshape(dataset.rtMat, length(dataset.pose),1);
+    
     datasets_leica{1} = dataset; 
+
     
     indexes = {[], [], 1:length(datasets_leica), []};
     datasets = [{}, {}, datasets_leica, {}];

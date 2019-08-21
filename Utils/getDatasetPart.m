@@ -3,7 +3,7 @@ function [ dataset ] = getDatasetPart(dataset, indexes)
 %INPUT - dataset - dataset structure to slice
 %      - indexes - cell array of pose numbers for each dataset id
 %OUTPUT - dataset - sliced dataset structure
-    dataset_names = {'dist', 'plane', 'ext', 'proj'};
+    dataset_names = {'selftouch', 'planes', 'external', 'projection'};
     for name=dataset_names
         name = name{1};
         for i = 1:length(dataset.(name))

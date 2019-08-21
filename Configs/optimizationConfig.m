@@ -43,7 +43,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     % set which approach will be used
     % value is used for scaling
     % see README for details
-    approach.eyes=0;
+    approach.projection=0;
     approach.selftouch=0;
     approach.planes=0;
     approach.external=0;
@@ -52,12 +52,6 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
             approach.(approaches{i}) = 1;
         end
     end
-    if(approach.eyes)
-        approach.selftouch=approach.selftouch*40000;
-        approach.planes=approach.planes*40000;
-        approach.external=approach.planes*40000;
-    end
-    
     %% Calibration joint types
     % set which parts of the body will be calibrated
     % superior over chains
@@ -82,21 +76,21 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     optim.bounds=0; % set to use bounds
     optim.repetitions=5; % number of training repetitions
     optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
-    optim.distribution = 'normal'; % or 'uniform'
+    optim.distribution = 'uniform'; % or 'normal'
     optim.units = 'm'; % 'm' or 'mm' 
-    optim.pert_levels = 1+sum(optim.pert); % do not change!
     optim.splitPoint=0.7; % training dataset ratio
     optim.refPoints=0; % set to use 'refPoints' field in dataset
     optim.useNorm=0; % set to compute errors as norm of two points
     optim.parametersWeights.body=[1,1]; % set to scale parameters - [body lengths, body angles]
     optim.parametersWeights.skin=[1,1]; % set to scale parameters - [skin lengths, skin angles]
+    optim.parametersWeights.external=[1,1]; % set to scale parameters - [rotation, translation]
+    optim.parametersWeights.planes=1; % set to scale parameters
     optim.boundsFromDefault=1; % set to compute bounds from default values
     optim.optimizeInitialGuess=1; % set to include plane or external transformation parameters into optimized parameters
-    optim.planeParams = 3;  % how many plane parameters should be optimized
-    optim.externalParams = 6;   % how many external transform parameters should be optimized
-    optim.parametersWeights.planes=ones(1,optim.planeParams); % set to scale parameters - plane parameters
-    optim.parametersWeights.external=ones(1,optim.externalParams); % set to scale parameters - external transformation parameters
-    
+    optim.rotationType = 'quat';   % how the external calib works with rotation (quat - quaternion; vector - rotation vector)
+    optim.skipNoPert = 0; % skip calibration without perturbation
+    optim.optimizeDifferences = 0; % calibration with the differences from the start values   
+    optim.usePxCoef = 1; % enables comparison of projection and touch errors by converting pixels to m or mm
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1]; %[a,d,alpha,theta]
     

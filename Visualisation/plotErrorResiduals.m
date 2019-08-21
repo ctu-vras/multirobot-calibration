@@ -18,6 +18,7 @@ function plotErrorResiduals( computed_points, real_points )
     scatter(computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:))
     xlabel('error in Y [mm]') 
     ylabel('error in Z [mm]')
+    save('scatter2d.fig')
     
     %% quiver plot of residuals in 2D
     figure()
@@ -30,18 +31,18 @@ function plotErrorResiduals( computed_points, real_points )
     quiver(real_points(2,:), real_points(3,:), computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:), 1, 'Color', 'b');
     xlabel('Y [mm]')
     ylabel('Z [mm]')
-    
-    %% quiver plot of residuals in 2D without position
-    figure()
-    subplot(2,1,1)
-    quiver(computed_points(1,:)-real_points(1,:), computed_points(2,:)-real_points(2,:), 1, 'Color', 'b');
-    xlabel('X [mm]')
-    ylabel('Y [mm]')
-    title('Residuals of end effector position error')
-    subplot(2,1,2)
-    quiver(computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:), 1, 'Color', 'b');
-    xlabel('Y [mm]')
-    ylabel('Z [mm]')
+    save('quiver2d.fig')
+%     %% quiver plot of residuals in 2D without position
+%     figure()
+%     subplot(2,1,1)
+%     quiver(computed_points(1,:)-real_points(1,:), computed_points(2,:)-real_points(2,:), 1, 'Color', 'b');
+%     xlabel('X [mm]')
+%     ylabel('Y [mm]')
+%     title('Residuals of end effector position error')
+%     subplot(2,1,2)
+%     quiver(computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:), 1, 'Color', 'b');
+%     xlabel('Y [mm]')
+%     ylabel('Z [mm]')
     
     %% quiver plot of residuals in 3D
     figure()
@@ -50,5 +51,6 @@ function plotErrorResiduals( computed_points, real_points )
     ylabel('Y [mm]')
     zlabel('Z [mm]')
     title('Residuals of end effector position error')
+    save('quiver3D.fig')
 end
 

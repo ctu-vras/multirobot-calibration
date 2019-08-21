@@ -6,8 +6,8 @@ function plotErrorBars(folders,varargin)
 %                                - Default: 0
 %                       - 'log' - 1/0 to use logarithmic scale
 %                               - Default: 1
-%                       - 'const' - 1 or 1000, to use m or mm
-%                                 - Default: 1
+%                       - 'units' - 'm' or 'mm'
+%                                 - Default: mm
 %                       - 'location' - legend location
 %                                 - Default: northwest
 %                       - 'type' - errorbar type - minmax or std
@@ -18,7 +18,7 @@ function plotErrorBars(folders,varargin)
     addRequired(p,'folders');
     addParameter(p,'pert',0);
     addParameter(p,'log',1);
-    addParameter(p,'const',1, @(x) ismember(x,[1,1000]));
+    addParameter(p,'units','mm', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'location','northwest');
     addParameter(p,'type','minmax');
     addParameter(p, 'title', 'RMS errors');
@@ -29,13 +29,7 @@ function plotErrorBars(folders,varargin)
     log=p.Results.log;
     type=p.Results.type;
     titl=p.Results.title;
-    const=p.Results.const;
-    if const==1
-        constName='m';
-    elseif const==1000
-        constName='mm';
-    end
-    
+    units=p.Results.units;
     lines = [5,13,6,14,7,15,8,16];
     numLines = length(lines);
 
@@ -56,11 +50,18 @@ function plotErrorBars(folders,varargin)
         info = load(['Results/',folder,'/info.mat']);
         errors=errors.errors;
         optim = info.optim;
+        if strcmp(units,'m') &&  strcmp(optim.units,'mm')
+            const = 0.001;
+        elseif strcmp(units,'mm') &&  strcmp(optim.units,'m')
+            const = 1000;
+        else
+            const = 1;
+        end
         for l = 1:numLines
-            mins(l, fi) = min(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)));
-            maxs(l, fi) = max(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)));
-            means(l, fi) = mean(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)));
-            stds(l, fi) = std(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)));
+            mins(l, fi) = min(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
+            maxs(l, fi) = max(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
+            means(l, fi) = mean(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
+            stds(l, fi) = std(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
         end
     end
     
@@ -96,6 +97,6 @@ function plotErrorBars(folders,varargin)
        set(gca,'YScale','log');
     end
     legend(optTypes, 'location', location, 'FontSize',19);
-    ylabel(['Errors [',constName,'/px]'], 'FontSize', 20);
+    ylabel(['Errors [',units,'/px]'], 'FontSize', 20);
     title(titl,'FontSize',24);
 end
