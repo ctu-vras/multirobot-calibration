@@ -36,11 +36,12 @@ end
 %Edit each joints
 for joint=robot.joints
    joint=joint{1};
+   if ~strcmp(joint.type,'base')
    % if calibrate only offsets - set all other params to zeros
-   if jointTypes.onlyOffsets
-       whitelist.(joint.group)(joint.DHindex,1:3)=zeros(1,3);
-   end
-   if ~strcmp(joint.type,'base') 
+       if jointTypes.onlyOffsets
+           whitelist.(joint.group)(joint.DHindex,1:3)=zeros(1,3);
+       end
+%    if ~strcmp(joint.type,'base') 
        % joint is in non-calibrated 'type' or non-calibrated 'group' set
        % whitelist to zeros
        if ~jointTypes.(joint.type) || ~chains.(strrep(joint.group,'Skin',''))
