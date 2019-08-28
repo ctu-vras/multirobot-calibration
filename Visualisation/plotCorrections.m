@@ -24,8 +24,7 @@ function plotCorrections(folder, varargin)
     noiseLevel=p.Results.noiseLevel;
     symLog=p.Results.log;
     units=p.Results.units;
-	close all
-    % load saved variables
+	% load saved variables
     corrections=load(['Results/',folder,'/corrections.mat']);
     corrections=corrections.corrs_dh;
     info = load(['Results/',folder,'/info.mat']);
@@ -39,6 +38,7 @@ function plotCorrections(folder, varargin)
         coef=1000;
     else
         coef = info.optim.unitsCoef;
+        units = info.optim.units;
     end
     
     fnames=fieldnames(corrections);
@@ -101,10 +101,8 @@ function plotCorrections(folder, varargin)
                    end
                    title(bp,['Corrections of ',fnames{name}])
                    grid(bp,'on');
-                   
               end
            end
-
         end
     end
 end

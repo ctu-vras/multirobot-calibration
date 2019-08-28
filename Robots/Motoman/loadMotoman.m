@@ -97,13 +97,18 @@ function [ name, jointStructure, structure ] = loadMotoman()
            0.000,  0.200, 0.000, 0.000;
            0.000,  0.354, 0.000, 0.000];
        
-    structure.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
-            0.0, -0.445,    0.0,  pi];
-        
-    structure.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
-            0.0, -0.445,     0.0,  0.0];
-        
-     
+% this dh not working
+%     structure.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
+%             0.0, -0.445,    0.0,  pi];
+%         
+%     structure.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
+%             0.0, -0.445,     0.0,  0.0];
+    % dh after camera calibration    
+    structure.DH.rightEye = [0.0741 1.8034 -2.5086 -2.7753;
+            0.0000 -0.5670 0.0000 0.2863];
+    structure.DH.leftEye = [0.2315 1.8602 2.5486 0.0860;
+            0.0000 -0.4982 0.0000 -3.0618];
+    
     %% robot initial whitelist    
     structure.WL.leftArm = [1, 0, 1, 0;
                              1, 1, 1, 1;
