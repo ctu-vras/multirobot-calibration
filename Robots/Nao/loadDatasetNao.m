@@ -14,10 +14,17 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
         alt='';
         robot.structure=rmfield(robot.structure, 'matrices');
     else
-        alt=varargin{2};
+        if strfind(varargin{end},'Alt')
+            alt=varargin{end};
+            datasetsNames=varargin{1:end-1};
+        else
+            alt='';
+            datasetsNames=varargin;
+            robot.structure=rmfield(robot.structure, 'matrices');
+        end
+            
     end
-    
-    datasetsNames=varargin{1};
+    %datasetsNames=varargin{1};
     % Assign robot's DH into new variable
     DH=robot.structure.DH;
     % Add 'dummy' torso link to precompute RT matrices

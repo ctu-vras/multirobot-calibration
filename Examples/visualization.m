@@ -16,17 +16,17 @@ plotCorrections('exampleNao','units','mm');
 %% Error boxplots
 % Boxplots of errors work very similar, but you can pass more than one
 % folder
-plotErrorsBoxplots({'exampleNao','exampleNao2'});
+plotErrorsBoxplots({'exampleNao','leica-motoman'});
 
 %%
 % Again, the function takes more optional arguments
 % E.g. to change location of the legend and use logaritmic scale
-plotErrorsBoxplots({'exampleNao','exampleNao2'},'log',1,'location','northeast');
+plotErrorsBoxplots({'exampleNao','leica-motoman'},'log',1,'location','northeast');
 
 
 %% Error bars
 % Errors can be also shown as bars
-plotErrorBars({'exampleNao','exampleNao2'})
+plotErrorBars({'exampleNao','leica-motoman'})
 
 %% Error Residuals
 % Shows residual errors using quiver plot
@@ -47,7 +47,7 @@ plotErrorResiduals(extPoints, robPoints(1:3,:))
 % Shows comparison of joint distributions
 % Function takes 2 datasets, where both of them are cellArray of structs
 close all
-load('Results/exampleNao3/info');
+load('Results/exampleNao/info');
 % This example does not 'make sense', it just for demonstration of input.
 % Argument with 'rightArm' determines which chain to show.
 plotJointDistribution(rob, {datasets.selftouch{1},datasets.selftouch{2}},{datasets.selftouch{2}}, 'rightArm', '', '', 1);
@@ -55,7 +55,7 @@ plotJointDistribution(rob, {datasets.selftouch{1},datasets.selftouch{2}},{datase
 %%
 % Alternatively you can pass just one dataset
 close all
-load('Results/exampleNao3/info');
+load('Results/exampleNao/info');
 % This example shows also title and legend settings
 plotJointDistribution(rob, {datasets.selftouch{1}},[], 'leftArm', 'myFig', {'myDataset'}, 1);
 
@@ -64,19 +64,19 @@ plotJointDistribution(rob, {datasets.selftouch{1}},[], 'leftArm', 'myFig', {'myD
 %% Jacobian
 % Shows Jacobians computed in each repetition of calibration. All the
 % mandatory arguments can be loaded from results
-load('Results/exampleNao2/info');
+load('Results/exampleNao/info');
 plotJacobian(rob, whitelist, jacobians)
 
 %% Moveable model
 % This model uses 'showModel' method of Robot and allows to change
 % activations by 'left' and 'right' arrow keys.
 % You need to have datasets from calibration, which can be easile loaded
-load('Results/exampleNao2/info');
+load('Results/exampleNao/info');
 activationsView(rob,{datasets.selftouch{:}})
 
 %%
 % For Nao robot it allows to show skin and info about activations
-load('Results/exampleNao2/info');
+load('Results/exampleNao/info');
 activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
 
 
@@ -86,10 +86,10 @@ activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
 
 %% Distances between taxels
 % Shows distribution of distances between taxels for each taxel or triangle
-load('Results/exampleNao2/info');
-getTaxelDistances(rob,{'rightArm_torso'})
+load('Results/exampleNao/info');
+getTaxelDistances(rob,{'rightArm_torso'},'')
 
 %% Activated taxels
 % Shows activated taxels in the dataset
-load('Results/exampleNao2/info');
+load('Results/exampleNao/info');
 visualizeActivatedTaxels({'rightArm_torso'})

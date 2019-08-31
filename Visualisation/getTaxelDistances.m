@@ -1,4 +1,4 @@
-function getTaxelDistances(robot, datasetsNames)
+function getTaxelDistances(robot, datasetsNames,alt)
     % GETTAXELDISTANCES shows distribution of distances between
     % taxels/triangles.
     %   INPUT - robot - instance of @Robot class
@@ -14,7 +14,7 @@ function getTaxelDistances(robot, datasetsNames)
         chain1=spl{1};
         chain2=spl{2};
         % get taxelStruct
-        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH);
+        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH,alt);
         
         %Allocate matrices
         dataX=[]; %X index
