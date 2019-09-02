@@ -22,7 +22,7 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     % get perturbation ranges
     fnames=fieldnames(pert);
     % allocate array
-    perms=zeros(length(r.joints),4,optim.pert_levels-1);
+    perms=zeros(length(r.joints),4,optim.repetitions,optim.pert_levels-1);
     index=1;
     for i=1:length(optim.pert)
         % if the given pert range is used
@@ -32,10 +32,10 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
             if strcmp(optim.distribution,'uniform')
                 % if 'uniform' distribution - use rand*2 - 1, to get values
                 % from -1 to 1
-                perms(:,:,index)=(rand(length(r.joints),4)*2-1).*[repmat(pert.(fnames{i}).DH(1:2),length(r.joints),1)*optim.unitsCoef, repmat(pert.(fnames{i}).DH(3:4),length(r.joints),1)];
+                perms(:,:,:,index)=(rand(length(r.joints),4, optim.repetitions)*2-1).*[pert.(fnames{i}).DH(1:2)*optim.unitsCoef, pert.(fnames{i}).DH(3:4)];
             elseif strcmp(optim.distribution,'normal')
                 % if 'normal' distribution - just use randn function
-                perms(:,:,index)=randn(length(r.joints),4).*[repmat(pert.(fnames{i}).DH(1:2),length(r.joints),1)*optim.unitsCoef, repmat(pert.(fnames{i}).DH(3:4),length(r.joints),1)];
+                perms(:,:,:,index)=randn(length(r.joints),4, optim.repetitions).*[pert.(fnames{i}).DH(1:2)*optim.unitsCoef, pert.(fnames{i}).DH(3:4)];
             end
             index=index+1;
         end
@@ -71,7 +71,7 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
         for i=1:optim.pert_levels-1
             % no need for 'repmat' here, as we already have the default DH
             % parameters from previous step
-            init.(joint.group)(joint.DHindex,:,:,i+1)=init.(joint.group)(joint.DHindex,:,:,1)+perms(jointId,:,i);
+            init.(joint.group)(joint.DHindex,:,:,i+1)=init.(joint.group)(joint.DHindex,:,:,1)+perms(jointId,:,:,i);
         end
         if optim.bounds          
             % if custom function to load bounds was used

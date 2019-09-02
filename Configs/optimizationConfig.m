@@ -4,12 +4,12 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     %options.Algorithm = 'trust-region-reflective'; %Use for bounds
     options.Algorithm = 'levenberg-marquardt';
     options.Display = 'iter';
-    options.TolFun = 5e-7; %If problem does not converge, set lower values (and vice-versa)
-    options.TolX = 1e-12;
-    options.MaxIter = 150; %Set higher value if problem does not converge (but too big value can results in overfitting)
+    options.TolFun = 5e-18; %If problem does not converge, set lower values (and vice-versa)
+    options.TolX = 1e-26;
+    options.MaxIter = 200; %Set higher value if problem does not converge (but too big value can results in overfitting)
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
-    options.UseParallel=0; % set to use parallel computing on more cores
+    options.UseParallel=1; % set to use parallel computing on more cores
     %options.SpecifyObjectiveGradient=true
     %options.ScaleProblem='jacobian'; %Set if problem is badly scaled
     
@@ -74,11 +74,11 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     
     %% Calibration settings
     optim.bounds=0; % set to use bounds
-    optim.repetitions=5; % number of training repetitions
+    optim.repetitions=1; % number of training repetitions
     optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
     optim.distribution = 'uniform'; % or 'normal'
     optim.units = 'm'; % 'm' or 'mm' 
-    optim.splitPoint=0.7; % training dataset ratio
+    optim.splitPoint=1; % training dataset ratio
     optim.refPoints=0; % set to use 'refPoints' field in dataset
     optim.useNorm=0; % set to compute errors as norm of two points
     optim.parametersWeights.body=[1,1]; % set to scale parameters - [body lengths, body angles]
@@ -90,7 +90,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     optim.rotationType = 'quat';   % how the external calib works with rotation (quat - quaternion; vector - rotation vector)
     optim.skipNoPert = 0; % skip calibration without perturbation
     optim.optimizeDifferences = 0; % calibration with the differences from the start values   
-    optim.usePxCoef = 1; % enables comparison of projection and touch errors by converting pixels to m or mm
+    optim.usePxCoef = 0; % enables comparison of projection and touch errors by converting pixels to m or mm
     %% Perturbations   
     pert.mild.DH=[0.01,0.01,0.01,0.1]; %[a,d,alpha,theta]
     

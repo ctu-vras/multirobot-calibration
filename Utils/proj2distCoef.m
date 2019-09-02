@@ -13,8 +13,13 @@ function [ coeffs ] = proj2distCoef( points2Cam, eyes, cameras)
     cameras = cameras.*(1:size(cameras,2)); % convert logical array to array of used cameras
     cameras = reshape(cameras',[],1);
     cameras(cameras==0) = [];
-    coeffs(2*length(cameras)) = 0;
-    coeffs(1:2:end) = sqrt(sum(points2Cam(1:3,:).^2,1))./fx(cameras);
-    coeffs(2:2:end) = sqrt(sum(points2Cam(1:3,:).^2,1))./fy(cameras);
+    if(~isempty(cameras))
+        coeffs(2*length(cameras)) = 0;
+        coeffs(1:2:end) = sqrt(sum(points2Cam(1:3,:).^2,1))./fx(cameras);
+        coeffs(2:2:end) = sqrt(sum(points2Cam(1:3,:).^2,1))./fy(cameras);
+    else
+        coeffs = [];
+    end
+    
 end
 

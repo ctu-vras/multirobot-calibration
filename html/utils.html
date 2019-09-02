@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="MATLAB R2016a"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><title>Example of using the utils in toolbox</title><style type="text/css">
+* {margin: 0; padding: 0;}
+body {text-align: start; line-height: 17.234001159668px; min-height: 0px; white-space: normal; color: rgb(0, 0, 0); font-family: Consolas, Inconsolata, Menlo, monospace; font-style: normal; font-size: 14px; font-weight: normal; text-decoration: none; white-space: normal; }
+h1, h2 {font-weight: normal;}
+.content { padding: 30px; }
+
+.S0 { margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S1 { line-height: 26.3999996185303px; min-height: 24px; white-space: pre-wrap; color: rgb(213, 80, 0); font-family: Helvetica, Arial, sans-serif; font-size: 22px; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 15px; margin-right: 10px;  }
+.S2 { min-height: 0px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S3 { line-height: 21px; min-height: 17px; white-space: pre-wrap; font-family: Helvetica, Arial, sans-serif; white-space: pre-wrap; margin-left: 4px; margin-top: 2px; margin-bottom: 9px; margin-right: 10px;  }
+.S4 { line-height: 20.576000213623px; min-height: 20px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 9px; margin-right: 10px;  }
+.S5 { margin-left: 3px; margin-top: 10px; margin-bottom: 4px; margin-right: 3px;  }
+.S6 { line-height: 15.5926675796509px; min-height: 18px; white-space: nowrap; font-size: 12.6666669845581px; white-space: nowrap; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S7 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S8 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(160, 32, 240); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S9 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+.S10 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(34, 139, 34); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+
+.LineNodeBlock {margin: 10px 0 10px 0;}
+.LineNodeBlock+.paragraphNode {margin-top: 10px;}
+.lineNode {padding-left: 10px; background-color: #F7F7F7; border-left: 1px solid #E9E9E9; border-right: 1px solid #E9E9E9;}
+.inlineWrapper:first-child .lineNode,.inlineWrapper.outputs+.inlineWrapper .lineNode {padding-top: 5px; border-top: 1px solid #E9E9E9;}
+.inlineWrapper:last-child .lineNode,.inlineWrapper.outputs .lineNode {padding-bottom: 5px; border-bottom: 1px solid #E9E9E9;}
+.lineNode .textBox {white-space: pre;}
+</style></head><body><div class = "content"><div class = 'SectionBlock containment active'><h1 class = "S1"><span class = "S2">Example of using the utils in toolbox</span></h1><p class = "S3"><span class = "S2">Examples of some of the important utils, which could be useful even outside existing functions</span></p></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S4"><span class = "S2">Find RT matrix to any joint</span></h2></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Variable with created robot is needed, we can for example create a new one</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">rob=Robot(</span><span class = "S8">'loadNAO'</span><span class = "S9">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Then choose the joint. You can take any joint from robot</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">joint</span><span class = "S9">=rob.joints{53};</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Or find the joint by its name</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">joint=rob.findJoint(</span><span class = "S8">'rightTriangle3'</span><span class = "S9">);</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">joint=joint{1}; </span><span class = "S10">% The function can return more than one result, if robot include joint with the same name</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% Robot allows to find joint not just by name, but also by group, type or</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% id (in these cases there will usually be more than 1 joint returned).</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Then you need to find all groups on the way to the root and indexes in DH arrays of these groups</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">str=[];</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">str=getIndexes(str, joint);</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9"></span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% We get that 'rightTriangle3' need to compute matrices through</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% 'rightArmSkin' and 'rightArm'</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">The last thing needed are the joint angles, for this example we can use zeros</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">angles.rightArmSkin=[0,0,0];</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">angles.rightArm=[0,1,0.5,0.3,0,0.5];</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">With this, we can compute the RT matrix as it is in the calibration</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">matInt=getTFIntern(rob.structure.DH,joint,[],angles, rob.structure.H0,str.DHindexes.(joint.name),str.parents, []);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">or you can use the simplier function to compute the transformation</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">mat=getTF(rob.structure.DH,joint,[],angles, rob.structure.H0);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">You can also get transformation to given frame</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">mat2=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,</span><span class = "S8">'rightShoulderPitch'</span><span class = "S9">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">And easily compute the rest then</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">joint=rob.findJoint(</span><span class = "S8">'rightShoulderPitch'</span><span class = "S9">);</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">joint=joint{1};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">mat3=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,</span><span class = "S8">'base'</span><span class = "S9">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">We can test it</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">disp(norm(mat-mat3*mat2,</span><span class = "S8">'fro'</span><span class = "S9">)&lt;eps)</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% Frobenius norm of matrix should be very low number (not 0 in most cases </span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% beacuse of floating point numbers errors)</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S4"><span class = "S2">Mass transformation of points</span></h2><p class = "S3"><span class = "S2">If you need to tranform more points to the base frame, you can use 'getPoints'.</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% We can load dataset to get everything we need</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">load(</span><span class = "S8">'Results/exampleNao/info.mat'</span><span class = "S9">);</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9"></span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">% And easily transform all point from local frame to the base frame</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S9">newPoints=getPoints(rob.structure.DH, datasets.selftouch{:}, rob.structure.H0, 0);</span></p></div></div></div></div>
+<!-- 
+##### SOURCE BEGIN #####
+%% Example of using the utils in toolbox
+% Examples of some of the important utils, which could be useful even outside 
+% existing functions
+%% Find RT matrix to any joint
+% Variable with created robot is needed, we can for example create a new one
+
+rob=Robot('loadNAO');
+%% 
+% Then choose the joint. You can take any joint from robot
+
+joint=rob.joints{53};
+%% 
+% Or find the joint by its name
+
+joint=rob.findJoint('rightTriangle3');
+joint=joint{1}; % The function can return more than one result, if robot include joint with the same name
+% Robot allows to find joint not just by name, but also by group, type or
+% id (in these cases there will usually be more than 1 joint returned).
+%% 
+% Then you need to find all groups on the way to the root and indexes in 
+% DH arrays of these groups
+
+str=[];
+str=getIndexes(str, joint);
+
+% We get that 'rightTriangle3' need to compute matrices through
+% 'rightArmSkin' and 'rightArm'
+%% 
+% The last thing needed are the joint angles, for this example we can use 
+% zeros
+
+angles.rightArmSkin=[0,0,0];
+angles.rightArm=[0,1,0.5,0.3,0,0.5];
+%% 
+% With this, we can compute the RT matrix as it is in the calibration
+
+matInt=getTFIntern(rob.structure.DH,joint,[],angles, rob.structure.H0,str.DHindexes.(joint.name),str.parents, []);
+%% 
+% or you can use the simplier function to compute the transformation
+
+mat=getTF(rob.structure.DH,joint,[],angles, rob.structure.H0);
+%% 
+% You can also get transformation to given frame
+
+mat2=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'rightShoulderPitch');
+%% 
+% And easily compute the rest then
+
+joint=rob.findJoint('rightShoulderPitch');
+joint=joint{1};
+mat3=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'base');
+%% 
+% We can test it
+
+disp(norm(mat-mat3*mat2,'fro')<eps)
+% Frobenius norm of matrix should be very low number (not 0 in most cases 
+% beacuse of floating point numbers errors)
+%% Mass transformation of points
+% If you need to tranform more points to the base frame, you can use 'getPoints'.
+
+% We can load dataset to get everything we need
+load('Results/exampleNao/info.mat');
+
+% And easily transform all point from local frame to the base frame
+newPoints=getPoints(rob.structure.DH, datasets.selftouch{:}, rob.structure.H0, 0);
+##### SOURCE END #####
+--></body></html>

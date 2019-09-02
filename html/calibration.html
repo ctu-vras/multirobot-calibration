@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="MATLAB R2016a"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><title>Calibration examples</title><style type="text/css">
+* {margin: 0; padding: 0;}
+body {text-align: start; line-height: 17.234001159668px; min-height: 0px; white-space: normal; color: rgb(0, 0, 0); font-family: Consolas, Inconsolata, Menlo, monospace; font-style: normal; font-size: 14px; font-weight: normal; text-decoration: none; white-space: normal; }
+h1, h2 {font-weight: normal;}
+.content { padding: 30px; }
+
+.S0 { margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S1 { line-height: 26.3999996185303px; min-height: 24px; white-space: pre-wrap; color: rgb(213, 80, 0); font-family: Helvetica, Arial, sans-serif; font-size: 22px; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 15px; margin-right: 10px;  }
+.S2 { min-height: 0px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S3 { line-height: 21px; min-height: 17px; white-space: pre-wrap; font-family: Helvetica, Arial, sans-serif; white-space: pre-wrap; margin-left: 4px; margin-top: 2px; margin-bottom: 9px; margin-right: 10px;  }
+.S4 { line-height: 20.576000213623px; min-height: 20px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 9px; margin-right: 10px;  }
+.S5 { margin-left: 3px; margin-top: 10px; margin-bottom: 4px; margin-right: 3px;  }
+.S6 { line-height: 15.5926675796509px; min-height: 18px; white-space: nowrap; font-size: 12.6666669845581px; white-space: nowrap; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S7 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S8 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(160, 32, 240); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S9 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(34, 139, 34); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+.S10 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+
+.LineNodeBlock {margin: 10px 0 10px 0;}
+.LineNodeBlock+.paragraphNode {margin-top: 10px;}
+.lineNode {padding-left: 10px; background-color: #F7F7F7; border-left: 1px solid #E9E9E9; border-right: 1px solid #E9E9E9;}
+.inlineWrapper:first-child .lineNode,.inlineWrapper.outputs+.inlineWrapper .lineNode {padding-top: 5px; border-top: 1px solid #E9E9E9;}
+.inlineWrapper:last-child .lineNode,.inlineWrapper.outputs .lineNode {padding-bottom: 5px; border-bottom: 1px solid #E9E9E9;}
+.lineNode .textBox {white-space: pre;}
+</style></head><body><div class = "content"><div class = 'SectionBlock containment active'><h1 class = "S1"><span class = "S2">Calibration examples</span></h1><p class = "S3"><span class = "S2">Few examples how to run calibration with different argument and different robots. Last example shows how to run with use of CSV files. The first example is full commented, the rest has only the 'new' parts commented.</span></p></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S4"><span class = "S2">motoman self touch calibration - only right arm</span></h2><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">robot_fcn = </span><span class = "S8">'loadMotoman'</span><span class = "S7">; </span><span class = "S9">% Name of the function with robot structure</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">config_fcn = </span><span class = "S8">'motomanOptConfig'</span><span class = "S7">; </span><span class = "S9">% Name of the function with calibration config</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">approaches = {</span><span class = "S8">'selftouch'</span><span class = "S7">}; </span><span class = "S9">% Used approaches, delimited by comma (,)</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">chains = {</span><span class = "S8">'rightArm'</span><span class = "S7">}; </span><span class = "S9">% Used chains, delimited by comma (,) </span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">jointTypes={</span><span class = "S8">''</span><span class = "S7">}; </span><span class = "S9">% Used body parts, delimited by comma (,), in 'motomanOptConfig' joint is set by default</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">dataset_fcn = </span><span class = "S8">'loadDatasetMotoman'</span><span class = "S7">; </span><span class = "S9">% Name of the function for loading of the dataset</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">whitelist_fcn = </span><span class = "S8">'loadMotomanWL'</span><span class = "S7">; </span><span class = "S9">% Name of the function with custom whitelist</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">bounds_fcn = </span><span class = "S8">''</span><span class = "S7">; </span><span class = "S9">% Name of the funtion with custom bounds</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">dataset_params = {[1,0,0,0]}; </span><span class = "S9">% Params of the 'dataset_fcn', delimited by comma (,)</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">folder = </span><span class = "S8">'self-touch-motoman'</span><span class = "S7">; </span><span class = "S9">% Folder where results will be saved (relatively to 'results' folder)</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">saveInfo = 1; </span><span class = "S9">% 1/0, determines whether to save results</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfunc = </span><span class = "S8">''</span><span class = "S7">; </span><span class = "S9">% name of function to load DH ('loadDHfromMat','loadDHfromTxt')</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHargs = </span><span class = "S8">''</span><span class = "S7">; </span><span class = "S9">% arguments for the function above</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfolder = </span><span class = "S8">''</span><span class = "S7">; </span><span class = "S9">% folder from which to load DH</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10"></span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S4"><span class = "S2">motoman leica calibration - only right arm using DH from self touch (with min rms errors) as initial</span></h2><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">robot_fcn = </span><span class = "S8">'loadMotomanLeica'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">config_fcn = </span><span class = "S8">'motomanOptConfig'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">approaches = {</span><span class = "S8">'external'</span><span class = "S10">};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">chains = {</span><span class = "S8">'rightArm'</span><span class = "S10">};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">jointTypes={</span><span class = "S8">''</span><span class = "S10">}; </span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">dataset_fcn = </span><span class = "S8">'loadDatasetMotoman'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">whitelist_fcn = </span><span class = "S8">'loadMotomanWL'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">bounds_fcn = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">dataset_params = {</span><span class = "S8">'leica'</span><span class = "S10">};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">folder = </span><span class = "S8">'leica-motoman'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">saveInfo = 1;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfunc = </span><span class = "S8">'loadDHfromMat'</span><span class = "S7">; </span><span class = "S9">% Here load from '.mat' files is used</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHargs = {</span><span class = "S8">'type'</span><span class = "S7">, </span><span class = "S8">'min'</span><span class = "S7">}; </span><span class = "S9">% this means: load the DH params which has the lowest RMS error</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfolder = </span><span class = "S8">'self-touch-motoman'</span><span class = "S7">; </span><span class = "S9">%load DH from this file</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S4"><span class = "S2">motoman hand-eye calibration - right arm and right eye using DH from rep1 and pert1 of self touch as initial</span></h2><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">robot_fcn = </span><span class = "S8">'loadMotoman'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">config_fcn = </span><span class = "S8">'motomanOptConfig'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">approaches = {</span><span class = "S8">'projection'</span><span class = "S10">};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">chains = {</span><span class = "S8">'rightArm'</span><span class = "S7">, </span><span class = "S8">'rightEye'</span><span class = "S10">};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">jointTypes={</span><span class = "S8">'joint'</span><span class = "S7">,</span><span class = "S8">'eye'</span><span class = "S10">}; </span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">dataset_fcn = </span><span class = "S8">'loadDatasetMotoman'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">whitelist_fcn = </span><span class = "S8">''</span><span class = "S7">; </span><span class = "S9">%Whitelist does not have to be specified, the default will be used</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">bounds_fcn = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">dataset_params = {[0,0,0,1]};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">folder = </span><span class = "S8">'projections-motoman'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">saveInfo = 1;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfunc = </span><span class = "S8">'loadDHfromTxt'</span><span class = "S7">; </span><span class = "S9">%load from txt files</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHargs = {</span><span class = "S8">'DH-rep1-pert1'</span><span class = "S7">}; </span><span class = "S9">% name of the file</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfolder = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S4"><span class = "S2">iCub selftouch calibration - only right arm, using first 100 point from dataset</span></h2><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">robot_fcn = </span><span class = "S8">'loadICUBv1'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">config_fcn = </span><span class = "S8">'motomanOptConfig'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">approaches = {</span><span class = "S8">'selftouch'</span><span class = "S10">};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">chains = {</span><span class = "S8">'rightArm'</span><span class = "S10">};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">jointTypes={</span><span class = "S8">''</span><span class = "S10">}; </span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">dataset_fcn = </span><span class = "S8">'loadDatasetICub'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">whitelist_fcn = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">bounds_fcn = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">dataset_params = {100};</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">folder = </span><span class = "S8">'self-touch-icub'</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">saveInfo = 1;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfunc = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHargs = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadDHfolder = </span><span class = "S8">''</span><span class = "S10">;</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S10">main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S4"><span class = "S2">load task from CSV</span></h2><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">addpath(genpath(</span><span class = "S8">'Utils'</span><span class = "S7">)); </span><span class = "S9">% At first run, this folder needs to be loaded manually</span></p></div><div class = 'inlineWrapper'><p class = "S6 lineNode"><span class = "S7">loadTasksFromFile(</span><span class = "S8">'tasks.csv'</span><span class = "S7">); </span><span class = "S9">% take 'tasks.csv' and run commands from there</span></p></div></div></div></div>
+<!-- 
+##### SOURCE BEGIN #####
+%% Calibration examples
+% Few examples how to run calibration with different argument and different 
+% robots. Last example shows how to run with use of CSV files. The first example 
+% is full commented, the rest has only the 'new' parts commented.
+%% motoman self touch calibration - only right arm
+
+robot_fcn = 'loadMotoman'; % Name of the function with robot structure
+config_fcn = 'motomanOptConfig'; % Name of the function with calibration config
+approaches = {'selftouch'}; % Used approaches, delimited by comma (,)
+chains = {'rightArm'}; % Used chains, delimited by comma (,) 
+jointTypes={''}; % Used body parts, delimited by comma (,), in 'motomanOptConfig' joint is set by default
+dataset_fcn = 'loadDatasetMotoman'; % Name of the function for loading of the dataset
+whitelist_fcn = 'loadMotomanWL'; % Name of the function with custom whitelist
+bounds_fcn = ''; % Name of the funtion with custom bounds
+dataset_params = {[1,0,0,0]}; % Params of the 'dataset_fcn', delimited by comma (,)
+folder = 'self-touch-motoman'; % Folder where results will be saved (relatively to 'results' folder)
+saveInfo = 1; % 1/0, determines whether to save results
+loadDHfunc = ''; % name of function to load DH ('loadDHfromMat','loadDHfromTxt')
+loadDHargs = ''; % arguments for the function above
+loadDHfolder = ''; % folder from which to load DH
+
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+%% motoman leica calibration - only right arm using DH from self touch (with min rms errors) as initial
+
+robot_fcn = 'loadMotomanLeica';
+config_fcn = 'motomanOptConfig';
+approaches = {'external'};
+chains = {'rightArm'};
+jointTypes={''}; 
+dataset_fcn = 'loadDatasetMotoman';
+whitelist_fcn = 'loadMotomanWL';
+bounds_fcn = '';
+dataset_params = {'leica'};
+folder = 'leica-motoman';
+saveInfo = 1;
+loadDHfunc = 'loadDHfromMat'; % Here load from '.mat' files is used
+loadDHargs = {'type', 'min'}; % this means: load the DH params which has the lowest RMS error
+loadDHfolder = 'self-touch-motoman'; %load DH from this file
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+%% motoman hand-eye calibration - right arm and right eye using DH from rep1 and pert1 of self touch as initial
+
+robot_fcn = 'loadMotoman';
+config_fcn = 'motomanOptConfig';
+approaches = {'projection'};
+chains = {'rightArm', 'rightEye'};
+jointTypes={'joint','eye'}; 
+dataset_fcn = 'loadDatasetMotoman';
+whitelist_fcn = ''; %Whitelist does not have to be specified, the default will be used
+bounds_fcn = '';
+dataset_params = {[0,0,0,1]};
+folder = 'projections-motoman';
+saveInfo = 1;
+loadDHfunc = 'loadDHfromTxt'; %load from txt files
+loadDHargs = {'DH-rep1-pert1'}; % name of the file
+loadDHfolder = '';
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+%% iCub selftouch calibration - only right arm, using first 100 point from dataset
+
+robot_fcn = 'loadICUBv1';
+config_fcn = 'motomanOptConfig';
+approaches = {'selftouch'};
+chains = {'rightArm'};
+jointTypes={''}; 
+dataset_fcn = 'loadDatasetICub';
+whitelist_fcn = '';
+bounds_fcn = '';
+dataset_params = {100};
+folder = 'self-touch-icub';
+saveInfo = 1;
+loadDHfunc = '';
+loadDHargs = '';
+loadDHfolder = '';
+main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+%% load task from CSV
+
+addpath(genpath('Utils')); % At first run, this folder needs to be loaded manually
+loadTasksFromFile('tasks.csv'); % take 'tasks.csv' and run commands from there
+##### SOURCE END #####
+--></body></html>

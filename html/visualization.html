@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="MATLAB R2016a"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><title>Examples of visualization</title><style type="text/css">
+* {margin: 0; padding: 0;}
+body {text-align: start; line-height: 17.234001159668px; min-height: 0px; white-space: normal; color: rgb(0, 0, 0); font-family: Consolas, Inconsolata, Menlo, monospace; font-style: normal; font-size: 14px; font-weight: normal; text-decoration: none; white-space: normal; }
+h1, h2 {font-weight: normal;}
+.content { padding: 30px; }
+
+.S0 { margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S1 { line-height: 26.3999996185303px; min-height: 24px; white-space: pre-wrap; color: rgb(213, 80, 0); font-family: Helvetica, Arial, sans-serif; font-size: 22px; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 15px; margin-right: 10px;  }
+.S2 { min-height: 0px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S3 { line-height: 21px; min-height: 17px; white-space: pre-wrap; font-family: Helvetica, Arial, sans-serif; white-space: pre-wrap; margin-left: 4px; margin-top: 2px; margin-bottom: 9px; margin-right: 10px;  }
+.S4 { margin-left: 3px; margin-top: 10px; margin-bottom: 4px; margin-right: 3px;  }
+.S5 { line-height: 15.5926675796509px; min-height: 18px; white-space: nowrap; font-size: 12.6666669845581px; white-space: nowrap; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S6 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S7 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(160, 32, 240); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S8 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+.S9 { line-height: 20.576000213623px; min-height: 20px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 9px; margin-right: 10px;  }
+.S10 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(34, 139, 34); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+.S11 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(160, 32, 240); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+
+.LineNodeBlock {margin: 10px 0 10px 0;}
+.LineNodeBlock+.paragraphNode {margin-top: 10px;}
+.lineNode {padding-left: 10px; background-color: #F7F7F7; border-left: 1px solid #E9E9E9; border-right: 1px solid #E9E9E9;}
+.inlineWrapper:first-child .lineNode,.inlineWrapper.outputs+.inlineWrapper .lineNode {padding-top: 5px; border-top: 1px solid #E9E9E9;}
+.inlineWrapper:last-child .lineNode,.inlineWrapper.outputs .lineNode {padding-bottom: 5px; border-bottom: 1px solid #E9E9E9;}
+.lineNode .textBox {white-space: pre;}
+</style></head><body><div class = "content"><div class = 'SectionBlock containment active'><h1 class = "S1"><span class = "S2">Examples of visualization</span></h1></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Most of the functions support optional arguments. To see the options try to view the help for the function, e.g.</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">help </span><span class = "S7">plotCorrections</span><span class = "S8">;</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Corrections</span></h2><p class = "S3"><span class = "S2">To show corrections, you just need to provide folder with results</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">plotCorrections(</span><span class = "S7">'exampleNao'</span><span class = "S8">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">The function also supporst more arguments. For example, to use length in mm</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">plotCorrections(</span><span class = "S7">'exampleNao'</span><span class = "S6">,</span><span class = "S7">'units'</span><span class = "S6">,</span><span class = "S7">'mm'</span><span class = "S8">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Error boxplots</span></h2><p class = "S3"><span class = "S2">Boxplots of errors work very similar, but you can pass more than one folder</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">plotErrorsBoxplots({</span><span class = "S7">'exampleNao'</span><span class = "S6">,</span><span class = "S7">'leica-motoman'</span><span class = "S8">});</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Again, the function takes more optional arguments E.g. to change location of the legend and use logaritmic scale</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">plotErrorsBoxplots({</span><span class = "S7">'exampleNao'</span><span class = "S6">,</span><span class = "S7">'leica-motoman'</span><span class = "S6">},</span><span class = "S7">'log'</span><span class = "S6">,1,</span><span class = "S7">'location'</span><span class = "S6">,</span><span class = "S7">'northeast'</span><span class = "S8">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Error bars</span></h2><p class = "S3"><span class = "S2">Errors can be also shown as bars</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">plotErrorBars({</span><span class = "S7">'exampleNao'</span><span class = "S6">,</span><span class = "S7">'leica-motoman'</span><span class = "S8">})</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Error Residuals</span></h2><p class = "S3"><span class = "S2">Shows residual errors using quiver plot We need two set of points, which can be computed for example like this</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/leica-motoman/info'</span><span class = "S6">); </span><span class = "S10">%Load saved data</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">dataset = datasets.external{1};</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">extPoints=dataset.refPoints;</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">robPoints = getPoints(rob.structure.defaultDH, dataset, rob.structure.H0, false); </span><span class = "S10">% Transform all point to base frame</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">[R,T]=fitSets(extPoints,robPoints(1:3,:)'); </span><span class = "S10">% Fit sets from different origin</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">extPoints = R*extPoints' + T; </span><span class = "S10">% Use found transformation</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">And the function itself can be called</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">plotErrorResiduals(extPoints, robPoints(1:3,:))</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Joint distribution</span></h2><p class = "S3"><span class = "S2">Shows comparison of joint distributions Function takes 2 datasets, where both of them are cellArray of structs</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">close </span><span class = "S11">all</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/exampleNao/info'</span><span class = "S8">);</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S10">% This example does not 'make sense', it just for demonstration of input.</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S10">% Argument with 'rightArm' determines which chain to show.</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">plotJointDistribution(rob, {datasets.selftouch{1},datasets.selftouch{2}},{datasets.selftouch{2}}, </span><span class = "S7">'rightArm'</span><span class = "S6">, </span><span class = "S7">''</span><span class = "S6">, </span><span class = "S7">''</span><span class = "S8">, 1);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Alternatively you can pass just one dataset</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">close </span><span class = "S11">all</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/exampleNao/info'</span><span class = "S8">);</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S10">% This example shows also title and legend settings</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">plotJointDistribution(rob, {datasets.selftouch{1}},[], </span><span class = "S7">'leftArm'</span><span class = "S6">, </span><span class = "S7">'myFig'</span><span class = "S6">, {</span><span class = "S7">'myDataset'</span><span class = "S8">}, 1);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Projections</span></h2></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Jacobian</span></h2><p class = "S3"><span class = "S2">Shows Jacobians computed in each repetition of calibration. All the mandatory arguments can be loaded from results</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/exampleNao/info'</span><span class = "S8">);</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">plotJacobian(rob, whitelist, jacobians)</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Moveable model</span></h2><p class = "S3"><span class = "S2">This model uses 'showModel' method of Robot and allows to change activations by 'left' and 'right' arrow keys. You need to have datasets from calibration, which can be easile loaded</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/exampleNao/info'</span><span class = "S8">);</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">activationsView(rob,{datasets.selftouch{:}})</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">For Nao robot it allows to show skin and info about activations</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/exampleNao/info'</span><span class = "S8">);</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">activationsView(rob,{datasets.selftouch{:}},</span><span class = "S7">'info'</span><span class = "S6">,1,</span><span class = "S7">'skin'</span><span class = "S8">,1)</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Robots equipped with skin</span></h2><p class = "S3"><span class = "S2">Right now, the functions are developed for Nao and will probably not work on any other robot</span></p></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Distances between taxels</span></h2><p class = "S3"><span class = "S2">Shows distribution of distances between taxels for each taxel or triangle</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/exampleNao/info'</span><span class = "S8">);</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">getTaxelDistances(rob,{</span><span class = "S7">'rightArm_torso'</span><span class = "S6">},</span><span class = "S7">''</span><span class = "S8">)</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Activated taxels</span></h2><p class = "S3"><span class = "S2">Shows activated taxels in the dataset</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/exampleNao/info'</span><span class = "S8">);</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">visualizeActivatedTaxels({</span><span class = "S7">'rightArm_torso'</span><span class = "S8">})</span></p></div></div></div></div>
+<!-- 
+##### SOURCE BEGIN #####
+%% Examples of visualization
+% Most of the functions support optional arguments. To see the options try to 
+% view the help for the function, e.g.
+
+help plotCorrections;
+%% Corrections
+% To show corrections, you just need to provide folder with results
+
+plotCorrections('exampleNao');
+%% 
+% The function also supporst more arguments. For example, to use length 
+% in mm
+
+plotCorrections('exampleNao','units','mm');
+%% Error boxplots
+% Boxplots of errors work very similar, but you can pass more than one folder
+
+plotErrorsBoxplots({'exampleNao','leica-motoman'});
+%% 
+% Again, the function takes more optional arguments E.g. to change location 
+% of the legend and use logaritmic scale
+
+plotErrorsBoxplots({'exampleNao','leica-motoman'},'log',1,'location','northeast');
+%% Error bars
+% Errors can be also shown as bars
+
+plotErrorBars({'exampleNao','leica-motoman'})
+%% Error Residuals
+% Shows residual errors using quiver plot We need two set of points, which can 
+% be computed for example like this
+
+load('Results/leica-motoman/info'); %Load saved data
+dataset = datasets.external{1};
+extPoints=dataset.refPoints;
+robPoints = getPoints(rob.structure.defaultDH, dataset, rob.structure.H0, false); % Transform all point to base frame
+[R,T]=fitSets(extPoints,robPoints(1:3,:)'); % Fit sets from different origin
+extPoints = R*extPoints' + T; % Use found transformation
+%% 
+% And the function itself can be called
+
+plotErrorResiduals(extPoints, robPoints(1:3,:))
+%% Joint distribution
+% Shows comparison of joint distributions Function takes 2 datasets, where both 
+% of them are cellArray of structs
+
+close all
+load('Results/exampleNao/info');
+% This example does not 'make sense', it just for demonstration of input.
+% Argument with 'rightArm' determines which chain to show.
+plotJointDistribution(rob, {datasets.selftouch{1},datasets.selftouch{2}},{datasets.selftouch{2}}, 'rightArm', '', '', 1);
+%% 
+% Alternatively you can pass just one dataset
+
+close all
+load('Results/exampleNao/info');
+% This example shows also title and legend settings
+plotJointDistribution(rob, {datasets.selftouch{1}},[], 'leftArm', 'myFig', {'myDataset'}, 1);
+%% Projections
+%% Jacobian
+% Shows Jacobians computed in each repetition of calibration. All the mandatory 
+% arguments can be loaded from results
+
+load('Results/exampleNao/info');
+plotJacobian(rob, whitelist, jacobians)
+%% Moveable model
+% This model uses 'showModel' method of Robot and allows to change activations 
+% by 'left' and 'right' arrow keys. You need to have datasets from calibration, 
+% which can be easile loaded
+
+load('Results/exampleNao/info');
+activationsView(rob,{datasets.selftouch{:}})
+%% 
+% For Nao robot it allows to show skin and info about activations
+
+load('Results/exampleNao/info');
+activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
+%% Robots equipped with skin
+% Right now, the functions are developed for Nao and will probably not work 
+% on any other robot
+%% Distances between taxels
+% Shows distribution of distances between taxels for each taxel or triangle
+
+load('Results/exampleNao/info');
+getTaxelDistances(rob,{'rightArm_torso'},'')
+%% Activated taxels
+% Shows activated taxels in the dataset
+
+load('Results/exampleNao/info');
+visualizeActivatedTaxels({'rightArm_torso'})
+##### SOURCE END #####
+--></body></html>

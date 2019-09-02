@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="generator" content="MATLAB R2016a"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><title>Example of models supported in the toolbox</title><style type="text/css">
+* {margin: 0; padding: 0;}
+body {text-align: start; line-height: 17.234001159668px; min-height: 0px; white-space: normal; color: rgb(0, 0, 0); font-family: Consolas, Inconsolata, Menlo, monospace; font-style: normal; font-size: 14px; font-weight: normal; text-decoration: none; white-space: normal; }
+h1, h2 {font-weight: normal;}
+.content { padding: 30px; }
+
+.S0 { margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S1 { line-height: 26.3999996185303px; min-height: 24px; white-space: pre-wrap; color: rgb(213, 80, 0); font-family: Helvetica, Arial, sans-serif; font-size: 22px; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 15px; margin-right: 10px;  }
+.S2 { min-height: 0px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S3 { line-height: 21px; min-height: 17px; white-space: pre-wrap; font-family: Helvetica, Arial, sans-serif; white-space: pre-wrap; margin-left: 4px; margin-top: 2px; margin-bottom: 9px; margin-right: 10px;  }
+.S4 { margin-left: 3px; margin-top: 10px; margin-bottom: 4px; margin-right: 3px;  }
+.S5 { line-height: 15.5926675796509px; min-height: 18px; white-space: nowrap; font-size: 12.6666669845581px; white-space: nowrap; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S6 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S7 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(160, 32, 240); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 0px;  }
+.S8 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+.S9 { line-height: 20.576000213623px; min-height: 20px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: bold; white-space: pre-wrap; margin-left: 4px; margin-top: 3px; margin-bottom: 9px; margin-right: 10px;  }
+.S10 { line-height: 15.5926685333252px; min-height: 0px; white-space: pre; color: rgb(160, 32, 240); font-size: 12.6666679382324px; white-space: pre; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; margin-right: 45px;  }
+
+.LineNodeBlock {margin: 10px 0 10px 0;}
+.LineNodeBlock+.paragraphNode {margin-top: 10px;}
+.lineNode {padding-left: 10px; background-color: #F7F7F7; border-left: 1px solid #E9E9E9; border-right: 1px solid #E9E9E9;}
+.inlineWrapper:first-child .lineNode,.inlineWrapper.outputs+.inlineWrapper .lineNode {padding-top: 5px; border-top: 1px solid #E9E9E9;}
+.inlineWrapper:last-child .lineNode,.inlineWrapper.outputs .lineNode {padding-bottom: 5px; border-bottom: 1px solid #E9E9E9;}
+.lineNode .textBox {white-space: pre;}
+</style></head><body><div class = "content"><div class = 'SectionBlock containment active'><h1 class = "S1"><span class = "S2">Example of models supported in the toolbox</span></h1></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">For all of the function, you need to create a robot.</span></p><p class = "S3"><span class = "S2">One possibility is to create a new one</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">rob=Robot(</span><span class = "S7">'loadNAO'</span><span class = "S8">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Or you can load robot from results</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">load(</span><span class = "S7">'Results/example/info.mat'</span><span class = "S8">);</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Graph model</span></h2><p class = "S3"><span class = "S2">This model shows robot as tree-based graph</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">rob.showGraphModel()</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><h2 class = "S9"><span class = "S2">Matlab model</span></h2><p class = "S3"><span class = "S2">This model shows 3D visualization of the robot</span></p><p class = "S3"><span class = "S2">This function needs the joint angles to be provided. They need to be given in orded as are chains defined in Robot.</span></p></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">If you do not know this order, look at </span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">fieldnames(rob.structure.DH)</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">The angles for individual joints are in order as they goes from root to the end-effector (or the last joint). And there must be one joint angle for each joint, which means it sometimes requires to add '0' (zero) to position, where virtual link is added and the robot does not normally has a joint angle - usually torso or end-effectors.</span></p><p class = "S3"><span class = "S2">You can provide joint angles for all chains (all physical chain, providing joint angles of for example skin will not work).</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">close </span><span class = "S10">all</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]})</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Or you can add joint angles just for first few chains. Here, the head will not be shown</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">close </span><span class = "S10">all</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0]})</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">The function also supports visualization of the skin/markers</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">close </span><span class = "S10">all</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},</span><span class = "S7">'skin'</span><span class = "S8">,1)</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">And to compare with other settings, two robots can be shown. </span></p><p class = "S3"><span class = "S2">You can either just turn the other robot on and it will load DH from 'defaultDH' field of 'Robot.structure'</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">close </span><span class = "S10">all</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},</span><span class = "S7">'dual'</span><span class = "S8">,1)</span></p></div></div></div><p class = "S0"></p><div class = 'SectionBlock containment'><p class = "S3"><span class = "S2">Or you can pass the new DH</span></p><div class = 'LineNodeBlock contiguous'><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">close </span><span class = "S10">all</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">newDH=rob.structure.DH;</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S8">newDH.rightArm(6,1)=0.1;</span></p></div><div class = 'inlineWrapper'><p class = "S5 lineNode"><span class = "S6">rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},</span><span class = "S7">'dual'</span><span class = "S6">,1,</span><span class = "S7">'dualDH'</span><span class = "S8">,newDH)</span></p></div></div></div></div>
+<!-- 
+##### SOURCE BEGIN #####
+%% Example of models supported in the toolbox
+% For all of the function, you need to create a robot.
+% 
+% One possibility is to create a new one
+
+rob=Robot('loadNAO');
+%% 
+% Or you can load robot from results
+
+load('Results/example/info.mat');
+%% Graph model
+% This model shows robot as tree-based graph
+
+rob.showGraphModel()
+%% Matlab model
+% This model shows 3D visualization of the robot
+% 
+% This function needs the joint angles to be provided. They need to be given 
+% in orded as are chains defined in Robot.
+% 
+% If you do not know this order, look at 
+
+fieldnames(rob.structure.DH)
+%% 
+% The angles for individual joints are in order as they goes from root to 
+% the end-effector (or the last joint). And there must be one joint angle for 
+% each joint, which means it sometimes requires to add '0' (zero) to position, 
+% where virtual link is added and the robot does not normally has a joint angle 
+% - usually torso or end-effectors.
+% 
+% You can provide joint angles for all chains (all physical chain, providing 
+% joint angles of for example skin will not work).
+
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]})
+%% 
+% Or you can add joint angles just for first few chains. Here, the head 
+% will not be shown
+
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0]})
+%% 
+% The function also supports visualization of the skin/markers
+
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'skin',1)
+%% 
+% And to compare with other settings, two robots can be shown. 
+% 
+% You can either just turn the other robot on and it will load DH from 'defaultDH' 
+% field of 'Robot.structure'
+
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1)
+%% 
+% Or you can pass the new DH
+
+close all
+newDH=rob.structure.DH;
+newDH.rightArm(6,1)=0.1;
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1,'dualDH',newDH)
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<demos>
+    <name>Multirobot Calibration Framework</name>
+    <type>toolbox</type>
+    <icon>HelpIcon.DEMOS</icon>
+    <description>This text appears on the main page for your examples.</description>
+        <label>First Section</label>
+        <demoitem>
+            <label>Calibration</label>
+            <type>M-file</type>
+            <source>calibration</source>
+        </demoitem>
+        <demoitem>
+            <label>Models</label>
+            <type>M-file</type>
+            <source>models</source>
+        </demoitem>
+        <demoitem>
+            <label>Utils</label>
+            <type>M-file</type>
+            <source>utils</source>
+        </demoitem>
+        <demoitem>
+            <label>Visualization</label>
+            <type>M-file</type>
+            <source>visualization</source>
+        </demoitem>
+
+</demos>

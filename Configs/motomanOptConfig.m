@@ -1,17 +1,17 @@
 function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(approaches, inputChains, jointType)
     %% Solver options
     options = optimoptions('lsqnonlin');
-    %options.Algorithm = 'trust-region-reflective';
+    options.Algorithm = 'trust-region-reflective';
     options.Algorithm = 'levenberg-marquardt';
     options.Display = 'iter';
-    options.TolFun =  5e-18;
-    options.TolX = 1e-30;
+    options.TolFun =  5e-15;
+    options.TolX = 1e-25;
     options.MaxIter = 200;
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
     options.UseParallel=0;
     %options.SpecifyObjectiveGradient=true
-    options.ScaleProblem='jacobian';
+%     options.ScaleProblem='jacobian';
     
     %% Chains
     chains.rightArm=0;
@@ -69,21 +69,21 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     
     %% Calibration settings
     optim.bounds=0;
-    optim.repetitions=1;
-    optim.pert=[0,0,0];
+    optim.repetitions=50;
+    optim.pert=[0,0,1];
     optim.distribution = 'uniform';
     optim.units = 'm';
     optim.splitPoint=0.7;
     optim.refPoints=0;
-    optim.useNorm=0;
+    optim.useNorm=1;
     optim.parametersWeights.body=[1,1]; % set to scale parameters - [body lengths, body angles]
     optim.parametersWeights.skin=[1,1]; % set to scale parameters - [skin lengths, skin angles]
     optim.parametersWeights.external=[1,1]; % set to scale parameters - [rotation, translation]
     optim.parametersWeights.planes=1; % set to scale parameters
-    optim.boundsFromDefault=1; % set to compute bounds from default values
-    optim.optimizeInitialGuess=1; % set to include plane or external transformation parameters into optimized parameters
+    optim.boundsFromDefault=0; % set to compute bounds from default values
+    optim.optimizeInitialGuess=0; % set to include plane or external transformation parameters into optimized parameters
     optim.rotationType = 'vector'; % how the external calib works with rotation (quat - quaternion; vector - rotation vector)
-    optim.skipNoPert = 0;
+    optim.skipNoPert = 1;
     optim.optimizeDifferences = 0;
     optim.usePxCoef = 1;
     %% Perturbations   
