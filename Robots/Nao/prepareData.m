@@ -1,4 +1,4 @@
-function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt)
+function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt, optim)
 % PREPAREDATA returns 'taxelStruct' with Nao dataset informations
 %   INPUT - robot - instance of @robot class
 %         - datasetName - string with name of the dataset

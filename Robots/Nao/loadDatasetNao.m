@@ -13,10 +13,11 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
     if length(varargin)==1
         alt='';
         robot.structure=rmfield(robot.structure, 'matrices');
+        datasetsNames=varargin;
     else
         if strfind(varargin{end},'Alt')
             alt=varargin{end};
-            datasetsNames=varargin{1:end-1};
+            v
         else
             alt='';
             datasetsNames=varargin;
@@ -49,7 +50,7 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
         name2=strsplit(chain2,'Arm');
         name2=name2{1};
         % call prepareData to get current values
-        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH,alt);
+        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH,alt,optim);
         %Init dataset 
         dataset.point = []; % Points in local frame Mx3 (Mx6 if no refPoint)
         dataset.pose = []; % Mx1 int id of pose
