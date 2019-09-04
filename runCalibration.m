@@ -1,10 +1,9 @@
-function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder)
+function runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder)
     %% preparation
     assert(~isempty(robot_fcn) && ~isempty(config_fcn) && ~isempty(dataset_fcn),'Empty name of robot, config or dataset function')
     rob = Robot(robot_fcn);
     
     [options, chains, approach, jointTypes, optim, pert] = loadConfig(config_fcn, approaches, chains, jointTypes);
-
     if ~isempty(loadDHfolder)
         loadDHfunc=str2func(loadDHfunc);
         loadDHfunc(rob, loadDHfolder, loadDHargs{:});
@@ -80,7 +79,7 @@ function main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn
             end
             
             obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach, initialParamValues);
-            sprintf('%f percent done', 100*((pert_level-1)*optim.repetitions + rep - 1)/(optim.pert_levels*optim.repetitions))
+            sprintf('%f percent done', 100*((pert_level-1-optim.skipNoPert)*optim.repetitions + rep - 1)/((optim.pert_levels-optim.skipNoPert)*optim.repetitions))
             % optimization        
             [opt_result, calibOut.resnorms{1,rep, pert_level}, calibOut.residuals{1,rep, pert_level},...
                 calibOut.exitFlags{1,rep, pert_level}, calibOut.outputs{1,rep, pert_level}, ...

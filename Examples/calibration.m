@@ -19,7 +19,7 @@ loadDHfunc = ''; % name of function to load DH ('loadDHfromMat','loadDHfromTxt')
 loadDHargs = ''; % arguments for the function above
 loadDHfolder = ''; % folder from which to load DH
 
-main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% motoman leica calibration - only right arm using DH from self touch (with min rms errors) as initial
 robot_fcn = 'loadMotomanLeica';
@@ -36,7 +36,7 @@ saveInfo = 1;
 loadDHfunc = 'loadDHfromMat'; % Here load from '.mat' files is used
 loadDHargs = {'type', 'min'}; % this means: load the DH params which has the lowest RMS error
 loadDHfolder = 'self-touch-motoman'; %load DH from this file
-main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% motoman hand-eye calibration - right arm and right eye using DH from rep1 and pert1 of self touch as initial
 robot_fcn = 'loadMotoman';
@@ -53,7 +53,7 @@ saveInfo = 1;
 loadDHfunc = 'loadDHfromTxt'; %load from txt files
 loadDHargs = {'DH-rep1-pert1'}; % name of the file
 loadDHfolder = '';
-main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% iCub selftouch calibration - only right arm, using first 100 point from dataset
 robot_fcn = 'loadICUBv1';
@@ -70,7 +70,7 @@ saveInfo = 1;
 loadDHfunc = '';
 loadDHargs = '';
 loadDHfolder = '';
-main(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
+runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder);
 
 %% load task from CSV
 addpath(genpath('Utils')); % At first run, this folder needs to be loaded manually

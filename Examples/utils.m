@@ -54,7 +54,7 @@ mat3=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'base');
 
 %%
 % We can test it
-disp(norm(mat-mat3*mat2,'fro')<eps)
+disp(norm(mat-mat3*mat2,'fro')<10*eps)
 % Frobenius norm of matrix should be very low number (not 0 in most cases 
 % beacuse of floating point numbers errors) 
 
@@ -66,4 +66,4 @@ disp(norm(mat-mat3*mat2,'fro')<eps)
 load('Results/exampleNao/info.mat');
 
 % And easily transform all point from local frame to the base frame
-newPoints=getPoints(rob.structure.DH, datasets.selftouch{:}, rob.structure.H0, 0);
+newPoints=getPoints(rob.structure.DH, datasets.selftouch{1}, rob.structure.H0, 0);
