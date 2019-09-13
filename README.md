@@ -18,7 +18,7 @@
 # How to run
 
 Recommended steps (the order is optional):
- - [Download the toolbox and additional files](https://drive.google.com/drive/folders/1yUFahOVC2i1dPDTiDs6FNzH-VJfpOyXe?usp=sharing)
+ - [Download the toolbox and additional files](https://drive.google.com/drive/folders/1yUFahOVC2i1dPDTiDs6FNzH-VJfpOyXe?usp=sharing) - always download the last version!
  - prepare functions for your robot (or use one of the existing)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
    - mandatory are functions with robot structures and DH (see [loading functions](#loading-functions)) and 
