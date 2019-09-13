@@ -17,7 +17,7 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
     else
         if strfind(varargin{end},'Alt')
             alt=varargin{end};
-            v
+            datasetsNames=varargin{1:end-1};
         else
             alt='';
             datasetsNames=varargin;
@@ -25,6 +25,7 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
         end
             
     end
+
     %datasetsNames=varargin{1};
     % Assign robot's DH into new variable
     DH=robot.structure.DH;
