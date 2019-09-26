@@ -18,7 +18,7 @@
 # How to run
 
 Recommended steps (the order is optional):
- - [Download the toolbox and additional files](/releases/latest) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
+ - [Download the toolbox and additional files](/-/releases/latest) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
  - Install the toolbox in Matlab by double clicking on the file
  - Prepare functions for your robot (or use one of the existing from Robot function patterns)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
