@@ -9,7 +9,8 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
 %       - optim - calibration options (not used here)
 %       - chains - structure containing which chains will be calibrated
 %       - varargin - cellarray of arguments to specify which datasets will
-%       be used - vector(1x5) or cellarray(1x4} or string 'leica'
+%       be used - vector(1x5) or cellarray(1x4} or string 'leica' followed
+%       by string 'LEye', 'REye' if only one eye should be used
 % OUTPUT - datasets - structure containing datasets for calibration
 %        - indexes - cellarray of indexes to datasets to separate them into
 %        specific datasets (self-touch, planes, external, projections)
@@ -28,6 +29,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
     end
         
     % check if varargin is not empty
+    chain = '';
     if(nargin >= 4)
         if(ismatrix(varargin{1}) && ~ischar(varargin{1})) % use selected groups of datasets
         used_datasets = varargin{1}; 
@@ -35,6 +37,9 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
             used_datasets = [0,0,0,0,1];
         elseif(iscell(varargin{1}))
             indexes = varargin{1}; % use default groups of datasets but only the selected parts
+        end
+        if(length(varargin) > 1)
+            chain = varargin{2};
         end
     end
     
@@ -127,10 +132,13 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                 
                 %% assign refPoints and cameras to the marker
                 for j = 1:(size(mergedData,1))
+                    if(contains(chain, 'LEye') && mergedData(j,4) == 1) || (contains(chain, 'REye') && mergedData(j,4) == 2)
+                        continue
+                    end
                     if(j > 1 && (first_indexInUnique(j-1) ~= first_indexInUnique(j)))
                         cam_index = cam_index + 1;
                     end
-                     cams(cam_index,mergedData(j,4)) = 1;
+                    cams(cam_index,mergedData(j,4)) = 1;
                     if(mergedData(j,4) == 1)
                         refPoints(cam_index,1:2) = mergedData(j,5:6);
                     else

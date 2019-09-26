@@ -3,7 +3,8 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
     %                training/testing indexes
     %   INPUT - optim - structure of calibration settings
     %         - chains - structure of chain settings
-    %         - funcname - name of the robot-specific function
+    %         - funcname - name of the robot-specific function or mat-file
+    %         with the datasets (and indexes)
     %         - varargin - agrument which will be passed to the
     %                      robot-specific function
     %   OUTPUT - training_set_indexes - 1xN cellarrays with Mx1 array of
@@ -15,12 +16,19 @@ function [training_set_indexes, testing_set_indexes, datasetsStruct]=prepareData
     %                             cellarrays
     
     %% Call appropriate functions with arguments 
-    if nargin>4
-        func=str2func(funcname);
-        [datasets, indexes]=func(r,optim, chains, varargin{:});
+    if(contains(funcname, '.mat'))
+        file = load(funcname);
+        assert(isfield(file, 'datasets') && isfield(file, 'indexes'));
+        datasets = file.datasets;
+        indexes = file.indexes;
     else
-        func=str2func(funcname);
-        [datasets, indexes]=func(r,optim, chains);
+        if nargin>4
+            func=str2func(funcname);
+            [datasets, indexes]=func(r,optim, chains, varargin{:});
+        else
+            func=str2func(funcname);
+            [datasets, indexes]=func(r,optim, chains);
+        end
     end
     %% Assing joint to names and split
     for dataset=1:length(datasets)

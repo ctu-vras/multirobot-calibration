@@ -18,17 +18,19 @@
 # How to run
 
 Recommended steps (the order is optional):
- - [Download the toolbox and additional files](https://drive.google.com/drive/folders/1yUFahOVC2i1dPDTiDs6FNzH-VJfpOyXe?usp=sharing) - always download the last version!
- - prepare functions for your robot (or use one of the existing)
+ - [Download the toolbox and additional files](/releases/latest) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
+ - Install the toolbox in Matlab by double clicking on the file
+ - Prepare functions for your robot (or use one of the existing from Robot function patterns)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
    - mandatory are functions with robot structures and DH (see [loading functions](#loading-functions)) and 
      functions to prepare datasets (see [Datasets](#datasets) and functions for existing robots)
    - voluntary are whitelist (see [Whitelist](#whitelist)), bounds (see [bounds](#bounds)) functions
- - set up calibration config file (see [Calibration config](#calibration-config))
- - select config files, output folders and run calibration 
+ - Set up calibration config file (see [Calibration config](#calibration-config))
+ - Select config files, output folders and run calibration 
    - look at [Calibration examples](Examples/calibration.m)
    - or use csv file as input (see [Loading from csv](#loading-from-csv))
- - visualize and evaluate results (see [Visualization](#visualization))
+ - Visualize and evaluate results (see [Visualization](#visualization))
+ - **Recommendation:** _Create a working folder, move the additional files there and set it as Current Folder in Matlab_
 
 # Examples
 
@@ -99,7 +101,7 @@ All of the datasets must be structure with these fields (some of them may be vol
  - pose - Nx1 array of any (almost) type, used to assigning points from one 'pose'
    - e.g. when camera has more photos of one touch 
 
-You can take an inspiration from existing functions [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m). 
+You can take an inspiration from existing functions [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m) and existing dataset mat-file [multirobot_leica_dataset.mat](Robots/Motoman/multirobot_leica_dataset.mat) . 
 
 # Configs
 
