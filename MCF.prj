@@ -27,6 +27,7 @@
     <param.platforms />
     <param.guid>39a01084-b6dc-470c-81a6-29c41fd73f37</param.guid>
     <param.exclude.filters>.git/
+Templates/
 Robots/
 paper/
 Configs/
@@ -111,6 +112,7 @@ plotJointsError.m
       <item>/Robots/Nao/Dataset/Infos</item>
       <item>/Robots/Nao/Dataset/Points</item>
       <item>/article</item>
+      <item>/Examples/Templates</item>
     </param.matlabpath.excludes>
     <param.javaclasspath.excludes />
     <unset>
