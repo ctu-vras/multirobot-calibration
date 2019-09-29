@@ -1,4 +1,4 @@
-function [ datasets, indexes ] = loadNewLeicaDataset(rob,~, ~, ~ )
+function datasets = loadNewLeicaDataset(rob,~, ~, ~ )
 %LOADDATASETMOTOMAN Loading Motoman dataset loading function
 % Custom function for loading Motoman dataset collected in 
 % august 2019 with additional data from Leica tracker.
@@ -8,12 +8,10 @@ function [ datasets, indexes ] = loadNewLeicaDataset(rob,~, ~, ~ )
 %       - chains - structure containing which chains will be calibrated
 %       (not used here - ~)
 %       - varargin - cellarray of arguments (not used here - ~)
-% OUTPUT - datasets - structure containing datasets for calibration
-%        - indexes - cellarray of indexes to datasets to separate them into
-%        specific datasets (self-touch, planes, external, projections)
+%   OUTPUT - datasets - 1x4 ([self-touch, planes, external, projection]) 
+%                       cell array of cell arrays (1xN) of datasets
 
     assert(~isempty(rob.findJoint('LR1')))
-    datasets_leica = {};
     
     
     dataset.cameras = [];
@@ -38,10 +36,8 @@ function [ datasets, indexes ] = loadNewLeicaDataset(rob,~, ~, ~ )
         dataset.rtMat(j) = matrices; 
     end   
     dataset.rtMat = reshape(dataset.rtMat, length(dataset.pose),1);
+     
+    datasets = {{}, {}, {dataset}, {}};
     
-    datasets_leica{1} = dataset; 
-
-    
-    indexes = {[], [], 1:length(datasets_leica), []};
-    datasets = [{}, {}, datasets_leica, {}];
+    save('multirobot_leica_dataset.mat', 'datasets')
 end

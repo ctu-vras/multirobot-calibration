@@ -3,7 +3,7 @@
     <name>Multirobot Calibration Framework</name>
     <type>toolbox</type>
     <icon>HelpIcon.DEMOS</icon>
-    <description>This text appears on the main page for your examples.</description>
+    <description>Framework examples</description>
         <label>First Section</label>
         <demoitem>
             <label>Calibration</label>

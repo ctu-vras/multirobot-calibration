@@ -1,4 +1,4 @@
-function [ datasets, indexes ] = loadDatasetICub(robot,optim, chains, varargin )
+function datasets = loadDatasetICub(robot,optim, chains, varargin )
 %LOADDATASETICUB Function for loading iCub dataset
 % Custom function for loading iCub dataset IROS2018 or ICRA2019.
 % INPUT - rob - object of class Robot
@@ -6,11 +6,10 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, chains, varargin )
 %       - chains - structure containing which chains will be calibrated
 %       - varargin - cellarray of arguments to specify which datasets will
 %       be used - vector(1x5) or cellarray(1x4} or string 'leica'
-% OUTPUT - datasets - structure containing datasets for calibration
-%        - indexes - cellarray of indexes to datasets to separate them into
-%        specific datasets (self-touch, planes (not used), external (not used), projections)
+%   OUTPUT - datasets - 1x4 ([self-touch, planes, external, projection]) 
+%                       cell array of cell arrays (1xN) of datasets
 
-    %third varargin is the name of dataset(s), default is ICRA2019 dataset
+    %third varargin is the name of dataset(s), default is ICRA2019 dataset   
     varargin = varargin{1};
     if(length(varargin) == 3)
         source_files = {varargin{3}};
@@ -22,7 +21,8 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, chains, varargin )
         chain = varargin{2};
     end
     nmb_of_files = length(source_files);
-    datasets = cell(1,nmb_of_files*2);  %datasets cell array MUST BE ROW VECTOR
+    datasetsTouch = cell(1,nmb_of_files);  %datasets cell array MUST BE ROW VECTOR
+    datasetsProjs = {};
     DEG2RAD = pi/180;
     % all possible robot fingers
     fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'}; 
@@ -94,7 +94,7 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, chains, varargin )
         C(:) = {'leftHandFinger'}; % left end effector
         dataset.frame2 = C;
         dataset.refPoints = data2(:,1:3);    
-        datasets{k} = dataset; 
+        datasetsTouch{k} = dataset; 
         
         if(contains(chain, 'Eye'))
             % projection dataset is doubled touch dataset
@@ -160,9 +160,9 @@ function [ datasets, indexes ] = loadDatasetICub(robot,optim, chains, varargin )
                 projs = projections(points2Cam, robot.structure.eyes, dataset2.cameras);
                 dataset2.refPoints = [nan(2,length(points2Cam));projs]';
             end
-            datasets{k+nmb_of_files} = dataset2;  
+            datasetsProjs{k} = dataset2;  
         end           
     end
-    indexes = {1:nmb_of_files, [] ,[], nmb_of_files+1:nmb_of_files*2};
+    datasets = {datasetsTouch,{},{}, datasetsProjs};
 end
 

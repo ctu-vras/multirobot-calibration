@@ -1,4 +1,4 @@
-function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin )
+function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
 %LOADDATASETMOTOMAN Loading Motoman dataset loading function
 % Custom function for loading Motoman dataset collected in 
 % february/march 2019 with additional data from Leica tracker.
@@ -11,9 +11,8 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
 %       - varargin - cellarray of arguments to specify which datasets will
 %       be used - vector(1x5) or cellarray(1x4} or string 'leica' followed
 %       by string 'LEye', 'REye' if only one eye should be used
-% OUTPUT - datasets - structure containing datasets for calibration
-%        - indexes - cellarray of indexes to datasets to separate them into
-%        specific datasets (self-touch, planes, external, projections)
+%   OUTPUT - datasets - 1x4 ([self-touch, planes, external, projection]) 
+%                       cell array of cell arrays (1xN) of datasets
 
     varargin = varargin{1};
     % default selection of datasets groups
@@ -54,10 +53,10 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
         'no_leica_higher_table1_5x5_dataset.mat',  'no_leica_higher_table2_5x5_dataset.mat',...
         'leica_lower_table1_5x5_dataset.mat', 'leica_lower_table2_5x5_dataset.mat', ...
         'no_leica_lower_table1_5x5_dataset.mat', 'no_leica_lower_table2_5x5_dataset.mat'};
-    datasets_leica = {};
-    datasets_projection = {};
-    datasets_selftouch = {};
-    datasets_planes = {};
+    datasetsLeica = {};
+    datasetsProjs = {};
+    datasetsTouch = {};
+    datasetsPlanes = {};
     index = 0; 
     
     if(isLeica) % leica end effector
@@ -99,7 +98,7 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                 dataset.point = zeros(size(leicaData,1),6);
                 dataset.refPoints = leicaData(:,20:22);  
                 index = index + 1;
-                datasets_leica{index} = dataset; 
+                datasetsLeica{index} = dataset; 
             end
         end       
     else
@@ -225,17 +224,14 @@ function [ datasets, indexes ] = loadDatasetMotoman(rob,optim, chains, varargin 
                 dataset2.id = index;
                 if(k == 1)
                     dataset2.name = ['Dist ', num2str(index)];
-                    datasets_selftouch{1} = dataset2;
+                    datasetsTouch{1} = dataset2;
                 else
                     dataset2.name = ['Plane ', num2str(index)];
-                    datasets_planes{end+1} = dataset2;
+                    datasetsPlanes{end+1} = dataset2;
                 end
-                datasets_projection{index} = dataset;                   
+                datasetsProjs{index} = dataset;                   
             end
         end        
     end
-    
-    indexes = {1:length(datasets_selftouch), (1:length(datasets_planes))+length(datasets_selftouch),...
-        1:length(datasets_leica), (1:length(datasets_projection))+sum(used_datasets)};
-    datasets = [datasets_selftouch, datasets_planes, datasets_leica, datasets_projection];
+    datasets = {datasetsTouch, datasetsPlanes, datasetsLeica, datasetsProjs};
 end

@@ -1,4 +1,4 @@
-function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
+function datasets = loadDatasetNao(robot,optim, chains, varargin)
     % LOADDATASETNAO returns 'datasets' and 'indexes' for given
     % optimization settings. 
     %   INPUT - robot - instance of @robot class
@@ -6,9 +6,8 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
     %         - chains - structure with optimized chains
     %         - datasetNames - 1xN cell array with names of the
     %           datasets, e.g. {'rightArm_torso'}
-    %   OUTPUT - datasets - 1xN cell array of datasets
-    %          - indexes - 1x4 cell array with numbers of datasets, which belongs
-    %            given group...[dist, planes, ext, proj]
+    %   OUTPUT - datasets - 1x4 ([self-touch, planes, external, projection]) 
+    %                       cell array of cell arrays (1xN) of datasets
     varargin=varargin{1};
     if length(varargin)==1
         alt='';
@@ -33,7 +32,6 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
     DH.torso=[0,0,0,0];
     % Variables init
     datasets=cell(1,length(datasetsNames));
-    indexes={1:length(datasetsNames),[],[],[]};
     for name=1:length(datasetsNames)
         % Split dataset name to get names of the chains
         spl=strsplit(datasetsNames{name},'_');
@@ -187,5 +185,5 @@ function [ datasets, indexes]= loadDatasetNao(robot,optim, chains, varargin)
         % Assign dataset into output datasets
         datasets{name}=dataset;
     end
-    
+    datasets = {datasets,{},{},{}};
 end

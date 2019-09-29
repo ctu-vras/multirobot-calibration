@@ -36,6 +36,10 @@ Recommended steps (the order is optional):
 
 Examples how to run calibration and use visualization and models can be found in [Examples folder](Examples) as .m files ([Calibration examples](Examples/calibration.m),[Models examples](Examples/models.m),[Visualization examples](Examples/visualization.m), [Utils examples](Examples/utils.m)) or livescripts .mlx files ([Calibration examples](Examples/calibration.mlx),[Models examples](Examples/models.mlx),[Visualization examples](Examples/visualization.mlx), [Utils examples](Examples/utils.m))
 
+# Templates
+
+Templates for [Robot function](Templates/loadExampleRobot.m), [Config function](Templates/exampleConfig.m), [Loading dataset function](Templates/loadExampleDataset.m) and dataset mat-file can be found in [Templates folder](Templates)
+
 # Robot
 
 Found in the [@Robot](@Robot) folder. This directory includes the main class file for the robots [Robot.m](@Robot/Robot.m).
@@ -101,14 +105,14 @@ All of the datasets must be structure with these fields (some of them may be vol
  - pose - Nx1 array of any (almost) type, used to assigning points from one 'pose'
    - e.g. when camera has more photos of one touch 
 
-You can take an inspiration from existing functions [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m) and existing dataset mat-file [multirobot_leica_dataset.mat](Robots/Motoman/multirobot_leica_dataset.mat) . 
+You can take an inspiration from existing functions [loadExampleDataset.m](Templates/loadExampleDataset.m) [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m) and existing dataset mat-file [multirobot_leica_dataset.mat](Robots/Motoman/multirobot_leica_dataset.mat) . 
 
 # Configs
 
 ## Loading functions
 
 These functions serve to create the structure of the robot and set default DH, whitelist and bounds.
-Take a look at existing robots [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m](Robots/Motoman/loadMotoman.m), [loadICUBv1.m](Robots/iCub/loadICUBv1.m)
+Take a look at existing robots [loadExampleRobot.m](Templates/loadExampleRobot.m), [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m](Robots/Motoman/loadMotoman.m), [loadICUBv1.m](Robots/iCub/loadICUBv1.m)
 
 ### Output variables
 
