@@ -19,7 +19,8 @@
 
 Recommended steps (the order is optional):
  - [Download the toolbox and additional files](https://gitlab.fel.cvut.cz/body-schema/code-calib-multirobot/-/releases) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
- - Install the toolbox in Matlab by double clicking on the file
+ - Install the toolbox in Matlab by double clicking on the file. The toolbox directory (depending on your Matlab Preferences - Add-ons - Installation Folder) will be added to the Matlab "path".
+ - Unpack the additionalFiles.zip into a folder of your choice. This will give you access to the folders discussed below.
  - Prepare functions for your robot (or use one of the existing from Robot function patterns)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
    - mandatory are functions with robot structures and DH (see [loading functions](#loading-functions)) and 
