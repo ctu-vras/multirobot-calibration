@@ -137,7 +137,7 @@ function showModel(r, angles, varargin)
         robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
         %structure.(name)(8,:)=[];
         robot.(name).DH = structure.(name);
-        robot.(name).Th = [angles{i}];
+        robot.(name).Th = reshape([angles{i}], 1, []);
         robot.(name).LinkColor = LINK_COLOR;
         robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
     end
@@ -190,7 +190,7 @@ function showModel(r, angles, varargin)
             robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
             %structure.(name)(8,:)=[];
             robot.(name).DH = structure.(name);
-            robot.(name).Th = [angles{i}];
+            robot.(name).Th = reshape([angles{i}], 1, []);
             robot.(name).LinkColor = LINK_COLOR_2;
             robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
         end

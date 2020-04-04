@@ -47,9 +47,18 @@ function [chain] = FwdKin(body_part,varargin)
         alph = DH(:,3);
         offs = DH(:,4);
 
-        %%% THETAS!
-        thet = theta + offs;
-    
+        %%% THETAS
+        try
+            thet = theta + offs;
+        catch ME
+            msg = ['Body part: ', body_part.name, '\nActual number of joint angles: ', ...
+                num2str(size(offs,1)), '\nNumber of joint angles inserted: ', ...
+                num2str(size(theta,1)), '\nInserted joint angles: ', num2str(theta')] ;
+            causeException = MException('MATLAB:myCode:dimensions',msg);
+            ME = addCause(ME,causeException);
+            rethrow(ME);
+        end
+        
         %%% CHAIN
         RTMat    = cell(1,length(a)+1);
         RFFrame  = cell(1,length(a)+1);

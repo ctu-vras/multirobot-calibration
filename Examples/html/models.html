@@ -1,0 +1,171 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>models</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-04"><meta name="DC.source" content="models.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Example of models supported in the toolbox</a></li><li><a href="#4">Graph model</a></li><li><a href="#5">Matlab model</a></li></ul></div><h2 id="1">Example of models supported in the toolbox</h2><pre class="codeinput"><span class="comment">% For all of the function, you need to create a robot.</span>
+</pre><p>One possibility is to create a new one</p><pre class="codeinput">rob=Robot(<span class="string">'loadNAO'</span>);
+</pre><p>Or you can load robot from results</p><pre class="codeinput">load(<span class="string">'Results/exampleNao/info.mat'</span>);
+</pre><h2 id="4">Graph model</h2><pre class="codeinput"><span class="comment">% This model shows robot as tree-based graph</span>
+rob.showGraphModel()
+</pre><img vspace="5" hspace="5" src="models_01.png" alt=""> <h2 id="5">Matlab model</h2><pre class="codeinput"><span class="comment">% This model shows 3D visualization of the robot</span>
+
+<span class="comment">% This function needs the joint angles to be provided. They need to be given in orded as are chains defined in Robot.</span>
+</pre><p>If you do not know this order, look at</p><pre class="codeinput">fieldnames(rob.structure.DH)
+</pre><pre class="codeoutput">
+ans =
+
+  7&times;1 cell array
+
+    'leftArm'
+    'rightArm'
+    'head'
+    'torsoSkin'
+    'leftArmSkin'
+    'rightArmSkin'
+    'headSkin'
+
+</pre><p>The angles for individual joints are in order as they goes from root to the end-effector (or the last joint). And there must be one joint angle for each joint, which means it sometimes requires to add '0' (zero) to position, where virtual link is added and the robot does not normally has a joint angle - usually torso or end-effectors.</p><pre class="codeinput"><span class="comment">% **If the robot does not have 'movable' torso (ie. joint angles are always</span>
+<span class="comment">% zero), do not pass joint angles into the function**</span>
+
+<span class="comment">% You can provide joint angles for all chains (all physical chain, providing joint angles of for example skin will not work).</span>
+close <span class="string">all</span>
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]})
+</pre><img vspace="5" hspace="5" src="models_02.png" alt=""> <p>Or you can add joint angles just for first few chains. Here, the head will not be shown</p><pre class="codeinput">close <span class="string">all</span>
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0]})
+</pre><img vspace="5" hspace="5" src="models_03.png" alt=""> <p>The function also supports visualization of the skin/markers</p><pre class="codeinput">close <span class="string">all</span>
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},<span class="string">'skin'</span>,1)
+</pre><img vspace="5" hspace="5" src="models_04.png" alt=""> <p>And to compare with other settings, two robots can be shown.</p><pre class="codeinput"><span class="comment">% You can either just turn the other robot on and it will load DH from 'defaultDH' field of 'Robot.structure'</span>
+close <span class="string">all</span>
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},<span class="string">'dual'</span>,1)
+</pre><img vspace="5" hspace="5" src="models_05.png" alt=""> <p>Or you can pass the new DH</p><pre class="codeinput">close <span class="string">all</span>
+newDH=rob.structure.DH;
+newDH.rightArm(6,1)=0.1;
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},<span class="string">'dual'</span>,1,<span class="string">'dualDH'</span>,newDH)
+</pre><img vspace="5" hspace="5" src="models_06.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Example of models supported in the toolbox
+
+% For all of the function, you need to create a robot.
+%%
+% One possibility is to create a new one
+rob=Robot('loadNAO');
+%%
+% Or you can load robot from results
+load('Results/exampleNao/info.mat');
+
+%% Graph model
+
+% This model shows robot as tree-based graph
+rob.showGraphModel()
+
+%% Matlab model
+
+% This model shows 3D visualization of the robot
+
+% This function needs the joint angles to be provided. They need to be given in orded as are chains defined in Robot.
+
+%%
+% If you do not know this order, look at 
+fieldnames(rob.structure.DH)
+
+%%
+% The angles for individual joints are in order as they goes from root to the end-effector (or the last joint). And there must
+% be one joint angle for each joint, which means it sometimes requires to add '0' (zero) to position, where virtual link is
+% added and the robot does not normally has a joint angle - usually torso or end-effectors.
+
+% **If the robot does not have 'movable' torso (ie. joint angles are always
+% zero), do not pass joint angles into the function**
+
+% You can provide joint angles for all chains (all physical chain, providing joint angles of for example skin will not work).
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]})
+
+%%
+% Or you can add joint angles just for first few chains. Here, the head will not be shown
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0]})
+
+%%
+% The function also supports visualization of the skin/markers
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'skin',1)
+
+%%
+% And to compare with other settings, two robots can be shown. 
+
+% You can either just turn the other robot on and it will load DH from 'defaultDH' field of 'Robot.structure'
+close all
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1)
+
+%%
+% Or you can pass the new DH
+close all
+newDH=rob.structure.DH;
+newDH.rightArm(6,1)=0.1;
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1,'dualDH',newDH)
+##### SOURCE END #####
+--></body></html>

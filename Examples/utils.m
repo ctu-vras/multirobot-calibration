@@ -1,4 +1,5 @@
 %% Example of using the utils in toolbox
+%
 % Examples of some of the important utils, which could be useful even
 % outside existing functions
 
@@ -17,6 +18,7 @@ joint=rob.joints{15};
 % Or find the joint by its name
 joint=rob.findJoint('EE1');
 joint=joint{1}; % The function can return more than one result, if robot include joint with the same name
+
 % Robot allows to find joint not just by name, but also by group, type or
 % id (in these cases there will usually be more than 1 joint returned).
 

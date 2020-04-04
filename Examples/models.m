@@ -1,6 +1,7 @@
 %% Example of models supported in the toolbox
-
+%
 % For all of the function, you need to create a robot.
+
 %%
 % One possibility is to create a new one
 rob=Robot('loadNAO');
@@ -9,14 +10,13 @@ rob=Robot('loadNAO');
 load('Results/exampleNao/info.mat');
 
 %% Graph model
-
 % This model shows robot as tree-based graph
 rob.showGraphModel()
 
-%% Matlab model
-
-% This model shows 3D visualization of the robot
-
+%% Matlab model  
+%
+% This model shows 3D visualization of the robot  
+%
 % This function needs the joint angles to be provided. They need to be given in orded as are chains defined in Robot.
 
 %%
@@ -27,7 +27,10 @@ fieldnames(rob.structure.DH)
 % The angles for individual joints are in order as they goes from root to the end-effector (or the last joint). And there must
 % be one joint angle for each joint, which means it sometimes requires to add '0' (zero) to position, where virtual link is
 % added and the robot does not normally has a joint angle - usually torso or end-effectors.
-
+%
+% *If the robot does not have 'moveable' torso (ie. joint angles are
+% always zero), do not provide them into the function.*
+%
 % You can provide joint angles for all chains (all physical chain, providing joint angles of for example skin will not work).
 close all
 rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]})
@@ -44,7 +47,7 @@ rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'skin',1)
 
 %%
 % And to compare with other settings, two robots can be shown. 
-
+%
 % You can either just turn the other robot on and it will load DH from 'defaultDH' field of 'Robot.structure'
 close all
 rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1)
