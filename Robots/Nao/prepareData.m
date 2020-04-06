@@ -23,6 +23,22 @@ chain2Original=firstLocal.data;
 
 % Load given dataset
 datasetLocal=load(strcat('Dataset/Datasets/',datasetName,'.mat'));
+if iscell(datasetLocal.(chain1))
+    n = datasetLocal;
+    fnames = fieldnames(n);
+    for field=reshape(fieldnames(n.(fnames{1}){1}), 1, [])
+       field = field{1};
+       s.(field) = [];
+    end
+    datasetLocal.(fnames{1}) = repmat(s, size(n.(fnames{1}), 1), 1);
+    datasetLocal.(fnames{2}) = repmat(s, size(n.(fnames{2}), 1), 1);
+
+    for val=1:size(n.(fnames{1}), 1)
+        datasetLocal.(fnames{1})(val) = n.(fnames{1}){val};
+        datasetLocal.(fnames{2})(val) = n.(fnames{2}){val};
+    end 
+end
+
 % Split string with word 'Arm' to get just side ...right for
 % rightArm, '' for Torso
 name1=strsplit(chain1,'Arm');
@@ -71,6 +87,7 @@ dataset.(chain1).newTaxelsNA={}; %1xN cell array of non-activated points (1x3 po
 dataset.(chain2).newTaxelsNA={};
 
 fprintf('%s\n',datasetName);
+
 for i=1:size(datasetLocal.(chain1),1)
     % Just print of process
     if rem(i,100)==0
@@ -119,7 +136,11 @@ for i=1:size(datasetLocal.(chain1),1)
     % load taxel indexes (4th components of the vector from activated
     % points in the dataset), and add 1 to all of them (to get matlab
     % indexing)
-    taxelsIds=datasetLocal.(chain1)(i).activatedUn(:,4)+1;
+    if isfield(datasetLocal.(chain1), 'activatedUn')
+        taxelsIds=datasetLocal.(chain1)(i).activatedUn(:,4)+1;
+    else
+        taxelsIds=datasetLocal.(chain1)(i).activatedTaxels' + 1;
+    end
     % assign ids to right points
     newTaxels=[chain1Points(taxelsIds',:),taxelsIds];
     % delete activated taxels from chain1Points
@@ -128,7 +149,11 @@ for i=1:size(datasetLocal.(chain1),1)
     dataset.(chain1).newTaxels{end+1}=newTaxels;
 
     %the same for second chain
-    taxelsIds=datasetLocal.(chain2)(i).activatedUn(:,4)+1;
+    if isfield(datasetLocal.(chain2), 'activatedUn')
+        taxelsIds=datasetLocal.(chain2)(i).activatedUn(:,4)+1;
+    else
+        taxelsIds=datasetLocal.(chain2)(i).activatedTaxels' + 1;
+    end
     newTaxels=[chain2Points(taxelsIds',:),taxelsIds];
     chain2Points(taxelsIds',:)=[];
     dataset.(chain2).newTaxels{end+1}=newTaxels;
@@ -154,7 +179,6 @@ for i=1:size(datasetLocal.(chain1),1)
     dataset.(chain2).newTaxelsNA{end+1}=chain2Points;
 
 end
-
 
 %Ouput structure init
 % fields are e.g. 's255', which means taxel 255
