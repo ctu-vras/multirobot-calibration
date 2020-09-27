@@ -8,12 +8,12 @@ function rotationVector = rotMatrix2rotVector(rotMatrix)
 [U, ~, V] = svd(rotMatrix);
 rotMatrix = U * V';
 t = trace(rotMatrix);
-[v,~] = eig(rotMatrix);
-% theta = real(acos((t - 1) / 2))
+% [v,~] = eig(rotMatrix);
+theta = real(acos((t - 1) / 2));
 r = [rotMatrix(3,2) - rotMatrix(2,3); ...
      rotMatrix(1,3) - rotMatrix(3,1); ...
      rotMatrix(2,1) - rotMatrix(1,2)];
-theta = atan2(v(:,3)'*r,t-1);
+% theta = atan2(v(:,3)'*r,t-1);
 if sin(theta) >= 1e-7
     % theta is not close to 0 or pi
     rotationVector = theta / (2 * sin(theta)) * r;

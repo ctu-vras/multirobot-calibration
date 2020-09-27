@@ -53,10 +53,10 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
         'no_leica_higher_table1_5x5_dataset.mat',  'no_leica_higher_table2_5x5_dataset.mat',...
         'leica_lower_table1_5x5_dataset.mat', 'leica_lower_table2_5x5_dataset.mat', ...
         'no_leica_lower_table1_5x5_dataset.mat', 'no_leica_lower_table2_5x5_dataset.mat'};
-    datasetsLeica = {};
-    datasetsProjs = {};
-    datasetsTouch = {};
-    datasetsPlanes = {};
+    datasets.external = {};
+    datasets.projection = {};
+    datasets.selftouch = {};
+    datasets.planes = {};
     index = 0; 
     
     if(isLeica) % leica end effector
@@ -98,7 +98,7 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
                 dataset.point = zeros(size(leicaData,1),6);
                 dataset.refPoints = leicaData(:,20:22);  
                 index = index + 1;
-                datasetsLeica{index} = dataset; 
+                datasets.external{index} = dataset; 
             end
         end       
     else
@@ -157,36 +157,38 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
                 if (chains.leftArm == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.leftArm;
-                        dh(:,4)=dh(:,4)+ dataset.joints(index_pose(j)).leftArm';
+                        dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).leftArm';
                         preMatrixLeft(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
                 end
                 if (chains.rightArm == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.rightArm;
-                        dh(:,4)=dh(:,4)+ dataset.joints(index_pose(j)).rightArm';
+                        dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).rightArm';
                         preMatrixRight(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
                 end
                 if (chains.rightEye == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.rightEye;
-                        dh(:,4)=dh(:,4)+ dataset.joints(index_pose(j)).rightEye';
+                        dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).rightEye';
                         preMatrixRightEye(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
                 end            
                 if (chains.leftEye == 0)
                     for j = 1:length(index_pose)
                         dh=rob.structure.DH.leftEye;
-                        dh(:,4)=dh(:,4)+ dataset.joints(index_pose(j)).leftEye';
+                        dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).leftEye';
                         preMatrixLeftEye(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
                 end
                   
                 %% assign corresponding tf matrices to each pose
                 for j = length(dataset.pose):-1:1
-                    matrices.rightMarkers = rob.structure.rightMarkers(:,:,projData(j,2));
-                    matrices.leftMarkers = rob.structure.leftMarkers(:,:,projData(j,2));
+                    matrices.rightMarkers = [rotVector2rotMatrix(rob.structure.DH.rightMarkers(projData(j,2), 4:6)), ...
+                        rob.structure.DH.rightMarkers(projData(j,2), 1:3)'; 0 0 0 1]; %rob.structure.rightMarkers(:,:,projData(j,2));
+                    matrices.leftMarkers = [rotVector2rotMatrix(rob.structure.DH.leftMarkers(projData(j,2), 4:6)), ...
+                        rob.structure.DH.leftMarkers(projData(j,2), 1:3)'; 0 0 0 1]; % rob.structure.leftMarkers(:,:,projData(j,2));
                     matrices.torso = eye(4);
                     if(chains.leftArm == 0)
                         matrices.leftArm = preMatrixLeft(:,:,dataset.pose(j));
@@ -224,14 +226,15 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
                 dataset2.id = index;
                 if(k == 1)
                     dataset2.name = ['Dist ', num2str(index)];
-                    datasetsTouch{1} = dataset2;
+                    datasets.selftouch{1} = dataset2;
                 else
                     dataset2.name = ['Plane ', num2str(index)];
-                    datasetsPlanes{end+1} = dataset2;
+                    datasets.planes{end+1} = dataset2;
                 end
-                datasetsProjs{index} = dataset;                   
+                datasets.projection{index} = dataset;                   
             end
         end        
     end
-    datasets = {datasetsTouch, datasetsPlanes, datasetsLeica, datasetsProjs};
+    %datasets = {datasets.selftouch, datasets.planes, datasets.external, datasets.projection};
+    
 end

@@ -13,9 +13,11 @@ function plotErrorsBoxplots(folders,varargin)
 %                                      - Default: 'errors'
 %                       - 'location' - string, location of the legend
 %                                 - Default: 'northwest'
+%                       - 'points' - 1/0 to show points in boxes
+%                               - Default: 0
 
     % Argument parser
-    close all;
+%     close all;
     p=inputParser;
     addRequired(p,'folders');
     addParameter(p,'pert',0);
@@ -23,6 +25,7 @@ function plotErrorsBoxplots(folders,varargin)
     addParameter(p,'units','mm', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'errorsType','errors');
     addParameter(p,'location','northwest');
+    addParameter(p, 'points', 0);
     parse(p,folders,varargin{:});
     
     % get values from parser
@@ -31,9 +34,10 @@ function plotErrorsBoxplots(folders,varargin)
     symLog=p.Results.log;
     errorsType=p.Results.errorsType;
     units=p.Results.units;
+    showPoints = p.Results.points;
     figure();
     ax=axes();
-    data=[];
+    data = [];
     names={};
     colors=[];
     totalNum=0;
@@ -42,6 +46,14 @@ function plotErrorsBoxplots(folders,varargin)
     usedNames={};
     boxOrder=[];
     linePositions=[];
+    maxReps = 0;
+    
+    for folder=folders
+        info = load(['Results/',folder{1},'/info.mat']);
+        if(info.optim.repetitions > maxReps) 
+            maxReps = info.optim.repetitions;
+        end
+    end
     % iterate over all folders
     for folder=folders
         folder=folder{1};
@@ -79,6 +91,11 @@ function plotErrorsBoxplots(folders,varargin)
             end
         end
         
+        for i=1:4
+           distsTs{i,:}(end+1:maxReps) = nan; 
+           distsTr{i,:}(end+1:maxReps) = nan; 
+        end
+        
         % Prepare names and colors
         optTypes={'Selftouch Test', 'Planes Test', 'External Test', 'Projection Test'};
         optTypes2={'Selftouch Train', 'Planes Train', 'External Train', 'Projection Train'};
@@ -90,7 +107,7 @@ function plotErrorsBoxplots(folders,varargin)
             % if values for given calibration type
             if any(~isnan(distsTs{i,:}))
                % concatenate data
-               data=[data;distsTs{i,:}'];
+               data=[data,distsTs{i,:}'];
                % concatenate names
                names(end+1:end+size(distsTs{i,:},2),1)={[optTypes{i},folder]};
                % add colors
@@ -105,7 +122,7 @@ function plotErrorsBoxplots(folders,varargin)
                end
             end
             if any(~isnan(distsTr{i,:}))
-               data=[data;distsTr{i,:}'];
+               data=[data,distsTr{i,:}'];
                names(end+1:end+size(distsTr{i,:},2),1)={[optTypes2{i},folder]};
                colors=[colors;colorTypes2(i,:)];
                curNum=curNum+1;
@@ -124,27 +141,39 @@ function plotErrorsBoxplots(folders,varargin)
         linePositions=[linePositions,totalNum+curNum+0.5];
         totalNum=totalNum+curNum;     
     end
-    boxplot(ax,data,names,'position',1:size(unique(names),1),'width',0.9,'colors',colors)
-    % find all object
-    h = findobj(gca,'Tag','Box');
+    
+%     figure()
+
+% data2 = nan(10,4);
+% data2(1,1) = data(1);
+% data2(1,2) = data(2);
+% data2(:,3) = data(3:12);
+% data2(:,4) = data(13:end);
+data2 = data
+% data2 = reshape(data,10,4);
+names2 = [1, 2, zeros(1,10)+3, zeros(1,10)+4];
+     bplot(data2,'width',0.9, 'nolegend')
+%       boxplot(ax,data,names,'position',1:size(unique(names),1),'width',0.9,'colors',colors)
+    hold on
+    h = findobj(gca, 'Type', 'Patch');
     % get them in reverse order
     h=h(end:-1:1,:);
     % add colors
     for j=1:length(h)
-       patch(get(h(j),'XData'),get(h(j),'YData'),colors(j,:), 'FaceAlpha',.5);
+        h(j).FaceColor = colors(j,:);
+        h(j).FaceAlpha = 0.5;
+    end
+    if showPoints
+        scatter(names2, data,'filled','MarkerFaceAlpha',0.6','jitter','on','jitterAmount',0.15);
     end
     if symLog
-        symlog('y',log10(const)-2) 
+        bisymlog('y',log10(const)-2, 0) 
     end
     
     set(gca, 'Xtick', positions, 'Xticklabels', folders,'FontSize',15)
     xtickangle(ax,90)
     ax.XAxis.TickLabelInterpreter = 'latex';
     ax.YAxis.TickLabelInterpreter = 'latex';
-    % find all children
-    c = get(gca, 'Children');
-    % get them in reverse order and cut the last one
-    c=c(end-1:-1:1,:);
     xlabel('Dataset');
     ylabel(['Error [',units,']']);
     title('Comparison of RMS errors')
@@ -154,7 +183,7 @@ function plotErrorsBoxplots(folders,varargin)
     for i=1:length(folders)-1
         line([linePositions(i) linePositions(i)],yl,'Color','black','LineStyle','--')
     end
-    % plot legent
-    legend(c(boxOrder),usedNames,'Location',location);
+    % plot legend
+    legend(h(boxOrder),usedNames,'Location',location);
 end
 

@@ -23,12 +23,6 @@ function [options, chains, approach, jointTypes, optim, pert]=exampleConfig(appr
     chains.leftEye=0;
     chains.rightEye=0;
     
-    if ~isempty(inputChains{1})
-        for i = 1:length(inputChains)
-            chains.(inputChains{i}) = 1;
-        end
-    end
-    
     %% Calibration approaches
     % set which approach will be used
     % value is used for scaling
@@ -37,11 +31,7 @@ function [options, chains, approach, jointTypes, optim, pert]=exampleConfig(appr
     approach.selftouch=0;
     approach.planes=0;
     approach.external=0;
-    if ~isempty(approaches{1})
-        for i = 1:length(approaches)
-            approach.(approaches{i}) = 1;
-        end
-    end
+
     %% Calibration joint types
     % set which parts of the body will be calibrated
     % superior over chains
@@ -55,12 +45,6 @@ function [options, chains, approach, jointTypes, optim, pert]=exampleConfig(appr
     jointTypes.triangle=0;
     jointTypes.mount=0;
     jointTypes.finger=0;
-    
-    if ~isempty(jointType{1})
-        for i = 1:length(jointType)
-            jointTypes.(jointType{i}) = 1;
-        end
-    end
     
     %% Calibration settings
     optim.bounds=0; % set to use bounds

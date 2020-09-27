@@ -5,15 +5,22 @@ function plotJacobian(robot, whitelist, jacobians, titles)
 %      - jacobians - cell array of jacobians
 %      - titles - subplot titles
     fnames=fieldnames(robot.structure.DH);
-    params={'a','d','$\alpha$','$\theta$'};
+    for name = 1:size(fnames,1)
+        whitelist.(fnames{name}) = double(whitelist.(fnames{name}));
+    end
+    [whitelist, ~] = padVectors(whitelist, 1);
+    for name = 1:size(fnames,1)
+        whitelist.(fnames{name}) = logical(whitelist.(fnames{name}));
+    end
+    params={'x/a','y/d','z','$\alpha$','$beta$','$\theta$'};
     %% xt contains the parameters names
     xt = {};
     for name=1:length(fnames)
         if any(any(whitelist.(fnames{name})))
            joints=robot.findJointByGroup(fnames{name});
            idx=find(whitelist.(fnames{name})')-1;
-           col=mod(idx,4)+1;
-           row=floor(idx/4)+1;
+           col=mod(idx,6)+1;
+           row=floor(idx/6)+1;
            for i=1:size(whitelist.(fnames{name}),1)
               for j=col(row==i)'
                   xt{end+1}=[joints{i}.name,' ',params{j}];
@@ -54,9 +61,10 @@ function plotJacobian(robot, whitelist, jacobians, titles)
         maxs = max(max(abs(jacobians{j})));
         maxs(maxs == 0) = 1;
         jac = jacobians{j}./maxs;
-        boxplot(jac)
-        set(gca,'XTickLabel',xt, 'FontSize',16)
+        bplot(jac)
+        set(gca, 'Xtick', 1:size(jac,2), 'XTickLabel',xt, 'FontSize',16)
         ylim([-1,1])
+        xlim([0.5, size(jac,2)+0.5])
         bp = gca;
         xtickangle(90)
         bp.XAxis.TickLabelInterpreter = 'latex';

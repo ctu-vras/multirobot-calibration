@@ -1,4 +1,4 @@
-function structure=getIndexes(structure, joint, skin)
+function structure=getIndexes(structure, joint)
 % GETINDEXES computes indexes and parents needed to find transformations
 %   INPUT - structure - structure where new fields will be added/updated
 %         - joint - Joint object for which we want find the informations
@@ -13,11 +13,7 @@ function structure=getIndexes(structure, joint, skin)
            id=id+1;
            joint=joint.parent;
         end
-        if skin && contains(gr,'Skin')
-            structure.DHindexes.(name).(gr) = num2cell(idx(end:-1:1));
-        else
-            structure.DHindexes.(name).(gr) = idx(end:-1:1);
-        end
+        structure.DHindexes.(name).(gr) = idx(end:-1:1);
         structure.parents.(gr) = joint; % joint.group differs from gr
         gr = joint.group;
         idx = joint.DHindex; 

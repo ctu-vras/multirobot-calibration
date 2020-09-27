@@ -1,4 +1,4 @@
-function [ dist ] = getPlaneDist( dh_pars, robot, datasets, planePars)
+function [ dist ] = getPlaneDist( dh_pars, robot, datasets, planePars, type)
 %GETPLANEDIST returns errors from selftouch configurations
 %   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is matrix.
@@ -13,7 +13,7 @@ function [ dist ] = getPlaneDist( dh_pars, robot, datasets, planePars)
     for datasetId=length(datasets)
         dataset = datasets{datasetId};    
         % compute points in the base frame
-        robPoints = getPoints(dh_pars, dataset, H0, false);
+        robPoints = getPoints(dh_pars, dataset, H0, false, type);
         if isempty(planePars)
             % compute the plane
             plane = getPlane(robPoints);

@@ -1,4 +1,4 @@
-function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt, optim)
+function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt, chains, optim)
 % PREPAREDATA returns 'taxelStruct' with Nao dataset informations
 %   INPUT - robot - instance of @robot class
 %         - datasetName - string with name of the dataset
@@ -6,24 +6,43 @@ function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt, op
 %         - DH - structure with 'groups' as fields
 %   OUTPUT - taxelStruct - structure with fields for each taxel
 
-if strcmp(alt,'Alt')
-    rtMat.([chain1,'Skin','Mats'])=robot.structure.matrices.([chain1,'Skin']);
-    rtMat.([chain2,'Skin','Mats'])=robot.structure.matrices.([chain2,'Skin']);
-    rtFields = fieldnames(rtMat);
+rtMat=[];
+rtFields = [];
+if contains(chain1, 'Finger') || contains(chain2, 'Finger')
+   finger = 1;
 else
-    rtMat=[];
-    rtFields = [];
+    finger=0;
 end
-
 % Load taxels in local frames
-firstLocal = importdata(strcat('Dataset/Points/',chain1,alt,'.txt'),' ',4);
-chain1Original=firstLocal.data;
-firstLocal = importdata(strcat('Dataset/Points/',chain2,alt,'.txt'),' ',4);
-chain2Original=firstLocal.data;
+if ~ismember(chain1, {'leftFinger', 'rightFinger'})
+    if ~alt
+        chain1Original = zeros(384, 6);
+    else
+        firstLocal = importdata(strcat('Dataset/Points/',chain1,'.txt'),' ',4);
+        chain1Original=firstLocal.data;
+    end
+else
+    chain1Original = zeros(384,6);
+end
+if ~ismember(chain2, {'leftFinger', 'rightFinger'})
+    if ~alt
+        chain2Original = zeros(384, 6);
+    else
+        firstLocal = importdata(strcat('Dataset/Points/',chain2,'.txt'),' ',4);
+        chain2Original=firstLocal.data;
+    end
+else
+    chain2Original = zeros(384, 6);
+end
 
 % Load given dataset
 datasetLocal=load(strcat('Dataset/Datasets/',datasetName,'.mat'));
-if iscell(datasetLocal.(chain1))
+if isfield(datasetLocal, chain1)
+    iterateVar = chain1;
+else
+    iterateVar = chain2;
+end
+if iscell(datasetLocal.(iterateVar))
     n = datasetLocal;
     fnames = fieldnames(n);
     for field=reshape(fieldnames(n.(fnames{1}){1}), 1, [])
@@ -31,28 +50,65 @@ if iscell(datasetLocal.(chain1))
        s.(field) = [];
     end
     datasetLocal.(fnames{1}) = repmat(s, size(n.(fnames{1}), 1), 1);
-    datasetLocal.(fnames{2}) = repmat(s, size(n.(fnames{2}), 1), 1);
-
+    if ~finger
+        datasetLocal.(fnames{2}) = repmat(s, size(n.(fnames{2}), 1), 1);
+    end
+    
     for val=1:size(n.(fnames{1}), 1)
         datasetLocal.(fnames{1})(val) = n.(fnames{1}){val};
-        datasetLocal.(fnames{2})(val) = n.(fnames{2}){val};
+        if ~finger
+            datasetLocal.(fnames{2})(val) = n.(fnames{2}){val};
+        end
     end 
 end
 
 % Split string with word 'Arm' to get just side ...right for
 % rightArm, '' for Torso
-name1=strsplit(chain1,'Arm');
-name1=name1{1};
-name2=strsplit(chain2,'Arm');
-name2=name2{1};
+% if ~finger
+%     name1=strsplit(chain1,'Arm');
+%     name1=name1{1};
+%     name2=strsplit(chain2,'Arm');
+%     name2=name2{1};
+% else
+%     name1=strsplit(chain1,'Finger');
+%     name1=name1{1};
+%     name2=strsplit(chain2,'Finger');
+%     name2=name2{1}; 
+% end
+
+if contains(chain1, 'Arm')
+    name1=strsplit(chain1,'Arm');
+    name1=name1{1};
+elseif contains(chain1, 'Finger')
+    name1=strsplit(chain1,'Finger');
+    name1=name1{1};
+else
+    name1=chain1;
+end
+
+if contains(chain2, 'Arm')
+    name2=strsplit(chain2,'Arm');
+    name2=name2{1};
+elseif contains(chain2, 'Finger')
+    name2=strsplit(chain2,'Finger');
+    name2=name2{1};
+else
+    name2=chain2;
+end
 
 % Prepare instances of each frame to speed-up the computation
 chain1Joints=[];
 chain2Joints=[];
 
-for triangleId=1:32
-    %Find frame from string, e.g. rightTriangle15
-    joint=robot.findJoint([name1,'Triangle',int2str(triangleId-1)]);
+for taxelId=0:383
+    tri_num = fix(taxelId/12);
+    taxel_num = mod(taxelId, 12);
+    %Find frame from string, e.g. rightTaxel5
+    if ~ismember(chain1, {'leftFinger', 'rightFinger'})
+        joint=robot.findJoint([name1,'Taxel',int2str(tri_num),'_',int2str(taxel_num)]);
+    else
+        joint=robot.findJoint([name1,'Finger']);
+    end
     %Save it joint was found
     if ~isempty(joint)
         joint=joint{1};
@@ -63,8 +119,13 @@ for triangleId=1:32
     else
         chain1Joints=[chain1Joints;nan];
     end
-    %The same for second chain
-    joint=robot.findJoint([name2,'Triangle',int2str(triangleId-1)]);
+    
+    if ~ismember(chain2, {'leftFinger', 'rightFinger'})
+        %The same for second chain
+        joint=robot.findJoint([name2,'Taxel',int2str(tri_num),'_',int2str(taxel_num)]);
+    else
+        joint=robot.findJoint([name2,'Finger']);
+    end
     if ~isempty(joint)
         joint=joint{1};
         chain2Joints=[chain2Joints;joint];
@@ -73,37 +134,74 @@ for triangleId=1:32
     end
 end
 
-% variables init
-dataset.(chain1).newTaxels={}; % 1xN cell array of arrays with points (1x3 points, pointId)
-dataset.(chain2).newTaxels={}; 
-dataset.(chain1).cops={}; % 1xN cell array of arrays with cops (1x3 points)
-dataset.(chain2).cops={};
-dataset.(chain1).cop={}; % 1xN cell array of points with selected cop (1x3 point)
-dataset.(chain2).cop={};
-dataset.angles=[]; % Nx1 structure of joint angles (field names are names of the groups)
-dataset.mins=[]; % Nx1 array of double distances between selected cops
-dataset.difs=[]; % Nx3 array of double distances in each coordinate
-dataset.(chain1).newTaxelsNA={}; %1xN cell array of non-activated points (1x3 point)
-dataset.(chain2).newTaxelsNA={};
+% if finger
+%     %Add finger as second joint
+%     joint=robot.findJoint([name2,'Finger']);
+%     if ~isempty(joint)
+%         joint=joint{1};
+%         chain2Joints=[joint];
+%     else
+%         chain2Joints=[nan];
+%     end
+% end
 
+% variables init
+
+dataset.(chain1).newTaxels=cell(1, size(datasetLocal.(iterateVar),1)); % 1xN cell array of arrays with points (1x3 points, pointId)
+dataset.(chain2).newTaxels=cell(1, size(datasetLocal.(iterateVar),1)); 
+dataset.(chain1).cops=cell(1, size(datasetLocal.(iterateVar),1)); % 1xN cell array of arrays with cops (1x3 points)
+dataset.(chain2).cops=cell(1, size(datasetLocal.(iterateVar),1));
+dataset.(chain1).cop=cell(1, size(datasetLocal.(iterateVar),1)); % 1xN cell array of points with selected cop (1x3 point)
+dataset.(chain2).cop=cell(1, size(datasetLocal.(iterateVar),1));
+dataset.angles=[]; % Nx1 structure of joint angles (field names are names of the groups)
+dataset.mins=zeros(size(datasetLocal.(iterateVar),1), 1); % Nx1 array of double distances between selected cops
+dataset.difs=zeros(size(datasetLocal.(iterateVar),1), 3); % Nx3 array of double distances in each coordinate
+dataset.(chain1).newTaxelsNA=cell(1, size(datasetLocal.(iterateVar),1)); %1xN cell array of non-activated points (1x3 point)
+dataset.(chain2).newTaxelsNA=cell(1, size(datasetLocal.(iterateVar),1));
 fprintf('%s\n',datasetName);
 
-for i=1:size(datasetLocal.(chain1),1)
+if contains(chain1, 'Finger')
+    chain1_ = [name1, 'Arm'];
+else
+    chain1_ = chain1;
+end
+
+if contains(chain2, 'Finger')
+    chain2_ = [name2, 'Arm'];
+else
+    chain2_ = chain2;
+end
+
+for i=1:size(datasetLocal.(iterateVar),1)
     % Just print of process
     if rem(i,100)==0
-        fprintf('Completed %d out of %d\n',i,size(datasetLocal.(chain1),1))
+        fprintf('Completed %d out of %d\n',i,size(datasetLocal.(iterateVar),1))
     end
     % Assing right angles to the groups
-    ang=datasetLocal.(chain1)(i).angles;
+    ang=datasetLocal.(iterateVar)(i).angles;
     angles.rightArm=[0,ang.RShoulderPitch, ang.RShoulderRoll, ang.RElbowYaw,...
         ang.RElbowRoll, ang.RWristYaw];
     angles.leftArm=[0,ang.LShoulderPitch, ang.LShoulderRoll, ang.LElbowYaw,...
         ang.LElbowRoll, ang.LWristYaw];
     angles.head=[0,ang.HeadYaw, ang.HeadPitch];
-    angles.rightArmSkin=[0,0,0];
-    angles.leftArmSkin=[0,0,0];
-    angles.torsoSkin=[0,0,0];
-    angles.headSkin=[0,0,0];
+%     angles.leftIndex = [0, ang.LFinger11, ang.LFinger12, ang.LFinger13];
+%     angles.rightIndex = [0, ang.RFinger11, ang.RFinger12, ang.RFinger13];
+%     angles.leftMiddle = [0, ang.LFinger21, ang.LFinger12, ang.LFinger23];
+%     angles.rightMiddle = [0, ang.RFinger21, ang.RFinger22, ang.RFinger23];
+%     angles.leftThumb = [0, ang.LThumb1, ang.LThumb2];
+%     angles.rightThumb = [0, ang.RThumb1, ang.Rthumb2];
+    angles.leftIndex = zeros(1,4);
+    angles.rightIndex = zeros(1,4);
+    angles.leftMiddle = zeros(1,4);
+    angles.rightMiddle = zeros(1,4);
+    angles.leftThumb = zeros(1,3);
+    angles.rightThumb = zeros(1,3);
+    angles.leftFinger = [0];
+    angles.rightFinger = [0];
+    angles.rightArmSkin=[0,0,0,0];
+    angles.leftArmSkin=[0,0,0,0];
+    angles.torsoSkin=[0,0,0,0];
+    angles.headSkin=[0,0,0,0];
     angles.torso=[0];
     dataset.angles=[dataset.angles;angles];
     
@@ -111,72 +209,102 @@ for i=1:size(datasetLocal.(chain1),1)
     chain1Points=zeros(384,3);
     chain2Points=zeros(384,3);
     s=[];
-    for triangleId=1:32
+    
+
+    dh=DH.(chain1_);
+    dh(:,6)=dh(:,6)+angles.(chain1_)';
+    rtMat.(chain1_)=dhpars2tfmat(dh);
+    
+    dh=DH.(chain2_);
+    dh(:,6)=dh(:,6)+angles.(chain2_)';
+    rtMat.(chain2_)=dhpars2tfmat(dh);
+    
+    rtFields = fieldnames(rtMat(1));
+
+    for taxelId=0:383
         % Get joint
-        joint=chain1Joints(triangleId);
+        joint=chain1Joints(taxelId+1);
         % If parent is not empty == not 'nan'
         if ~isempty(joint.parent)
             % compute RT matrix
-            s=getIndexes(s,joint,isfield(robot.structure,'matrices'));
-            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields);
+            s=getIndexes(s,joint);
+            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
             % transform all points for given frame
-            points=mat*[chain1Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
+            points=mat*[chain1Original(taxelId+1, 1:3),1]';%.*1000
             % assign 1:3 component of the vectors
-            chain1Points((triangleId-1)*12+1:triangleId*12,1:3)=points(1:3,:)';
+            chain1Points(taxelId+1, :)=points(1:3,:)';
         end
-        joint=chain2Joints(triangleId);
+        %if ~finger
+        joint=chain2Joints(taxelId+1);
         if ~isempty(joint.parent)
-            s=getIndexes(s,joint,isfield(robot.structure,'matrices'));
-            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields);
-            points=mat*[chain2Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
-            chain2Points((triangleId-1)*12+1:triangleId*12,1:3)=points(1:3,:)';
+            s=getIndexes(s,joint);
+            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
+            points=mat*[chain2Original(taxelId+1, 1:3),1]';%.*1000
+            chain2Points(taxelId+1, :)=points(1:3,:)';
         end
+        %end
     end
-    
+%     if finger
+%         joint=chain2Joints(1);
+%         if ~isempty(joint.parent)
+%             s=getIndexes(s,joint);
+%             mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
+%             points=mat*[0,0,0,1]';%.*1000
+%             chain2Points=points(1:3,:)';
+%         end
+%     end
     % load taxel indexes (4th components of the vector from activated
     % points in the dataset), and add 1 to all of them (to get matlab
     % indexing)
-    if isfield(datasetLocal.(chain1), 'activatedUn')
-        taxelsIds=datasetLocal.(chain1)(i).activatedUn(:,4)+1;
+    if ~ismember(chain1, {'leftFinger', 'rightFinger'})
+        if isfield(datasetLocal.(chain1), 'activatedUn') %Old dataset structure
+            taxelsIds=datasetLocal.(chain1)(i).activatedUn(:,4)+1;
+        else
+            taxelsIds=datasetLocal.(chain1)(i).activatedTaxels' + 1;%New dataset structure
+        end
     else
-        taxelsIds=datasetLocal.(chain1)(i).activatedTaxels' + 1;
+       taxelsIds = 1; 
     end
     % assign ids to right points
     newTaxels=[chain1Points(taxelsIds',:),taxelsIds];
     % delete activated taxels from chain1Points
     chain1Points(taxelsIds',:)=[];
     % copy activated taxels transformed to the base frame into dataset
-    dataset.(chain1).newTaxels{end+1}=newTaxels;
+    dataset.(chain1).newTaxels{i}=newTaxels;
 
     %the same for second chain
-    if isfield(datasetLocal.(chain2), 'activatedUn')
-        taxelsIds=datasetLocal.(chain2)(i).activatedUn(:,4)+1;
+    if ~ismember(chain2, {'leftFinger', 'rightFinger'})
+        if isfield(datasetLocal.(chain2), 'activatedUn')
+            taxelsIds=datasetLocal.(chain2)(i).activatedUn(:,4)+1;
+        else
+            taxelsIds=datasetLocal.(chain2)(i).activatedTaxels' + 1;
+        end
     else
-        taxelsIds=datasetLocal.(chain2)(i).activatedTaxels' + 1;
+        taxelsIds = 1;
     end
     newTaxels=[chain2Points(taxelsIds',:),taxelsIds];
     chain2Points(taxelsIds',:)=[];
-    dataset.(chain2).newTaxels{end+1}=newTaxels;
+    dataset.(chain2).newTaxels{i}=newTaxels;
     
     % calculate cops and assigned them to dataset
-    cops1=findCop(dataset.(chain1).newTaxels{end},0.01); %10
-    cops2=findCop(dataset.(chain2).newTaxels{end},0.01); %10
-    dataset.(chain1).cops{end+1}=cops1;
-    dataset.(chain2).cops{end+1}=cops2;
+    cops1=findCop(dataset.(chain1).newTaxels{i},0.01); %10
+    cops2=findCop(dataset.(chain2).newTaxels{i},0.01); %10
+    dataset.(chain1).cops{i}=cops1;
+    dataset.(chain2).cops{i}=cops2;
     % find closest cops on the two chains
     [cop1,cop2, difs, actMin]=findClosestCop(cops1,cops2);
-    dataset.(chain1).cop{end+1}=cop1;
-    dataset.(chain2).cop{end+1}=cop2;
-    dataset.mins=[dataset.mins;actMin];
-    dataset.difs=[dataset.difs;difs];
+    dataset.(chain1).cop{i}=cop1;
+    dataset.(chain2).cop{i}=cop2;
+    dataset.mins(i)=actMin;
+    dataset.difs(i,:)=difs;
     
     % Delete points (0,0,0) - heat taxels and unused triangles
     chain1Points(all(~chain1Points,2),:)=[];
     chain2Points(all(~chain2Points,2),:)=[];
     
     % assing non-activated points
-    dataset.(chain1).newTaxelsNA{end+1}=chain1Points;
-    dataset.(chain2).newTaxelsNA{end+1}=chain2Points;
+    dataset.(chain1).newTaxelsNA{i}=chain1Points;
+    dataset.(chain2).newTaxelsNA{i}=chain2Points;
 
 end
 

@@ -5,12 +5,12 @@ function tfmat = dhpars2tfmat(dhpars)
 %OUTPUT - tfmat - transformation matrix from end effector to the first
 %joint of group.
     s = size(dhpars,1);
-    % reshape dh table to third dimension 
-    dhpars = reshape(dhpars', 1,4,s);
+    % reshape dh table to third dimension
+    dhpars = reshape(dhpars', 1,6,s);
     as = dhpars(1,1,:);
     ds = dhpars(1,2,:);
-    als = dhpars(1,3,:);
-    ths = dhpars(1,4,:);
+    als = dhpars(1,4,:);
+    ths = dhpars(1,6,:);
     cos_als = cos(als);
     sin_als = sin(als);
     cos_ths = cos(ths);

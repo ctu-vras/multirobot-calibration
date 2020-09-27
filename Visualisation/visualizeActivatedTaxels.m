@@ -1,9 +1,22 @@
-function visualizeActivatedTaxels(datasetsNames)
+function visualizeActivatedTaxels(varargin)
     % VISUALIZEACTIVATEDTAXELS shows activated taxels on all chains and 
     % number of actiated taxels/triangles for given datasets.
     %   INPUT - datasetNames - 1xN cellArray of strings
     %                        - e.g. {'rightArm_torso'}
     close all;
+    varargin=varargin{1};
+    if length(varargin)==1
+        alt='';
+        datasetsNames=varargin;
+    else
+        if strfind(varargin{end},'Alt')
+            alt=varargin{end};
+            datasetsNames=varargin{1:end-1};
+        else
+            alt='';
+            datasetsNames=varargin;
+        end    
+    end
     for name=1:length(datasetsNames)
         % get chain names from dataset name
         spl=strsplit(datasetsNames{name},'_');

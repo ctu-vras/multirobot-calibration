@@ -21,8 +21,8 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
         chain = varargin{2};
     end
     nmb_of_files = length(source_files);
-    datasetsTouch = cell(1,nmb_of_files);  %datasets cell array MUST BE ROW VECTOR
-    datasetsProjs = {};
+    datasets.selftouch = cell(1,nmb_of_files);  %datasets cell array MUST BE ROW VECTOR
+    datasets.projection = {};
     DEG2RAD = pi/180;
     % all possible robot fingers
     fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'}; 
@@ -46,38 +46,36 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
         end
         data2(nmbPoses+1:end,:) = [];
         eyeAngle = data2(:,29)/2;
-        dataset.joints = struct('torso', num2cell(data2(:,4:5)*DEG2RAD,2), 'leftArm',num2cell(data2(:, [6:13])*DEG2RAD,2),...
+        dataset.joints = struct('torso', num2cell([zeros(size(data2,1),1),data2(:,4:5)*DEG2RAD],2), 'leftArm',num2cell(data2(:, [6:13])*DEG2RAD,2),...
             'rightArm',num2cell(data2(:, [6,17:23])*DEG2RAD,2), 'head',num2cell(data2(:, [6,24:26])*DEG2RAD,2),...
             'leftEye',num2cell([data2(:, 27),data2(:,28)+eyeAngle]*DEG2RAD,2), 'rightEye',num2cell([data2(:, 27),data2(:,28)-eyeAngle]*DEG2RAD,2));
         
         % precompute rt matrices
         for i = size(data2,1):-1:1
-            dhtorso=robot.structure.DH.torso;
-            dhtorso(:,4)=dhtorso(:,4)+dataset.joints(i).torso';
-            mat.torso = robot.structure.H0 * dhpars2tfmat(dhtorso);
+            mat.torso = getTFtoFrame(robot.structure.DH, robot.joints{4},  dataset.joints(i), robot.structure.H0);
             if(chains.leftArm == 0)
                 dhleft=robot.structure.DH.leftArm;
-                dhleft(:,4)=dhleft(:,4)+dataset.joints(i).leftArm';
+                dhleft(:,end)=dhleft(:,end)+dataset.joints(i).leftArm';
                 mat.leftArm = dhpars2tfmat(dhleft);
             end
             if(chains.rightArm == 0)
                 dhright=robot.structure.DH.rightArm;
-                dhright(:,4)=dhright(:,4)+dataset.joints(i).rightArm';
+                dhright(:,end)=dhright(:,end)+dataset.joints(i).rightArm';
                 mat.rightArm = dhpars2tfmat(dhright);
             end
             if(chains.leftEye == 0)
                 dhleft=robot.structure.DH.leftEye;
-                dhleft(:,4)=dhleft(:,4)+dataset.joints(i).leftEye';
+                dhleft(:,end)=dhleft(:,end)+dataset.joints(i).leftEye';
                 mat.leftEye = dhpars2tfmat(dhleft);
             end
             if(chains.rightEye == 0)
                 dhright=robot.structure.DH.rightEye;
-                dhright(:,4)=dhright(:,4)+dataset.joints(i).rightEye';
+                dhright(:,end)=dhright(:,end)+dataset.joints(i).rightEye';
                 mat.rightEye = dhpars2tfmat(dhright);
             end
             if(chains.head == 0)
                 dhhead=robot.structure.DH.head;
-                dhhead(:,4)=dhhead(:,4)+dataset.joints(i).head';
+                dhhead(:,end)=dhhead(:,end)+dataset.joints(i).head';
                 mat.head = dhpars2tfmat(dhhead);
             end
             for finger=fingers
@@ -94,7 +92,7 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
         C(:) = {'leftHandFinger'}; % left end effector
         dataset.frame2 = C;
         dataset.refPoints = data2(:,1:3);    
-        datasetsTouch{k} = dataset; 
+        datasets.selftouch{k} = dataset; 
         
         if(contains(chain, 'Eye'))
             % projection dataset is doubled touch dataset
@@ -160,9 +158,9 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
                 projs = projections(points2Cam, robot.structure.eyes, dataset2.cameras);
                 dataset2.refPoints = [nan(2,length(points2Cam));projs]';
             end
-            datasetsProjs{k} = dataset2;  
+            datasets.projection{k} = dataset2;  
         end           
     end
-    datasets = {datasetsTouch,{},{}, datasetsProjs};
+%     datasets = {datasets.selftouch,{},{}, datasets.projection};
 end
 

@@ -1,7 +1,9 @@
-function [options, chains, approach, jointTypes, optim, pert] = loadConfig(funcname,varargin)
+function [options, chains, approach, jointTypes, optim, pert] = loadConfig(funcname, approaches, inputChains, jointType)
 %LOADCONFIG Loading Config file function
 %INPUT - funcname - Config function name
-%       - varargin - additional arguments for the config file
+%       - inputChains - chains to calibrate
+%       - approaches - calibration approaches
+%       - jointType -joint types to calibrate
 %OUTPUT - options - lsqnonlin solver options
 %       - chains - chains to calibrate
 %       - approach - calibration approaches
@@ -11,12 +13,38 @@ function [options, chains, approach, jointTypes, optim, pert] = loadConfig(funcn
 
     func=str2func(funcname);
     if nargin>1
-        [options, chains, approach, jointTypes, userOptim, pert]=func((varargin{:}));
+        [options, chains, approach, jointTypes, userOptim, pert]=func(approaches, inputChains, jointType);
     else
         [options, chains, approach, jointTypes, userOptim, pert]=func();
     end
     
-    assert(sum(struct2array(chains)) && sum(struct2array(jointTypes)), 'Nothing to calibrate chains or jointTypes do not contain fields with non-zero value')
+    if ~isempty(inputChains{1})
+        for i = 1:length(inputChains)
+            if (chains.(inputChains{i}) == 0)
+                chains.(inputChains{i}) = 1;
+            end
+        end
+    end
+    
+    if ~isempty(approaches{1})
+        for i = 1:length(approaches)
+            if (approach.(approaches{i}) == 0)
+                approach.(approaches{i}) = 1;
+            end
+        end
+    end
+    
+    if ~isempty(jointType{1})
+        for i = 1:length(jointType)
+            if (jointTypes.(jointType{i}) == 0)
+                jointTypes.(jointType{i}) = 1;
+            end
+        end
+    end
+    
+    chains_ = struct2cell(chains);
+    jointTypes_ = struct2cell(jointTypes);
+    assert(sum([chains_{:}]) && sum([jointTypes_{:}]), 'Nothing to calibrate chains or jointTypes do not contain fields with non-zero value')
     assert(all(ismember(fieldnames(approach), {'selftouch', 'planes', 'external', 'projection'})), 'Invalid approach used');
     assert(all(cellfun(@(x) isprop(types, x) | strcmp(x,'onlyOffsets'), fieldnames(jointTypes))), 'Invalid jointTypes, use only types from class types and/or ''onlyOffsets'' option');
     

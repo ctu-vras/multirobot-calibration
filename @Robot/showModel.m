@@ -1,4 +1,4 @@
-function showModel(r, angles, varargin)
+function fig = showModel(r, varargin)
     % SHOWMODEL shows virtual model of the robot based on input joint
     %           angles.
     %   INPUT - angles - cellarray of 1xN arrays joint in order corresponding
@@ -22,29 +22,19 @@ function showModel(r, angles, varargin)
     
     % argument parser
     p=inputParser;
-    addRequired(p,'angles');
-    addParameter(p,'skin',0,@isnumeric);
+    if ~isfield(r.structure, 'defaultJoints')
+        r.structure.defaultJoints = {};
+    end
+    addOptional(p,'angles',  r.structure.defaultJoints);
+    addParameter(p,'specialGroup','');
     addParameter(p,'dual',0,@isnumeric);
     addParameter(p,'dualDH',[]);
     addParameter(p,'figName','');
-    parse(p,angles,varargin{:});
-    %Skin or markers
-    if p.Results.skin
-        if strcmp(r.name,'nao')
-            SKIN_ON=1;
-            MARKERS_ON=0;
-        else
-            MARKERS_ON=1;
-            SKIN_ON=0;
-        end
-    else
-        SKIN_ON=0;
-        MARKERS_ON=0;
-    end
-        
+    parse(p, varargin{:});
+    angles = p.Results.angles;
+            
     % Color settings
-    LINK_COLOR = [0.5 0.5 0.8]; % blueish
-    LINK_COLOR_2 = [0.8 0.5 0.5]; % redish
+    LINK_COLORS = [[0.5 0.5 0.8];[0.8 0.5 0.5]]; % blueish and redish
 
     %% INIT AND PLOT BODY PARTS
 
@@ -83,131 +73,83 @@ function showModel(r, angles, varargin)
     root = eye(4);
     DrawRefFrame(root,1,40,'hat','ROOT');
 
-    %% TORSO
-    robot.tor.name = 'torso';
-    robot.tor.H0 = r.structure.H0;
-    if isfield(r.structure.DH,'torso')
-        torso_dh=r.structure.DH.torso;
-    else
-       torso_dh=[0 0 0 0]; 
-    end
-    robot.tor.DH = torso_dh;
-    robot.tor.Th = zeros(1,size(torso_dh, 1)); % only first joint go here
-    robot.tor.LinkColor = LINK_COLOR;
-    robot.chain.rootToTorso = FwdKin(robot.tor,'noFrames',SKIN_ON); % we don't draw this chain common to all
-
-    %% Other joints
-    structure=r.structure.DH;
-    fnames=fieldnames(structure);
-    fnames(contains(fnames,'Skin') | strcmp(fnames, 'torso')) = [];
-    % iterate over minimum from all groups or legth of 'angles'
-    for i=1:min(length(fnames),size(angles,2))
-        name=fnames{i};
-        jointNames = {};
-        % find joint from given group to save their names
-        joints=findJointByGroup(r,name);
-        for joint=1:size(joints,2)
-            j=joints(joint);
-            if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)
-                jointNames{end+1} = j{1}.name;
-            end
-        end 
-        robot.(name).jointNames = jointNames;
-        robot.(name).name = name;
-        % Select the right H0 matrix
-        if((strcmp(name, 'leftEye') || strcmp(name, 'rightEye')) && isfield(structure,'head'))
-            robot.(name).H0 = robot.chain.head.RFFrame{end};
-        elseif strcmp(name, 'leftThumb') || strcmp(name, 'leftIndex') || strcmp(name, 'leftMiddle')
-            robot.(name).H0=robot.chain.leftArm.RFFrame{end};
-        elseif strcmp(name, 'rightThumb') || strcmp(name, 'rightIndex') || strcmp(name, 'rightMiddle')
-            robot.(name).H0=robot.chain.rightArm.RFFrame{end};
-        elseif strcmp(name, 'leftLeg') 
-            robot.(name).H0=[1,0,0,0;
-                             0,0,1,-68.1;
-                             0,-1,0,-119.9;
-                             0,0,0,1];
-        elseif strcmp(name, 'rightLeg')
-            robot.(name).H0=[1,0,0,0;
-                             0,0,1,68.1;
-                             0,-1,0,-119.9;
-                             0,0,0,1];
-        else
-            robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
-        end
-        robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
-        %structure.(name)(8,:)=[];
-        robot.(name).DH = structure.(name);
-        robot.(name).Th = reshape([angles{i}], 1, []);
-        robot.(name).LinkColor = LINK_COLOR;
-        robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
-    end
-    
-    %second robot
-    if p.Results.dual
+    %% Draw
+    for robots=1:1+p.Results.dual
         fnames=fieldnames(r.structure.DH);
-        fnames(contains(fnames,'Skin') | strcmp(fnames, 'torso')) = [];
-        % if no second robot DH is given, use the defaultDH
-        if size(p.Results.dualDH,1)==0
-            structure=r.structure.defaultDH;
-         %else use input DH
+        angles_ = angles;
+        if robots==1
+            DH_ = r.structure.DH;
         else
-            for name=1:size(fnames,1)
-               structure.(fnames{name})=p.Results.dualDH.(fnames{name}); 
+            str = struct();
+            if size(p.Results.dualDH,1)==0
+                DH_=r.structure.defaultDH;
+             %else use input DH
+            else
+                for name=1:size(fnames,1)
+                   DH_.(fnames{name})=p.Results.dualDH.(fnames{name}); 
+                end
             end
         end
+        fnames(contains(fnames,'Skin') |...
+              contains(fnames,'Middle')...
+            | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers'))= [];
+        
+        fnames = fnames(1:size(angles,2));
+        if ~isfield(DH_,'torso')
+            DH_.torso=[0 0 0 0]; 
+        end
+        angles_ = {zeros(1,size(DH_.torso, 1)),angles{:}};
+        [DH, types_] = padVectors(DH_);
+        if ~strcmp(fnames{1},'torso') && strcmp(fnames{end},'torso')
+            fnames={'torso', fnames{1:end-1}}';
+        elseif ~strcmp(fnames{1},'torso') && ~strcmp(fnames{end},'torso')
+            fnames={'torso', fnames{1:end}}';
+        end
+
+        
+        %contains(fnames, 'Finger') |
+        % iterate over minimum from all groups or legth of 'angles'
+        
+        if ~strcmp(p.Results.specialGroup, '')
+            fnames = {fnames{:}, p.Results.specialGroup{:}}';
+            for gr=p.Results.specialGroup
+                gr = gr{1};
+                joints = r.findJointByGroup(gr);
+                angles_ = {angles_{:}, zeros(1,size(joints, 2))};
+            end
             
-        for i=1:min(length(fnames),size(angles,2))
+           
+        end
+        str.specialGroup = p.Results.specialGroup;
+        for i=1:length(fnames)
             name=fnames{i};
+            DH.(name)(:,1:3) = DH.(name)(:,1:3).*1000;
+            if strcmp(name, 'torso')
+                str.refFrame = 1;
+            else
+                str.refFrame = 0;
+            end
             jointNames = {};
+            % find joint from given group to save their names
             joints=findJointByGroup(r,name);
             for joint=1:size(joints,2)
                 j=joints(joint);
-                if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)
-                    jointNames{end+1} = j{1}.name;
-                end
+                %if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)...
+                %        || strcmp(j{1}.type,types.finger || strcmp(j{1}.type,types.)
+                jointNames{end+1} = j{1}.name;
+                %end
             end 
-            robot.(name).jointNames = jointNames;
-            robot.(name).name = name;
-            if((strcmp(name, 'leftEye') || strcmp(name, 'rightEye')) && isfield(structure,'head'))
-                robot.(name).H0 = robot.chain.head.RFFrame{end};
-            elseif strcmp(name, 'leftThumb') || strcmp(name, 'leftIndex') || strcmp(name, 'leftMiddle')
-                robot.(name).H0=robot.chain.leftArm.RFFrame{end};
-            elseif strcmp(name, 'rightThumb') || strcmp(name, 'rightIndex') || strcmp(name, 'rightMiddle')
-                robot.(name).H0=robot.chain.rightArm.RFFrame{end};
-            elseif strcmp(name, 'leftLeg') 
-                robot.(name).H0=[1,0,0,0;
-                                 0,0,1,-68.1;
-                                 0,-1,0,-119.9;
-                                 0,0,0,1];
-            elseif strcmp(name, 'rightLeg')
-                robot.(name).H0=[1,0,0,0;
-                                 0,0,1,68.1;
-                                 0,-1,0,-119.9;
-                                 0,0,0,1];
-            else
-                robot.(name).H0 = robot.chain.rootToTorso.RFFrame{end};
-            end
-            robot.(name).H0(1:3,4) = robot.(name).H0(1:3,4)./1000; % converting the translational part from mm back to m
-            %structure.(name)(8,:)=[];
-            robot.(name).DH = structure.(name);
-            robot.(name).Th = reshape([angles{i}], 1, []);
-            robot.(name).LinkColor = LINK_COLOR_2;
-            robot.chain.(name) = FwdKin(robot.(name),SKIN_ON);
+            theta.(name) = reshape([angles_{i}], 1, []);
+            str.link = name;
+            str.DH = DH;
+            str.theta = theta;
+            str.jointNames = jointNames;
+            str.LinkColor = LINK_COLORS(robots,:);
+            str.refFrameSize = 10;
+            str.types=types_;
+            FwdKin(r, str);
         end
     end
-    %% MARKERS
-    if MARKERS_ON
-        markers = r.structure.markers;
-
-        r_ee = robot.chain.rightArm.RFFrame{end};
-        r_ee(1:3,4) = r_ee(1:3,4)./1000; % converting the translational part from mm back to m
-        r_markers = markers2sphere(markers, r_ee, true);
-
-        l_ee = robot.chain.leftArm.RFFrame{end};
-        l_ee(1:3,4) = l_ee(1:3,4)./1000; % converting the translational part from mm back to m
-        l_markers = markers2sphere(markers, l_ee, true);       
-    end
-
     view([90,0]);
     axis equal;
     

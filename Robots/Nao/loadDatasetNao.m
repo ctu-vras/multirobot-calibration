@@ -10,46 +10,80 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
     %                       cell array of cell arrays (1xN) of datasets
     varargin=varargin{1};
     if length(varargin)==1
-        alt='';
-        robot.structure=rmfield(robot.structure, 'matrices');
+        alt=0;
         datasetsNames=varargin;
     else
         if strfind(varargin{end},'Alt')
-            alt=varargin{end};
+            alt=1;
             datasetsNames=varargin{1:end-1};
         else
-            alt='';
+            alt=0;
             datasetsNames=varargin;
-            robot.structure=rmfield(robot.structure, 'matrices');
-        end
-            
+        end    
     end
-
     %datasetsNames=varargin{1};
     % Assign robot's DH into new variable
     DH=robot.structure.DH;
+    if size(DH.leftArm,2)==4
+       [DH, ~] = padVectors(DH); 
+    end
     % Add 'dummy' torso link to precompute RT matrices
-    DH.torso=[0,0,0,0];
+    DH.torso=[0,0,nan,0,0,nan];
     % Variables init
-    datasets=cell(1,length(datasetsNames));
+    datasets.selftouch=cell(1,length(datasetsNames));
     for name=1:length(datasetsNames)
         % Split dataset name to get names of the chains
         spl=strsplit(datasetsNames{name},'_');
         chain1=spl{1};
         chain2=spl{2};
-        % If chain1 is not being optimized, swap the chains
-        if ~chains.(chain1)
-           chain1=spl{2};
-           chain2=spl{1};
+        if contains(chain1, 'Finger') || contains(chain2, 'Finger')
+           finger=1;
+        else
+            finger=0;
         end
+        % If chain1 is not being optimized, swap the chains
+        %if ~finger
+        if ~chains.(chain1)
+          chain1=spl{2};
+          chain2=spl{1};
+        end
+        %end
         % Split string with word 'Arm' to get just side ...right for
         % rightArm, '' for Torso
-        name1=strsplit(chain1,'Arm');
-        name1=name1{1};
-        name2=strsplit(chain2,'Arm');
-        name2=name2{1};
+%         if ~finger 
+%             name1=strsplit(chain1,'Arm');
+%             name1=name1{1};
+%             name2=strsplit(chain2,'Arm');
+%             name2=name2{1};
+%         else
+%             name1=strsplit(chain1,'Finger');
+%             name1=name1{1};
+%             name2=strsplit(chain2,'Finger');
+%             name2=name2{1};
+%         end
+        
+        if contains(chain1, 'Arm')
+            name1=strsplit(chain1,'Arm');
+            name1=name1{1};
+        elseif contains(chain1, 'Finger')
+            name1=strsplit(chain1,'Finger');
+            name1=name1{1};
+        else
+            name1 = chain1;
+        end
+
+        if contains(chain2, 'Arm')
+            name2=strsplit(chain2,'Arm');
+            name2=name2{1};
+        elseif contains(chain2, 'Finger')
+            name2=strsplit(chain2,'Finger');
+            name2=name2{1};
+        else
+            name2=chain2;
+        end
+        
         % call prepareData to get current values
-        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH,alt,optim);
+        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH,alt,chains, optim);
         %Init dataset 
         dataset.point = []; % Points in local frame Mx3 (Mx6 if no refPoint)
         dataset.pose = []; % Mx1 int id of pose
@@ -57,7 +91,6 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
         dataset.frame2 = {}; % Mx1 instance of joint (chain2)
         dataset.joints = []; % Mx1 structure of joints angles (fields are 'group' names...rightArm, rightArmSkin...)
         dataset.cameras = [];  
-        dataset.pixels = [];
         dataset.refPoints = []; % Mx3(Mx6) aray of refPoints (precomputed points) 
         dataset.rtMat = []; % Mx1 strucure of precomputed RT matrices (fields are the same as in 'joints')
         % defined in prepareData()
@@ -67,12 +100,36 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
         dataset.cop=[];
         dataset.newTaxelsNA=[];
         dataset.newTaxels=[];
-        dataset.name=strcat(chain1,'_',chain2);
+        %if ~finger
+            dataset.name=strcat(chain1,'_',chain2);
+        %else
+        %    dataset.name=strcat(chain1,'_',name2,'Finger');
+        %end
         %Load taxels in local frames
-        firstLocal = importdata(strcat('Dataset/Points/',chain1,alt,'.txt'),' ',4);
-        chain1Original=firstLocal.data;
-        firstLocal = importdata(strcat('Dataset/Points/',chain2,alt,'.txt'),' ',4);
-        chain2Original=firstLocal.data;
+        if ~ismember(chain1, {'leftFinger', 'rightFinger'})
+            if ~alt
+                chain1Original = zeros(384,6);
+            else
+                firstLocal = importdata(strcat('Dataset/Points/',chain1,'.txt'),' ',4);
+                chain1Original=firstLocal.data;
+            end
+        else
+            chain1Original = [0,0,0]; 
+        end
+        
+        if ~ismember(chain2, {'leftFinger', 'rightFinger'})
+            if ~alt
+                chain2Original = zeros(384, 6);
+            else
+                firstLocal = importdata(strcat('Dataset/Points/',chain2,'.txt'),' ',4);
+                chain2Original=firstLocal.data;
+            end
+        else
+            chain2Original = [0,0,0];
+        end
+        %else
+        %    chain2Original = [0,0,0]; 
+        %end
         poseID=1;
         %Iterate over all 32 triangles (maximal number on one chain)
         for triangleId=0:31
@@ -83,7 +140,6 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                 datasetLocal.frame2 = {};
                 datasetLocal.joints = [];
                 datasetLocal.cameras = [];
-                datasetLocal.pixels = [];
                 datasetLocal.refPoints = [];
                 datasetLocal.rtMat = [];
                 datasetLocal.mins=[];
@@ -109,7 +165,12 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                             a=taxelStruct.(strcat('s',num2str(index))).secondTaxelId(i);
                             %If refPoint should be used and only one chain
                             %is being optimized
-                            if optim.refPoints && ~all([chains.(chain1),chains.(chain2)])
+                            %if ~finger
+                            c2=chain2;
+                            %else
+                            %    c2=[name2,'Finger'];
+                            %end
+                            if optim.refPoints && ~all([chains.(chain1),chains.(c2)])
                                 % Take refPoint of chain2
                                 datasetLocal.refPoints=[datasetLocal.refPoints;taxelStruct.(strcat('s',num2str(index))).secondTaxel(i,:)];
                                 % Assing taxel on chain1 in local frame
@@ -121,12 +182,21 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                             end
                             datasetLocal.joints=[datasetLocal.joints;angles];
                             %Find frame from string, e.g. rightTriangle15
-                            datasetLocal.frame{end+1,1}=strcat(name1,'Triangle',num2str(triangleId));
+                            if ~ismember(chain1, {'leftFinger', 'rightFinger'})
+                                datasetLocal.frame{end+1,1}=strcat(name1,'Taxel',num2str(triangleId),'_',num2str(taxelId-1));
+                            else
+                                datasetLocal.frame{end+1,1}=chain1;
+                            end
                             % Find frame of second taxel...integer division of (a-1)/12
                             % a-1 because a is in matlab indexing and
                             % triangles are numbered from 0
                             %e.g. a=12...a//12=1, but we need (a-1)//12=0
-                            datasetLocal.frame2{end+1,1} = strcat(name2,'Triangle',num2str(floor((a-1)/12)));
+                            if ~ismember(chain2, {'leftFinger', 'rightFinger'})
+                                datasetLocal.frame2{end+1,1} = strcat(name2,'Taxel',num2str(fix((a-1)/12)),'_',num2str(mod(a-1,12)));                            
+                            else
+                                datasetLocal.frame2{end+1,1} = chain2;
+                            end
+                            %datasetLocal.pose=[datasetLocal.pose;fix((a-1)/12)];
                             datasetLocal.pose=[datasetLocal.pose;poseID];
                             % Assing mins and difs...just for visualization
                             datasetLocal.mins=[datasetLocal.mins;taxelStruct.(strcat('s',num2str(index))).mins(i)];
@@ -136,20 +206,30 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                             % Precompute RT matrices if joint are not being
                             % optimized
                             %if ~chains.joint
+                            
+                            if ~ismember(chain1, {'rightFinger', 'leftFinger'})
                                 dh=DH.(chain1);
-                                dh(:,4)=dh(:,4)+angles.(chain1)';
+                                dh(:,6)=dh(:,6)+angles.(chain1)';
                                 matrices.(chain1)=dhpars2tfmat(dh);
+                            else
+                                dh=DH.([name1, 'Arm']);
+                                dh(:,6)=dh(:,6)+angles.([name1, 'Arm'])';
+                                matrices.([name1, 'Arm'])=dhpars2tfmat(dh);
+                            end
+                            
+                            if ~ismember(chain2, {'rightFinger', 'leftFinger'})
                                 dh=DH.(chain2);
-                                dh(:,4)=dh(:,4)+angles.(chain2)';
+                                dh(:,6)=dh(:,6)+angles.(chain2)';
                                 matrices.(chain2)=dhpars2tfmat(dh);
-                                % Torso is computed everytime to prevent
-                                % error in getTF
-                                matrices.torso=eye(4);
-                                if strcmp(alt,'Alt')
-                                    matrices.([chain1,'Skin','Mats'])=robot.structure.matrices.([chain1,'Skin']);
-                                    matrices.([chain2,'Skin','Mats'])=robot.structure.matrices.([chain2,'Skin']);
-                                end
-                            %end
+                            else
+                                dh=DH.([name2, 'Arm']);
+                                dh(:,6)=dh(:,6)+angles.([name2, 'Arm'])';
+                                matrices.([name2, 'Arm'])=dhpars2tfmat(dh);
+                            end
+
+                            % Torso is computed everytime to prevent
+                            % error in getTF
+                            matrices.torso=eye(4);
                             
                             datasetLocal.rtMat=[datasetLocal.rtMat;matrices];
                             
@@ -164,7 +244,7 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                 end
                 %if there were more than X (10) activations on one
                 %triangle, assign them to the global dataset
-                if size(datasetLocal.point,1)>10
+                if size(datasetLocal.point,1)>8
                     dataset.refPoints=[dataset.refPoints;datasetLocal.refPoints];
                     dataset.point=[dataset.point;datasetLocal.point];
                     dataset.joints=[dataset.joints;datasetLocal.joints];
@@ -183,7 +263,9 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
         dataset.avg=mean(dataset.mins);
         dataset.avgDifs=mean(dataset.difs);
         % Assign dataset into output datasets
-        datasets{name}=dataset;
+        datasets.selftouch{name}=dataset;
     end
-    datasets = {datasets,{},{},{}};
+    % Assigning datasets to the right groups
+    %datasets.selftouch=datasets;
+    %datasets = {datasets,{},{},{}};
 end

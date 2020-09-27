@@ -21,7 +21,7 @@ function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, op
     count = 1;
     for field=1:length(fnames)
         % if field in whitelist has any 1 (anything was calibrated) 
-        if(any(any(whitelist.(fnames{field}))))
+        if(isfield(whitelist, fnames{field}) && any(any(whitelist.(fnames{field}))))
             % find right index in whitelist 
             new_count = count + sum(sum(whitelist.(fnames{field})));
             % get whitelist in right format
@@ -33,15 +33,14 @@ function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, op
             % append to results
             results.(fnames{field})=permute(a,[2,1,3,4]);
             % wrap ti [-pi,pi];
-            results.(fnames{field})(:,3:4,:,:)=ezwraptopi(results.(fnames{field})(:,3:4,:,:));
+            results.(fnames{field})(:,4:6,:,:)=ezwraptopi(results.(fnames{field})(:,4:6,:,:));
             count = new_count;
         end
         mResults = results.(fnames{field});
-        mResults(:,1:2,:,:) = results.(fnames{field})(:,1:2,:,:)/optim.unitsCoef;
         % corrections = results - default 
         corrs.(fnames{field}) = mResults-robot.structure.DH.(fnames{field})(:,:,1); 
         % wrap to [-pi,pi]
-        corrs.(fnames{field})(:,3:4,:,:)=ezwraptopi(corrs.(fnames{field})(:,3:4,:,:));
+        corrs.(fnames{field})(:,4:6,:,:)=ezwraptopi(corrs.(fnames{field})(:,4:6,:,:));
     end
 end
 

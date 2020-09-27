@@ -42,7 +42,18 @@ function plotCorrections(folder, varargin)
     end
     
     fnames=fieldnames(corrections);
-    params={'a','d','$\alpha$','$\theta$'};
+    
+    for name = 1:size(fnames,1)
+        whitelist.(fnames{name}) = double(whitelist.(fnames{name}));
+    end
+    [whitelist, ~] = padVectors(whitelist, 1);
+    
+    [corrections, ~] = padVectors(corrections);
+    for name = 1:size(fnames,1)
+        whitelist.(fnames{name}) = logical(whitelist.(fnames{name}));
+    end
+    
+    params={'x/a','y/d','z','$\alpha$','$beta$','$\theta$'};
     % iterate over all 'groups'
     for name=1:length(fnames)
         % if any parameter from 'group' was optimized
@@ -53,18 +64,18 @@ function plotCorrections(folder, varargin)
            % from 0 to n-1
            idx=find(whitelist.(fnames{name})')-1;
            % get columns idxs
-           col=mod(idx,4)+1; 
+           col=mod(idx,6)+1; 
            % get rows idxs
-           row=floor(idx/4)+1;  
+           row=floor(idx/6)+1;  
            values=[];
            xt={};
            
            % for each DH parameter
-           for i=1:4
-              % for every parameter, where column index is 'i' (1-4)
+           for i=1:6
+              % for every parameter, where column index is 'i' (1-6)
               for j=row(col==i)'
                   % assign values 
-                  if(i > 2)
+                  if(i > 3)
                       values=[values,corrections.(fnames{name})(j,i,:,noiseLevel+1)];
                   else
                       values=[values,corrections.(fnames{name})(j,i,:,noiseLevel+1).*coef];
@@ -72,13 +83,14 @@ function plotCorrections(folder, varargin)
                   % get name of parameter
                   xt{end+1}=[joints{j}.name,' ',params{i}];
               end
-              % if i%2==0 (2,4) show figure
-              if mod(i,2)==0
+              % if i%3==0 (3,6) show figure
+              if mod(i,3)==0 && ~isempty(values)
                    values=permute(values,[3,2,1]);
                    fig=figure();
                    bp=axes();
-                   boxplot(values,xt);
-                   set(bp,'xticklabel',xt)
+                   bplot(values);
+                   set(bp,'Xtick', 1:size(values,2),'xticklabel',xt)
+                   xlim([0.5,0.5+size(values,2)])
                    xtickangle(bp,90)
                    bp.XAxis.TickLabelInterpreter = 'latex';
                    bp.YAxis.TickLabelInterpreter = 'latex';
@@ -86,17 +98,17 @@ function plotCorrections(folder, varargin)
                    xt={};
                    xlabel(bp,'Joints')
                    % lengths
-                   if i==2
+                   if i==3
                     ylabel(bp,['Corrections [',units,']']);
                     if symLog
-                        symlog(bp,'y');
+                        bisymlog('y', 0, 0, bp);
                     end
                    % angles
                    else
                     ylabel(bp,'Corrections [rad]');
                    
                     if symLog
-                        symlog(bp,'y',-3);
+                        bisymlog('y',-3, 0, bp);
                     end
                    end
                    title(bp,['Corrections of ',fnames{name}])

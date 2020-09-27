@@ -1,15 +1,15 @@
-function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig(approaches, inputChains, jointType)
+function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig(~, ~, ~)
     %% Solver options
     options = optimoptions('lsqnonlin');
-    %options.Algorithm = 'trust-region-reflective'; %Use for bounds
-    options.Algorithm = 'levenberg-marquardt';
+    options.Algorithm = 'trust-region-reflective'; %Use for bounds
+%     options.Algorithm = 'levenberg-marquardt';
     options.Display = 'iter';
-    options.TolFun = 5e-18; %If problem does not converge, set lower values (and vice-versa)
-    options.TolX = 1e-26;
+    options.TolFun = 1e-12; %If problem does not converge, set lower values (and vice-versa)
+    options.TolX = 1e-18;
     options.MaxIter = 200; %Set higher value if problem does not converge (but too big value can results in overfitting)
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
-    options.UseParallel=1; % set to use parallel computing on more cores
+    options.UseParallel=true; % set to use parallel computing on more cores
     %options.SpecifyObjectiveGradient=true
     %options.ScaleProblem='jacobian'; %Set if problem is badly scaled
     
@@ -32,12 +32,8 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     chains.rightThumb=0;
     chains.leftMiddle=0;
     chains.rightMiddle=0;
-    
-    if ~isempty(inputChains{1})
-        for i = 1:length(inputChains)
-            chains.(inputChains{i}) = 1;
-        end
-    end
+    chains.leftFinger=0;
+    chains.rightFinger=0;
     
     %% Calibration approaches
     % set which approach will be used
@@ -47,11 +43,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     approach.selftouch=0;
     approach.planes=0;
     approach.external=0;
-    if ~isempty(approaches{1})
-        for i = 1:length(approaches)
-            approach.(approaches{i}) = 1;
-        end
-    end
+
     %% Calibration joint types
     % set which parts of the body will be calibrated
     % superior over chains
@@ -64,22 +56,17 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     jointTypes.patch=0;
     jointTypes.triangle=0;
     jointTypes.mount=0;
+    jointTypes.taxel=0; 
     jointTypes.finger=0;
     
-    if ~isempty(jointType{1})
-        for i = 1:length(jointType)
-            jointTypes.(jointType{i}) = 1;
-        end
-    end
-    
     %% Calibration settings
-    optim.bounds=0; % set to use bounds
+    optim.bounds=1; % set to use bounds
     optim.repetitions=1; % number of training repetitions
     optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
     optim.distribution = 'uniform'; % or 'normal'
     optim.units = 'm'; % 'm' or 'mm' 
-    optim.splitPoint=1; % training dataset ratio
-    optim.refPoints=0; % set to use 'refPoints' field in dataset
+    optim.splitPoint=0.7; % training dataset ratio
+    optim.refPoints=1; % set to use 'refPoints' field in dataset
     optim.useNorm=0; % set to compute errors as norm of two points
     optim.parametersWeights.body=[1,1]; % set to scale parameters - [body lengths, body angles]
     optim.parametersWeights.skin=[1,1]; % set to scale parameters - [skin lengths, skin angles]

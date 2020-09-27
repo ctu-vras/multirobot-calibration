@@ -24,7 +24,7 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
     planeParams=[];
     extParams=[];
     % Add optimized parameters from solver back to dh_pars
-    fnames = fieldnames(dh_pars);
+    fnames = fieldnames(whitelist);
     count = 1;
     for field=1:length(fnames)
         % find indexes of params

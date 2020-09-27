@@ -21,5 +21,7 @@ classdef group
         rightThumb = 'rightThumb';
         leftMiddle = 'leftMiddle';
         rightMiddle = 'rightMiddle';
+        leftFinger = 'leftFinger';
+        rightFinger = 'rightFinger';
     end
 end

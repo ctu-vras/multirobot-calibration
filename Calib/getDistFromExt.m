@@ -1,4 +1,4 @@
-function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
+function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams, type)
 %GETDISTFROMEXT returns errors from configurations with external camera
 %   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is matrix.
@@ -16,7 +16,7 @@ function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
         dataset = datasets{datasetId};
         extPoints=dataset.refPoints;
         % compute points in the base frame
-        robPoints = getPoints(dh_pars, dataset, H0, false);
+        robPoints = getPoints(dh_pars, dataset, H0, false, robot.structure.type);
         if isempty(extParams)
             % find transformation between external camera and robot
             [R,T]=fitSets(extPoints,robPoints(1:3,:)'); 

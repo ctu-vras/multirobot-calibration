@@ -1,4 +1,4 @@
-function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(approaches, inputChains, jointType)
+function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(approaches, ~, ~)
     %% Solver options
     options = optimoptions('lsqnonlin');
     options.Algorithm = 'trust-region-reflective';
@@ -6,10 +6,10 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     options.Display = 'iter';
     options.TolFun =  5e-15;
     options.TolX = 1e-25;
-    options.MaxIter = 200;
+    options.MaxIter = 20;
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
-    options.UseParallel=0;
+    options.UseParallel=false;
     %options.SpecifyObjectiveGradient=true
 %     options.ScaleProblem='jacobian';
     
@@ -28,12 +28,6 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     chains.rightThumb=0;
     chains.leftMiddle=0;
     chains.rightMiddle=0;
-    
-    if ~isempty(inputChains{1})
-        for i = 1:length(inputChains)
-            chains.(inputChains{i}) = 1;
-        end
-    end
     
     %% Calibration approaches
     approach.projection=0;
@@ -60,17 +54,12 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     jointTypes.triangle=0;
     jointTypes.mount=0;
     jointTypes.finger=0;
-    
-    if ~isempty(jointType{1})
-        for i = 1:length(jointType)
-            jointTypes.(jointType{i}) = 1;
-        end
-    end
+    jointTypes.taxel=0;
     
     %% Calibration settings
     optim.bounds=0;
-    optim.repetitions=50;
-    optim.pert=[0,0,1];
+    optim.repetitions=2;
+    optim.pert=[1,0,0];
     optim.distribution = 'uniform';
     optim.units = 'm';
     optim.splitPoint=0.7;
@@ -83,7 +72,7 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     optim.boundsFromDefault=0; % set to compute bounds from default values
     optim.optimizeInitialGuess=0; % set to include plane or external transformation parameters into optimized parameters
     optim.rotationType = 'vector'; % how the external calib works with rotation (quat - quaternion; vector - rotation vector)
-    optim.skipNoPert = 1;
+    optim.skipNoPert = 0;
     optim.optimizeDifferences = 0;
     optim.usePxCoef = 1;
     %% Perturbations   

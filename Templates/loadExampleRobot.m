@@ -6,7 +6,8 @@ function [ name, jointStructure, structure ] = loadExampleRobot()
 %        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
 %                    - WL - logical array of whitelisted parameters for calibration 
 %                    - H0 - initial robot transformation 
-%                    - defaultDH - stores robot DH 
+%                    - defaultJoints - stores robot default joint position
+%                    (e.g. home position) for visualisation 
 %                    - bounds - bounds for DH parameters (a, d, alpha, offset)
 %                    - eyes - cameras and their instrinsic parameters
 %                    (camera matrix, distortion coefficents - radial and tangential)
@@ -74,8 +75,8 @@ function [ name, jointStructure, structure ] = loadExampleRobot()
                     0 0 1 0;
                     0 0 0 1];
        
-    %% robot default DH (permanent)    
-    structure.defaultDH = structure.DH;
+    %% robot default joint position (e.g. home position) for visualisation    
+    structure.defaultJoints = {zeros(1,4), zeros(1,4), zeros(1,2), zeros(1,2), zeros(1,2)};
     
     %% robot bounds for DH parameters
     structure.bounds.joint = [inf inf inf inf]; % no bounds

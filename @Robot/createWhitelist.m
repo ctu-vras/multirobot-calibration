@@ -32,26 +32,25 @@ if(nargin == 8)
 else
    whitelist = robot.structure.WL; 
 end
-
+[whitelist, ~] = padVectors(whitelist, 1);
 %Edit each joints
 for joint=robot.joints
    joint=joint{1};
    if ~strcmp(joint.type,'base')
    % if calibrate only offsets - set all other params to zeros
-       if jointTypes.onlyOffsets
-           whitelist.(joint.group)(joint.DHindex,1:3)=zeros(1,3);
+       if jointTypes.onlyOffsets && isfield(whitelist, joint.group)
+               whitelist.(joint.group)(joint.DHindex,[1:4,6])=0;
        end
-%    if ~strcmp(joint.type,'base') 
        % joint is in non-calibrated 'type' or non-calibrated 'group' set
        % whitelist to zeros
-       if ~jointTypes.(joint.type) || ~chains.(strrep(joint.group,'Skin',''))
-            whitelist.(joint.group)(joint.DHindex,:)=zeros(1,4);
+       if (~jointTypes.(joint.type) || ~chains.(strrep(joint.group,'Skin',''))) && isfield(whitelist, joint.group)
+            whitelist.(joint.group)(joint.DHindex,:)=zeros(1,6);
        end
    end
 end
 
 %% Allocate matrices
-names = fieldnames(dh_pars);
+names = fieldnames(whitelist);
 count = 0;
 for index = 1:size(names,1)
     count = count + sum(sum(whitelist.(names{index})));

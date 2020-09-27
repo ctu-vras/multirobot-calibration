@@ -1,32 +1,48 @@
 %% Examples of visualization
+% Its better to create some robot to add everything important to path
+rob = Robot('loadNAO');
+r
 %%
 % Most of the functions support optional arguments. To see the options try
 % to view the help for the function, e.g.
 help plotCorrections;
 
+%% NAO skin
+% Special function for NAO to show his skin with trinagles and taxels
+% numbers
+showNaoSkin();
+
 %% Corrections
 % To show corrections, you just need to provide folder with results
-plotCorrections('exampleNao');
+folder = 'NAO_new';
+plotCorrections(folder);
 
 %%
 % The function also supporst more arguments. For example, to use length in
 % mm
-plotCorrections('exampleNao','units','mm');
+folder = 'fingTorso3';
+plotCorrections(folder,'units','mm');
 
 %% Error boxplots
 % Boxplots of errors work very similar, but you can pass more than one
 % folder
-plotErrorsBoxplots({'exampleNao','leica-motoman'});
+folder = 'NAO_alt';
+folder2 = 'leica-motoman';
+plotErrorsBoxplots({folder,folder2});
 
 %%
 % Again, the function takes more optional arguments
 % E.g. to change location of the legend and use logaritmic scale
-plotErrorsBoxplots({'exampleNao','leica-motoman'},'log',1,'location','northeast');
+folder = 'NAO_alt';
+folder2 = 'NAO';
+plotErrorsBoxplots({folder, folder2},'log',1,'location','northeast');
 
 
 %% Error bars
 % Errors can be also shown as bars
-plotErrorBars({'exampleNao','leica-motoman'})
+folder = 'NAO_alt';
+folder2 = 'leica-motoman';
+plotErrorBars({folder,folder2})
 
 %% Error Residuals
 % Shows residual errors using quiver plot
@@ -47,7 +63,8 @@ plotErrorResiduals(extPoints, robPoints(1:3,:))
 % Shows comparison of joint distributions
 % Function takes 2 datasets, where both of them are cellArray of structs
 close all
-load('Results/exampleNao/info');
+folder = 'NAO_alt';
+load(['Results/',folder,'/info']);
 % This example does not 'make sense', it just for demonstration of input.
 % Argument with 'rightArm' determines which chain to show.
 plotJointDistribution(rob, {datasets.selftouch{1},datasets.selftouch{2}},{datasets.selftouch{2}}, 'rightArm', '', '', 1);
@@ -55,16 +72,28 @@ plotJointDistribution(rob, {datasets.selftouch{1},datasets.selftouch{2}},{datase
 %%
 % Alternatively you can pass just one dataset
 close all
-load('Results/exampleNao/info');
+folder = 'NAO_alt';
+load(['Results/',folder,'/info']);
 % This example shows also title and legend settings
-plotJointDistribution(rob, {datasets.selftouch{1}},[], 'leftArm', 'myFig', {'myDataset'}, 1);
+plotJointDistribution(rob, {datasets.selftouch{1}},[], 'rightArm', 'myFig', {'myDataset'}, 1);
+
+%% Joint-error plot
+% shows mean errors for each joint value of given joints
+close all
+folder = 'leica-motoman';
+load(['Results/',folder,'/info']);
+load(['Results/',folder,'/errors']);
+% errors must be for whole dataset (train + test together)
+plotJointsError(rob, [errorsAll{3}{1}, errorsAll{11}{1}], datasets.external, group.rightArm, 'Joint-error plot', [1,8])
+
 
 %% Projections
 
 %% Jacobian
 % Shows Jacobians computed in each repetition of calibration. All the
 % mandatory arguments can be loaded from results
-load('Results/exampleNao/info');
+fodler = 'NAO_alt';
+load(['Results/',folder,'/info']);
 plotJacobian(rob, whitelist, jacobians)
 
 %% Moveable model
@@ -76,7 +105,13 @@ activationsView(rob,{datasets.selftouch{:}})
 
 %%
 % For Nao robot it allows to show skin and info about activations
-load('Results/exampleNao/info');
+folder = 'alt_new';
+load(strcat('Results/',folder, '/info'));
+load(strcat('Results/',folder, '/results.mat'));
+% rob=Robot('loadNAO');
+rob.structure.DH = res_dh;
+dataset_params{1}={'rightArm_torso', 'leftArm_torso', 'rightArm_head', 'leftArm_head'};
+[~,~,datasets] = rob.prepareDataset(optim, chains, dataset_fcn,dataset_params);
 activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
 
 
@@ -86,10 +121,14 @@ activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
 
 %% Distances between taxels
 % Shows distribution of distances between taxels for each taxel or triangle
-load('Results/exampleNao/info');
-getTaxelDistances(rob,{'rightArm_torso'},'')
+folder = 'exampleNao';
+load(strcat('Results/',folder, '/info'));
+load(strcat('Results/',folder, '/results.mat'));
+rob.structure.DH = res_dh;
+rob.structure.matrices = rob.structure.matricesBack;
+getTaxelDistances(rob,dataset_params)
 
 %% Activated taxels
 % Shows activated taxels in the dataset
 load('Results/exampleNao/info');
-visualizeActivatedTaxels({'rightArm_torso'})
+visualizeActivatedTaxels(dataset_params)

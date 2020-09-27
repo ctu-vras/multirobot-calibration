@@ -62,7 +62,7 @@ classdef Joint < handle
             %Reverse order of the ids to get matrix to input joint 
             DH=DH(idx(end:-1:1),:);
             %Add joint angles
-            DH(:,4)=DH(:,4)+angles';
+            DH(:,6)=DH(:,6)+angles';
             %compute RT matrix
             R=dhpars2tfmat(DH);
             par=obj;

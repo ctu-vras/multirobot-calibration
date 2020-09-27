@@ -63,15 +63,16 @@ classdef Robot < handle
                         assert(strcmp(curJoint{2}, types.base), 'Joint without parent must be of type: ''base''')
                     end
                     %Call Joint constructor
-                    
                     joints{jointId}=Joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},parentId);
                     %Add new joint to cellarray
                     obj.joints{end+1}=joints{jointId};
                 end
                 obj.name=name;
+                % robot default DH (permanent)             
+                structure.defaultDH = structure.DH;
                 assert(isfield(structure, 'DH') && isfield(structure, 'WL') && isfield(structure, 'H0') ...
-                    && isfield(structure, 'defaultDH') && isfield(structure, 'bounds'), ...
-                    'Robot structure is incomplete, it must contains: DH, WL, H0, defaultDH and bounds')
+                     && isfield(structure, 'bounds'), ...
+                    'Robot structure is incomplete, it must contains: DH, WL, H0 and bounds')
                 obj.structure=structure;                
             else
                 error('Incorrect number of arguments inserted, expected 1, but got %d',nargin);
@@ -143,7 +144,7 @@ classdef Robot < handle
         [init, lb, ub]=prepareDH(robot, pert, optim, funcname);
         
         %% Prepare datasets
-        [training_set_indexes, testing_set_indexes, datasets]=prepareDataset(r,optim, chains, funcname, varargin)
+        [training_set_indexes, testing_set_indexes, datasets, datasets_out]=prepareDataset(r,optim, chains, funcname, varargin)
         
         %% Prepare vector of parameters for optimization
         [opt_pars, lb_pars, up_pars, whitelist, start_dh] = createWhitelist(robot, dh_pars, lb_pars, ub_pars, optim, chains, jointTypes, funcname);

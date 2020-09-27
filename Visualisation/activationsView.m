@@ -18,6 +18,7 @@ function activationsView(robot,datasets,varargin)
     addRequired(p,'datasets');
     addParameter(p,'skin',0);
     addParameter(p,'info',0);
+    addParameter(p, 'finger', 0); 
     parse(p,robot,datasets,varargin{:});
     %% First fig of each dataset
     for dataset=datasets
@@ -38,21 +39,27 @@ function showFig(robot,idx,dataset,parser)
     if ~isfield(dataset,'name')
         dataset.name='';
     end
+    
+    ang = ang(1:3);
+    if parser.finger
+       ang = {ang{:}, 0, 0}; 
+    end
     % Show model in given configuration
-    robot.showModel(ang,'figName',dataset.name)
+    robot.showModel(ang,'figName',dataset.name);
     
     %If skin
     if parser.skin
         % show skin and color activated taxels, selected COP and all cops
         % with different color for each chain
-        scatter3(dataset.newTaxelsNA{idx,1}(:,1).*1000,dataset.newTaxelsNA{idx,1}(:,2).*1000,dataset.newTaxelsNA{idx,1}(:,3).*1000,'red')
-        scatter3(dataset.newTaxels{idx,1}(:,1).*1000,dataset.newTaxels{idx,1}(:,2).*1000,dataset.newTaxels{idx,1}(:,3).*1000,'filled','red')
-        scatter3(dataset.newTaxelsNA{idx,2}(:,1).*1000,dataset.newTaxelsNA{idx,2}(:,2).*1000,dataset.newTaxelsNA{idx,2}(:,3).*1000,'blue')
-        scatter3(dataset.newTaxels{idx,2}(:,1).*1000,dataset.newTaxels{idx,2}(:,2).*1000,dataset.newTaxels{idx,2}(:,3).*1000,'filled','blue')
-        scatter3(dataset.cops{idx,1}(:,1).*1000,dataset.cops{idx,1}(:,2).*1000,dataset.cops{idx,1}(:,3).*1000,'filled','black')
-        scatter3(dataset.cops{idx,2}(:,1).*1000,dataset.cops{idx,2}(:,2).*1000,dataset.cops{idx,2}(:,3).*1000,'filled','black')
-        scatter3(dataset.cop{idx,1}(:,1).*1000,dataset.cop{idx,1}(:,2).*1000,dataset.cop{idx,1}(:,3).*1000,150,'red','filled')
-        scatter3(dataset.cop{idx,2}(:,1).*1000,dataset.cop{idx,2}(:,2).*1000,dataset.cop{idx,2}(:,3).*1000,150,'blue','filled')
+        x=1000000;
+        scatter3(dataset.newTaxelsNA{idx,1}(:,1).*x,dataset.newTaxelsNA{idx,1}(:,2).*x,dataset.newTaxelsNA{idx,1}(:,3).*x,'red')
+        scatter3(dataset.newTaxels{idx,1}(:,1).*x,dataset.newTaxels{idx,1}(:,2).*x,dataset.newTaxels{idx,1}(:,3).*x,'filled','red')
+        scatter3(dataset.newTaxelsNA{idx,2}(:,1).*x,dataset.newTaxelsNA{idx,2}(:,2).*x,dataset.newTaxelsNA{idx,2}(:,3).*x,'blue')
+        scatter3(dataset.newTaxels{idx,2}(:,1).*x,dataset.newTaxels{idx,2}(:,2).*x,dataset.newTaxels{idx,2}(:,3).*x,'filled','blue')
+        scatter3(dataset.cops{idx,1}(:,1).*x,dataset.cops{idx,1}(:,2).*x,dataset.cops{idx,1}(:,3).*x,'filled','black')
+        scatter3(dataset.cops{idx,2}(:,1).*x,dataset.cops{idx,2}(:,2).*x,dataset.cops{idx,2}(:,3).*x,'filled','black')
+        scatter3(dataset.cop{idx,1}(:,1).*x,dataset.cop{idx,1}(:,2).*x,dataset.cop{idx,1}(:,3).*x,150,'red','filled')
+        scatter3(dataset.cop{idx,2}(:,1).*x,dataset.cop{idx,2}(:,2).*x,dataset.cop{idx,2}(:,3).*x,150,'blue','filled')
     end
     
     %If info

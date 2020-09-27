@@ -1,4 +1,4 @@
-function [ arm1, arm2 ] = getPoints(dh_pars, dataset, H0, compute_arm2)
+function [ arm1, arm2 ] = getPoints(dh_pars, dataset, H0, compute_arm2, type)
 %GETPOINTS Compute points coordinates to base.
 %INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is matrix.
@@ -31,10 +31,10 @@ function [ arm1, arm2 ] = getPoints(dh_pars, dataset, H0, compute_arm2)
         parents = dataset.parents;
         %% compute end effectors coordinates
         for i = 1:size(joints, 1)      
-            arm1(:,i) =  getTFIntern(dh_pars,frames(i),rtMats(i), joints(i), H0, DHindexes.(frames(i).name), parents, rtFields)...
+            arm1(:,i) =  getTFIntern(dh_pars,frames(i),rtMats(i), joints(i), H0, DHindexes.(frames(i).name), parents, rtFields,type)...
                 *[points(i,1:3),1]';
             if compute_arm2
-               arm2(:,i) =  getTFIntern(dh_pars,frames2(i),rtMats(i), joints(i), H0, DHindexes.(frames2(i).name), parents, rtFields)...
+               arm2(:,i) =  getTFIntern(dh_pars,frames2(i),rtMats(i), joints(i), H0, DHindexes.(frames2(i).name), parents, rtFields,type)...
                    *[points(i,4:6),1]';
             end
         end

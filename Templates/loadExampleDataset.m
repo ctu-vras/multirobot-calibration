@@ -14,13 +14,12 @@ function datasets = loadExampleDataset(rob,optim, chains, varargin)
        chain = varargin{1}{1}; 
     end
     datasetsCount = 3;
-    datasets_st = cell(1,datasetsCount); %datasets cell array MUST BE ROW VECTOR
-    datasets_projs = {};
+    datasets.selftouch = cell(1,datasetsCount); %datasets cell array MUST BE ROW VECTOR
+    datasets.projection = {};
     posesCount = 100;
     for index = 1:datasetsCount 
         %% self touch dataset
-        dataset.cameras = [];
-        dataset.refPoints = [];
+        dataset = initDataset(true);
         dataset.pose = 1:posesCount;
         C = cell(posesCount,1);
         C(:) = {'rightWrist'}; % end effector name
@@ -46,10 +45,11 @@ function datasets = loadExampleDataset(rob,optim, chains, varargin)
         dataset.rtMat = reshape(dataset.rtMat, length(dataset.pose),1);
         dataset.id = index;
         dataset.name = ['Self-touch ', num2str(index)];
-        datasets_st{index} = dataset; 
+        datasets.selftouch{index} = dataset; 
         
         %% projection dataset
         if (~isempty(chain))
+            dataset2 = initDataset(true);
             dataset2.pose = dataset.pose;
             dataset2.frame = dataset.frame;
             dataset2.point = dataset.point;
@@ -69,11 +69,11 @@ function datasets = loadExampleDataset(rob,optim, chains, varargin)
             end
             dataset2.id = index;
             dataset2.name = ['Projection ', num2str(index)];
-            datasets_projs{index} = dataset2; 
+            datasets.projection{index} = dataset2; 
         end
     end
     %           self-touch, planes, external, projection
-    datasets = {datasets_st,{},{}, datasets_projs};
+    %datasets = {datasets.selftouch,{},{}, datasets.projection};
     % dataset can be saved and then the mat-file can be used
 %     save('example_dataset.mat', 'datasets'); 
     
