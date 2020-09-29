@@ -23,5 +23,6 @@ classdef group
         rightMiddle = 'rightMiddle';
         leftFinger = 'leftFinger';
         rightFinger = 'rightFinger';
+        dummy = 'dummy';
     end
 end

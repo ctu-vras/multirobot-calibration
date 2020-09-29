@@ -203,6 +203,7 @@ for i=1:size(datasetLocal.(iterateVar),1)
     angles.torsoSkin=[0,0,0,0];
     angles.headSkin=[0,0,0,0];
     angles.torso=[0];
+    angles.dummy = [angles.rightArm(end), angles.leftArm(end)];
     dataset.angles=[dataset.angles;angles];
     
     % Init variables - 384 taxels
@@ -210,17 +211,16 @@ for i=1:size(datasetLocal.(iterateVar),1)
     chain2Points=zeros(384,3);
     s=[];
     
-
-    dh=DH.(chain1_);
-    dh(:,6)=dh(:,6)+angles.(chain1_)';
-    rtMat.(chain1_)=dhpars2tfmat(dh);
+%     dh=DH.(chain1_);
+%     dh(:,6)=dh(:,6)+angles.(chain1_)';
+%     rtMat.(chain1_)=dhpars2tfmat(dh);
     
-    dh=DH.(chain2_);
-    dh(:,6)=dh(:,6)+angles.(chain2_)';
-    rtMat.(chain2_)=dhpars2tfmat(dh);
+%     dh=DH.(chain2_);
+%     dh(:,6)=dh(:,6)+angles.(chain2_)';
+%     rtMat.(chain2_)=dhpars2tfmat(dh);
     
-    rtFields = fieldnames(rtMat(1));
-
+%     rtFields = fieldnames(rtMat(1));
+      rtFields = [];
     for taxelId=0:383
         % Get joint
         joint=chain1Joints(taxelId+1);

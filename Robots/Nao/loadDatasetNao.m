@@ -207,25 +207,25 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                             % optimized
                             %if ~chains.joint
                             
-                            if ~ismember(chain1, {'rightFinger', 'leftFinger'})
-                                dh=DH.(chain1);
-                                dh(:,6)=dh(:,6)+angles.(chain1)';
-                                matrices.(chain1)=dhpars2tfmat(dh);
-                            else
-                                dh=DH.([name1, 'Arm']);
-                                dh(:,6)=dh(:,6)+angles.([name1, 'Arm'])';
-                                matrices.([name1, 'Arm'])=dhpars2tfmat(dh);
-                            end
-                            
-                            if ~ismember(chain2, {'rightFinger', 'leftFinger'})
-                                dh=DH.(chain2);
-                                dh(:,6)=dh(:,6)+angles.(chain2)';
-                                matrices.(chain2)=dhpars2tfmat(dh);
-                            else
-                                dh=DH.([name2, 'Arm']);
-                                dh(:,6)=dh(:,6)+angles.([name2, 'Arm'])';
-                                matrices.([name2, 'Arm'])=dhpars2tfmat(dh);
-                            end
+%                             if ~ismember(chain1, {'rightFinger', 'leftFinger'})
+%                                 dh=DH.(chain1);
+%                                 dh(:,6)=dh(:,6)+angles.(chain1)';
+%                                 matrices.(chain1)=dhpars2tfmat(dh);
+%                             else
+%                                 dh=DH.([name1, 'Arm']);
+%                                 dh(:,6)=dh(:,6)+angles.([name1, 'Arm'])';
+%                                 matrices.([name1, 'Arm'])=dhpars2tfmat(dh);
+%                             end
+%                             
+%                             if ~ismember(chain2, {'rightFinger', 'leftFinger'})
+%                                 dh=DH.(chain2);
+%                                 dh(:,6)=dh(:,6)+angles.(chain2)';
+%                                 matrices.(chain2)=dhpars2tfmat(dh);
+%                             else
+%                                 dh=DH.([name2, 'Arm']);
+%                                 dh(:,6)=dh(:,6)+angles.([name2, 'Arm'])';
+%                                 matrices.([name2, 'Arm'])=dhpars2tfmat(dh);
+%                             end
 
                             % Torso is computed everytime to prevent
                             % error in getTF
@@ -244,7 +244,7 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                 end
                 %if there were more than X (10) activations on one
                 %triangle, assign them to the global dataset
-                if size(datasetLocal.point,1)>8
+                if size(datasetLocal.point,1)>0
                     dataset.refPoints=[dataset.refPoints;datasetLocal.refPoints];
                     dataset.point=[dataset.point;datasetLocal.point];
                     dataset.joints=[dataset.joints;datasetLocal.joints];

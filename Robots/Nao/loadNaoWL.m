@@ -29,6 +29,8 @@ function WL = loadNaoWL()
         [1, 1, 1, 1;
          1, 1, 1, 1;
          1, 1, 1, 1];
+    WL.dummy = [0,0,0,0;
+                0,0,0,0];
     WL.torsoSkin=[[1,1,1,1,nan,nan];ones(size(torso_left,2)+size(torso_right,2)+2+indexes(1),6)];
     WL.leftArmSkin=[[1,1,1,1,nan,nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
     WL.rightArmSkin=[[1,1,1,1,nan,nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];

@@ -32,7 +32,9 @@ function [name, jointStructure, structure]=loadNAO()
         {'leftWristYaw',types.joint,'leftElbowRoll',5,group.leftArm},...
         {'leftEE',types.joint,'leftWristYaw',6,group.leftArm},...
         ...
-        {'leftPlastic',types.mount,'leftEE',1,group.leftArmSkin},...
+        {'leftDummy', types.joint, 'leftWristYaw', 2, group.dummy},...
+        ...
+        {'leftPlastic',types.mount,'leftDummy',1,group.leftArmSkin},...
         {'leftUpperPatch',types.patch,'leftPlastic',2,group.leftArmSkin},...
         {'leftLowerPatch',types.patch,'leftPlastic',3,group.leftArmSkin},...
         ...
@@ -43,7 +45,9 @@ function [name, jointStructure, structure]=loadNAO()
         {'rightWristYaw',types.joint,'rightElbowRoll',5,group.rightArm},...
         {'rightEE',types.joint,'rightWristYaw',6,group.rightArm},...
         ...
-        {'rightPlastic',types.mount,'rightEE',1,group.rightArmSkin},...
+        {'rightDummy', types.joint, 'rightWristYaw', 1, group.dummy},...
+        ...
+        {'rightPlastic',types.mount,'rightDummy',1,group.rightArmSkin},...
         {'rightUpperPatch',types.patch,'rightPlastic',2,group.rightArmSkin},...
         {'rightLowerPatch',types.patch,'rightPlastic',3,group.rightArmSkin},...
         ...
@@ -131,18 +135,27 @@ function [name, jointStructure, structure]=loadNAO()
     structure.DH.leftArm=[0, 0.1, -pi/2, 0;
                0, 0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
-               0, 0.105, -pi/2, 0.0;
+               0.015, 0.105, -pi/2, 0.0;
                0, 0.0, pi/2, 0;
-               0, 0, -pi/2, pi];
+               0, 0.05775+0.05595, -pi/2, pi];%0, 0.05775+0.05595, -pi/2, pi
+%     structure.DH.leftArm = [0, 0.098, 0.1, 0, 0, 0;
+%                             0, 0, -pi/2, 0, nan, nan;
+%                             0, 0, pi/2, pi/2, nan, nan;
+%                             0.015, 0.105, pi/2, 0, nan, nan;
+%                             0, 0, 0, 0, 0, -pi/2;
+%                             0.05595, 0, 0, 0, 0, 0];
     structure.DH.rightArm=[0, 0.1, -pi/2, 0; 
                0, -0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
-               0, 0.105, -pi/2, 0.0;
+               -0.015, 0.105, -pi/2, 0.0;
                0, 0, pi/2, 0;
-               0, 0, -pi/2, pi];
+               0, 0.05775+0.05595, -pi/2, pi;];%0, 0.05775+0.05595, -pi/2, pi
+
     structure.DH.head=[0, 0.1265, 0, 0.0;
          0, 0, -pi/2, 0;
          0,0,0,0];
+     structure.DH.dummy = [0, 0, -pi/2, pi;
+                           0, 0, -pi/2, pi];
 %     structure.DH.torsoSkin=zeros(3+size(torso_left,2)+size(torso_right,2)+indexes(1),6);
 %     structure.DH.headSkin=zeros(size(head_left,2)+size(head_right,2)+3+indexes(2),6);
 %     structure.DH.leftArmSkin=zeros(size(hands_upper,2)+size(hands_lower,2)+3+indexes(3),6);
@@ -165,27 +178,28 @@ function [name, jointStructure, structure]=loadNAO()
     
     %% Whitelist
     structure.WL.leftArm= ...
-              [0, 0, 0, 0;
-               0, 0, 0, 0;
-               0, 0,  0, 0;
-               0, 0, 0, 0.0;
-               0, 0, 0, 0;
-               0, 0, 0, 0];
+              [0, 0, 0, 0, nan, nan;
+               0, 0, 0, 0, nan, nan;
+               0, 0,  0, 0, nan, nan;
+               0, 0, 0, 0.0, nan, nan;
+               0, 0, 0, 0, nan, nan;
+               0, 0, 0, 0, nan, nan];
     structure.WL.rightArm= ...
-              [0, 0, 0, 0; 
-               0, 0, 0, 0;
-               0, 0, 0, 0;
-               0, 0, 0, 0;
-               0, 0, 0, 0;
-               0, 0, 0, 0];
+              [0, 0, 0, 0, nan, nan; 
+               0, 0, 0, 0, nan, nan;
+               0, 0, 0, 0, nan, nan;
+               0, 0, 0, 0, nan, nan;
+               0, 0, 0, 0, nan, nan;
+               0, 0, 0, 0, nan, nan;
+               0, 0, 0, 0, nan, nan];
     structure.WL.head= ...
-        [0, 0, 0, 0;
-         0, 0, 0, 0;
-         0,0,0,0];
-    structure.WL.rightArmSkin=[[1,1,1,1,1,1];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
-    structure.WL.leftArmSkin=[[1,1,1,1,1,1];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
-    structure.WL.torsoSkin=[[1,1,1,1,1,1];ones(size(torso_left,2)+size(torso_right,2)+2+indexes(1),6)];
-    structure.WL.headSkin=[[1,1,1,1,1,1];ones(size(head_left,2)+size(head_right,2)+2+indexes(2),6)];
+        [0, 0, 0, 0, nan, nan;
+         0, 0, 0, 0, nan, nan;
+         0,0,0,0, nan, nan];
+    structure.WL.rightArmSkin=[[1,1,1,1,nan, nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
+    structure.WL.leftArmSkin=[[1,1,1,1,nan, nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
+    structure.WL.torsoSkin=[[1,1,1,1, nan, nan];ones(size(torso_left,2)+size(torso_right,2)+2+indexes(1),6)];
+    structure.WL.headSkin=[[1,1,1,1,nan, nan];ones(size(head_left,2)+size(head_right,2)+2+indexes(2),6)];
     structure.WL.leftIndex = zeros(3,6);
     structure.WL.rightIndex = zeros(3,6);
     structure.WL.leftMiddle = zeros(3,6);
@@ -225,21 +239,21 @@ function [name, jointStructure, structure]=loadNAO()
     rightArmSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/rightArm.txt',' ', 0);                     
     structure.DH.rightArmSkin=[rightArmSkinTranslation,zeros(size(rightArmSkinTranslation,1),3)];
 %     structure.DH.rightArmSkin(1,:) = [0.0147583849496236,-0.00443192627587114,2.74767239286415,-1.60296822098659,nan,nan];
-    structure.DH.rightArmSkin(1,:) = [0,0,0,0,0,0];
+    structure.DH.rightArmSkin(1,:) = [0,0,0,0,nan, nan];
 
     leftArmSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/leftArm.txt',' ', 0);
     structure.DH.leftArmSkin=[leftArmSkinTranslation,zeros(size(leftArmSkinTranslation,1),3)];
 %     structure.DH.leftArmSkin(1,:) = [0.0156903503206978,-0.00540526356648849,-2.97543773911731,-1.59420115139453,nan,nan];
-     %structure.DH.leftArmSkin(1,:) = [0, 0, 0, 0,nan,nan];
+     structure.DH.leftArmSkin(1,:) = [0, 0, 0, 0,nan,nan];
     
     torsoSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/torso.txt',' ', 0);
     structure.DH.torsoSkin=[torsoSkinTranslation,zeros(size(torsoSkinTranslation,1),3)];
 %     structure.DH.torsoSkin(1,:) = [2.23560066606708e-05,0.000110417865904946,0.00895097260336288,-0.00289365818304649,nan,nan];
-    structure.DH.torsoSkin(1,:) = [0, 0, 0, 0,0,0];
+    structure.DH.torsoSkin(1,:) = [0, 0, 0, 0,nan, nan];
     
     headSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/head.txt',' ', 0);
     structure.DH.headSkin=[headSkinTranslation,zeros(size(headSkinTranslation,1),3)];
 %     structure.DH.headSkin(1,:) = [-0.00114580222204280,0.00579003189040555,1.59493010477590,0.234818194892817,nan,nan];
-    %structure.DH.headSkin(1,:) = [0, 0, 0, 0,nan,nan];
+    structure.DH.headSkin(1,:) = [0, 0, 0, 0,nan,nan];
 
 end

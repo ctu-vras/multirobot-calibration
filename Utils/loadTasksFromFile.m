@@ -70,8 +70,16 @@ function loadTasksFromFile(fileName)
         chains = strsplit(line{5},','); 
         jointTypes = strsplit(line{6},','); 
         
+        %% save info
+        saveInfo = [];
+        for saveInfo_=line{11}
+            saveInfo_ = str2num(saveInfo_);
+            if ~isempty(saveInfo_)
+                saveInfo = [saveInfo, saveInfo_];
+            end
+        end
         %% run the main script and write timestamp after end of program
-        runCalibration(line{2},line{3},approaches, chains, jointTypes, line{7},line{8},line{9},varArgs,num2str(line{10}),eval(line{11}),loadDHfunc,args, line{12});
+        runCalibration(line{2},line{3},approaches, chains, jointTypes, line{7},line{8},line{9},varArgs,num2str(line{10}),saveInfo,loadDHfunc,args, line{12});
         stamp=datestr(now,'HH:MM:SS.FFF');
         file.Timestamp{lineId,1}=stamp;
         writetable(file,fileName,'Delimiter',';')

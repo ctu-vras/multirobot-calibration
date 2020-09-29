@@ -19,7 +19,9 @@ function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, H0, indexes, parents
                 if ~type.(gr) %types.gr == 0 => only DH links
 
                     DH=dh_pars.(gr)(indexes.(gr),:)';
-                    DH(6,:)=DH(6,:)+joints.(gr);
+                    j = joints.(gr);
+                    DH(6,:)=DH(6,:)+j(indexes.(gr));
+%                     DH(6, :) = DH(6,:) + joints.(gr);
                     % reshape dh table 
                     s = size(DH,2);
                     as = DH(1,:); ds = DH(2,:); als = DH(4,:); ths = DH(6,:);
