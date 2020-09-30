@@ -27,8 +27,6 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     r.structure.type = type;
 
     %% Perturbation
-    % get perturbation ranges
-    fnames=fieldnames(pert);
     % allocate array
     perms=zeros(length(r.joints),6,optim.repetitions,optim.pert_levels-1);
     index=1; 
@@ -37,15 +35,19 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
         if optim.pert(i)
             % generate random numbers with given distribution and multiply
             % them with perturbation ranges
-            [str, ~] = padVectors(pert.(fnames{i}),2);
-            pert.(fnames{i}) = str;
+            pert_temp = pert{i};
+            if length(pert_temp) == 4
+                warning('Only 4 parameters inserted for perturbation vector %d. If there is any 6D transformaton, the remaining parameters will be computed as a mean of the existing ones.', i);
+                pert_temp = [pert_temp, mean(pert_temp(1:2)), mean(pert_temp(3:4))];
+                pert_temp = pert_temp([1,2,5,3,6,4]);
+            end
             if strcmp(optim.distribution,'uniform')
                 % if 'uniform' distribution - use rand*2 - 1, to get values
                 % from -1 to 1
-                perms(:,:,:,index)=(rand(length(r.joints),6, optim.repetitions)*2-1).*[pert.(fnames{i}).DH(1:3)*optim.unitsCoef, pert.(fnames{i}).DH(4:6)];
+                perms(:,:,:,index)=(rand(length(r.joints),6, optim.repetitions)*2-1).*[pert_temp(1:3)*optim.unitsCoef, pert_temp(4:6)];
             elseif strcmp(optim.distribution,'normal')
                 % if 'normal' distribution - just use randn function
-                perms(:,:,:,index)=randn(length(r.joints),6, optim.repetitions).*[pert.(fnames{i}).DH(1:3)*optim.unitsCoef, pert.(fnames{i}).DH(4:6)];
+                perms(:,:,:,index)=randn(length(r.joints),6, optim.repetitions).*[pert_temp(1:3)*optim.unitsCoef, pert_temp(4:6)];
             end
             index=index+1;
         end

@@ -60,9 +60,9 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     jointTypes.finger=0;
     
     %% Calibration settings
-    optim.bounds=1; % set to use bounds
-    optim.repetitions=1; % number of training repetitions
-    optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
+    optim.bounds=0; % set to use bounds
+    optim.repetitions=5; % number of training repetitions
+    optim.pert=[1,1,1]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
     optim.distribution = 'uniform'; % or 'normal'
     optim.units = 'm'; % 'm' or 'mm' 
     optim.splitPoint=0.7; % training dataset ratio
@@ -73,21 +73,11 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     optim.parametersWeights.external=[1,1]; % set to scale parameters - [rotation, translation]
     optim.parametersWeights.planes=1; % set to scale parameters
     optim.boundsFromDefault=1; % set to compute bounds from default values
-    optim.optimizeInitialGuess=1; % set to include plane or external transformation parameters into optimized parameters
+    optim.optimizeInitialGuess=0; % set to include plane or external transformation parameters into optimized parameters
     optim.rotationType = 'quat';   % how the external calib works with rotation (quat - quaternion; vector - rotation vector)
     optim.skipNoPert = 0; % skip calibration without perturbation
     optim.optimizeDifferences = 0; % calibration with the differences from the start values   
     optim.usePxCoef = 0; % enables comparison of projection and touch errors by converting pixels to m or mm
     %% Perturbations   
-    pert.mild.DH=[0.01,0.01,0.01,0.1]; %[a,d,alpha,theta]
-    
-    pert.mild.camera=[0.05,0.05,0.05,0.05]; %camera is optional
-    
-    pert.fair.DH=[0.03,0.03,0.03,0.3];
-    
-    pert.fair.camera=[0.03,0.03,0.03,0.03];
-    
-    pert.stormy.DH=[0.1,0.1,0.1,1];
-    
-    pert.stormy.camera=[0.1,0.1,0.1,0.1];
+    pert = {[0.01,0.01,0.01,0.01,0.01,0.01], [0.03,0.03,0.03,0.03,0.03,0.03], [0.05,0.1,0.5,0.1,]};
 end
