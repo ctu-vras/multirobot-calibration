@@ -65,7 +65,9 @@ function fig = showModel(r, varargin)
     end
     
     
-    axes  ('Position', [0 0 1 1]); hold on; grid on;
+    %axes  ('Position', [0 0 1 1]); 
+    %setAxes(fig.CurrentAxes);
+    hold on; grid on;
     xlabel('x (mm)'); ylabel('y (mm)'),zlabel('z (mm)');
     hold on
     

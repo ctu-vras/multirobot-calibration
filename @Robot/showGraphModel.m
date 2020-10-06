@@ -1,7 +1,7 @@
 function showGraphModel(r)
     % SHOWGRAPHMODEL shows tree-based graph of given robot
     
-    close all;
+    %close all;
     % init vector and to each index assing its parent
     treeVector=[];
     for joint=r.joints
