@@ -27,8 +27,12 @@ function [ opt_pars, min_pars, max_pars, whitelist, dh_pars] = createWhitelist( 
 
 %% Call appropriate function or select default
 if(nargin == 8)
-   func=str2func(funcname);
-   whitelist = func(); 
+   if ischar(funcname) || isstring(funcname)
+       func=str2func(funcname);
+       whitelist = func(); 
+   else
+       whitelist = funcname; 
+   end
 else
    whitelist = robot.structure.WL; 
 end

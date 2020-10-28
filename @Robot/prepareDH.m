@@ -13,8 +13,12 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     
 %% Call appropriate function or select default
     if(nargin == 4)
-       func=str2func(funcname);
-       bounds = func();
+       if ischar(funcname) || isstring(funcname)
+           func=str2func(funcname);
+           bounds = func();
+       else
+           bounds = funcname;
+       end
     else
        bounds = [];
     end

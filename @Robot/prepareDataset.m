@@ -20,7 +20,9 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
     %                         of a class
     
     %% Call appropriate functions with arguments
-    if(contains(funcname, '.mat'))
+    if isstruct(funcname)
+        datasets = funcname;
+    elseif(contains(funcname, '.mat'))
         file = load(funcname);
         assert(isfield(file, 'datasets'));
         datasets = file.datasets;

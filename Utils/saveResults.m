@@ -128,6 +128,7 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err,
                     for col=1:len
                         values(col) = res_dh.(fnames{name})(line,col,rep,pert_level);
                     end
+
                     fprintf(file,formatSpec, joints{line}.name, values);
                 end
                 fprintf(file,'\n');             

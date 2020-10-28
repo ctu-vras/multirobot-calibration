@@ -9,7 +9,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     options.MaxIter = 200; %Set higher value if problem does not converge (but too big value can results in overfitting)
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
-    options.UseParallel=true; % set to use parallel computing on more cores
+    options.UseParallel=false; % set to use parallel computing on more cores
     %options.SpecifyObjectiveGradient=true
     %options.ScaleProblem='jacobian'; %Set if problem is badly scaled
     
@@ -34,6 +34,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     chains.rightMiddle=0;
     chains.leftFinger=0;
     chains.rightFinger=0;
+    chains.dummy = 0;
     
     %% Calibration approaches
     % set which approach will be used
@@ -61,8 +62,8 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     
     %% Calibration settings
     optim.bounds=0; % set to use bounds
-    optim.repetitions=5; % number of training repetitions
-    optim.pert=[1,1,1]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
+    optim.repetitions=1; % number of training repetitions
+    optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
     optim.distribution = 'uniform'; % or 'normal'
     optim.units = 'm'; % 'm' or 'mm' 
     optim.splitPoint=0.7; % training dataset ratio

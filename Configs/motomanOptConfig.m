@@ -58,8 +58,8 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     
     %% Calibration settings
     optim.bounds=0;
-    optim.repetitions=2;
-    optim.pert=[1,0,0];
+    optim.repetitions=1;
+    optim.pert=[0,0,0];
     optim.distribution = 'uniform';
     optim.units = 'm';
     optim.splitPoint=0.7;
@@ -76,15 +76,5 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     optim.optimizeDifferences = 0;
     optim.usePxCoef = 1;
     %% Perturbations   
-    pert.mild.DH=[0.01,0.01,0.01,0.1];
-    
-    pert.mild.camera=[0.05,0.05,0.05,0.05];
-    
-    pert.fair.DH=[0.03,0.03,0.03,0.3];
-    
-    pert.fair.camera=[0.03,0.03,0.03,0.03];
-    
-    pert.stormy.DH=[0.1,0.1,0.1,1];
-    
-    pert.stormy.camera=[0.1,0.1,0.1,0.1];
+    pert = {[0.01,0.01,0.01,0.01,0.01,0.01], [0.03,0.03,0.03,0.03,0.03,0.03], [0.05,0.1,0.5,0.1,]};
 end

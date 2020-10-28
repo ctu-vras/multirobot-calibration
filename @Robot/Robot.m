@@ -30,6 +30,7 @@ classdef Robot < handle
         name 
         joints={} 
         structure={} 
+        jointsStructure=[];
     end
     
     
@@ -68,6 +69,10 @@ classdef Robot < handle
                     obj.joints{end+1}=joints{jointId};
                 end
                 obj.name=name;
+                for joint = 1:size(jointsStructure,2)
+                obj.jointsStructure = [obj.jointsStructure, jointsStructure{joint}'];
+                end
+                obj.jointsStructure = obj.jointsStructure';
                 % robot default DH (permanent)             
                 structure.defaultDH = structure.DH;
                 assert(isfield(structure, 'DH') && isfield(structure, 'WL') && isfield(structure, 'H0') ...
