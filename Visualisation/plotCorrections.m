@@ -88,7 +88,11 @@ function plotCorrections(folder, varargin)
                    values=permute(values,[3,2,1]);
                    fig=figure();
                    bp=axes();
-                   bplot(values);
+                   if(size(values,1) == 1)
+                        bplot(repmat(values,2,1));
+                   else
+                        bplot(values);
+                   end
                    set(bp,'Xtick', 1:size(values,2),'xticklabel',xt)
                    xlim([0.5,0.5+size(values,2)])
                    xtickangle(bp,90)
