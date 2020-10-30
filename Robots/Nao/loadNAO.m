@@ -182,11 +182,9 @@ function [name, jointStructure, structure]=loadNAO()
                0, 0, 0, 0, nan, nan;
                0, 0,  0, 0, nan, nan;
                0, 0, 0, 0.0, nan, nan;
-               0, 0, 0, 0, nan, nan;
                0, 0, 0, 0, nan, nan];
     structure.WL.rightArm= ...
               [0, 0, 0, 0, nan, nan; 
-               0, 0, 0, 0, nan, nan;
                0, 0, 0, 0, nan, nan;
                0, 0, 0, 0, nan, nan;
                0, 0, 0, 0, nan, nan;
@@ -196,11 +194,10 @@ function [name, jointStructure, structure]=loadNAO()
         [0, 0, 0, 0, nan, nan;
          0, 0, 0, 0, nan, nan;
          0,0,0,0, nan, nan];
-%     structure.WL.dummy = [0,0,0,0; 0 0 0 0];
-    structure.WL.rightArmSkin=[[1,1,1,1,nan, nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
-    structure.WL.leftArmSkin=[[1,1,1,1,nan, nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
-    structure.WL.torsoSkin=[[1,1,1,1, nan, nan];ones(size(torso_left,2)+size(torso_right,2)+2+indexes(1),6)];
-    structure.WL.headSkin=[[1,1,1,1,nan, nan];ones(size(head_left,2)+size(head_right,2)+2+indexes(2),6)];
+    structure.WL.torsoSkin=[[1,1,1,1,nan,nan];ones(size(torso_left,2)+size(torso_right,2)+2+indexes(1),6)];
+    structure.WL.leftArmSkin=[[1,1,1,1,nan,nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
+    structure.WL.rightArmSkin=[[1,1,1,1,nan,nan];ones(size(hands_upper,2)+size(hands_lower,2)+2+indexes(3),6)];
+    structure.WL.headSkin=[[1,1,1,1,nan,nan];ones(size(head_left,2)+size(head_right,2)+2+indexes(2),6)];
 %     structure.WL.leftIndex = zeros(3,6);
 %     structure.WL.rightIndex = zeros(3,6);
 %     structure.WL.leftMiddle = zeros(3,6);

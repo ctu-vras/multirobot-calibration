@@ -78,7 +78,24 @@ classdef Robot < handle
                 assert(isfield(structure, 'DH') && isfield(structure, 'WL') && isfield(structure, 'H0') ...
                      && isfield(structure, 'bounds'), ...
                     'Robot structure is incomplete, it must contains: DH, WL, H0 and bounds')
-                obj.structure=structure;                
+                obj.structure=structure;       
+                fnames = fieldnames(obj.structure.DH);
+                WLfnames = fieldnames(obj.structure.WL);
+                for fname=WLfnames'
+                    if ~any(ismember(fnames, fname{1}))
+                       obj.structure.WL = rmfield(obj.structure.WL, fname{1});
+                    end
+                end
+
+                for fname=fnames
+                    if ~any(ismember(WLfnames, fname{1}))
+                       obj.structure.WL.(fname{1}) = zeros(size(obj.structure.DH.(fname{1})));
+                    end
+                end
+                obj.structure.DH = sortStruct(obj.structure.DH);
+                obj.structure.WL = sortStruct(obj.structure.WL);
+                obj.structure.bounds = orderfields(obj.structure.bounds);
+                obj.structure.defaultDH = sortStruct(obj.structure.defaultDH);
             else
                 error('Incorrect number of arguments inserted, expected 1, but got %d',nargin);
             end
