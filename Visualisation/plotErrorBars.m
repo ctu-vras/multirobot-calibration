@@ -67,36 +67,46 @@ function plotErrorBars(folders,varargin)
     
     %% plot bars
     figure()
+    if(size(means,2) == 1)
+        idxs = find(~isnan(means)');
+    else
+        idxs = find(any(~isnan(means)'));
+    end
     set(gcf,'defaultaxesfontsize', 16)
     if(lenFolders > 1)
-        hBar = bar(means(1:numLines,:)');
+        hBar = bar(means(idxs,:)');
         hold on
         xs = hBar(1).XData + [hBar(:).XOffset]';
-        for k = 1:numLines
-            hBar(k).FaceColor = colors(k,:);
+        ii = 1;
+        for k = idxs % 1:numLines
+            hBar(ii).FaceColor = colors(k,:);
+            ii = ii + 1;
         end
-        set(gca,'xticklabel', folders, 'FontSize', 18, 'XTickLabelRotation', -15);  
+        set(gca,'xticklabel', folders, 'FontSize', 16, 'XTickLabelRotation', -15);  
     else % for only one folder no grouping
         hold on
-        for i = 1:numLines
-            bar(i,means(i),'facecolor', colors(i,:));
+        ii = 1;
+        for i = idxs % 1:numLines
+            bar(ii,means(i),'facecolor', colors(i,:));
+            ii = ii + 1;
         end
-        xs = 1:numLines;
-        xlabel(folders{1},'FontSize', 18, 'Rotation', -15)
+        xs = 1:length(idxs);%  1:numLines;
+        xlabel(folders{1},'FontSize', 16)
         set(gca,'xticklabel',[])
     end
     %% plot errorbars
     if(strcmp(type,'minmax'))
-        errorbar(xs', means(1:numLines,:)', mins(1:numLines,:)' - means(1:numLines,:)', maxs(1:numLines,:)' - means(1:numLines,:)', 'LineStyle', 'none', 'Color', 'k')
+        errorbar(xs', means(idxs,:)', mins(idxs,:)' - means(idxs,:)', maxs(idxs,:)' - means(idxs,:)', 'LineStyle', 'none', 'Color', 'k')
     else
-        errorbar(xs', means(1:numLines,:)', stds(1:numLines,:)', 'LineStyle', 'none', 'Color', 'k')
+        errorbar(xs', means(idxs,:)', stds(idxs,:)', 'LineStyle', 'none', 'Color', 'k')
     end
     grid on
     grid minor
     if(log)
        set(gca,'YScale','log');
     end
-    legend(optTypes, 'location', location, 'FontSize',19);
-    ylabel(['Errors [',units,'/px]'], 'FontSize', 20);
-    title(titl,'FontSize',24);
+    legend(optTypes(idxs), 'location', location, 'FontSize',16);
+    ylabel(['Errors [',units,'/px]'], 'FontSize', 16);
+    
+    title(titl,'FontSize',22);
 end

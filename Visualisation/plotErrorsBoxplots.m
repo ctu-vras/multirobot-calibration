@@ -46,7 +46,7 @@ function plotErrorsBoxplots(folders,varargin)
     usedNames={};
     boxOrder=[];
     linePositions=[];
-    maxReps = 0;
+    maxReps = 2;
     
     for folder=folders
         info = load(['Results/',folder{1},'/info.mat']);
@@ -149,10 +149,10 @@ function plotErrorsBoxplots(folders,varargin)
 % data2(1,2) = data(2);
 % data2(:,3) = data(3:12);
 % data2(:,4) = data(13:end);
-data2 = data
+data2 = data;
 % data2 = reshape(data,10,4);
 names2 = [1, 2, zeros(1,10)+3, zeros(1,10)+4];
-     bplot(data2,'width',0.9, 'nolegend')
+     bplot(data2,'width',0.9, 'nolegend');
 %       boxplot(ax,data,names,'position',1:size(unique(names),1),'width',0.9,'colors',colors)
     hold on
     h = findobj(gca, 'Type', 'Patch');

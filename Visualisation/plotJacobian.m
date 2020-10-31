@@ -61,7 +61,7 @@ function plotJacobian(robot, whitelist, jacobians, titles)
         maxs = max(max(abs(jacobians{j})));
         maxs(maxs == 0) = 1;
         jac = jacobians{j}./maxs;
-        bplot(jac)
+        bplot(jac);
         set(gca, 'Xtick', 1:size(jac,2), 'XTickLabel',xt, 'FontSize',16)
         ylim([-1,1])
         xlim([0.5, size(jac,2)+0.5])
