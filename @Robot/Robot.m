@@ -87,9 +87,11 @@ classdef Robot < handle
                     end
                 end
 
-                for fname=fnames
+                for fname=fnames'
                     if ~any(ismember(WLfnames, fname{1}))
-                       obj.structure.WL.(fname{1}) = zeros(size(obj.structure.DH.(fname{1})));
+                       temp = obj.structure.DH.(fname{1});
+                       temp(~isnan(temp)) = 1;
+                       obj.structure.WL.(fname{1}) = temp;
                     end
                 end
                 obj.structure.DH = sortStruct(obj.structure.DH);

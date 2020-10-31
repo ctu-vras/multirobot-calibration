@@ -36,6 +36,24 @@ if(nargin == 8)
 else
    whitelist = robot.structure.WL; 
 end
+
+fnames = fieldnames(robot.structure.DH);
+WLfnames = fieldnames(whitelist);
+for fname=WLfnames'
+    if ~any(ismember(fnames, fname{1}))
+       whitelist = rmfield(whitelist, fname{1});
+    end
+end
+
+for fname=fnames'
+    if ~any(ismember(WLfnames, fname{1}))
+       temp = obj.structure.DH.(fname{1});
+       temp(~isnan(temp)) = 1;
+       obj.structure.WL.(fname{1}) = temp;
+    end
+end
+whitelist = sortStruct(whitelist);
+
 [whitelist, ~] = padVectors(whitelist, 1);
 %Edit each joints
 for joint=robot.joints
@@ -52,20 +70,7 @@ for joint=robot.joints
        end
    end
 end
-fnames = fieldnames(robot.structure.DH);
-WLfnames = fieldnames(whitelist);
-for fname=WLfnames'
-    if ~any(ismember(fnames, fname{1}))
-       whitelist = rmfield(whitelist, fname{1});
-    end
-end
 
-for fname=fnames
-    if ~any(ismember(WLfnames, fname{1}))
-       whitelist.(fname{1}) = zeros(size(robot.structure.DH.(fname{1})));
-    end
-end
-whitelist = sortStruct(whitelist);
 %% Allocate matrices
 names = fieldnames(whitelist);
 count = 0;
