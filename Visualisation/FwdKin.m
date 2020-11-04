@@ -62,6 +62,7 @@ function [RFFrame] = FwdKin(robot, str, varargin)
             thetas = theta.(link)';
             offs = DH.(link)(:,4);
             thet = thetas + offs;
+            theta.dummy = [0;0];
         catch ME
             msg = ['Body part: ', link, '\nActual number of joint angles: ', ...
                 num2str(size(offs,1)), '\nNumber of joint angles inserted: ', ...
@@ -99,40 +100,44 @@ function [RFFrame] = FwdKin(robot, str, varargin)
                 RFFrame{1} = getTFtoFrame(DH,joint, theta, H0, base);
             end
         end
-        
-        % Draw the stuff (joints, ref frames, links)
-        for i = 1:length(RFFrame)
-            DrawCylinder(ljnt, rjnt, RFFrame{i} * [1 0 0 0; 0 1 0 0; 0 0 1 -ljnt/2; 0 0 0 1], JntColor, 100, 0.8);
-        end
-        
-        
-        if ~refFrame
-            DrawRefFrame(RFFrame{1},1,refFrameSize,'hat',link);
-            if length(RFFrame) >=2
-                for i = 2:length(RFFrame)
-                    joint = robot.findJoint(jointNames{i-1});
-                    joint = joint{1};
-                    if any(contains(str.specialGroup, joint.group))
-                        DrawRefFrame(RFFrame{i},i,refFrameSize,'www');
-                    else
-                        DrawRefFrame(RFFrame{i},i,refFrameSize,'noh',jointNames{i-1});
+                
+        if str.naoSkin && any(ismember({'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'}, str.link))
+            for point = length(RFFrame):-1:2
+                p = RFFrame{point};
+                scatter3(p(1, end), p(2, end), p(3, end), 'b');
+            end
+        else
+            % Draw the stuff (joints, ref frames, links)
+            for i = 1:length(RFFrame)
+                DrawCylinder(ljnt, rjnt, RFFrame{i} * [1 0 0 0; 0 1 0 0; 0 0 1 -ljnt/2; 0 0 0 1], JntColor, 100, 0.8);
+            end
+            if ~refFrame
+                DrawRefFrame(RFFrame{1},1,refFrameSize,'hat',link);
+                if length(RFFrame) >=2
+                    for i = 2:length(RFFrame)
+                        joint = robot.findJoint(jointNames{i-1});
+                        joint = joint{1};
+                        if any(contains(str.specialGroup, joint.group))
+                            DrawRefFrame(RFFrame{i},i,refFrameSize,'www');
+                        else
+                            DrawRefFrame(RFFrame{i},i,refFrameSize,'noh',jointNames{i-1});
+                        end
                     end
+                end  
+            end
+            for i = 1:length(RFFrame)-1
+                if ~isempty(jointNames)
+                    joint = robot.findJoint(jointNames{i});
+                    joint = joint{1};
+                    gr=joint.group;
+                else
+                    gr = '';
                 end
-            end  
-        end
-        for i = 1:length(RFFrame)-1
-            if ~isempty(jointNames)
-                joint = robot.findJoint(jointNames{i});
-                joint = joint{1};
-                gr=joint.group;
-            else
-                gr = '';
-            end
-            if ~any(contains(str.specialGroup, gr))
-                cyl{i} = DrawCylinderFromTo(RFFrame{i}(1:3,4),RFFrame{i+1}(1:3,4), LinkColor, 100, linkTransparency, linkratio);
+                if ~any(contains(str.specialGroup, gr))
+                    cyl{i} = DrawCylinderFromTo(RFFrame{i}(1:3,4),RFFrame{i+1}(1:3,4), LinkColor, 100, linkTransparency, linkratio);
+                end
             end
         end
-        
         view(3);
 
     

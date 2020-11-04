@@ -30,9 +30,9 @@ function fig = showModel(r, varargin)
     addParameter(p,'dual',0,@isnumeric);
     addParameter(p,'dualDH',[]);
     addParameter(p,'figName','');
+    addParameter(p, 'naoSkin', strcmp(r.name, 'nao'));
     parse(p, varargin{:});
     angles = p.Results.angles;
-            
     % Color settings
     LINK_COLORS = [[0.5 0.5 0.8];[0.8 0.5 0.5]]; % blueish and redish
 
@@ -94,7 +94,7 @@ function fig = showModel(r, varargin)
         end
         fnames(contains(fnames,'Skin') |...
               contains(fnames,'Middle')...
-            | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers'))= [];
+            | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers') )= [];
         
         fnames = fnames(1:size(angles,2));
         if ~isfield(DH_,'torso')
@@ -149,6 +149,40 @@ function fig = showModel(r, varargin)
             str.LinkColor = LINK_COLORS(robots,:);
             str.refFrameSize = 10;
             str.types=types_;
+            str.naoSkin = p.Results.naoSkin;
+            FwdKin(r, str);
+        end
+    end
+    fnames = {'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'};
+    if p.Results.naoSkin
+        for i=1:length(fnames)
+            name=fnames{i};
+            DH.(name)(:,1:3) = DH.(name)(:,1:3).*1000;
+            if strcmp(name, 'torso')
+                str.refFrame = 1;
+            else
+                str.refFrame = 0;
+            end
+            jointNames = {};
+            % find joint from given group to save their names
+            joints=findJointByGroup(r,name);
+            for joint=1:size(joints,2)
+                j=joints(joint);
+                %if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)...
+                %        || strcmp(j{1}.type,types.finger || strcmp(j{1}.type,types.)
+                jointNames{end+1} = j{1}.name;
+                %end
+            end  
+            theta.(name) = zeros(1,size(joints, 2));
+%             theta.(name) = reshape([angles_{i}], 1, []);
+            str.link = name;
+            str.DH = DH;
+            str.theta = theta;
+            str.jointNames = jointNames;
+            str.LinkColor = LINK_COLORS(robots,:);
+            str.refFrameSize = 10;
+            str.types=types_;
+            str.naoSkin = p.Results.naoSkin;
             FwdKin(r, str);
         end
     end
