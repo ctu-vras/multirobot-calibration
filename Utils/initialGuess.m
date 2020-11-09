@@ -1,8 +1,8 @@
-function [params, typicalX] = initialGuess(rob, datasets, dh_pars, approaches, optim)
+function [params, typicalX] = initialGuess(H0, datasets, dh_pars, approaches, optim)
 %INITIALGUESS Compute initial guess of plane and/or external transformation parameters
 % Compute plane parameters for each dataset.planes and rotation vector
 % (quaternion) and translation vector for each dataset.external separately
-%INPUT - rob - instance of @Robot class
+%INPUT - H0 - robot H0 transformation matrix
 %      - datasets - structure of dataset, where field names are {selftouch,
 %                     planes, external, projections} and and each field is 1xN cellArray
 %      - dh_pars - structure with DH parameters, where field names corresponding to names of
@@ -18,7 +18,7 @@ function [params, typicalX] = initialGuess(rob, datasets, dh_pars, approaches, o
         if approaches.(type)
             for dataset = datasets.(type)
                 dataset = dataset{1};
-                robPoints = getPoints(dh_pars, dataset, rob.structure.H0, false);
+                robPoints = getPoints(dh_pars, dataset, H0, false);
                 if strcmp(type,'planes')
                     newParams = getPlane(robPoints);
                     newParams = newParams(1:3)/newParams(4); % plane equation in format ax+by+cz = 1

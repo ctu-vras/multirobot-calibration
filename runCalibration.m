@@ -74,7 +74,7 @@ function runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, d
             end
             initialParamValues = [];
             if optim.optimizeInitialGuess && (approach.planes || approach.external) 
-                [params, typicalX]=initialGuess(rob, tr_datasets, dh, approach, optim);
+                [params, typicalX]=initialGuess(rob.structure.H0, tr_datasets, dh, approach, optim);
                 options.TypicalX(end-length(params)+1:end) = typicalX;
                 if(optim.optimizeDifferences)
                     initialParamValues = params;
@@ -103,11 +103,11 @@ function runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, d
     [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, rob, datasets, testing_set_indexes, optim, approach);
     
     %% unpad all variables to default state
-    res_dh = unpadVectors(res_dh, rob);
-    start_dh = unpadVectors(start_dh, rob);
-    whitelist = unpadVectors(whitelist, rob);
-    corrs_dh = unpadVectors(corrs_dh, rob);
-    rob.structure.DH = unpadVectors(rob.structure.DH, rob);
+    res_dh = unpadVectors(res_dh, rob.structure.DH, rob.structure.type);
+    start_dh = unpadVectors(start_dh, rob.structure.DH, rob.structure.type);
+    whitelist = unpadVectors(whitelist, rob.structure.DH, rob.structure.type);
+    corrs_dh = unpadVectors(corrs_dh, rob.structure.DH, rob.structure.type);
+    rob.structure.DH = unpadVectors(rob.structure.DH, rob.structure.DH, rob.structure.type);
     %% saving results
     outfolder = ['Results/', folder, '/'];
     ext_pars_result = opt_pars(size(start_pars,1)+1:end,:,:);
