@@ -29,10 +29,17 @@ function fig = showModel(r, varargin)
     addParameter(p,'specialGroup','');
     addParameter(p,'dual',0,@isnumeric);
     addParameter(p,'dualDH',[]);
+    addParameter(p,'units','m', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'figName','');
     addParameter(p, 'naoSkin', strcmp(r.name, 'nao'));
     parse(p, varargin{:});
     angles = p.Results.angles;
+    units = p.Results.units;
+    if strcmp(units,'m')
+        coef = 1;
+    else
+        coef = 1000;
+    end
     % Color settings
     LINK_COLORS = [[0.5 0.5 0.8];[0.8 0.5 0.5]]; % blueish and redish
 
@@ -68,12 +75,12 @@ function fig = showModel(r, varargin)
     %axes  ('Position', [0 0 1 1]); 
     %setAxes(fig.CurrentAxes);
     hold on; grid on;
-    xlabel('x (mm)'); ylabel('y (mm)'),zlabel('z (mm)');
+    xlabel(['x (',units,')']); ylabel(['y (',units,')']),zlabel(['z (',units,')']);
     hold on
     
     %% ROOT - plot the original root reference frame
     root = eye(4);
-    DrawRefFrame(root,1,40,'hat','ROOT');
+    DrawRefFrame(root,1,0.04*coef,'hat','ROOT');
 
     %% Draw
     for robots=1:1+p.Results.dual
@@ -125,7 +132,7 @@ function fig = showModel(r, varargin)
         str.specialGroup = p.Results.specialGroup;
         for i=1:length(fnames)
             name=fnames{i};
-            DH.(name)(:,1:3) = DH.(name)(:,1:3).*1000;
+            DH.(name)(:,1:3) = DH.(name)(:,1:3).*coef;
             if strcmp(name, 'torso')
                 str.refFrame = 1;
             else
@@ -147,17 +154,17 @@ function fig = showModel(r, varargin)
             str.theta = theta;
             str.jointNames = jointNames;
             str.LinkColor = LINK_COLORS(robots,:);
-            str.refFrameSize = 10;
+            str.refFrameSize = 0.01*coef;
             str.types=types_;
             str.naoSkin = p.Results.naoSkin;
-            FwdKin(r, str);
+            FwdKin(r, str, coef);
         end
     end
     fnames = {'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'};
     if p.Results.naoSkin
         for i=1:length(fnames)
             name=fnames{i};
-            DH.(name)(:,1:3) = DH.(name)(:,1:3).*1000;
+            DH.(name)(:,1:3) = DH.(name)(:,1:3).*coef;
             if strcmp(name, 'torso')
                 str.refFrame = 1;
             else
@@ -180,10 +187,10 @@ function fig = showModel(r, varargin)
             str.theta = theta;
             str.jointNames = jointNames;
             str.LinkColor = LINK_COLORS(robots,:);
-            str.refFrameSize = 10;
+            str.refFrameSize = 0.01*coef;
             str.types=types_;
             str.naoSkin = p.Results.naoSkin;
-            FwdKin(r, str);
+            FwdKin(r, str, coef);
         end
     end
     view([90,0]);

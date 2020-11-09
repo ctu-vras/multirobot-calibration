@@ -1,7 +1,7 @@
 % Edited by Alessandro Roncone
 % Genova Oct 2013
 % changes Matej Hoffmann, July 2017
-function [RFFrame] = FwdKin(robot, str, varargin)
+function [RFFrame] = FwdKin(robot, str, coef)
 % This function computes and displays the forward kinematics of a body part
 % INPUT
 %   body_part (struct) - the body part under consideration. Each body part has the same structure:
@@ -20,8 +20,8 @@ function [RFFrame] = FwdKin(robot, str, varargin)
 %   chain (struct) - the resulted chain with everything inside it. It's divided by body parts.
 
     %% MISC STUFF
-        ljnt  = 7;               % joint pic length
-        rjnt  = 2;               % joint pic radius
+        ljnt  = 0.007*coef;               % joint pic length
+        rjnt  = 0.002*coef;               % joint pic radius
         linkratio = 1/15;        % link dimension ratio
         linkTransparency = 0.2;
         LinkColor = str.LinkColor;
@@ -35,7 +35,7 @@ function [RFFrame] = FwdKin(robot, str, varargin)
         jointNames = str.jointNames;
         theta = str.theta;
         refFrame = str.refFrame;
-        H0 = robot.structure.H0*1000;
+        H0 = robot.structure.H0;
         [DH, types] = padVectors(DH);
         %DH.(link)(:,1:2) = DH.(link)(:,1:2).*1000;
         %DH(:,1:2) = DH(:, 1:2).*1000;
