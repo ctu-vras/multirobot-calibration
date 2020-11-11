@@ -162,7 +162,7 @@ classdef Robot < handle
         showModel(robot, angles, varargin);
         
         %% Show graph model
-        showGraphModel(robot);
+        showGraphModel(robot, ax);
         
         %% Prepare DH, bounds and perts
         [init, lb, ub]=prepareDH(robot, pert, optim, funcname);

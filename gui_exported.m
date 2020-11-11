@@ -522,8 +522,9 @@ classdef gui_exported < matlab.apps.AppBase
             app.Robot = Robot(file(1:end-2));
             app.RobotnameEditField.Value = app.Robot.name;
             app.H0mat.Data = app.Robot.structure.H0;
-            %axes(app.UIAxes2);
-            app.Robot.showGraphModel;
+            %set(app.Robot_toolboxUIFigure, 'currentaxes', app.UIAxes2);  %# for axes with handle axs on figure f
+%             axes(app.UIAxes2);
+            app.Robot.showGraphModel(app.UIAxes2);
             app.UITable4.Data = app.Robot.jointsStructure;
             [app.Robot.structure.DH, app.Robot.structure.type] = padVectors(app.Robot.structure.DH);
             [app.Robot.structure.WL, ~] = padVectors(app.Robot.structure.WL, 1);
@@ -878,7 +879,7 @@ classdef gui_exported < matlab.apps.AppBase
                 end
                 initialParamValues = [];
                 if optim.optimizeInitialGuess && (approach.planes || approach.external) 
-                    [params, typicalX]=initialGuess(app.Robot, tr_datasets, dh, approach, optim);
+                    [params, typicalX]=initialGuess(app.Robot.structure.H0, tr_datasets, dh, approach, optim);
                     options.TypicalX(end-length(params)+1:end) = typicalX;
                     if(optim.optimizeDifferences)
                         initialParamValues = params;
@@ -893,10 +894,10 @@ classdef gui_exported < matlab.apps.AppBase
                 % optimization        
                 [opt_result, calibOut.resnorms{1,rep, pert_level}, calibOut.residuals{1,rep, pert_level},...
                     calibOut.exitFlags{1,rep, pert_level}, calibOut.outputs{1,rep, pert_level}, ...
-                    calibOut.lambdas{1,rep, pert_level}, jacobians{1,rep, pert_level}] = ...
+                    calibOut.lambdas{1,rep, pert_level}, jac] = ...
                 lsqnonlin(obj_func, pars, lb_pars, up_pars, options);  
                 opt_pars(:, rep, pert_level) = opt_result';
-                jacobians(1, rep, pert_level) = full(jacobians(1, rep, pert_level));
+                jacobians{1, rep, pert_level} = full(jac);
                 obsIndexes(rep, pert_level) = computeObservability(jacobians{1,rep, pert_level}, length(training_set_indexes{rep}));
             end
         end
@@ -908,11 +909,11 @@ classdef gui_exported < matlab.apps.AppBase
         [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, app.Robot, datasets, testing_set_indexes, optim, approach);
         
         %% unpad all variables to default state
-        res_dh = unpadVectors(res_dh, app.Robot);
-        start_dh = unpadVectors(start_dh, app.Robot);
-        whitelist = unpadVectors(whitelist, app.Robot);
-        corrs_dh = unpadVectors(corrs_dh, app.Robot);
-        app.Robot.structure.DH = unpadVectors(app.Robot.structure.DH, app.Robot);
+        res_dh = unpadVectors(res_dh, app.Robot.structure.DH, app.Robot.structure.type);
+        start_dh = unpadVectors(start_dh, app.Robot.structure.DH, app.Robot.structure.type);
+        whitelist = unpadVectors(whitelist, app.Robot.structure.DH, app.Robot.structure.type);
+        corrs_dh = unpadVectors(corrs_dh, app.Robot.structure.DH, app.Robot.structure.type);
+        app.Robot.structure.DH = unpadVectors(app.Robot.structure.DH, app.Robot.structure.DH, app.Robot.structure.type);
         %% saving results
         outfolder = ['Results/', folder, '/'];
         ext_pars_result = opt_pars(size(start_pars,1)+1:end,:,:);
@@ -1119,8 +1120,7 @@ classdef gui_exported < matlab.apps.AppBase
             end
             %Call Joint constructor
             app.Robot.joints{event.Indices(1)} = Joint(curJoint{1},curJoint{2},j,curJoint{4},curJoint{5},parentId);
-            axes(app.UIAxes2);
-            app.Robot.showGraphModel;
+            app.Robot.showGraphModel(app.UIAxes2);
         end
 
         % Callback function
@@ -1309,7 +1309,8 @@ classdef gui_exported < matlab.apps.AppBase
             app.Robot_toolboxUIFigure = uifigure('Visible', 'off');
             app.Robot_toolboxUIFigure.Position = [100 100 900 600];
             app.Robot_toolboxUIFigure.Name = 'Robot_toolbox';
-
+            
+            
             % Create TabGroup
             app.TabGroup = uitabgroup(app.Robot_toolboxUIFigure);
             app.TabGroup.Position = [1 1 900 600];
@@ -2241,6 +2242,7 @@ classdef gui_exported < matlab.apps.AppBase
 
             % Show the figure after all components are created
             app.Robot_toolboxUIFigure.Visible = 'on';
+            set(0, 'ShowHiddenHandles', 'on');
         end
     end
 
