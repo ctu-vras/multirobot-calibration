@@ -31,7 +31,7 @@ function fig = showModel(r, varargin)
     addParameter(p,'dualDH',[]);
     addParameter(p,'units','m', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'figName','');
-    addParameter(p, 'naoSkin', strcmp(r.name, 'nao'));
+    addParameter(p, 'naoSkin', 0);
     parse(p, varargin{:});
     angles = p.Results.angles;
     units = p.Results.units;
@@ -195,7 +195,7 @@ function fig = showModel(r, varargin)
     end
     view([90,0]);
     axis equal;
-    
+    axis tight;
     %if nargin > 7
     %    saveas(gcf, varargin{1});
     %end

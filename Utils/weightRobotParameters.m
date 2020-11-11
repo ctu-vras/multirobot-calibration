@@ -17,13 +17,13 @@ function options= weightRobotParameters(whitelist, options, paramsLength, optim)
                 skin=0;
             end
             idx=find(whitelist.(fnames{name})')-1;
-            params=mod(idx,4)+1;  
+            params=mod(idx,6)+1;  
             % parametersWeights is structure -.body (lengths, angles); .skin (skinLengths, skinAngles);
             for i=1:size(params,1)
                 if skin
-                    options.TypicalX(paramNumber)=options.TypicalX(paramNumber)*optim.parametersWeights.skin(1+(params(i)>2)); % if params(i) is 3 or 4 -> index is 2, else index is 1
+                    options.TypicalX(paramNumber)=options.TypicalX(paramNumber)*optim.parametersWeights.skin(1+(params(i)>3)); % if params(i) is 3 or 4 -> index is 2, else index is 1
                 else
-                    options.TypicalX(paramNumber)=options.TypicalX(paramNumber)*optim.parametersWeights.body(1+(params(i)>2)); % if params(i) is 3 or 4 -> index is 2, else index is 1
+                    options.TypicalX(paramNumber)=options.TypicalX(paramNumber)*optim.parametersWeights.body(1+(params(i)>3)); % if params(i) is 3 or 4 -> index is 2, else index is 1
                 end
                 paramNumber=paramNumber+1;
             end

@@ -102,10 +102,16 @@ function [RFFrame] = FwdKin(robot, str, coef)
         end
                 
         if str.naoSkin && any(ismember({'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'}, str.link))
-            for point = length(RFFrame):-1:2
-                p = RFFrame{point};
-                scatter3(p(1, end), p(2, end), p(3, end), 'b');
+            points = zeros(length(RFFrame)-1,3);
+            for point = 2:length(RFFrame)
+                if contains(jointNames{point-1}, 'Taxel')
+                    p = RFFrame{point};
+                    points(point, :) = [p(1, end), p(2, end), p(3, end)];
+                end
+                %scatter3(p(1, end), p(2, end), p(3, end), 'b');
             end
+            points(~any(points,2), :) = [];
+            scatter3(points(:,1),points(:,2),points(:,3),'b')
         else
             % Draw the stuff (joints, ref frames, links)
             for i = 1:length(RFFrame)

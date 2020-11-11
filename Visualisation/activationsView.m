@@ -51,7 +51,7 @@ function showFig(robot,idx,dataset,parser)
     if parser.skin
         % show skin and color activated taxels, selected COP and all cops
         % with different color for each chain
-        x=1000000;
+        x=0.001;
         scatter3(dataset.newTaxelsNA{idx,1}(:,1).*x,dataset.newTaxelsNA{idx,1}(:,2).*x,dataset.newTaxelsNA{idx,1}(:,3).*x,'red')
         scatter3(dataset.newTaxels{idx,1}(:,1).*x,dataset.newTaxels{idx,1}(:,2).*x,dataset.newTaxels{idx,1}(:,3).*x,'filled','red')
         scatter3(dataset.newTaxelsNA{idx,2}(:,1).*x,dataset.newTaxelsNA{idx,2}(:,2).*x,dataset.newTaxelsNA{idx,2}(:,3).*x,'blue')

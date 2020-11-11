@@ -1,4 +1,4 @@
-function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt, chains, optim)
+function taxelStruct=prepareDataOutliers(robot, datasetName, chain1, chain2, DH, alt, chains, optim)
 % PREPAREDATA returns 'taxelStruct' with Nao dataset informations
 %   INPUT - robot - instance of @robot class
 %         - datasetName - string with name of the dataset
@@ -364,7 +364,7 @@ for i=1:size(dataset.(chain1).cop,2)
 
    %If 'minDist' is lower than given number (could help to get rid of 'bad'
    %activations)
-   if minDist<0.05
+   if minDist<99999
        %Assign newData to the 'taxelStruct'
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId;minTaxel2Id];
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel;minTaxel2];

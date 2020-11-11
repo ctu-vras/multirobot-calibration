@@ -244,7 +244,7 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
                 end
                 %if there were more than X (10) activations on one
                 %triangle, assign them to the global dataset
-                if size(datasetLocal.point,1)>10
+                if size(datasetLocal.point,1)>0
                     dataset.refPoints=[dataset.refPoints;datasetLocal.refPoints];
                     dataset.point=[dataset.point;datasetLocal.point];
                     dataset.joints=[dataset.joints;datasetLocal.joints];

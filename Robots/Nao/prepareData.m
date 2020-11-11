@@ -364,7 +364,7 @@ for i=1:size(dataset.(chain1).cop,2)
 
    %If 'minDist' is lower than given number (could help to get rid of 'bad'
    %activations)
-   if minDist<9999
+   if minDist<0.005
        %Assign newData to the 'taxelStruct'
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId;minTaxel2Id];
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel;minTaxel2];

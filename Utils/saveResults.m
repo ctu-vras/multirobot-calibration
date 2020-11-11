@@ -41,7 +41,13 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err,
     %% convert DH to metres
     fnames=fieldnames(res_dh);
     for name=1:length(fnames)
-       res_dh.(fnames{name})(:,1:2,:,:) =  res_dh.(fnames{name})(:,1:2,:,:)/units;
+       for line=1:size(res_dh.(fnames{name}), 1)
+           if size(res_dh.(fnames{name})(line,:,1,1),2)==4 || any(isnan(res_dh.(fnames{name})(line,:,1,1)))
+               res_dh.(fnames{name})(line,1:2,:,:) =  res_dh.(fnames{name})(line,1:2,:,:)/units;
+           else
+               res_dh.(fnames{name})(line,1:3,:,:) =  res_dh.(fnames{name})(line,1:3,:,:)/units;
+           end
+       end
     end
     %% save variables
     s = mkdir(outfolder);
