@@ -96,7 +96,7 @@ function runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, d
         end
     end
     %% evaluation
-    [res_dh, corrs_dh] = getResultDH(rob, opt_pars, start_dh, whitelist, optim);
+    [res_dh, corrs_dh, start_dh] = getResultDH(rob, opt_pars, start_dh, whitelist, optim);
     [before_tr_err,before_tr_err_all] = rmsErrors(start_dh, rob, datasets, training_set_indexes, optim, approach);
     [after_tr_err,after_tr_err_all] = rmsErrors(res_dh, rob, datasets, training_set_indexes, optim, approach);
     [before_ts_err,before_ts_err_all] = rmsErrors(start_dh, rob, datasets, testing_set_indexes, optim, approach);

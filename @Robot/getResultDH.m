@@ -1,4 +1,4 @@
-function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, optim)
+function [results, corrs, start_dh] = getResultDH(robot, opt_pars, start_dh, whitelist, optim)
 %GETRESULTDH - Returns final DH parameters and correction of each run
 %   INPUT - opt_pars - 1xN vector of optimized parameters
 %         - start_dh - structure of DH parameters used in calibration;
@@ -38,9 +38,12 @@ function [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, op
         end
         mResults = results.(fnames{field});
         % corrections = results - default 
-        corrs.(fnames{field}) = mResults-robot.structure.DH.(fnames{field})(:,:,1); 
+        corrs.(fnames{field}) = zeros(size(mResults));
+        corrs.(fnames{field})(:,1:3,:,:) = mResults(:,1:3,:,:)/optim.unitsCoef-robot.structure.DH.(fnames{field})(:,1:3,1); 
+        corrs.(fnames{field})(:,4:6,:,:) = mResults(:,4:6,:,:)-robot.structure.DH.(fnames{field})(:,4:6,1);
         % wrap to [-pi,pi]
         corrs.(fnames{field})(:,4:6,:,:)=ezwraptopi(corrs.(fnames{field})(:,4:6,:,:));
+        start_dh.(fnames{field})(:,1:3,:,:) = start_dh.(fnames{field})(:,1:3,:,:)/optim.unitsCoef;
     end
 end
 
