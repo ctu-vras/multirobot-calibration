@@ -174,7 +174,7 @@ classdef Robot < handle
         [opt_pars, lb_pars, up_pars, whitelist, start_dh] = createWhitelist(robot, dh_pars, lb_pars, ub_pars, optim, chains, jointTypes, funcname);
     
         %% Get result DH and its correction from the initial one
-        [results, corrs] = getResultDH(robot, opt_pars, start_dh, whitelist, optim)
+        [results, corrs, start_dh] = getResultDH(robot, opt_pars, start_dh, whitelist, optim)
     end
     
 end
