@@ -30,8 +30,10 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
     % check if varargin is not empty
     chain = '';
     if(nargin >= 4)
-        if(ismatrix(varargin{1}) && ~ischar(varargin{1})) % use selected groups of datasets
-        used_datasets = varargin{1}; 
+        if(ismatrix(varargin{1}) && ~ischar(varargin{1}))
+            used_datasets = varargin{1};
+        elseif(ismatrix(varargin{1}) && ~isempty(str2num(varargin{1}))) %   % use selected groups of datasets       
+            used_datasets = str2num(varargin{1}); 
         elseif(strcmp('leica', varargin{1})) % use only leica dataset for robot calibration
             used_datasets = [0,0,0,0,1];
         elseif(iscell(varargin{1}))

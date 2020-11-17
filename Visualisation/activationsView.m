@@ -30,6 +30,9 @@ end
 %% Fig show
 function showFig(robot,idx,dataset,parser)
     fnames=fieldnames(robot.structure.DH);
+    fnames(contains(fnames,'Skin') |...
+      contains(fnames,'Middle')...
+    | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers') )= [];
     ang=cell(1,length(fnames));
     % Get angles from dataset in correct format for 'showModel'
     for name=1:length(fnames)
@@ -40,9 +43,9 @@ function showFig(robot,idx,dataset,parser)
         dataset.name='';
     end
     
-    ang = ang(1:3);
+%     ang = ang(1:3);
     if parser.finger
-       ang = {ang{:}, 0, 0}; 
+       ang = [ang(:)', {0}, {0}]; 
     end
     % Show model in given configuration
     robot.showModel(ang,'figName',dataset.name);
@@ -90,6 +93,7 @@ function showFig(robot,idx,dataset,parser)
         annotation('textbox',dim,'String',txt,'FitBoxToText','on')
     end
     % find correct figure
+    title(['Point ', num2str(idx)]) 
     f = findobj( 'Type', 'Figure', 'Name', dataset.name);
     %Set callback to keyboard keys
     set(f,'KeyPressFcn',{@key_press,robot, idx, dataset,parser});

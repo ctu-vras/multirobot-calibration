@@ -89,15 +89,13 @@ classdef Robot < handle
 
                 for fname=fnames'
                     if ~any(ismember(WLfnames, fname{1}))
-                       temp = obj.structure.DH.(fname{1});
-                       temp(~isnan(temp)) = 1;
-                       obj.structure.WL.(fname{1}) = temp;
+                       obj.structure.WL.(fname{1}) = zeros(size(obj.structure.DH.(fname{1})));
                     end
                 end
-                obj.structure.DH = sortStruct(obj.structure.DH);
-                obj.structure.WL = sortStruct(obj.structure.WL);
+                obj.structure.DH = group.sort(obj.structure.DH);
+                obj.structure.WL = group.sort(obj.structure.WL);
                 obj.structure.bounds = orderfields(obj.structure.bounds);
-                obj.structure.defaultDH = sortStruct(obj.structure.defaultDH);
+                obj.structure.defaultDH = group.sort(obj.structure.defaultDH);
             else
                 error('Incorrect number of arguments inserted, expected 1, but got %d',nargin);
             end

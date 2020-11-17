@@ -47,12 +47,10 @@ end
 
 for fname=fnames'
     if ~any(ismember(WLfnames, fname{1}))
-       temp = obj.structure.DH.(fname{1});
-       temp(~isnan(temp)) = 1;
-       obj.structure.WL.(fname{1}) = temp;
+       robot.structure.WL.(fname{1}) = zeros(size(robot.structure.DH.(fname{1})));
     end
 end
-whitelist = sortStruct(whitelist);
+whitelist = group.sort(whitelist);
 
 [whitelist, ~] = padVectors(whitelist, 1);
 %Edit each joints

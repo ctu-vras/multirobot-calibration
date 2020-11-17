@@ -1,4 +1,4 @@
-function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams, type)
+function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
 %GETDISTFROMEXT returns errors from configurations with external camera
 %   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is matrix.

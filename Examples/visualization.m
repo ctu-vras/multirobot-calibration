@@ -97,9 +97,7 @@ plotJointsError(rob, [errorsAll{3}{1}, errorsAll{11}{1}], datasets.external, gro
 % Shows Jacobians computed in each repetition of calibration. All the
 % mandatory arguments can be loaded from results
 folder = 'NAOOO';
-load(['Results/',folder,'/info']);
-load(['Results/',folder,'/jacobians']);
-plotJacobian(rob, whitelist, jacobians)
+plotJacobian(folder)
 
 %% Moveable model
 % This model uses 'showModel' method of Robot and allows to change

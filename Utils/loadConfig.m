@@ -1,6 +1,6 @@
-function [options, chains, approach, jointTypes, optim, pert] = loadConfig(funcname, approaches, inputChains, jointType)
+function [options, chains, approach, jointTypes, optim, pert] = loadConfig(config, approaches, inputChains, jointType)
 %LOADCONFIG Loading Config file function
-%INPUT - funcname - Config function name
+%INPUT - config - Config function name
 %       - inputChains - chains to calibrate
 %       - approaches - calibration approaches
 %       - jointType -joint types to calibrate
@@ -10,14 +10,21 @@ function [options, chains, approach, jointTypes, optim, pert] = loadConfig(funcn
 %       - jointTypes -joint types to calibrate
 %       - optim - calibration settings
 %       - pert - perturbation levels
-
-    func=str2func(funcname);
-    if nargin>1
-        [options, chains, approach, jointTypes, userOptim, pert]=func(approaches, inputChains, jointType);
+    if ischar(config) || isstring(config)
+        func=str2func(config);
+        if nargin>1
+            [options, chains, approach, jointTypes, userOptim, pert]=func(approaches, inputChains, jointType);
+        else
+            [options, chains, approach, jointTypes, userOptim, pert]=func();
+        end
     else
-        [options, chains, approach, jointTypes, userOptim, pert]=func();
+        options = config.options;
+        chains = config.chains;
+        approach = config.approach;
+        jointTypes = config.jointTypes;
+        userOptim = config.optim;
+        pert = config.pert;
     end
-    
     if ~isempty(inputChains{1})
         for i = 1:length(inputChains)
             if (chains.(inputChains{i}) == 0)

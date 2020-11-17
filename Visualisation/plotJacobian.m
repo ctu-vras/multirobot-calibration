@@ -1,9 +1,14 @@
-function plotJacobian(robot, whitelist, jacobians, titles)
+function plotJacobian(folder, titles)
 %PLOTJACOBIAN Function for plotting jacobians
 %INPUT - robot - Robot object
 %      - whitelist - whitelist structure to gain the parameters names
 %      - jacobians - cell array of jacobians
 %      - titles - subplot titles
+    info = load(['Results/',folder,'/info']);
+    jac = load(['Results/',folder,'/jacobians']);
+    jacobians = jac.jacobians;
+    robot = info.rob;
+    whitelist = info.whitelist;
     fnames=fieldnames(robot.structure.DH);
     for name = 1:size(fnames,1)
         whitelist.(fnames{name}) = double(whitelist.(fnames{name}));
@@ -72,7 +77,7 @@ function plotJacobian(robot, whitelist, jacobians, titles)
 
         bp.XAxis.FontSize = 15;
         set(findobj(gca,'Type','text'),'FontSize')
-        if nargin==3
+        if nargin==1
             title(['Rep ',num2str(j)])
         elseif(iscell(titles))
             title(titles{j})
