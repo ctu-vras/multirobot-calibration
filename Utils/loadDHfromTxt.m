@@ -5,7 +5,11 @@ function loadDHfromTxt(robot, folder, file)
 %INPUT - robot - Robot object to store DH 
 %      - folder - folder with the required txt file
 %      - file - file with the required DH
-fileID = fopen(['Results/',folder,'/',file,'.txt']);
+if(nargin == 2)
+    fileID = fopen(folder);
+else
+    fileID = fopen(['Results/',folder,'/',file,'.txt']);
+end
 % load the columns with values
 C = textscan(fileID,'%s %s %s %s %s %s %s');
 % convert values to double
