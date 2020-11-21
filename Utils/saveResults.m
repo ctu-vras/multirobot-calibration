@@ -1,12 +1,13 @@
-function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, chains, approach, jointTypes, optim, options, robot_fcn, dataset_fcn, config_fcn, dataset_params)
+function saveResults(rob,outfolder,res_dh,corrs_dh, errors, errorsAll, whitelist, chains, approach, jointTypes, optim, options, robot_fcn, dataset_fcn, config_fcn, dataset_params)
 %SAVERESULTS Save results to mat files
 %   Saving inputed variables to mat files
 %INPUT - rob - Robot object
 %      - outfolder - save folder name
 %      - res_dh - robot result DH
 %      - corrs_dh - corrections from nominal DH
-%      - before_tr_err, after_tr_err, before_ts_err, after_ts_err - before/after training rms errors, before/after testing rms errors
-%      - before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all - before/after training individual errors, before/after testing individual errors
+%      - errors - before/after training rms errors, before/after testing rms errors
+%      - errorsAll - before/after training individual errors, before/after testing individual errors
+%      - whitelist - parameters to calibrate
 %      - chains - chains to calibrate
 %      - approach - calibration approaches
 %      - jointTypes -joint types to calibrate
@@ -22,22 +23,6 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err,
     else
         units = 1000;
     end
-    %% merge all rms errors
-    errors = nan(16,optim.repetitions * optim.pert_levels);
-    if(~isempty(before_tr_err))
-        errors(1:4,:) = before_tr_err;
-    end
-    if(~isempty(after_tr_err))
-        errors(5:8,:) = after_tr_err;
-    end
-    if(~isempty(before_ts_err))
-        errors(9:12,:) = before_ts_err;
-    end
-    if(~isempty(after_ts_err))
-        errors(13:16,:) = after_ts_err;
-    end
-
-    errorsAll=[before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all];
     %% convert DH to metres
     fnames=fieldnames(res_dh);
     for name=1:length(fnames)
@@ -55,7 +40,7 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, before_tr_err, after_tr_err,
     save([outfolder, 'results.mat'], 'res_dh');
     save([outfolder, 'corrections.mat'], 'corrs_dh');
     save([outfolder, 'errors.mat'], 'errors','errorsAll');
-    save([outfolder, 'info.mat'], 'optim', 'chains', 'approach',...
+    save([outfolder, 'info.mat'], 'whitelist', 'optim', 'chains', 'approach',...
     'jointTypes', 'rob', 'options', 'robot_fcn', 'dataset_fcn', 'config_fcn',...
     'dataset_params');
     

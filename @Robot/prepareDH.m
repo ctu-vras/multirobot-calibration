@@ -25,10 +25,8 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     [bounds, ~] = padVectors(bounds);
     [r.structure.bounds, ~] = padVectors(r.structure.bounds);
 %% Pad values and reshape
-    [DH, type] = padVectors(r.structure.DH);
-    r.structure.DH = DH;
-    r.structure.defaultDH = DH;
-    r.structure.type = type;
+    [r.structure.DH, r.structure.type] = padVectors(r.structure.DH);
+    [r.structure.defaultDH, ~] = padVectors(r.structure.defaultDH);
 
     %% Perturbation
     % allocate array

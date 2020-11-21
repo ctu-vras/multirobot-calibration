@@ -42,7 +42,7 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     if(approach.projection)
         approach.selftouch=approach.selftouch*20;
         approach.planes=approach.planes*10;
-        approach.external=approach.planes*10;
+        approach.external=approach.external*10;
     end
     
     %% Calibration joint types

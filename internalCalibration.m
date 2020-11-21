@@ -78,25 +78,29 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
     end
     %% evaluation
     [res_dh, corrs_dh, start_dh] = getResultDH(rob, opt_pars, start_dh, whitelist, optim);
-    [before_tr_err,before_tr_err_all] = rmsErrors(start_dh, rob, data.datasets, data.training_set_indexes, optim, approach);
-    [after_tr_err,after_tr_err_all] = rmsErrors(res_dh, rob, data.datasets, data.training_set_indexes, optim, approach);
-    [before_ts_err,before_ts_err_all] = rmsErrors(start_dh, rob, data.datasets, data.testing_set_indexes, optim, approach);
-    [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, rob, data.datasets, data.testing_set_indexes, optim, approach);
     
+    errors = nan(16,optim.repetitions * optim.pert_levels);    
+    errorsAll = cell(16,1);
+    [errors(1:4,:), errorsAll(1:4)] = rmsErrors(start_dh, rob, data.datasets, data.training_set_indexes, optim, approach);  % before calib on training data
+    [errors(5:8,:), errorsAll(5:8)] = rmsErrors(res_dh, rob, data.datasets, data.training_set_indexes, optim, approach);    % after calib on training data
+    [errors(9:12,:), errorsAll(9:12)] = rmsErrors(start_dh, rob, data.datasets, data.testing_set_indexes, optim, approach); % before calib on testing data
+    [errors(13:16,:), errorsAll(13:16)] = rmsErrors(res_dh, rob, data.datasets, data.testing_set_indexes, optim, approach); % after calib on testing data
+
     %% unpad all variables to default state
     res_dh = unpadVectors(res_dh, rob.structure.DH, rob.structure.type);
     start_dh = unpadVectors(start_dh, rob.structure.DH, rob.structure.type);
     whitelist = unpadVectors(whitelist, rob.structure.DH, rob.structure.type);
     corrs_dh = unpadVectors(corrs_dh, rob.structure.DH, rob.structure.type);
     rob.structure.DH = unpadVectors(rob.structure.DH, rob.structure.DH, rob.structure.type);
+    rob.structure.defaultDH = unpadVectors(rob.structure.defaultDH, rob.structure.defaultDH, rob.structure.type);
     %% saving results
     outfolder = ['Results/', folder, '/'];
     ext_pars_result = opt_pars(size(whpars.start_pars,1)+1:end,:,:);
     
-    saveResults(rob, outfolder, res_dh, corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, chains, approach, jointTypes, optim, options, saveData.robot_fcn, saveData.dataset_fcn, saveData.config_fcn, saveData.dataset_params);
+    saveResults(rob, outfolder, res_dh, corrs_dh, errors, errorsAll, whitelist, chains, approach, jointTypes, optim, options, saveData.robot_fcn, saveData.dataset_fcn, saveData.config_fcn, saveData.dataset_params);
     
     if saveInfo(1)
-        vars_to_save = {'start_dh', 'rob', 'whitelist', 'pert', 'chains', ...
+        vars_to_save = {'start_dh', 'rob', 'pert', 'chains', ...
         'training_set_indexes', 'testing_set_indexes', 'calibOut', ...
         'ext_pars_init', 'ext_pars_result', 'obsIndexes'};
         testing_set_indexes = data.testing_set_indexes;
