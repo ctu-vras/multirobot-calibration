@@ -109,6 +109,6 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
         save([outfolder, 'info.mat'], vars_to_save{:}, '-append');
     end
     if saveInfo(2)
-       save([outfolder, 'jacobians.mat'], 'jacobians');
+       save([outfolder, 'jacobians.mat'], 'jacobians', '-v7.3');
     end
 end
