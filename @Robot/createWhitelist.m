@@ -59,7 +59,7 @@ for joint=robot.joints
    if ~strcmp(joint.type,'base')
    % if calibrate only offsets - set all other params to zeros
        if jointTypes.onlyOffsets && isfield(whitelist, joint.group)
-               whitelist.(joint.group)(joint.DHindex,[1:4,6])=0;
+               whitelist.(joint.group)(joint.DHindex,1:5)=0;
        end
        % joint is in non-calibrated 'type' or non-calibrated 'group' set
        % whitelist to zeros
