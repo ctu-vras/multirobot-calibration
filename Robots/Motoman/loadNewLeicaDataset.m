@@ -37,7 +37,5 @@ function datasets = loadNewLeicaDataset(rob,~, ~, ~ )
     end   
     dataset.rtMat = reshape(dataset.rtMat, length(dataset.pose),1);
     dataset.name = 'leica';
-    datasets.external = {dataset};
-    
-    save('multirobot_leica_dataset.mat', 'datasets')
+    datasets.external = {dataset};    
 end

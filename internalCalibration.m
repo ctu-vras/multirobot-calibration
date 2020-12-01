@@ -97,12 +97,12 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
     outfolder = ['Results/', folder, '/'];
     ext_pars_result = opt_pars(size(whpars.start_pars,1)+1:end,:,:);
     
-    saveResults(rob, outfolder, res_dh, corrs_dh, errors, errorsAll, whitelist, chains, approach, jointTypes, optim, options, saveData.robot_fcn, saveData.dataset_fcn, saveData.config_fcn, saveData.dataset_params);
+    saveResults(rob, outfolder, res_dh, corrs_dh, errors, errorsAll, whitelist, chains, approach, jointTypes, optim, options, obsIndexes, saveData.robot_fcn, saveData.dataset_fcn, saveData.config_fcn, saveData.dataset_params);
     
     if saveInfo(1)
-        vars_to_save = {'start_dh', 'rob', 'pert', 'chains', ...
+        vars_to_save = {'start_dh', 'pert', ...
         'training_set_indexes', 'testing_set_indexes', 'calibOut', ...
-        'ext_pars_init', 'ext_pars_result', 'obsIndexes'};
+        'ext_pars_init', 'ext_pars_result'};
         testing_set_indexes = data.testing_set_indexes;
         training_set_indexes = data.training_set_indexes;
         pert = config.pert;
