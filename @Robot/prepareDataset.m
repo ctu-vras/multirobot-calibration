@@ -72,7 +72,7 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
                    datasets.(part){dataset}.refPoints = datasets.(part){dataset}.refPoints * optim.unitsCoef;
                 end
 
-                if isfield(datasets.(part){dataset},'frame2')
+                if strcmp(part, 'selftouch') && isfield(datasets.(part){dataset},'frame2')
                     uniqueFrames = [uniqueFrames; unique(datasets.(part){dataset}.frame2)];
                     clear joints2;
                     joints2(length(datasets.(part){dataset}.frame2), 1) = Joint();

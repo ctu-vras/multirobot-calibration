@@ -89,7 +89,6 @@ function datasets = loadExampleDataset(rob,optim, chains, varargin)
             % copy from previous dataset
             dataset2.pose = dataset.pose;
             dataset2.frame = dataset.frame;
-            dataset2.frame2 = dataset.frame2;
             dataset2.point = dataset.point;
             dataset2.joints = dataset.joints;
             dataset2.rtMat = dataset.rtMat;
