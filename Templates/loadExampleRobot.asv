@@ -38,7 +38,7 @@ function [ name, jointStructure, structure ] = loadExampleRobot()
     %% robot initial DH   fields of structure.DH are the ones  
     structure.DH.torso = [0.001, 0.000, 0, 0]; 
                     
-    structure.DH.leftArm = [0.020, 0.140, -pi/2.0, pi/2.0; % this line corresponds to leftShoulder joint defined above
+    structure.DH.leftArm = [0.020, 0.140, -pi/2.0, pi/2.0; % this line corresponds to leftShoulde
                              0.000, 0.100, -pi/2.0, pi/2.0;
                              0.000, 0.000, pi/2.0, -pi/2.0;
                              0.015, 0.150, -pi/2.0, pi/2.0];
@@ -57,8 +57,7 @@ function [ name, jointStructure, structure ] = loadExampleRobot()
     structure.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0];                                  
                                
-    %% robot initial whitelist          
-    % not mandatory, but its better to define whitelist 
+    %% robot initial whitelist                              
     structure.WL.torso = zeros(1,4);
     
     structure.WL.leftArm = ones(4,4);
@@ -78,11 +77,10 @@ function [ name, jointStructure, structure ] = loadExampleRobot()
                     0 0 0 1];
        
     %% robot default joint position (e.g. home position) for visualisation    
-    % joint angles for 'n' first groups (order defined in Utils/groups.m)
     structure.defaultJoints = {zeros(1,4), zeros(1,4), zeros(1,2), zeros(1,2), zeros(1,2)};
     
     %% robot bounds for DH parameters
-    structure.bounds.joint = [0.5 0.5 0 0]; % +- 0.5m in a,d and 0 in alpha, theta
+    structure.bounds.joint = [inf inf inf inf]; % no bounds
     structure.bounds.eye = [inf inf inf inf];  % no bounds
 
     %% robot cameras and their instrinsic parameters

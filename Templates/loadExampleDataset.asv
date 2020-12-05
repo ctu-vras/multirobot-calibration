@@ -43,38 +43,34 @@ function datasets = loadExampleDataset(rob,optim, chains, varargin)
         % Points have no translation from last frame
         dataset.point = zeros(posesCount,6);
         
-        % Define array for joints
-        dataset.joints = [];
+        % Define struct for joints
+        dataset.joints = {};
         
         % define cell with all groups
         myGroups = {'leftArm', 'rightArm', 'head', 'leftEye', 'rightEye'};
         % define number of joints in each groups
         jointNums = [4,4,2,2,2];
         
-        
+        offset = 0;
         % iterate over the cell array
-        for item=1:posesCount
-            offset = 0;
-            temp = struct();
-            for gr = 1:length(myGroups)
-                % add joint angles from offset to offset + number of joints for
-                % given group
-                temp.(myGroups{gr}) = data(item, offset+1:offset+jointNums(gr));
-                %update offset
-                offset = offset + jointNums(gr);
-            end
-            dataset.joints = [dataset.joints; temp];
+        for gr = 1:length(myGroups)
+            % add joint angles from offset to offset + number of joints for
+            % given group
+            dataset.joints.(myGroups{gr}) = data(:, offset+1:offset+jointNums(gr));
+            %update offset
+            offset = offset + jointNums(gr);
         end
         
-        for j = 1:length(dataset.pose)
+        for j = length(dataset.pose):-1:1
             matrices.torso = [1, 0, 0, 0;  % torso is not calibrated so we can create fixed matrix to speed up
                               0, 1, 0, 0;
                               0, 0, 1, 0;
                               0, 0, 0, 1];
-            %add to dataset
-            dataset.rtMat = [dataset.rtMat; matrices]; 
+            dataset.rtMat = [dataset]
         end   
-
+        
+        %reshape to right size
+        dataset.rtMat = reshape(dataset.rtMat, length(dataset.pose),1);
         % add name and id
         dataset.id = index;
         dataset.name = ['Self-touch ', num2str(index)];
@@ -85,11 +81,10 @@ function datasets = loadExampleDataset(rob,optim, chains, varargin)
         %% projection dataset
         if (~isempty(chain))
             % init dataset
-            dataset2 = initDataset(false);
+            dataset2 = initDataset(true);
             % copy from previous dataset
             dataset2.pose = dataset.pose;
             dataset2.frame = dataset.frame;
-            dataset2.frame2 = dataset.frame2;
             dataset2.point = dataset.point;
             dataset2.joints = dataset.joints;
             dataset2.rtMat = dataset.rtMat;
