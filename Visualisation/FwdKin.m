@@ -111,7 +111,7 @@ function [RFFrame] = FwdKin(robot, str, coef)
                 %scatter3(p(1, end), p(2, end), p(3, end), 'b');
             end
             points(~any(points,2), :) = [];
-            scatter3(points(:,1),points(:,2),points(:,3),'b')
+            scatter3(points(:,1),points(:,2),points(:,3),str.SkinColor, 'filled', 'MarkerFaceAlpha', 0.7,'MarkerEdgeColor','k');
         else
             % Draw the stuff (joints, ref frames, links)
             for i = 1:length(RFFrame)

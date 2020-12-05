@@ -42,6 +42,7 @@ function fig = showModel(r, varargin)
     end
     % Color settings
     LINK_COLORS = [[0.5 0.5 0.8];[0.8 0.5 0.5]]; % blueish and redish
+    SKIN_COLORS = {'b', 'r'};
 
     %% INIT AND PLOT BODY PARTS
 
@@ -83,7 +84,7 @@ function fig = showModel(r, varargin)
     DrawRefFrame(root,1,0.04*coef,'hat','ROOT');
 
     %% Draw
-    for robots=1:1+p.Results.dual
+    for robots=1+p.Results.dual:-1:1
         fnames=fieldnames(r.structure.DH);
         angles_ = angles;
         if robots==1
@@ -159,40 +160,42 @@ function fig = showModel(r, varargin)
             str.naoSkin = p.Results.naoSkin;
             FwdKin(r, str, coef);
         end
-    end
-    fnames = {'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'};
-    if p.Results.naoSkin
-        for i=1:length(fnames)
-            name=fnames{i};
-            DH.(name)(:,1:3) = DH.(name)(:,1:3).*coef;
-            if strcmp(name, 'torso')
-                str.refFrame = 1;
-            else
-                str.refFrame = 0;
+        fnames = {'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'};
+        if p.Results.naoSkin
+            for i=1:length(fnames)
+                name=fnames{i};
+                DH.(name)(:,1:3) = DH.(name)(:,1:3).*coef;
+                if strcmp(name, 'torso')
+                    str.refFrame = 1;
+                else
+                    str.refFrame = 0;
+                end
+                jointNames = {};
+                % find joint from given group to save their names
+                joints=findJointByGroup(r,name);
+                for joint=1:size(joints,2)
+                    j=joints(joint);
+                    %if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)...
+                    %        || strcmp(j{1}.type,types.finger || strcmp(j{1}.type,types.)
+                    jointNames{end+1} = j{1}.name;
+                    %end
+                end  
+                theta.(name) = zeros(1,size(joints, 2));
+    %             theta.(name) = reshape([angles_{i}], 1, []);
+                str.link = name;
+                str.DH = DH;
+                str.theta = theta;
+                str.jointNames = jointNames;
+                str.LinkColor = LINK_COLORS(robots,:);
+                str.SkinColor = SKIN_COLORS{robots};
+                str.refFrameSize = 0.01*coef;
+                str.types=types_;
+                str.naoSkin = p.Results.naoSkin;
+                FwdKin(r, str, coef);
             end
-            jointNames = {};
-            % find joint from given group to save their names
-            joints=findJointByGroup(r,name);
-            for joint=1:size(joints,2)
-                j=joints(joint);
-                %if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)...
-                %        || strcmp(j{1}.type,types.finger || strcmp(j{1}.type,types.)
-                jointNames{end+1} = j{1}.name;
-                %end
-            end  
-            theta.(name) = zeros(1,size(joints, 2));
-%             theta.(name) = reshape([angles_{i}], 1, []);
-            str.link = name;
-            str.DH = DH;
-            str.theta = theta;
-            str.jointNames = jointNames;
-            str.LinkColor = LINK_COLORS(robots,:);
-            str.refFrameSize = 0.01*coef;
-            str.types=types_;
-            str.naoSkin = p.Results.naoSkin;
-            FwdKin(r, str, coef);
         end
     end
+
     view([90,0]);
     axis equal;
     axis tight;
