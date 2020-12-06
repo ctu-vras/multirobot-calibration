@@ -1,4 +1,4 @@
-function saveResults(rob,outfolder,res_dh,corrs_dh, errors, errorsAll, whitelist, chains, approach, jointTypes, optim, options, robot_fcn, dataset_fcn, config_fcn, dataset_params)
+function saveResults(rob,outfolder,res_dh,corrs_dh, errors, errorsAll, whitelist, chains, approach, jointTypes, optim, options, obsIndexes, robot_fcn, dataset_fcn, config_fcn, dataset_params)
 %SAVERESULTS Save results to mat files
 %   Saving inputed variables to mat files
 %INPUT - rob - Robot object
@@ -42,7 +42,7 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, errors, errorsAll, whitelist
     save([outfolder, 'errors.mat'], 'errors','errorsAll');
     save([outfolder, 'info.mat'], 'whitelist', 'optim', 'chains', 'approach',...
     'jointTypes', 'rob', 'options', 'robot_fcn', 'dataset_fcn', 'config_fcn',...
-    'dataset_params');
+    'dataset_params', 'obsIndexes');
     
     %% save info to txt
     file=fopen([outfolder,'info.txt'],'w');

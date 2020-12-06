@@ -75,10 +75,12 @@ classdef Robot < handle
                 obj.jointsStructure = obj.jointsStructure';
                 % robot default DH (permanent)             
                 structure.defaultDH = structure.DH;
-                assert(isfield(structure, 'DH') && isfield(structure, 'WL') && isfield(structure, 'H0') ...
-                     && isfield(structure, 'bounds'), ...
-                    'Robot structure is incomplete, it must contains: DH, WL, H0 and bounds')
-                obj.structure=structure;       
+                assert(isfield(structure, 'DH') && isfield(structure, 'WL') && isfield(structure, 'bounds'), ...
+                    'Robot structure is incomplete, it must contains: DH, WL, and bounds')
+                obj.structure=structure; 
+                if (~isfield(obj.structure,'H0'))
+                    obj.structure.H0 = eye(4);
+                end
                 fnames = fieldnames(obj.structure.DH);
                 WLfnames = fieldnames(obj.structure.WL);
                 for fname=WLfnames'

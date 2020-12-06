@@ -5,12 +5,11 @@ function plotObserIndexes(folder)
 %      - jacobians - cell array of jacobians
 %      - titles - subplot titles
     info = load(['Results/',folder,'/info']);
-    obsIndexes = cell2mat(permute(struct2cell(repmat(info.obsIndexes,1,4)), [2,3,1]));
+    obsIndexes = cell2mat(permute(struct2cell(info.obsIndexes), [2,3,1]));
     figure();
     titles = fieldnames(info.obsIndexes);
     ticks = cell(1, size(obsIndexes,2));     
     perts = find(info.optim.pert == 1);
-    perts = [1,5,10,12];
     if (info.optim.skipNoPert) 
         index = 1;
     else

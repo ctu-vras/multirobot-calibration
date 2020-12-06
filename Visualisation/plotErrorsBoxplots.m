@@ -105,6 +105,17 @@ function plotErrorsBoxplots(folders,varargin)
 
         for i=1:4
             % if values for given calibration type
+            if any(~isnan(distsTr{i,:}))
+               data=[data,distsTr{i,:}'];
+               names(end+1:end+size(distsTr{i,:},2),1)={[optTypes2{i},folder]};
+               colors=[colors;colorTypes2(i,:)];
+               curNum=curNum+1;
+               boxNum=boxNum+1;
+                if ~ismember(optTypes2{i},usedNames)
+                   usedNames{end+1}=optTypes2{i};
+                   boxOrder=[boxOrder,boxNum];
+                end
+            end
             if any(~isnan(distsTs{i,:}))
                % concatenate data
                data=[data,distsTs{i,:}'];
@@ -121,17 +132,7 @@ function plotErrorsBoxplots(folders,varargin)
                   boxOrder=[boxOrder,boxNum];
                end
             end
-            if any(~isnan(distsTr{i,:}))
-               data=[data,distsTr{i,:}'];
-               names(end+1:end+size(distsTr{i,:},2),1)={[optTypes2{i},folder]};
-               colors=[colors;colorTypes2(i,:)];
-               curNum=curNum+1;
-               boxNum=boxNum+1;
-                if ~ismember(optTypes2{i},usedNames)
-                   usedNames{end+1}=optTypes2{i};
-                   boxOrder=[boxOrder,boxNum];
-                end
-            end
+            
         end
         % compute position of the boxes - boxes are 1 from each other, so
         % next box is after all boxes + current_boxes/2 + 0.5 if there is

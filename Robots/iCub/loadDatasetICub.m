@@ -91,9 +91,10 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
         dataset.frame = C;
         C(:) = {'leftHandFinger'}; % left end effector
         dataset.frame2 = C;
-        dataset.refPoints = data2(:,1:3);    
+        dataset.refPoints = data2(:,1:3); 
+        dataset.name = 'self-touch';
         datasets.selftouch{k} = dataset; 
-        
+       
         if(contains(chain, 'Eye'))
             % projection dataset is doubled touch dataset
             dataset2.frame =  reshape([dataset.frame'; dataset.frame2'],[],1);
@@ -158,6 +159,7 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
                 projs = projections(points2Cam, robot.structure.eyes, dataset2.cameras);
                 dataset2.refPoints = [nan(2,length(points2Cam));projs]';
             end
+            dataset2.name = 'proj';
             datasets.projection{k} = dataset2;  
         end           
     end
