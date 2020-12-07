@@ -18,5 +18,6 @@ function plotProjections(points, points2, plotTitle, legends )
     grid on;
     legend(legends,'Location','east');
     title(plotTitle)
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
 end
 

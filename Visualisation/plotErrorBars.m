@@ -82,7 +82,7 @@ function plotErrorBars(folders,varargin)
             hBar(ii).FaceColor = colors(k,:);
             ii = ii + 1;
         end
-        set(gca,'xticklabel', folders, 'FontSize', 16, 'XTickLabelRotation', -15);  
+        set(gca,'xticklabel', folders, 'FontSize', 16, 'XTickLabelRotation', -15);
     else % for only one folder no grouping
         hold on
         ii = 1;
@@ -107,6 +107,6 @@ function plotErrorBars(folders,varargin)
     end
     legend(optTypes(idxs), 'location', location, 'FontSize',16);
     ylabel(['Errors [',units,'/px]'], 'FontSize', 16);
-    
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
     title(titl,'FontSize',22);
 end

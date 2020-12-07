@@ -186,5 +186,6 @@ names2 = [1, 2, zeros(1,10)+3, zeros(1,10)+4];
     end
     % plot legend
     legend(h(boxOrder),usedNames,'Location',location);
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
 end
 

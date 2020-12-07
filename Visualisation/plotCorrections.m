@@ -15,7 +15,7 @@ function plotCorrections(folder, varargin)
     p=inputParser;
     addRequired(p,'folder');
     addParameter(p,'noiseLevel',0);
-    addParameter(p,'log',1);
+    addParameter(p,'log',0);
     addParameter(p,'units','x', @(x) any(validatestring(x,{'m','mm'})));
     
     parse(p,folder,varargin{:});
@@ -95,7 +95,7 @@ function plotCorrections(folder, varargin)
                    end
                    set(bp,'Xtick', 1:size(values,2),'xticklabel',xt)
                    xlim([0.5,0.5+size(values,2)])
-                   xtickangle(bp,90)
+                   xtickangle(bp,-15)
                    bp.XAxis.TickLabelInterpreter = 'latex';
                    bp.YAxis.TickLabelInterpreter = 'latex';
                    values=[];
@@ -117,9 +117,11 @@ function plotCorrections(folder, varargin)
                    end
                    title(bp,['Corrections of ',fnames{name}])
                    grid(bp,'on');
+                   set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
               end
            end
         end
     end
+    
 end
 

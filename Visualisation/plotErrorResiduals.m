@@ -18,6 +18,7 @@ function plotErrorResiduals( computed_points, real_points )
     scatter(computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:))
     xlabel('error in Y [mm]') 
     ylabel('error in Z [mm]')
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
     save('scatter2d.fig')
     
     %% quiver plot of residuals in 2D
@@ -31,6 +32,7 @@ function plotErrorResiduals( computed_points, real_points )
     quiver(real_points(2,:), real_points(3,:), computed_points(2,:)-real_points(2,:), computed_points(3,:)-real_points(3,:), 1, 'Color', 'b');
     xlabel('Y [mm]')
     ylabel('Z [mm]')
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
     save('quiver2d.fig')
 %     %% quiver plot of residuals in 2D without position
 %     figure()
@@ -51,6 +53,7 @@ function plotErrorResiduals( computed_points, real_points )
     ylabel('Y [mm]')
     zlabel('Z [mm]')
     title('Residuals of end effector position error')
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
     save('quiver3D.fig')
 end
 

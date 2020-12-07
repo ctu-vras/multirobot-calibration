@@ -33,6 +33,7 @@ function plotObserIndexes(folder)
         bp.XAxis.FontSize = 15;
         set(findobj(gca,'Type','text'),'FontSize')
         grid on;
+        set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
     end
 end
 

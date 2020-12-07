@@ -86,5 +86,6 @@ function plotJacobian(folder, titles)
         end
         grid on;
     end
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
 end
 
