@@ -25,7 +25,7 @@ function showGraphModel(r, ax)
     title(ax,sprintf('Structure of %s robot',r.name))
     xticks(ax,[])
     yticks(ax,[])
-    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
+    set(findall(ax, '-property', 'FontSize'), 'FontSize', 16)
 end
 
 
