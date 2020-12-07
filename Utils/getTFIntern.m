@@ -1,10 +1,9 @@
-function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, H0, indexes, parents, rtFields, type)
+function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, indexes, parents, rtFields, type)
 %GETTFIntern computes transformation from given joint to base 
 %INPUT - dh_pars - DH parameters 
 %       - joint - given Joint object to start the transformation
 %       - rtMat - precomputed matrices
 %       - joints - joint angles
-%       - H0 - H0 transformation (from base to torso)
 %       - indexes - row indexes into DH table 
 %       - parents - structure of joint ancestors for each group)
 %       - rtFields - fields in rtMat
@@ -140,8 +139,7 @@ function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, H0, indexes, parents
         end
         joint = parents.(gr);
         RTarm = RT*RTarm;
-        if(strcmp(joint.type, types.base)) % if the joint is base, multiply by H0 transformation and end the computation          
-            RTarm = H0 * RTarm;
+        if(strcmp(joint.type, types.base)) % if the joint is base end the computation          
             break;
         end
     end

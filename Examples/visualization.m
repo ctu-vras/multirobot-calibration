@@ -20,14 +20,14 @@ plotCorrections(folder);
 %%
 % The function also supporst more arguments. For example, to use length in
 % mm
-folder = 'NAOOO';
+folder = 'leica-comp';
 plotCorrections(folder,'units','mm');
 
 %% Error boxplots
 % Boxplots of errors work very similar, but you can pass more than one
 % folder
-folder = 'NAOOO';
-folder2 = 'leica-motoman';
+folder = 'plane-comp';
+folder2 = 'leica-comp';
 plotErrorsBoxplots({folder,folder2});
 
 %%
@@ -40,8 +40,8 @@ plotErrorsBoxplots({folder, folder2},'log',1,'location','northeast');
 
 %% Error bars
 % Errors can be also shown as bars
-folder = 'NAOOO';
-folder2 = 'leica-motoman';
+folder = 'plane-comp';
+folder2 = 'leica-comp';
 plotErrorBars({folder,folder2})
 
 %% Error Residuals
@@ -55,7 +55,7 @@ extPoints=dataset.refPoints';
 robPoints = zeros(4, size(dataset.joints, 1));
 for i = 1:size(dataset.joints,1) % Transform all point to base frame
     joint = rob.findJoint(dataset.frame{i});
-    robPoints(:,i) =  getTFtoFrame(rob.structure.defaultDH, joint{1}, dataset.joints(i), rob.structure.H0) *[dataset.point(i,1:3),1]';
+    robPoints(:,i) =  getTFtoFrame(rob.structure.defaultDH, joint{1}, dataset.joints(i)) *[dataset.point(i,1:3),1]';
 end
 % And the function itself can be called
 plotErrorResiduals(extPoints, robPoints(1:3,:))
@@ -66,7 +66,7 @@ plotErrorResiduals(extPoints, robPoints(1:3,:))
 % Function takes 2 datasets, where both of them are cellArray of structs
 close all
 folder = 'self-touch-motoman';
-load(['Results/',folder,'/info']);
+% load(['Results/',folder,'/info']);
 load(['Results/',folder,'/datasets']);
 % This example does not 'make sense', it just for demonstration of input.
 % Argument with 'rightArm' determines which chain to show.

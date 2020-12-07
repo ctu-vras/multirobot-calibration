@@ -6,12 +6,10 @@ function [RFFrame] = FwdKin(robot, str, coef)
 % INPUT
 %   body_part (struct) - the body part under consideration. Each body part has the same structure:
 %     name = the name of the body_part;
-%     H0   = is the roto-translation matrix in the origin of the chain (if the body part is attached
-%            to another one, typically the last reference frame of the previous body part goes here)
 %     DH   = it's the parameter matrix. Each row has 4 DH parameters (a, d, alpha, offset), thus each
 %            row completely describes a link. The more rows are added, the more links are attached.
 %     Th   = it's the joint values vector (as read from the encoders)
-%  This function is expecting input (translations in the H0 and lengths and angles in DH) in SI units (meters and radians).
+%  This function is expecting input (lengths and angles in DH) in SI units (meters and radians).
 %  However, the lengths are converted to mm here and for the drawing of reference frames.
 %
 %   varargin - "noFrames" = do not draw any frames
@@ -35,7 +33,7 @@ function [RFFrame] = FwdKin(robot, str, coef)
         jointNames = str.jointNames;
         theta = str.theta;
         refFrame = str.refFrame;
-        H0 = robot.structure.H0;
+        H0 = eye(4);
         [DH, types] = padVectors(DH);
         %DH.(link)(:,1:2) = DH.(link)(:,1:2).*1000;
         %DH(:,1:2) = DH(:, 1:2).*1000;
@@ -60,7 +58,7 @@ function [RFFrame] = FwdKin(robot, str, coef)
 %         thet = thetas + offs;
         try
             thetas = theta.(link)';
-            offs = DH.(link)(:,4);
+            offs = DH.(link)(:,6);
             thet = thetas + offs;
             theta.dummy = [0;0];
         catch ME

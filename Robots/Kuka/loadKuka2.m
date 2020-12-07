@@ -5,7 +5,6 @@ function [ name, jointStructure, structure ] = loadKuka2()
 %        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
 %        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
 %                    - WL - logical array of whitelisted parameters for calibration 
-%                    - H0 - initial robot transformation 
 %                    - defaultJoints - stores robot default joint position
 %                    (e.g. home position) for visualisation 
 %                    - bounds - bounds for DH parameters (a, d, alpha, offset)
@@ -36,12 +35,6 @@ function [ name, jointStructure, structure ] = loadKuka2()
                                
     %% robot initial whitelist                              
     structure.WL.leftArm = ones(4,4);
-     
-    %% robot H0 transformation                    
-    structure.H0 = [1 0 0 0;
-                    0 1 0 0;
-                    0 0 1 0;
-                    0 0 0 1];
        
     %% robot default joint position (e.g. home position) for visualisation    
     structure.defaultJoints = {zeros(1,7)};

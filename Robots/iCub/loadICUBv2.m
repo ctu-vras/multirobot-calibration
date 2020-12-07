@@ -5,13 +5,12 @@ function [ name, jointStructure, structure ] = loadICUBv2()
 %        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
 %        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
 %                    - WL - logical array of whitelisted parameters for calibration 
-%                    - H0 - initial robot transformation 
 %                    - defaultJoints - stores robot default joint position
 %                    (e.g. home position) for visualisation  
 %                    - bounds - bounds for DH parameters (a, d, alpha, offset)
 %                    - eyes - cameras and their instrinsic parameters
 %                    (camera matrix, distortion coefficents - radial and tangential)
-    name='icub';
+    name='iCub';
     
     %% Robot structure
     jointStructure={{'base',types.base,nan,0,group.torso},...
@@ -248,13 +247,6 @@ function [ name, jointStructure, structure ] = loadICUBv2()
                            0, 0, 0, 0;
                            0, 0, 0, 0];
      
-    %% robot H0 transformation                    
-%     structure.H0 = [0 -1  0  0;
-%                      0  0 -1  0;
-%                      1  0  0  0;
-%                      0  0  0  1];
-    structure.H0 = eye(4);
-       
     %% robot default joint position (e.g. home position) for visualisation    
     structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4), zeros(1,7), zeros(1,7), zeros(1,2), zeros(1,2)};
     

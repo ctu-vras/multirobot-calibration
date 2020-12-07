@@ -228,7 +228,7 @@ for i=1:size(datasetLocal.(iterateVar),1)
         if ~isempty(joint.parent)
             % compute RT matrix
             s=getIndexes(s,joint);
-            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
+            mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
             % transform all points for given frame
             points=mat*[chain1Original(taxelId+1, 1:3),1]';%.*1000
             % assign 1:3 component of the vectors
@@ -238,7 +238,7 @@ for i=1:size(datasetLocal.(iterateVar),1)
         joint=chain2Joints(taxelId+1);
         if ~isempty(joint.parent)
             s=getIndexes(s,joint);
-            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
+            mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
             points=mat*[chain2Original(taxelId+1, 1:3),1]';%.*1000
             chain2Points(taxelId+1, :)=points(1:3,:)';
         end
@@ -248,7 +248,7 @@ for i=1:size(datasetLocal.(iterateVar),1)
 %         joint=chain2Joints(1);
 %         if ~isempty(joint.parent)
 %             s=getIndexes(s,joint);
-%             mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
+%             mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
 %             points=mat*[0,0,0,1]';%.*1000
 %             chain2Points=points(1:3,:)';
 %         end

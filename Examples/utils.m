@@ -43,19 +43,19 @@ rtMat=[];
 % With this, we can compute the RT matrix as it is in the calibration
 % It is too complicated and not recommended for normal users
 [DH, type] = padVectors(rob.structure.DH); % Pad to size 6 vector
-matInt=getTFIntern(DH,joint,rtMat,angles, rob.structure.H0,str.DHindexes.(joint.name),str.parents, [],type);
+matInt=getTFIntern(DH,joint,rtMat,angles, str.DHindexes.(joint.name),str.parents, [],type);
 
 %% 
 % You can also get transformation to given frame
-% mat2=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'L1');
-mat2=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'rightPlastic');
+% mat2=getTFtoFrame(rob.structure.DH,joint, angles, 'L1');
+mat2=getTFtoFrame(rob.structure.DH,joint, angles, 'rightPlastic');
 
 %%
 % And easily compute the rest then
 % joint=rob.findJoint('L1');
 joint=rob.findJoint('rightPlastic');
 joint=joint{1};
-mat3=getTFtoFrame(rob.structure.DH,joint, angles, rob.structure.H0,'base');
+mat3=getTFtoFrame(rob.structure.DH,joint, angles, 'base');
 
 
 %%
@@ -73,4 +73,4 @@ load('Results/exampleNao/info.mat');
 
 % And easily transform all point from local frame to the base frame
 [DH, type] = padVectors(rob.structure.DH); % Pad to size 6 vector
-newPoints=getPoints(DH, datasets.selftouch{1}, rob.structure.H0, type);
+newPoints=getPoints(DH, datasets.selftouch{1}, type);

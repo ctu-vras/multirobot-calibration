@@ -118,7 +118,7 @@ for i=1:size(datasetLocal.(chain1),1)
         if ~isempty(joint.parent)
             % compute RT matrix
             s=getIndexes(s,joint,isfield(robot.structure,'matrices'));
-            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields);
+            mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields);
             % transform all points for given frame
             points=mat*[chain1Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
             % assign 1:3 component of the vectors
@@ -127,7 +127,7 @@ for i=1:size(datasetLocal.(chain1),1)
         joint=chain2Joints(triangleId);
         if ~isempty(joint.parent)
             s=getIndexes(s,joint,isfield(robot.structure,'matrices'));
-            mat=getTFIntern(DH,joint,rtMat,angles, robot.structure.H0,s.DHindexes.(joint.name),s.parents, rtFields);
+            mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields);
             points=mat*[chain2Original((triangleId-1)*12+1:triangleId*12,1:3),ones(12,1)]';%.*1000
             chain2Points((triangleId-1)*12+1:triangleId*12,1:3)=points(1:3,:)';
         end

@@ -9,11 +9,10 @@ function [ dist ] = getPlaneDist( dh_pars, robot, datasets, planePars)
 %   OUTPUT - dist - 1xN array of distance;
 %                   N is number of errors computed using planes
     dist = [];
-    H0 = robot.structure.H0;
     for datasetId=length(datasets)
         dataset = datasets{datasetId};    
         % compute points in the base frame
-        robPoints = getPoints(dh_pars, dataset, H0, false, robot.structure.type);
+        robPoints = getPoints(dh_pars, dataset, false, robot.structure.type);
         if isempty(planePars)
             % compute the plane
             plane = getPlane(robPoints);

@@ -39,11 +39,10 @@ classdef Joint < handle
         end
         
         %% Computes RT matrix to base
-        function [R,par]=computeRTMatrix(obj, DH, H0, angles, group)
+        function [R,par]=computeRTMatrix(obj, DH, angles, group)
             % COMPUTERTMATRIX iterates over parents of the input Joint and 
             % returns RT matrix
             %   DH...structure with DH
-            %   H0...4x4 matrix
             %   angles...structure with joint angles
             %   group...group of the input Joint
             %   R...4x4 RT matrix to input Joint
@@ -66,10 +65,9 @@ classdef Joint < handle
             %compute RT matrix
             R=dhpars2tfmat(DH);
             par=obj;
-            %If joint is base, multiply with H0 matrix
+            %If joint is base - no parent
             if strcmp(par.type,types.base)
                 par=nan;
-                R=H0*R;
             end
             
         end

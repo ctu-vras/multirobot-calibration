@@ -78,9 +78,6 @@ classdef Robot < handle
                 assert(isfield(structure, 'DH') && isfield(structure, 'WL') && isfield(structure, 'bounds'), ...
                     'Robot structure is incomplete, it must contains: DH, WL, and bounds')
                 obj.structure=structure; 
-                if (~isfield(obj.structure,'H0'))
-                    obj.structure.H0 = eye(4);
-                end
                 fnames = fieldnames(obj.structure.DH);
                 WLfnames = fieldnames(obj.structure.WL);
                 for fname=WLfnames'

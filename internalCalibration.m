@@ -54,7 +54,7 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
             end
             initialParamValues = [];
             if optim.optimizeInitialGuess && (approach.planes || approach.external) 
-                [params, typicalX]=initialGuess(rob.structure.H0, tr_datasets, dh, approach, optim);
+                [params, typicalX]=initialGuess(tr_datasets, dh, approach, optim);
                 options.TypicalX(end-length(params)+1:end) = typicalX;
                 if(optim.optimizeDifferences)
                     initialParamValues = params;

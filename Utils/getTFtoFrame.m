@@ -1,9 +1,8 @@
-function RTarm = getTFtoFrame(dh_pars,joint, joints, H0, stopJoint)
+function RTarm = getTFtoFrame(dh_pars,joint, joints, stopJoint)
 %GETTF computes transformation from given joint to given joint
 %INPUT - dh_pars - DH parameters 
 %       - joint - given Joint object to start the transformation
 %       - joints - joint angles
-%       - H0 - H0 transformation (from base to torso)
 %       - stopJoint - at which joint the calculation will stop
 %OUTPUT - RT - transformation from the joint to stopJoint
     if nargin<5
@@ -76,9 +75,9 @@ function RTarm = getTFtoFrame(dh_pars,joint, joints, H0, stopJoint)
             
         end
 
-        %If joint is base, multiply with H0 matrix
+        %If joint is base, end the computation
         if strcmp(joint.type,types.base)
-            RTarm=H0*RTarm;
+           break;
         end
     end
 

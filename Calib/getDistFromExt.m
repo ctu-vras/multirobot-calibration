@@ -11,12 +11,11 @@ function [dist] = getDistFromExt(dh_pars, robot, datasets, optim, extParams)
 %                   M=1 if optim.useNorm, M=3 if ~optim.useNorm;
 %                   N is number of errors computed from external cameras
     dist = [];
-    H0 = robot.structure.H0;
     for datasetId=1:length(datasets) 
         dataset = datasets{datasetId};
         extPoints=dataset.refPoints;
         % compute points in the base frame
-        robPoints = getPoints(dh_pars, dataset, H0, false, robot.structure.type);
+        robPoints = getPoints(dh_pars, dataset, false, robot.structure.type);
         if isempty(extParams)
             % find transformation between external camera and robot
             [R,T]=fitSets(extPoints,robPoints(1:3,:)'); 

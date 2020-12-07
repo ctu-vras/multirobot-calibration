@@ -48,8 +48,6 @@ function fig = showModel(r, varargin)
 
     % Each body part has the same structure:
     %     name = the name of the body_part;
-    %     H0   = is the roto-translation matrix in the origin of the chain (if the body part is attached
-    %            to another one, typically the last reference frame of the previous body part goes here)
     %     DH   = it's the parameter matrix. Each row has 4 DH parameters (a, d, alpha, offset), thus each
     %            row completely describes a link. The more rows are added, the more links are attached.
     %     Th   = it's the joint values vector (as read from the encoders)
@@ -104,7 +102,7 @@ function fig = showModel(r, varargin)
               contains(fnames,'Middle')...
             | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers') )= [];
         
-        fnames = fnames(1:size(angles,2));
+        fnames = fnames(1:(size(angles,2)+isfield(DH_, 'torso')));
         if ~isfield(DH_,'torso')
             DH_.torso=[0 0 0 0]; 
         end
@@ -199,6 +197,7 @@ function fig = showModel(r, varargin)
     view([90,0]);
     axis equal;
     axis tight;
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
     %if nargin > 7
     %    saveas(gcf, varargin{1});
     %end

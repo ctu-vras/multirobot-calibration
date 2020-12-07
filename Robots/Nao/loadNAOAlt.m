@@ -147,11 +147,7 @@ function [name, jointStructure, structure]=loadNAOAlt()
     structure.DH.headSkin=zeros(size(head_left,2)+size(head_right,2)+3+indexes(2),4);
     structure.DH.leftArmSkin=zeros(size(hands_upper,2)+size(hands_lower,2)+3+indexes(3),4);
     structure.DH.rightArmSkin=zeros(size(hands_upper,2)+size(hands_lower,2)+3+indexes(3),4);
-    structure.H0 = [1 0 0 0;
-                     0 1 0 0;
-                     0 0 1 0;
-                     0 0 0 1];
-    
+
     %% robot default joint position (e.g. home position) for visualisation    
     structure.defaultJoints = {zeros(1,6), zeros(1,6), zeros(1,3)};
     
