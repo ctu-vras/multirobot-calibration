@@ -87,7 +87,7 @@ function [RFFrame] = FwdKin(robot, str, coef)
                 % from root to i-th link
                 %DH_.(body_part.name) = DH;
                 %joints.(link)= theta';
-                RFFrame{i+1} = getTFtoFrame(DH,joint, theta, H0, base);
+                RFFrame{i+1} = getTFtoFrame(DH,joint, theta, base);
             end
         end
         
@@ -95,7 +95,7 @@ function [RFFrame] = FwdKin(robot, str, coef)
             joint = robot.findJoint(jointNames{1});
             joint = joint{1}.parent;
             if ~strcmp(joint.type, 'base')
-                RFFrame{1} = getTFtoFrame(DH,joint, theta, H0, base);
+                RFFrame{1} = getTFtoFrame(DH,joint, theta, base);
             end
         end
                 
