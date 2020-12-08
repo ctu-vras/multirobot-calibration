@@ -1,4 +1,4 @@
-function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=prepareDataset(r,optim, chains, funcname, varargin)
+function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=prepareDataset(r,optim, chains, approaches, funcname, varargin)
     % PREPAREDATASET returns datasets in universal format, together with
     %                training/testing indexes
     %   INPUT - optim - structure of calibration settings
@@ -18,7 +18,6 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
     %                             cellarrays
     %                         - joints are kept as stings and not instances
     %                         of a class
-    
     %% Call appropriate functions with arguments
     if isstruct(funcname)
         datasets = funcname;
@@ -36,7 +35,16 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
         end
     end
     datasets_out = datasets;
-    
+
+    for appr=fieldnames(approaches)'
+       assert(~(~isfield(datasets, appr{1}) && approaches.(appr{1})), ['Dataset for ', appr{1}, ' is emtpy!'])
+       if approaches.(appr{1}) && isfield(datasets, appr{1})
+          for i=1:length(datasets.(appr{1}))
+              assert(~isempty(datasets.(appr{1}){i}.point), ['Dataset for ', appr{1}, ' is emtpy!'])
+          end
+       end
+       
+    end
     %% Assing joint to names and split
     index = 0;
         % Assigning datasets to the right groups

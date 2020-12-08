@@ -165,7 +165,7 @@ classdef Robot < handle
         [init, lb, ub]=prepareDH(robot, pert, optim, funcname);
         
         %% Prepare datasets
-        [training_set_indexes, testing_set_indexes, datasets, datasets_out]=prepareDataset(r,optim, chains, funcname, varargin)
+        [training_set_indexes, testing_set_indexes, datasets, datasets_out]=prepareDataset(r,optim, chains, approaches, funcname, varargin)
         
         %% Prepare vector of parameters for optimization
         [opt_pars, lb_pars, up_pars, whitelist, start_dh] = createWhitelist(robot, dh_pars, lb_pars, ub_pars, optim, chains, jointTypes, funcname);

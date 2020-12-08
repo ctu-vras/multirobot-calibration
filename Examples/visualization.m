@@ -48,8 +48,8 @@ plotErrorBars({folder,folder2})
 % Shows residual errors using quiver plot
 % We need two set of points, which can be computed for example like this
 
-load('Results/NAOOO/info'); %Load saved data
-load('Results/NAOOO/datasets'); %Load saved data
+load('Results/NAO-rightArm/info'); %Load saved data
+load('Results/NAO-rightArm/datasets'); %Load saved data
 dataset = datasets_out.selftouch{1};
 extPoints=dataset.refPoints';
 robPoints = zeros(4, size(dataset.joints, 1));
@@ -96,7 +96,7 @@ plotJointsError(rob, [errorsAll{3}{1}, errorsAll{11}{1}], datasets.external, gro
 %% Jacobian
 % Shows Jacobians computed in each repetition of calibration. All the
 % mandatory arguments can be loaded from results
-folder = 'NAOOO';
+folder = 'NAO-rightArm';
 plotJacobian(folder)
 
 %% Moveable model
@@ -115,7 +115,7 @@ load(strcat('Results/',folder, '/results.mat'));
 % rob=Robot('loadNAO');
 rob.structure.DH = res_dh;
 dataset_params ={'rightArm_torso', 'leftArm_torso', 'rightArm_head', 'leftArm_head'};
-[~,~,datasets] = rob.prepareDataset(optim, chains, dataset_fcn,dataset_params);
+[~,~,datasets] = rob.prepareDataset(optim, chains, approaches, dataset_fcn,dataset_params);
 activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
 
 

@@ -22,9 +22,9 @@ function runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, d
     end
     
     if ~isempty(dataset_fcn) && iscell(dataset_params)
-        [data.training_set_indexes, data.testing_set_indexes, data.datasets, datasets_out] = rob.prepareDataset(config.optim, config.chains, dataset_fcn,dataset_params);
+        [data.training_set_indexes, data.testing_set_indexes, data.datasets, datasets_out] = rob.prepareDataset(config.optim, config.chains, config.approach, dataset_fcn,dataset_params);
     else
-        [data.training_set_indexes, data.testing_set_indexes, data.datasets, datasets_out] = rob.prepareDataset(config.optim, config.chains, dataset_fcn);
+        [data.training_set_indexes, data.testing_set_indexes, data.datasets, datasets_out] = rob.prepareDataset(config.optim, config.chains, config.approach, dataset_fcn);
     end
     saveData.robot_fcn = robot_fcn;
     saveData.config_fcn = config_fcn;

@@ -1,10 +1,10 @@
 %% NAO example - right arm mount from rightArm - torso touch
 % with already precomputed values
-robot_fcn = 'loadNAO'; % Name of the function with robot structure
+robot_fcn = 'loadNAOF3D'; % Name of the function with robot structure
 config_fcn = 'optimizationConfig'; % Name of the function with calibration config
 approaches = {'selftouch'}; % Used approaches, delimited by comma (,)
 chains = {'rightArm'}; % Used chains, delimited by comma (,) 
-jointTypes={'mount'}; % Used body parts, delimited by comma (,), in 'motomanOptConfig' joint is set by default
+jointTypes={'eye'}; % Used body parts, delimited by comma (,), in 'motomanOptConfig' joint is set by default
 dataset_fcn = 'loadDatasetNao'; % Name of the function for loading of the dataset
 whitelist_fcn = ''; % Name of the function with custom whitelist
 bounds_fcn = ''; % Name of the funtion with custom bounds
@@ -85,13 +85,13 @@ loadDHfromMat(rob, folder, 'type' ,'min');
 %Change following line to change which datasets will be displayed
 % dataset_params={'rightArm_torso', 'leftArm_torso', 'rightArm_head', 'leftArm_head'};
 % dataset_params={'rightArm_torso'};
-[~,~,datasets] = rob.prepareDataset(optim, chains, dataset_fcn,dataset_params);
+[~,~,datasets] = rob.prepareDataset(optim, chains, approaches, dataset_fcn,dataset_params);
 activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1, 'finger', 1)
 
 %% Distances between taxels
 %Good to check if all point getting better equally
 % Shows distribution of distances between taxels for each taxel or triangle
-folder = 'boh2';
+folder = 'NAO-rightArm';
 load(strcat('Results/',folder, '/info'));
 load(strcat('Results/',folder, '/results.mat'));
 loadDHfromMat(rob, folder, 'type' ,'min');

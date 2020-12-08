@@ -11,9 +11,10 @@ function dataset  = initDataset(all)
     dataset.point = [];
     if (all) 
         dataset.refDist = 0; 
-        dataset.rtMat = struct();  
+        dataset.rtMat = [];  
         dataset.name = '';
         dataset.id = -1;
+
     end
 end
 

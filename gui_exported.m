@@ -5,27 +5,22 @@ classdef gui_exported < matlab.apps.AppBase
         Robot_toolboxUIFigure           matlab.ui.Figure
         TabGroup                        matlab.ui.container.TabGroup
         MainTab                         matlab.ui.container.Tab
-        RobotconfigurationPanel         matlab.ui.container.Panel
+        RobotjointconfigurationPanel    matlab.ui.container.Panel
         GroupDropDownLabel              matlab.ui.control.Label
         GroupDropDown                   matlab.ui.control.DropDown
         UITable                         matlab.ui.control.Table
-        ResetconfigurationButton        matlab.ui.control.Button
-        ShowconfigurationButton         matlab.ui.control.Button
+        ResetJointsButton               matlab.ui.control.Button
+        ShowRobotButton                 matlab.ui.control.Button
+        dualrobotCheckBox               matlab.ui.control.CheckBox
         LoadfunctionsPanel              matlab.ui.container.Panel
         LoadRobotButton                 matlab.ui.control.Button
         LoadConfigButton                matlab.ui.control.Button
         LoadWhitelistButton             matlab.ui.control.Button
         LoadBoundsButton                matlab.ui.control.Button
         LoadrobotkinematicsPanel        matlab.ui.container.Panel
-        KinematicsfolderEditFieldLabel  matlab.ui.control.Label
-        KinematicsfolderEditField       matlab.ui.control.EditField
-        ButtonGroup                     matlab.ui.container.ButtonGroup
-        TXTButton                       matlab.ui.control.RadioButton
-        MATButton                       matlab.ui.control.RadioButton
-        LoadKinematicsButton            matlab.ui.control.Button
         TabGroup3                       matlab.ui.container.TabGroup
         TXTTab                          matlab.ui.container.Tab
-        ChooseFileButton                matlab.ui.control.Button
+        LoadKinematicsButton_2          matlab.ui.control.Button
         MATTab                          matlab.ui.container.Tab
         TypeButtonGroup                 matlab.ui.container.ButtonGroup
         NoneButton                      matlab.ui.control.RadioButton
@@ -36,15 +31,20 @@ classdef gui_exported < matlab.apps.AppBase
         PertSpinner                     matlab.ui.control.Spinner
         RepSpinnerLabel                 matlab.ui.control.Label
         RepSpinner                      matlab.ui.control.Spinner
+        LoadKinematicsButton            matlab.ui.control.Button
         LoaddatasetPanel                matlab.ui.container.Panel
         DatasetparametersTextAreaLabel  matlab.ui.control.Label
         DatasetparametersTextArea       matlab.ui.control.TextArea
         LoadDatasetButton               matlab.ui.control.Button
+        JointDistributionButton         matlab.ui.control.Button
+        PosesviewButton                 matlab.ui.control.Button
         VisualisationPanel              matlab.ui.container.Panel
-        JointdistributionButton         matlab.ui.control.Button
         CorrectionsButton               matlab.ui.control.Button
-        ErrorsBoxplotButton             matlab.ui.control.Button
-        ErrorbarsButton                 matlab.ui.control.Button
+        RMSEBoxplotsButton              matlab.ui.control.Button
+        RMSEBarsButton                  matlab.ui.control.Button
+        JacobiansObsButton              matlab.ui.control.Button
+        VisualisationfoldernameEditFieldLabel  matlab.ui.control.Label
+        VisualisationfoldernameEditField  matlab.ui.control.EditField
         CalibrationoptionsPanel         matlab.ui.container.Panel
         ApproachListBoxLabel            matlab.ui.control.Label
         ApproachListBox                 matlab.ui.control.ListBox
@@ -53,7 +53,7 @@ classdef gui_exported < matlab.apps.AppBase
         ChainsListBoxLabel              matlab.ui.control.Label
         ChainsListBox                   matlab.ui.control.ListBox
         CalibrationsettingsPanel_4      matlab.ui.container.Panel
-        RuncalibrationButton            matlab.ui.control.Button
+        RunCalibrationButton            matlab.ui.control.Button
         SavejacobiansCheckBox           matlab.ui.control.CheckBox
         SavedatasetCheckBox             matlab.ui.control.CheckBox
         SavevarsCheckBox                matlab.ui.control.CheckBox
@@ -91,8 +91,6 @@ classdef gui_exported < matlab.apps.AppBase
         UIAxes2                         matlab.ui.control.UIAxes
         RobotnameEditFieldLabel         matlab.ui.control.Label
         RobotnameEditField              matlab.ui.control.EditField
-        H0transformationmatrixPanel     matlab.ui.container.Panel
-        H0mat                           matlab.ui.control.Table
         KinematicsTab                   matlab.ui.container.Tab
         KinematicsparametersPanel       matlab.ui.container.Panel
         UITable5                        matlab.ui.control.Table
@@ -157,10 +155,10 @@ classdef gui_exported < matlab.apps.AppBase
         DatasetinfoPanel                matlab.ui.container.Panel
         DatasetnameEditFieldLabel       matlab.ui.control.Label
         DatasetnameEditField            matlab.ui.control.EditField
-        DatasetidEditFieldLabel         matlab.ui.control.Label
-        DatasetidEditField              matlab.ui.control.NumericEditField
         DatasettypeDropDownLabel        matlab.ui.control.Label
         DatasettypeDropDown             matlab.ui.control.DropDown
+        DatasetIDDropDownLabel          matlab.ui.control.Label
+        DatasetIDDropDown               matlab.ui.control.DropDown
         DataPanel                       matlab.ui.container.Panel
         DatasetData                     matlab.ui.control.Table
     end
@@ -177,8 +175,9 @@ classdef gui_exported < matlab.apps.AppBase
         Dataset
         SaveVars
         SaveFolder
+        VisuFolder
         Configuration
-        KinematicsFilename
+        DefaultJoints
         RobotFile
         ConfigFile
         BoundsFile
@@ -271,12 +270,12 @@ classdef gui_exported < matlab.apps.AppBase
             
         end
         function changeDataset(app)
-            id = app.DatasetidEditField.Value;
+            id = str2double(app.DatasetIDDropDown.Value);
             type = app.DatasettypeDropDown.Value;
-            if length(app.Dataset.(type)) < id
-                id=1;
-                app.DatasetidEditField.Value = 1;
-            end
+%             if length(app.Dataset.(type)) < id
+%                 id=1;
+%                 app.DatasetidEditField.Value = 1;
+%             end
             dataset = app.Dataset.(type){id};
             app.DatasetnameEditField.Value = dataset.name;
             app.DatasetData.Data = [];
@@ -287,11 +286,11 @@ classdef gui_exported < matlab.apps.AppBase
 %             frame2_length = length(dataset.frame2);
 %             refpoint_length = length(dataset.refPoints);
             fnames_ = fieldnames(dataset);
-            allowedFnames = {'joints'; 'cameras'; 'rtMat'; 'refPoints'; 'point'; 'pose'; 'frame'; 'frame2'};
+            allowedFnames = {'pose', 'frame', 'frame2', 'joints', 'point', 'cameras', 'refPoints'};
             fnames = {};
-            for fname=fnames_'
+            for fname=allowedFnames
                 fname = fname{1};
-                if any(ismember(allowedFnames, fname))
+                if any(ismember(fnames_, fname))
                     fnames{end+1} = fname;
                 end
             end
@@ -387,7 +386,7 @@ classdef gui_exported < matlab.apps.AppBase
                    colNames{end+1} = ['Joint ', num2str(joint)];
                end
                app.UITable_2.ColumnName = colNames;
-               app.UITable_2.Data = app.Configuration.(app.GroupDropDown_2.Value); 
+               app.UITable_2.Data = app.DefaultJoints.(app.GroupDropDown_2.Value); 
                
                colNames = {};
                for joint=1:length(app.Configuration.(app.GroupDropDown.Value))
@@ -396,9 +395,6 @@ classdef gui_exported < matlab.apps.AppBase
                app.UITable.ColumnName = colNames;
                app.UITable.Data = app.Configuration.(app.GroupDropDown.Value); 
             end
-        end
-        function changeData(app, indices, data, tab, variable)
-
         end
     end
 
@@ -424,6 +420,7 @@ classdef gui_exported < matlab.apps.AppBase
                 jString   = cmdWinDoc.getText(cmdWinDoc.getStartPosition.getOffset, ...
                                        cmdWinDoc.getLength);
                 app.TextArea.Value = char(jString);
+                scroll(app.TextArea, 'bottom');
             end
 
             app.Timer = timer('TimerFcn',@(obj, event)changeCW, 'ExecutionMode','fixedRate', 'Period', 0.5, 'TasksToExecute', inf);
@@ -438,9 +435,6 @@ classdef gui_exported < matlab.apps.AppBase
 %             setPromptFcn(app,jTextArea);
             
             app.Config = struct('options',[], 'chains',[], 'approach',[], 'jointTypes',[], 'optim',[], 'pert', []);
-            app.H0mat.Data = cell(4,4);
-            app.H0mat.ColumnWidth = {40,40,40,40};
-            app.H0mat.ColumnEditable = true;
             app.camMatrix1.Data = cell(3,3);
             app.camMatrix1.ColumnEditable = true;
             app.camMatrix1.ColumnWidth = {89,89,89,89};
@@ -479,24 +473,28 @@ classdef gui_exported < matlab.apps.AppBase
             app.Robot = [];
             app.SaveVars = [0,0,0];
             app.SaveFolder = '';
+            app.VisuFolder = '';
 %             app.RobotFunction.Value = 'loadMotoman';
 %             app.EditField_2.Value = 'motomanOptConfig';
 %             app.DatasetfunctionEditField.Value = 'loadDatasetMotoman';
-            app.DatasetparametersTextArea.Value = mat2str([1,0,0,0]);
+            app.DatasetparametersTextArea.Value = ''; % mat2str([1,0,0,0]);
             app.Configuration = {};
+            app.JointDistributionButton.Enable = 'off';
+            app.PosesviewButton.Enable = 'off';
             app.LoadConfigButton.Enable = 'off';
             app.LoadWhitelistButton.Enable = 'off';
             app.LoadBoundsButton.Enable = 'off';
             %app.LoadRobotButton.Enable = 'off';
             app.LoadKinematicsButton.Enable = 'off';
+            app.LoadKinematicsButton_2.Enable = 'off';
             app.LoadDatasetButton.Enable = 'off';
-            app.RuncalibrationButton.Enable = 'off';
-            app.JointdistributionButton.Enable = 'off';
+            app.RunCalibrationButton.Enable = 'off';
+            app.JacobiansObsButton.Enable = 'off';
             app.CorrectionsButton.Enable = 'off';
-            app.ErrorbarsButton.Enable = 'off';
-            app.ErrorsBoxplotButton.Enable = 'off';
-            app.ResetconfigurationButton.Enable = 'off';
-            app.ShowconfigurationButton.Enable = 'off';
+            app.RMSEBarsButton.Enable = 'off';
+            app.RMSEBoxplotsButton.Enable = 'off';
+            app.ResetJointsButton.Enable = 'off';
+            app.ShowRobotButton.Enable = 'off';
             app.SaveConfigfileButton.Enable = 'off';
             app.LoadConfigfileButton.Enable = 'off';
             app.LoadDatasetfileButton.Enable = 'off';
@@ -505,12 +503,80 @@ classdef gui_exported < matlab.apps.AppBase
             app.SaveRobotfileButton_2.Enable = 'off';
             app.SaveRobotfileButton_3.Enable = 'off';
             app.SaveRobotfileButton_4.Enable = 'off';
-            app.KinematicsFilename = '';
+            app.TabGroup.SelectedTab = app.MainTab;
+            app.TabGroup2.SelectedTab = app.JointsTab;
+            app.Panel.Visible = 'off';
+            app.Panel_2.Visible = 'off';
+            app.Panel_3.Visible = 'off';
+            app.Panel_4.Visible = 'off';
+            app.Panel_5.Visible = 'off';
+            app.Panel_6.Visible = 'off';
+            app.SaveboundsButton.Visible = 'off';
+            app.SavewhitelistButton.Visible = 'off';
             app.WLFile = '';
             app.RobotFile = '';
             app.BoundsFile = '';
             app.ConfigFile = '';
             app.DatasetFile = '';
+            
+            if verLessThan('matlab','9.5')
+            else
+                app.ResetJointsButton.Tooltip = {'Set joints configuration to default Joints from Robot M-function'};
+                app.ShowRobotButton.Tooltip = {'Show robot model with given joints configuration'};
+                app.dualrobotCheckBox.Tooltip = {'Show robot with default parameters and with the ones from Load Kinematics'};
+                app.LoadRobotButton.Tooltip = {'Load Robot M-function'};
+                app.LoadConfigButton.Tooltip = {'Load Config M-function (Approach, joint Types and Chains must be chosen)'};
+                app.LoadWhitelistButton.Tooltip = {'Load Whitelist M-function (Robot must be loaded)'};
+                app.LoadBoundsButton.Tooltip = {'Load Bounds M-function  (Robot must be loaded)'};
+                app.LoadKinematicsButton_2.Tooltip = {'Select text file with Kinematics parameters'};
+                app.TypeButtonGroup.Tooltip = {'Select Kinematics parameters with {max, min, median} rms errors for given perturbation level'};
+                app.PertSpinner.Tooltip = {'Select Kinematics parameters with given Perturbation level (0- no perturbation, 0< perturbation level) '};
+                app.RepSpinner.Tooltip = {'Select Kinematics parameters with given repetition index'};
+                app.LoadKinematicsButton.Tooltip = {'Select mat file with Kinematics parameters (must be in Results/<folder>)  (Robot must be loaded)'};
+                app.DatasetparametersTextArea.Tooltip = {'Additional parameters for dataset M-function (as varargin)'};
+                app.LoadDatasetButton.Tooltip = {'Load Dataset M-function (Config and Robot must be loaded)'};
+                app.JointDistributionButton.Tooltip = {'Show joint distribution, one figure for each dataset'};
+                app.PosesviewButton.Tooltip = {'Show moving model of the robot, one figure for each dataset'};
+                app.CorrectionsButton.Tooltip = {'Plot kinematics corrections (results-start)'};
+                app.RMSEBoxplotsButton.Tooltip = {'Plot RMS errors boxplot'};
+                app.RMSEBarsButton.Tooltip = {'Plot RMS errors with max and min over repetitions'};
+                app.JacobiansObsButton.Tooltip = {'Plot Jacobians (identifiability) and Observation indexes (observability)'};
+                app.VisualisationfoldernameEditField.Tooltip = {'Folder with calibration results used for Visualisations (default - same as Save folder, but can be changed)'};
+                app.ApproachListBox.Tooltip = {'Choose calibration type (approach)'};
+                app.jointTypesListBox.Tooltip = {'Choose joint types to calibrate'};
+                app.ChainsListBox.Tooltip = {'Choose chains to calibrate'};
+                app.RunCalibrationButton.Tooltip = {'Run calibration (Robot, Config and Dataset must be loaded and save folder name set)'};
+                app.SavejacobiansCheckBox.Tooltip = {'Save jacobians to mat file'};
+                app.SavedatasetCheckBox.Tooltip = {'Save dataset to mat file'};
+                app.SavevarsCheckBox.Tooltip = {'Save additional variables to info.mat (more info in Readme)'};
+                app.SavefoldernameEditField.Tooltip = {'Folder where the calibration results will be saved (Results/<folder name>)'};
+                app.ApproachListBox_3.Tooltip = {'Choose calibration type (approach)'};
+                app.jointTypesListBox_3.Tooltip = {'Choose joint types to calibrate'};
+                app.ChainsListBox_3.Tooltip = {'Choose chains to calibrate'};
+                app.UITable2_3.Tooltip = {'Each row is one perturbation level - additive perturbation from interval (-value, value)  in [m]'};
+                app.UITable2.Tooltip = {'calibration settings'};
+                app.UITable2_2.Tooltip = {'lsqnonlin solver options'};
+                app.UITable4.Tooltip = {'Robot joints (and skin etc) with their type, parent, group and index to kinematics table.'};
+                app.RobotnameEditField.Tooltip = {'Robot name'};
+                app.UITable5.Tooltip = {'DH or 6D kinematics parameters'};
+                app.UITable5_2.Tooltip = {'Calibration whitelist - which parameters will be calibrated'};
+                app.UITable5_3.Tooltip = {'Max and min value for each parameter (bounded calibration)'};
+                app.tCoef1.Tooltip = {'r1 and r2 tangential distortion coefficients'};
+                app.rCoef1.Tooltip = {'k1, k2 and r3 radial distortion coefficients'};
+                app.camMatrix1.Tooltip = {'3x3 camera matrix'};
+                app.tCoef2.Tooltip = {'r1 and r2 tangential distortion coefficients'};
+                app.rCoef2.Tooltip = {'k1, k2 and r3 radial distortion coefficients'};
+                app.camMatrix2.Tooltip = {'3x3 camera matrix'};
+                app.tCoef3.Tooltip = {'r1 and r2 tangential distortion coefficients'};
+                app.rCoef3.Tooltip = {'k1, k2 and r3 radial distortion coefficients'};
+                app.camMatrix3.Tooltip = {'3x3 camera matrix'};
+                app.DatasetnameEditField.Tooltip = {'Dataset name (used for visualisation)'};
+                app.DatasettypeDropDown.Tooltip = {'Show dataset with given dataset type'};
+                app.DatasetIDDropDown.Tooltip = {'Show dataset with given ID'};
+                app.DatasetData.Tooltip = {'Dataset overview'};
+                app.UITable.Tooltip = {'Robot joints configuration'};
+                app.UITable2.Tooltip = {'Robot default joints configuration'};
+            end
         end
 
         % Button pushed function: LoadRobotButton, 
@@ -518,12 +584,12 @@ classdef gui_exported < matlab.apps.AppBase
         % LoadRobotfileButton_3, LoadRobotfileButton_4
         function LoadRobotButtonPushed(app, event)
             [file, ~] = uigetfile('*.m');
+            if length(file) == 1 && file == 0
+                return
+            end
             app.Bounds = struct();
             app.Robot = Robot(file(1:end-2));
             app.RobotnameEditField.Value = app.Robot.name;
-            app.H0mat.Data = app.Robot.structure.H0;
-            %set(app.Robot_toolboxUIFigure, 'currentaxes', app.UIAxes2);  %# for axes with handle axs on figure f
-%             axes(app.UIAxes2);
             app.Robot.showGraphModel(app.UIAxes2);
             app.UITable4.Data = app.Robot.jointsStructure;
             [app.Robot.structure.DH, app.Robot.structure.type] = padVectors(app.Robot.structure.DH);
@@ -579,19 +645,33 @@ classdef gui_exported < matlab.apps.AppBase
                     app.Configuration.(fnames{i}) = app.Robot.structure.defaultJoints{i};
                 end
             end
+            app.DefaultJoints = app.Configuration;
             app.GroupDropDown.Items = fieldnames(app.Robot.structure.DH);
+            app.ChainsListBox.Items = fieldnames(app.Robot.structure.DH);
             app.configurationDropDown();
 %             axes(app.UIAxes);
 %             app.Robot.showModel('figName', 'Robot_toolbox');
-            app.ShowconfigurationButton.Enable = 'on';
-            app.ResetconfigurationButton.Enable = 'on';
-            if ~isempty(app.jointTypesListBoxProp) && ~isempty(app.ChainsListBoxProp) && ~isempty(app.ApproachListBoxProp)
-                app.LoadConfigButton.Enable = 'on';
-                app.LoadConfigfileButton.Enable = 'on';
-            end
+            app.ShowRobotButton.Enable = 'on';
+            app.ResetJointsButton.Enable = 'on';
+            app.CalibrationoptionsPanel.Enable = 'on';
+            objJoints = [app.Robot.joints{:}];
+            
+            types = unique({objJoints.type});
+            
+            app.jointTypesListBox.Items = [types(~strcmp(types,'base')), {'onlyOffsets'}];
+%             if ~isempty(app.jointTypesListBoxProp) && ~isempty(app.ChainsListBoxProp) && ~isempty(app.ApproachListBoxProp)
+%                 app.LoadConfigButton.Enable = 'on';
+%                 app.LoadConfigfileButton.Enable = 'on';
+%             end
             app.LoadBoundsButton.Enable = 'on';
             app.LoadWhitelistButton.Enable = 'on';
-            app.ButtonGroupSelectionChanged([]);
+            app.LoadKinematicsButton.Enable = 'on';
+            app.LoadKinematicsButton_2.Enable = 'on';
+            if ~strcmp(app.ConfigFile, '')
+               app.LoadDatasetButton.Enable = 'on'; 
+               app.LoadDatasetfileButton.Enable = 'on';
+            end
+%             app.ButtonGroupSelectionChanged([]);
             app.RobotFile = file(1:end-2);
             if isfield(app.Robot.structure, 'eyes')
                 for cam = 1:size(app.Robot.structure.eyes.dist, 2)
@@ -663,6 +743,9 @@ classdef gui_exported < matlab.apps.AppBase
         % Button pushed function: LoadConfigButton
         function LoadConfigButtonPushed(app, event)
             [file, ~] = uigetfile('*.m');
+            if length(file) == 1 && file == 0
+                return
+            end
             [app.Config.options, app.Config.chains, app.Config.approach, app.Config.jointTypes, app.Config.optim, app.Config.pert] = loadConfig(file(1:end-2), app.ApproachListBoxProp, app.ChainsListBoxProp, app.jointTypesListBoxProp);
 
             
@@ -686,8 +769,10 @@ classdef gui_exported < matlab.apps.AppBase
             app.changeListBox('chains', {'ChainsListBox', 'ChainsListBox_3'});
             app.changeListBox('jointTypes', {'jointTypesListBox_3', 'jointTypesListBox'});
             app.changeListBox('approach', {'ApproachListBox', 'ApproachListBox_3'});
-            app.LoadDatasetButton.Enable = 'on';
-            app.LoadDatasetfileButton.Enable = 'on';
+            if ~isempty(app.Robot)
+                app.LoadDatasetButton.Enable = 'on';
+                app.LoadDatasetfileButton.Enable = 'on';
+            end
             app.ConfigFile = file(1:end-2);
         end
 
@@ -700,6 +785,7 @@ classdef gui_exported < matlab.apps.AppBase
             box_ = box_{1};
             app.listBoxValueChanged(box, [box_,'Prop']);
             if ~isempty(app.Robot) && ~isempty(app.jointTypesListBoxProp) && ~isempty(app.ChainsListBoxProp) && ~isempty(app.ApproachListBoxProp)
+%             if ~isempty(app.jointTypesListBoxProp) && ~isempty(app.ChainsListBoxProp) && ~isempty(app.ApproachListBoxProp)
                 app.LoadConfigButton.Enable = 'on';
                 app.LoadConfigfileButton.Enable = 'on';
             else
@@ -711,6 +797,9 @@ classdef gui_exported < matlab.apps.AppBase
         % Button pushed function: LoadWhitelistButton
         function LoadWhitelistButtonPushed(app, event)
             [file, ~] = uigetfile('*.m');
+            if length(file) == 1 && file == 0
+                return
+            end
             func = str2func(file(1:end-2));
             app.Whitelist = func();
             app.GroupDropDown_3ValueChanged(event);
@@ -721,6 +810,9 @@ classdef gui_exported < matlab.apps.AppBase
         % Button pushed function: LoadBoundsButton
         function LoadBoundsButtonPushed(app, event)
             [file, ~] = uigetfile('*.m');
+            if length(file) == 1 && file == 0
+                return
+            end
             func = str2func(file(1:end-2));
             app.Bounds = func();
             app.GroupDropDown_3ValueChanged(event);
@@ -732,12 +824,25 @@ classdef gui_exported < matlab.apps.AppBase
         % LoadDatasetfileButton
         function LoadDatasetButtonPushed(app, event)
             [file, ~] = uigetfile('*.m');
+            if length(file) == 1 && file == 0
+                return
+            end
             func = str2func(file(1:end-2));
             params = app.DatasetparametersTextArea.Value;
             if ~strcmp(get(app.Timer, 'Running'), 'on')
                 start(app.Timer);
             end
             app.Dataset = func(app.Robot, app.Config.optim, app.Config.chains, reshape(params, 1, []));
+            
+            for appr=fieldnames(app.Config.approach)'
+               assert(~(~isfield(app.Dataset, appr{1}) && app.Config.approach.(appr{1})), ['Dataset for ', appr{1}, ' is emtpy!'])
+               if app.Config.approach.(appr{1}) && isfield(app.Dataset, appr{1})
+                  for i=1:length(app.Dataset.(appr{1}))
+                      assert(~isempty(app.Dataset.(appr{1}){i}.point), ['Dataset for ', appr{1}, ' is emtpy!'])
+                  end
+               end
+               
+            end
             items = {};
             for item = fieldnames(app.Dataset)'
                 if ~isempty(app.Dataset.(item{1}))
@@ -745,22 +850,33 @@ classdef gui_exported < matlab.apps.AppBase
                 end
             end
             app.DatasettypeDropDown.Items = items;
+            app.DatasetIDDropDown.Items = cellfun(@(x) num2str(x), num2cell(1:length(app.Dataset.(app.DatasettypeDropDown.Value))), 'UniformOutput', false);
             app.changeDataset();
             app.DatasetFile = file(1:end-2);
             if ~isempty(app.SavefoldernameEditField.Value)
-                app.RuncalibrationButton.Enable = 'on';
+                app.RunCalibrationButton.Enable = 'on';
             end
+            app.JointDistributionButton.Enable = 'on';
+            app.PosesviewButton.Enable = 'on';
+            
             stop(app.Timer);
         end
 
         % Value changed function: DatasettypeDropDown
         function DatasettypeDropDownValueChanged(app, event)
+            app.DatasetIDDropDown.Items = cellfun(@(x) num2str(x), num2cell(1:length(app.Dataset.(app.DatasettypeDropDown.Value))), 'UniformOutput', false);
+            app.DatasetIDDropDown.Value = '1';
             app.changeDataset();
         end
 
         % Button pushed function: LoadKinematicsButton
         function LoadKinematicsButtonPushed(app, event)
-            if app.MATButton.Value
+%             if app.MATButton.Value
+                [file, path] = uigetfile('*.mat');
+                if length(file) == 1 && file == 0
+                    return
+                end
+                path = split(path, '/');
                 args = {};
                 if ~app.NoneButton.Value
                     for t={'min', 'max', 'median'}
@@ -780,10 +896,12 @@ classdef gui_exported < matlab.apps.AppBase
                         args{end+1} = app.RepSpinner.Value;
                     end
                 end
-                loadDHfromMat(app.Robot, app.KinematicsfolderEditField.Value, args{:});
-            elseif app.TXTButton.Value
-                loadDHfromTxt(app.Robot, app.KinematicsfolderEditField.Value, app.KinematicsFilename);
-            end
+                loadDHfromMat(app.Robot, path{end-1}, args{:});
+                [app.Robot.structure.DH, app.Robot.structure.type] = padVectors(app.Robot.structure.DH);
+                app.GroupDropDown_2ValueChanged(event);
+%             elseif app.TXTButton.Value
+%                 loadDHfromTxt(app.Robot, app.KinematicsfolderEditField.Value, app.KinematicsFilename);
+%             end
                 
         end
 
@@ -799,139 +917,38 @@ classdef gui_exported < matlab.apps.AppBase
             
         end
 
-        % Button pushed function: RuncalibrationButton
-        function RuncalibrationButtonPushed(app, event)
-            [app.Config.options, app.Config.chains, app.Config.approach, app.Config.jointTypes, app.Config.optim, app.Config.pert] = loadConfig(app.ConfigFile, app.ApproachListBoxProp, app.ChainsListBoxProp, app.jointTypesListBoxProp);
+        % Button pushed function: RunCalibrationButton
+        function RunCalibrationButtonPushed(app, event)
+            [app.Config.options, app.Config.chains, app.Config.approach, app.Config.jointTypes, app.Config.optim, app.Config.pert] = loadConfig(app.Config, app.ApproachListBoxProp, app.ChainsListBoxProp, app.jointTypesListBoxProp);
             assert(~isempty(app.Config.optim), 'Opt config is empty!');
-            optim = app.Config.optim;
-            pert = app.Config.pert;
-            options = app.Config.options;
-            approach = app.Config.approach;
-            chains = app.Config.chains;
-            jointTypes = app.Config.jointTypes;
-            dataset_fcn = app.DatasetFile;
-            dataset_params = app.DatasetparametersTextArea.Value;
-            robot_fcn = app.RobotFile;
-            config_fcn = app.ConfigFile;
-            folder = app.SaveFolder;
-            saveInfo = app.SaveVars;
+
             if isempty(app.Bounds)
-                [start_dh, lb_dh, ub_dh] = app.Robot.prepareDH(pert, optim);
+                [start_dh, lb_dh, ub_dh] = app.Robot.prepareDH(app.Config.pert, app.Config.optim);
             else
-                [start_dh, lb_dh, ub_dh] = app.Robot.prepareDH(pert, optim, app.Bounds);
+                [start_dh, lb_dh, ub_dh] = app.Robot.prepareDH(app.Config.pert, app.Config.optim, app.Bounds);
             end
             
             if isempty(app.Whitelist)
-                [start_pars, min_pars, max_pars, whitelist, start_dh] = app.Robot.createWhitelist(start_dh, lb_dh, ub_dh, optim, chains, jointTypes);
+                [whpars.start_pars, whpars.min_pars, whpars.max_pars, whpars.whitelist, whpars.start_dh] = app.Robot.createWhitelist(start_dh, lb_dh, ub_dh, app.Config.optim, app.Config.chains, app.Config.jointTypes);
             else
-                [start_pars, min_pars, max_pars, whitelist, start_dh] = app.Robot.createWhitelist(start_dh, lb_dh, ub_dh, optim, chains, jointTypes, app.Whitelist);
+                [whpars.start_pars, whpars.min_pars, whpars.max_pars, whpars.whitelist, whpars.start_dh] = app.Robot.createWhitelist(start_dh, lb_dh, ub_dh, app.Config.optim, app.Config.chains, app.Config.jointTypes, app.Whitelist);
             end
             
             assert(~isempty(app.Dataset), 'Dataset is empty!');
-            [training_set_indexes, testing_set_indexes, datasets, datasets_out] = app.Robot.prepareDataset(optim, chains, app.Dataset);
-            %% calibration
-        parsCount = size(start_pars, 1);
-        if optim.optimizeInitialGuess 
-            if (approach.external)
-                parsCount = parsCount+length(datasets.external)*optim.externalParams;
+            [data.training_set_indexes, data.testing_set_indexes,data.datasets, datasets_out] = app.Robot.prepareDataset(app.Config.optim, app.Config.chains, app.Config.approach, app.Dataset);
+            
+            saveData.robot_fcn = app.RobotFile;
+            saveData.config_fcn = app.ConfigFile;
+            saveData.dataset_fcn =  app.DatasetFile;
+            saveData.dataset_params = app.DatasetparametersTextArea.Value;
+            if ~strcmp(get(app.Timer, 'Running'), 'on')
+                start(app.Timer);
             end
-            if(approach.planes)
-                parsCount = parsCount+length(datasets.planes)*optim.planeParams;
+            internalCalibration(app.Robot, app.Config, whpars, data, app.SaveFolder, app.SaveVars, saveData);
+            if app.SaveVars(3)
+               save(['Results/', app.SaveFolder,  '/datasets.mat'], 'datasets_out')
             end
-        end
-        options = weightRobotParameters(whitelist, options, parsCount,optim);
-        opt_pars = zeros(parsCount, optim.repetitions, optim.pert_levels);
-        ext_pars_init = zeros(parsCount-size(start_pars,1), optim.repetitions, optim.pert_levels);
-        jacobians = cell(1, optim.repetitions, optim.pert_levels);
-        calibOut.resnorms = cell(1, optim.repetitions, optim.pert_levels);
-        calibOut.residuals = cell(1, optim.repetitions, optim.pert_levels);
-        calibOut.exitFlags = cell(1, optim.repetitions, optim.pert_levels);
-        calibOut.outputs = cell(1, optim.repetitions, optim.pert_levels);
-        calibOut.lambdas = cell(1, optim.repetitions, optim.pert_levels);
-        obsIndexes = struct('Dopt', cell(optim.repetitions, optim.pert_levels), ...
-            'Ecc', cell(optim.repetitions, optim.pert_levels), ...
-            'Min', cell(optim.repetitions, optim.pert_levels), ...
-            'O4', cell(optim.repetitions, optim.pert_levels));
-        fnames = fieldnames(start_dh);
-        if ~strcmp(get(app.Timer, 'Running'), 'on')
-            start(app.Timer);
-        end
-        for pert_level = 1+optim.skipNoPert:optim.pert_levels
-            for rep = 1:optim.repetitions    
-                % levenberg-marquardt is incompatible with constrains, remove them
-                if ~optim.bounds || strcmpi(options.Algorithm, 'levenberg-marquardt')
-                    lb_pars = [];
-                    up_pars = [];
-                else
-                    lb_pars = min_pars(:,rep, pert_level);
-                    up_pars = max_pars(:,rep, pert_level);
-                end
-    
-                tr_datasets = getDatasetPart(datasets, training_set_indexes{rep});
-                for field = 1:length(fnames)
-                   dh.(fnames{field}) = start_dh.(fnames{field})(:,:, rep, pert_level);
-                end
-                % objective function setup
-                if(optim.optimizeDifferences)
-                    pars = zeros(1, parsCount);
-                else
-                    pars=start_pars(:,rep,pert_level)';
-                end
-                initialParamValues = [];
-                if optim.optimizeInitialGuess && (approach.planes || approach.external) 
-                    [params, typicalX]=initialGuess(app.Robot.structure.H0, tr_datasets, dh, approach, optim);
-                    options.TypicalX(end-length(params)+1:end) = typicalX;
-                    if(optim.optimizeDifferences)
-                        initialParamValues = params;
-                    else
-                        pars=[pars,params];
-                    end
-                    ext_pars_init(:, rep, pert_level) = params;
-                end
-    
-                obj_func = @(pars)errors_fcn(pars, dh, app.Robot, whitelist, tr_datasets, optim, approach, initialParamValues);
-                sprintf('%f percent done', 100*((pert_level-1-optim.skipNoPert)*optim.repetitions + rep - 1)/((optim.pert_levels-optim.skipNoPert)*optim.repetitions))
-                % optimization        
-                [opt_result, calibOut.resnorms{1,rep, pert_level}, calibOut.residuals{1,rep, pert_level},...
-                    calibOut.exitFlags{1,rep, pert_level}, calibOut.outputs{1,rep, pert_level}, ...
-                    calibOut.lambdas{1,rep, pert_level}, jac] = ...
-                lsqnonlin(obj_func, pars, lb_pars, up_pars, options);  
-                opt_pars(:, rep, pert_level) = opt_result';
-                jacobians{1, rep, pert_level} = full(jac);
-                obsIndexes(rep, pert_level) = computeObservability(jacobians{1,rep, pert_level}, length(training_set_indexes{rep}));
-            end
-        end
-        %% evaluation
-        [res_dh, corrs_dh] = getResultDH(app.Robot, opt_pars, start_dh, whitelist, optim);
-        [before_tr_err,before_tr_err_all] = rmsErrors(start_dh, app.Robot, datasets, training_set_indexes, optim, approach);
-        [after_tr_err,after_tr_err_all] = rmsErrors(res_dh, app.Robot, datasets, training_set_indexes, optim, approach);
-        [before_ts_err,before_ts_err_all] = rmsErrors(start_dh, app.Robot, datasets, testing_set_indexes, optim, approach);
-        [after_ts_err,after_ts_err_all] = rmsErrors(res_dh, app.Robot, datasets, testing_set_indexes, optim, approach);
-        
-        %% unpad all variables to default state
-        res_dh = unpadVectors(res_dh, app.Robot.structure.DH, app.Robot.structure.type);
-        start_dh = unpadVectors(start_dh, app.Robot.structure.DH, app.Robot.structure.type);
-        whitelist = unpadVectors(whitelist, app.Robot.structure.DH, app.Robot.structure.type);
-        corrs_dh = unpadVectors(corrs_dh, app.Robot.structure.DH, app.Robot.structure.type);
-        app.Robot.structure.DH = unpadVectors(app.Robot.structure.DH, app.Robot.structure.DH, app.Robot.structure.type);
-        %% saving results
-        outfolder = ['Results/', folder, '/'];
-        ext_pars_result = opt_pars(size(start_pars,1)+1:end,:,:);
-        saveResults(app.Robot, outfolder, res_dh, corrs_dh, before_tr_err, after_tr_err, before_ts_err, after_ts_err, before_tr_err_all, after_tr_err_all, before_ts_err_all, after_ts_err_all, chains, approach, jointTypes, optim, options, robot_fcn, dataset_fcn, config_fcn, dataset_params);
-        rob = app.Robot;
-        vars_to_save = {'start_dh', 'rob', 'whitelist', 'pert', 'chains', ...
-            'training_set_indexes', 'testing_set_indexes', 'calibOut', ...
-            'ext_pars_init', 'ext_pars_result', 'obsIndexes'};
-        if saveInfo(1)
-            save([outfolder, 'info.mat'], vars_to_save{:}, '-append');
-        end
-        if saveInfo(2)
-           save([outfolder, 'jacobians.mat'], 'jacobians');
-        end
-        if saveInfo(3)
-           save([outfolder, 'datasets.mat'], 'datasets_out')
-        end
-        stop(app.Timer);
+            stop(app.Timer);
         end
 
         % Value changed function: SavedatasetCheckBox
@@ -942,32 +959,29 @@ classdef gui_exported < matlab.apps.AppBase
         % Value changed function: SavefoldernameEditField
         function SavefoldernameEditFieldValueChanged(app, event)
             app.SaveFolder = app.SavefoldernameEditField.Value;
-            if ~isempty(app.Robot) && ~isempty(app.SavefoldernameEditField.Value)
-                app.JointdistributionButton.Enable = 'on';
-                app.CorrectionsButton.Enable = 'on';
-                app.ErrorbarsButton.Enable = 'on';
-                app.ErrorsBoxplotButton.Enable = 'on';
-            else
-                app.JointdistributionButton.Enable = 'off';
-                app.CorrectionsButton.Enable = 'off';
-                app.ErrorbarsButton.Enable = 'off';
-                app.ErrorsBoxplotButton.Enable = 'off';
-            end
+            app.VisualisationfoldernameEditField.Value = app.SavefoldernameEditField.Value;
+            VisualisationfoldernameEditFieldValueChanged(app, event);
+%             if ~isempty(app.Robot) && ~isempty(app.SavefoldernameEditField.Value)
+%                 app.JacobiansObsButton.Enable = 'on';
+%                 app.CorrectionsButton.Enable = 'on';
+%                 app.RMSEBarsButton.Enable = 'on';
+%                 app.RMSEBoxplotsButton.Enable = 'on';
+%             else
+%                 app.JacobiansObsButton.Enable = 'off';
+%                 app.CorrectionsButton.Enable = 'off';
+%                 app.RMSEBarsButton.Enable = 'off';
+%                 app.RMSEBoxplotsButton.Enable = 'off';
+%             end
             if ~isempty(app.Dataset) && ~isempty(app.SavefoldernameEditField)
-                app.RuncalibrationButton.Enable = 'on';
+                app.RunCalibrationButton.Enable = 'on';
             else
-                app.RuncalibrationButton.Enable = 'off';
+                app.RunCalibrationButton.Enable = 'off';
             end
-        end
-
-        % Callback function
-        function RobotmodelButtonPushed(app, event)
-            app.Robot.showModel();
         end
 
         % Button pushed function: CorrectionsButton
         function CorrectionsButtonPushed(app, event)
-            plotCorrections(app.SaveFolder);
+            plotCorrections(app.VisuFolder);
         end
 
         % Value changed function: GroupDropDown
@@ -976,19 +990,24 @@ classdef gui_exported < matlab.apps.AppBase
             
         end
 
-        % Button pushed function: ShowconfigurationButton
-        function ShowconfigurationButtonPushed(app, event)
+        % Button pushed function: ShowRobotButton
+        function ShowRobotButtonPushed(app, event)
             joints = {};
             for fname=fieldnames(app.Robot.structure.DH)'
                 if ~all(isnan(app.Configuration.(fname{1})))
                     joints{end+1} = app.Configuration.(fname{1});
                 end
             end
-            app.Robot.showModel(joints);
+            if app.dualrobotCheckBox.Value
+                app.Robot.showModel(joints, 'dual', 1);
+            else
+                app.Robot.showModel(joints);
+            end
+            
         end
 
-        % Button pushed function: JointdistributionButton
-        function JointdistributionButtonPushed(app, event)
+        % Button pushed function: JointDistributionButton
+        function JointDistributionButtonPushed(app, event)
             for fname=fieldnames(app.Dataset)'
                 for datasetId = 1:length(app.Dataset.(fname{1}))
                     plotJointDistribution(app.Robot, {app.Dataset.(fname{1}){datasetId}},[], app.GroupDropDown.Value, app.Dataset.(fname{1}){datasetId}.name, [], 1);
@@ -996,14 +1015,14 @@ classdef gui_exported < matlab.apps.AppBase
             end
         end
 
-        % Button pushed function: ErrorbarsButton
-        function ErrorbarsButtonPushed(app, event)
-            plotErrorBars({app.SaveFolder});
+        % Button pushed function: RMSEBarsButton
+        function RMSEBarsButtonPushed(app, event)
+            plotErrorBars({app.VisuFolder});
         end
 
-        % Button pushed function: ErrorsBoxplotButton
-        function ErrorsBoxplotButtonPushed(app, event)
-            plotErrorsBoxplots({app.SaveFolder});
+        % Button pushed function: RMSEBoxplotsButton
+        function RMSEBoxplotsButtonPushed(app, event)
+            plotErrorsBoxplots({app.VisuFolder});
         end
 
         % Cell edit callback: UITable2
@@ -1040,45 +1059,46 @@ classdef gui_exported < matlab.apps.AppBase
 
         % Cell edit callback: UITable5
         function UITable5CellEdit(app, event)
-            app.Robot.structure.DH.(app.GroupDropDown_2.Value)(event.Indices(1), event.Indices(2)) = str2mat(event.NewData);     
+            app.Robot.structure.DH.(app.GroupDropDown_2.Value)(event.Indices(1), event.Indices(2)) = event.NewData;     
         end
 
         % Cell edit callback: UITable_2
         function UITable_2CellEdit(app, event)
-            app.Configuration.(app.GroupDropDown_2.Value)(event.Indices(1), event.Indices(2)) = str2mat(event.NewData);    
+            app.DefaultJoints.(app.GroupDropDown_2.Value)(event.Indices(1), event.Indices(2)) = event.NewData;    
             app.configurationDropDown();
         end
 
         % Cell edit callback: UITable5_2
         function UITable5_2CellEdit(app, event)
-            app.Whitelist.(app.GroupDropDown_3.Value)(event.Indices(1), event.Indices(2)) = str2mat(event.NewData);              
+            app.Whitelist.(app.GroupDropDown_3.Value)(event.Indices(1), event.Indices(2)) = event.NewData;              
         end
 
         % Cell edit callback: UITable5_3
         function UITable5_3CellEdit(app, event)
-            app.Bounds.(app.GroupDropDown_3.Value)(event.Indices(1), event.Indices(2)) = str2mat(event.NewData);                      
+            app.Bounds.(app.GroupDropDown_3.Value)(event.Indices(1), event.Indices(2)) = event.NewData;                      
         end
 
-        % Button pushed function: ResetconfigurationButton
-        function ResetconfigurationButtonPushed(app, event)
-            fnames = fieldnames(app.Robot.structure.DH);
-            for i=1:length(fnames)
-                if i>length(app.Robot.structure.defaultJoints)
-                    app.Configuration.(fnames{i}) = nan(size(app.Robot.structure.DH.(fnames{i})));
-                else
-                    app.Configuration.(fnames{i}) = app.Robot.structure.defaultJoints{i};
-                end
-            end
+        % Button pushed function: ResetJointsButton
+        function ResetJointsButtonPushed(app, event)
+%             fnames = fieldnames(app.Robot.structure.DH);
+            app.Configuration = app.DefaultJoints;
+%             for i=1:length(fnames)
+%                 if i>length(app.Robot.structure.defaultJoints)
+%                     app.Configuration.(fnames{i}) = nan(size(app.Robot.structure.DH.(fnames{i})));
+%                 else
+%                     app.Configuration.(fnames{i}) = app.Robot.structure.defaultJoints{i};
+%                 end
+%             end
             app.configurationDropDown();
         end
 
         % Cell edit callback: UITable
         function UITableCellEdit(app, event)
-            app.Configuration.(app.GroupDropDown.Value)(event.Indices(2)) = str2mat(event.NewData);    
+            app.Configuration.(app.GroupDropDown.Value)(event.Indices(2)) = event.NewData;    
             app.configurationDropDown();
         end
 
-        % Value changed function: DatasetidEditField
+        % Callback function
         function DatasetidEditFieldValueChanged(app, event)
             app.changeDataset();
         end
@@ -1093,11 +1113,6 @@ classdef gui_exported < matlab.apps.AppBase
         % Value changed function: RobotnameEditField
         function RobotnameEditFieldValueChanged(app, event)
             app.Robot.name = app.RobotnameEditField.Value;
-        end
-
-        % Cell edit callback: H0mat
-        function H0matCellEdit(app, event)
-            app.Robot.structure.H0(event.Indices(1), event.Indices(2)) = event.NewData;
         end
 
         % Cell edit callback: UITable4
@@ -1123,40 +1138,6 @@ classdef gui_exported < matlab.apps.AppBase
             app.Robot.showGraphModel(app.UIAxes2);
         end
 
-        % Callback function
-        function RobotFunctionValueChanged(app, event)
-            if ~isempty(app.RobotFunction.Value)
-                app.LoadRobotButton.Enable = 'on';
-            else
-                app.LoadRobotButton.Enable = 'off';
-            end
-        end
-
-        % Value changed function: KinematicsfolderEditField
-        function KinematicsfolderEditFieldValueChanged(app, event)
-            if ~isempty(app.Robot) && ~isempty(app.KinematicsfolderEditField.Value)
-                if app.MATButton.Value
-                    app.LoadKinematicsButton.Enable = 'on';
-                elseif app.TXTButton.Value && ~isempty(app.KinematicsFilename)
-                    app.LoadKinematicsButton.Enable = 'on';
-                else
-                    app.LoadKinematicsButton.Enable = 'off';
-                end
-                
-            else
-                app.LoadKinematicsButton.Enable = 'off';
-            end      
-        end
-
-        % Callback function
-        function FilenameEditFieldValueChanged(app, event)
-            if ~isempty(app.Robot) && ~isepmty(app.KinematicsfolderEditField.Value) && app.TXTButton.Value && ~isempty(app.FilenameEditField.Value)
-                app.LoadKinematicsButton.Enable = 'on';
-            else
-                app.LoadKinematicsButton.Enable = 'off';
-            end 
-        end
-
         % Button pushed function: ReturntomainButton, 
         % ReturntomainButton_2, ReturntomainButton_3, 
         % ReturntomainButton_4, ReturntomainButton_5, 
@@ -1167,17 +1148,17 @@ classdef gui_exported < matlab.apps.AppBase
 
         % Button pushed function: NexttabButton
         function NexttabButtonPushed(app, event)
-            app.TabGroup.SelectedTab = app.RobotTab.TabGroup2.KinematicsTab;
+            app.TabGroup2.SelectedTab = app.KinematicsTab;
         end
 
         % Button pushed function: NexttabButton_3
         function NexttabButton_3Pushed(app, event)
-            app.TabGroup.SelectedTab = app.CameraseyesTab;
+            app.TabGroup2.SelectedTab = app.CameraseyesTab;
         end
 
         % Button pushed function: NexttabButton_2
         function NexttabButton_2Pushed(app, event)
-            app.TabGroup.SelectedTab = app.WhitelistBoundsTab;
+            app.TabGroup2.SelectedTab = app.WhitelistBoundsTab;
         end
 
         % Button pushed function: LoadConfigfileButton
@@ -1188,32 +1169,26 @@ classdef gui_exported < matlab.apps.AppBase
             app.UseConfigFile = '';
         end
 
-        % Button pushed function: ChooseFileButton
-        function ChooseFileButtonPushed(app, event)
-            [file, ~] = uigetfile('.txt');
-            app.KinematicsFilename = file;
-            if ~isempty(app.Robot) && ~isempty(app.KinematicsfolderEditField.Value) && app.TXTButton.Value
-                app.LoadKinematicsButton.Enable = 'on';
-            else
-                app.LoadKinematicsButton.Enable = 'off';
+        % Button pushed function: LoadKinematicsButton_2
+        function LoadKinematicsButton_2Pushed(app, event)
+            [file, path] = uigetfile('.txt');
+            if length(file) == 1 && file == 0
+                return
             end
-        end
-
-        % Selection changed function: ButtonGroup
-        function ButtonGroupSelectionChanged(app, event)
-            selectedButton = app.ButtonGroup.SelectedObject;
-            if ~isempty(app.Robot) && ~isempty(app.KinematicsfolderEditField.Value) && selectedButton == app.MATButton
-                app.LoadKinematicsButton.Enable = 'on';
-            elseif ~isempty(app.Robot) && ~isempty(app.KinematicsfolderEditField.Value) && selectedButton == app.TXTButton && ~isempty(app.KinematicsFilename)
-                app.LoadKinematicsButton.Enable = 'on';
-            else
-                app.LoadKinematicsButton.Enable = 'off';
-            end
+%             app.KinematicsFilename = file;
+            loadDHfromTxt(app.Robot, [path,file]);
+            [app.Robot.structure.DH, app.Robot.structure.type] = padVectors(app.Robot.structure.DH);
+            app.GroupDropDown_2ValueChanged(event);
+%             if ~isempty(app.Robot) && ~isempty(app.KinematicsfolderEditField.Value) && app.TXTButton.Value
+%                 app.LoadKinematicsButton.Enable = 'on';
+%             else
+%                 app.LoadKinematicsButton.Enable = 'off';
+%             end
         end
 
         % Cell edit callback: DatasetData
         function DatasetDataCellEdit(app, event)
-            id = app.DatasetidEditField.Value;
+            id = str2double(app.DatasetIDDropDown.Value);
             type = app.DatasettypeDropDown.Value;
             indices = event.Indices;
             col = app.DatasetData.ColumnName{indices(2)};
@@ -1297,6 +1272,39 @@ classdef gui_exported < matlab.apps.AppBase
         function rCoef3CellEdit(app, event)
             app.Robot.structure.eyes.dist(event.Indices(2), 3) = event.NewData;
         end
+
+        % Button pushed function: JacobiansObsButton
+        function JacobiansObsButtonPushed(app, event)
+            plotJacobian(app.VisuFolder);
+            plotObserIndexes(app.VisuFolder);
+        end
+
+        % Button pushed function: PosesviewButton
+        function PosesviewButtonPushed(app, event)
+            dat = struct2cell(app.Dataset);
+            activationsView(app.Robot,horzcat(dat{:}))
+        end
+
+        % Value changed function: VisualisationfoldernameEditField
+        function VisualisationfoldernameEditFieldValueChanged(app, event)
+            app.VisuFolder = app.VisualisationfoldernameEditField.Value;
+            if  ~isempty(app.VisualisationfoldernameEditField.Value)
+                app.JacobiansObsButton.Enable = 'on';
+                app.CorrectionsButton.Enable = 'on';
+                app.RMSEBarsButton.Enable = 'on';
+                app.RMSEBoxplotsButton.Enable = 'on';
+            else
+                app.JacobiansObsButton.Enable = 'off';
+                app.CorrectionsButton.Enable = 'off';
+                app.RMSEBarsButton.Enable = 'off';
+                app.RMSEBoxplotsButton.Enable = 'off';
+            end
+        end
+
+        % Callback function
+        function DatasetIDDropDownValueChanged(app, event)
+            app.changeDataset();
+        end
     end
 
     % Component initialization
@@ -1309,8 +1317,7 @@ classdef gui_exported < matlab.apps.AppBase
             app.Robot_toolboxUIFigure = uifigure('Visible', 'off');
             app.Robot_toolboxUIFigure.Position = [100 100 900 600];
             app.Robot_toolboxUIFigure.Name = 'Robot_toolbox';
-            
-            
+
             % Create TabGroup
             app.TabGroup = uitabgroup(app.Robot_toolboxUIFigure);
             app.TabGroup.Position = [1 1 900 600];
@@ -1319,126 +1326,96 @@ classdef gui_exported < matlab.apps.AppBase
             app.MainTab = uitab(app.TabGroup);
             app.MainTab.Title = 'Main';
 
-            % Create RobotconfigurationPanel
-            app.RobotconfigurationPanel = uipanel(app.MainTab);
-            app.RobotconfigurationPanel.Title = 'Robot configuration';
-            app.RobotconfigurationPanel.Position = [419 84 471 136];
+            % Create RobotjointconfigurationPanel
+            app.RobotjointconfigurationPanel = uipanel(app.MainTab);
+            app.RobotjointconfigurationPanel.Title = 'Robot joint configuration';
+            app.RobotjointconfigurationPanel.Position = [430 93 460 134];
 
             % Create GroupDropDownLabel
-            app.GroupDropDownLabel = uilabel(app.RobotconfigurationPanel);
+            app.GroupDropDownLabel = uilabel(app.RobotjointconfigurationPanel);
             app.GroupDropDownLabel.HorizontalAlignment = 'center';
-            app.GroupDropDownLabel.Position = [9 94 39 15];
+            app.GroupDropDownLabel.Position = [9 88 39 15];
             app.GroupDropDownLabel.Text = 'Group';
 
             % Create GroupDropDown
-            app.GroupDropDown = uidropdown(app.RobotconfigurationPanel);
+            app.GroupDropDown = uidropdown(app.RobotjointconfigurationPanel);
             app.GroupDropDown.Items = {'rightArm', 'leftArm', 'torso', 'head', 'leftEye', 'rightEye', 'leftLeg', 'rightLeg', 'leftIndex', 'rightIndex', 'leftThumb', 'rightThumb', 'leftMiddle', 'rightMiddle'};
             app.GroupDropDown.ValueChangedFcn = createCallbackFcn(app, @GroupDropDownValueChanged, true);
-            app.GroupDropDown.Position = [55 89 150 25];
+            app.GroupDropDown.Position = [55 83 118 25];
             app.GroupDropDown.Value = 'rightArm';
 
             % Create UITable
-            app.UITable = uitable(app.RobotconfigurationPanel);
+            app.UITable = uitable(app.RobotjointconfigurationPanel);
             app.UITable.ColumnName = {'Joint 1'; 'Joint 2'; 'Joint 3'; 'Joint 4'; 'Joint 5'; 'Joint 6'};
             app.UITable.RowName = {};
             app.UITable.ColumnEditable = true;
             app.UITable.CellEditCallback = createCallbackFcn(app, @UITableCellEdit, true);
-            app.UITable.Position = [6 11 455 76];
+            app.UITable.Position = [4 3 452 76];
 
-            % Create ResetconfigurationButton
-            app.ResetconfigurationButton = uibutton(app.RobotconfigurationPanel, 'push');
-            app.ResetconfigurationButton.ButtonPushedFcn = createCallbackFcn(app, @ResetconfigurationButtonPushed, true);
-            app.ResetconfigurationButton.Position = [210 89 115 25];
-            app.ResetconfigurationButton.Text = 'Reset configuration';
+            % Create ResetJointsButton
+            app.ResetJointsButton = uibutton(app.RobotjointconfigurationPanel, 'push');
+            app.ResetJointsButton.ButtonPushedFcn = createCallbackFcn(app, @ResetJointsButtonPushed, true);
+            app.ResetJointsButton.Position = [176 82 100 30];
+            app.ResetJointsButton.Text = 'Reset Joints';
 
-            % Create ShowconfigurationButton
-            app.ShowconfigurationButton = uibutton(app.RobotconfigurationPanel, 'push');
-            app.ShowconfigurationButton.ButtonPushedFcn = createCallbackFcn(app, @ShowconfigurationButtonPushed, true);
-            app.ShowconfigurationButton.Position = [329 89 115 25];
-            app.ShowconfigurationButton.Text = 'Show configuration';
+            % Create ShowRobotButton
+            app.ShowRobotButton = uibutton(app.RobotjointconfigurationPanel, 'push');
+            app.ShowRobotButton.ButtonPushedFcn = createCallbackFcn(app, @ShowRobotButtonPushed, true);
+            app.ShowRobotButton.Position = [280 82 100 30];
+            app.ShowRobotButton.Text = 'Show Robot';
+
+            % Create dualrobotCheckBox
+            app.dualrobotCheckBox = uicheckbox(app.RobotjointconfigurationPanel);
+            app.dualrobotCheckBox.Text = 'dual robot';
+            app.dualrobotCheckBox.Position = [384 86 75 23];
 
             % Create LoadfunctionsPanel
             app.LoadfunctionsPanel = uipanel(app.MainTab);
             app.LoadfunctionsPanel.Title = 'Load functions';
-            app.LoadfunctionsPanel.Position = [14 473 394 97];
+            app.LoadfunctionsPanel.Position = [10 483 400 67];
 
             % Create LoadRobotButton
             app.LoadRobotButton = uibutton(app.LoadfunctionsPanel, 'push');
             app.LoadRobotButton.ButtonPushedFcn = createCallbackFcn(app, @LoadRobotButtonPushed, true);
-            app.LoadRobotButton.Position = [8 25 85 30];
+            app.LoadRobotButton.Position = [1 10 98 30];
             app.LoadRobotButton.Text = 'Load Robot';
 
             % Create LoadConfigButton
             app.LoadConfigButton = uibutton(app.LoadfunctionsPanel, 'push');
             app.LoadConfigButton.ButtonPushedFcn = createCallbackFcn(app, @LoadConfigButtonPushed, true);
-            app.LoadConfigButton.Position = [102 25 85 30];
+            app.LoadConfigButton.Position = [100 10 98 30];
             app.LoadConfigButton.Text = 'Load Config';
 
             % Create LoadWhitelistButton
             app.LoadWhitelistButton = uibutton(app.LoadfunctionsPanel, 'push');
             app.LoadWhitelistButton.ButtonPushedFcn = createCallbackFcn(app, @LoadWhitelistButtonPushed, true);
-            app.LoadWhitelistButton.Position = [205 25 85 30];
+            app.LoadWhitelistButton.Position = [200 10 98 30];
             app.LoadWhitelistButton.Text = 'Load Whitelist';
 
             % Create LoadBoundsButton
             app.LoadBoundsButton = uibutton(app.LoadfunctionsPanel, 'push');
             app.LoadBoundsButton.ButtonPushedFcn = createCallbackFcn(app, @LoadBoundsButtonPushed, true);
-            app.LoadBoundsButton.Position = [302 25 85 30];
+            app.LoadBoundsButton.Position = [300 10 98 30];
             app.LoadBoundsButton.Text = 'Load Bounds';
 
             % Create LoadrobotkinematicsPanel
             app.LoadrobotkinematicsPanel = uipanel(app.MainTab);
             app.LoadrobotkinematicsPanel.Title = 'Load robot kinematics';
-            app.LoadrobotkinematicsPanel.Position = [14 337 392 126];
-
-            % Create KinematicsfolderEditFieldLabel
-            app.KinematicsfolderEditFieldLabel = uilabel(app.LoadrobotkinematicsPanel);
-            app.KinematicsfolderEditFieldLabel.HorizontalAlignment = 'center';
-            app.KinematicsfolderEditFieldLabel.Position = [1 71 68 28];
-            app.KinematicsfolderEditFieldLabel.Text = {'Kinematics '; 'folder'};
-
-            % Create KinematicsfolderEditField
-            app.KinematicsfolderEditField = uieditfield(app.LoadrobotkinematicsPanel, 'text');
-            app.KinematicsfolderEditField.ValueChangedFcn = createCallbackFcn(app, @KinematicsfolderEditFieldValueChanged, true);
-            app.KinematicsfolderEditField.Position = [74 71 85 30];
-
-            % Create ButtonGroup
-            app.ButtonGroup = uibuttongroup(app.LoadrobotkinematicsPanel);
-            app.ButtonGroup.SelectionChangedFcn = createCallbackFcn(app, @ButtonGroupSelectionChanged, true);
-            app.ButtonGroup.Position = [7 21 60 40];
-
-            % Create TXTButton
-            app.TXTButton = uiradiobutton(app.ButtonGroup);
-            app.TXTButton.Text = 'TXT';
-            app.TXTButton.Position = [5 21 49 18];
-            app.TXTButton.Value = true;
-
-            % Create MATButton
-            app.MATButton = uiradiobutton(app.ButtonGroup);
-            app.MATButton.Text = 'MAT';
-            app.MATButton.Position = [5 1 47 22];
-
-            % Create LoadKinematicsButton
-            app.LoadKinematicsButton = uibutton(app.LoadrobotkinematicsPanel, 'push');
-            app.LoadKinematicsButton.ButtonPushedFcn = createCallbackFcn(app, @LoadKinematicsButtonPushed, true);
-            app.LoadKinematicsButton.VerticalAlignment = 'top';
-            app.LoadKinematicsButton.Position = [74 25 85 32];
-            app.LoadKinematicsButton.Text = {'Load '; 'Kinematics'};
+            app.LoadrobotkinematicsPanel.Position = [10 211 400 126];
 
             % Create TabGroup3
             app.TabGroup3 = uitabgroup(app.LoadrobotkinematicsPanel);
-            app.TabGroup3.Position = [162 2 227 104];
+            app.TabGroup3.Position = [0 2 399 104];
 
             % Create TXTTab
             app.TXTTab = uitab(app.TabGroup3);
             app.TXTTab.Title = 'TXT';
 
-            % Create ChooseFileButton
-            app.ChooseFileButton = uibutton(app.TXTTab, 'push');
-            app.ChooseFileButton.ButtonPushedFcn = createCallbackFcn(app, @ChooseFileButtonPushed, true);
-            app.ChooseFileButton.VerticalAlignment = 'top';
-            app.ChooseFileButton.Position = [64 21 85 36];
-            app.ChooseFileButton.Text = {'Choose File'; ''};
+            % Create LoadKinematicsButton_2
+            app.LoadKinematicsButton_2 = uibutton(app.TXTTab, 'push');
+            app.LoadKinematicsButton_2.ButtonPushedFcn = createCallbackFcn(app, @LoadKinematicsButton_2Pushed, true);
+            app.LoadKinematicsButton_2.Position = [10 25 100 30];
+            app.LoadKinematicsButton_2.Text = 'Load Kinematics';
 
             % Create MATTab
             app.MATTab = uitab(app.TabGroup3);
@@ -1447,7 +1424,7 @@ classdef gui_exported < matlab.apps.AppBase
             % Create TypeButtonGroup
             app.TypeButtonGroup = uibuttongroup(app.MATTab);
             app.TypeButtonGroup.Title = 'Type';
-            app.TypeButtonGroup.Position = [2 2 130 71];
+            app.TypeButtonGroup.Position = [254 5 130 71];
 
             % Create NoneButton
             app.NoneButton = uiradiobutton(app.TypeButtonGroup);
@@ -1473,80 +1450,109 @@ classdef gui_exported < matlab.apps.AppBase
             % Create PertSpinnerLabel
             app.PertSpinnerLabel = uilabel(app.MATTab);
             app.PertSpinnerLabel.HorizontalAlignment = 'right';
-            app.PertSpinnerLabel.Position = [140 43 28 22];
+            app.PertSpinnerLabel.Position = [155 40 28 22];
             app.PertSpinnerLabel.Text = 'Pert';
 
             % Create PertSpinner
             app.PertSpinner = uispinner(app.MATTab);
-            app.PertSpinner.Position = [176 43 44 22];
+            app.PertSpinner.Position = [190 42 44 22];
             app.PertSpinner.Value = -1;
 
             % Create RepSpinnerLabel
             app.RepSpinnerLabel = uilabel(app.MATTab);
             app.RepSpinnerLabel.HorizontalAlignment = 'right';
-            app.RepSpinnerLabel.Position = [141 15 28 22];
+            app.RepSpinnerLabel.Position = [154 15 28 22];
             app.RepSpinnerLabel.Text = 'Rep';
 
             % Create RepSpinner
             app.RepSpinner = uispinner(app.MATTab);
-            app.RepSpinner.Position = [177 15 44 22];
+            app.RepSpinner.Position = [190 15 44 22];
             app.RepSpinner.Value = -1;
+
+            % Create LoadKinematicsButton
+            app.LoadKinematicsButton = uibutton(app.MATTab, 'push');
+            app.LoadKinematicsButton.ButtonPushedFcn = createCallbackFcn(app, @LoadKinematicsButtonPushed, true);
+            app.LoadKinematicsButton.Position = [10 25 100 30];
+            app.LoadKinematicsButton.Text = 'Load Kinematics';
 
             % Create LoaddatasetPanel
             app.LoaddatasetPanel = uipanel(app.MainTab);
             app.LoaddatasetPanel.Title = 'Load dataset';
-            app.LoaddatasetPanel.Position = [14 224 393 104];
+            app.LoaddatasetPanel.Position = [10 95 400 104];
 
             % Create DatasetparametersTextAreaLabel
             app.DatasetparametersTextAreaLabel = uilabel(app.LoaddatasetPanel);
             app.DatasetparametersTextAreaLabel.HorizontalAlignment = 'center';
-            app.DatasetparametersTextAreaLabel.Position = [200 28 66 28];
+            app.DatasetparametersTextAreaLabel.Position = [27 45 82 28];
             app.DatasetparametersTextAreaLabel.Text = {'Dataset'; 'parameters'};
 
             % Create DatasetparametersTextArea
             app.DatasetparametersTextArea = uitextarea(app.LoaddatasetPanel);
-            app.DatasetparametersTextArea.HorizontalAlignment = 'center';
-            app.DatasetparametersTextArea.Position = [278 7 100 70];
+            app.DatasetparametersTextArea.Position = [123 6 120 70];
 
             % Create LoadDatasetButton
             app.LoadDatasetButton = uibutton(app.LoaddatasetPanel, 'push');
             app.LoadDatasetButton.ButtonPushedFcn = createCallbackFcn(app, @LoadDatasetButtonPushed, true);
-            app.LoadDatasetButton.Position = [55 28 87 30];
+            app.LoadDatasetButton.Position = [16 7 100 30];
             app.LoadDatasetButton.Text = 'Load Dataset';
+
+            % Create JointDistributionButton
+            app.JointDistributionButton = uibutton(app.LoaddatasetPanel, 'push');
+            app.JointDistributionButton.ButtonPushedFcn = createCallbackFcn(app, @JointDistributionButtonPushed, true);
+            app.JointDistributionButton.Position = [270 47 100 30];
+            app.JointDistributionButton.Text = 'Joint Distribution';
+
+            % Create PosesviewButton
+            app.PosesviewButton = uibutton(app.LoaddatasetPanel, 'push');
+            app.PosesviewButton.ButtonPushedFcn = createCallbackFcn(app, @PosesviewButtonPushed, true);
+            app.PosesviewButton.Position = [270 9 100 30];
+            app.PosesviewButton.Text = 'Poses view';
 
             % Create VisualisationPanel
             app.VisualisationPanel = uipanel(app.MainTab);
             app.VisualisationPanel.Title = 'Visualisation';
-            app.VisualisationPanel.Position = [429 5 458 69];
-
-            % Create JointdistributionButton
-            app.JointdistributionButton = uibutton(app.VisualisationPanel, 'push');
-            app.JointdistributionButton.ButtonPushedFcn = createCallbackFcn(app, @JointdistributionButtonPushed, true);
-            app.JointdistributionButton.Position = [4 14 102 22];
-            app.JointdistributionButton.Text = 'Joint distribution';
+            app.VisualisationPanel.Position = [430 5 460 83];
 
             % Create CorrectionsButton
             app.CorrectionsButton = uibutton(app.VisualisationPanel, 'push');
             app.CorrectionsButton.ButtonPushedFcn = createCallbackFcn(app, @CorrectionsButtonPushed, true);
-            app.CorrectionsButton.Position = [114 13 100 22];
+            app.CorrectionsButton.Position = [125 3 100 30];
             app.CorrectionsButton.Text = 'Corrections';
 
-            % Create ErrorsBoxplotButton
-            app.ErrorsBoxplotButton = uibutton(app.VisualisationPanel, 'push');
-            app.ErrorsBoxplotButton.ButtonPushedFcn = createCallbackFcn(app, @ErrorsBoxplotButtonPushed, true);
-            app.ErrorsBoxplotButton.Position = [224 13 100 22];
-            app.ErrorsBoxplotButton.Text = 'Errors Boxplot';
+            % Create RMSEBoxplotsButton
+            app.RMSEBoxplotsButton = uibutton(app.VisualisationPanel, 'push');
+            app.RMSEBoxplotsButton.ButtonPushedFcn = createCallbackFcn(app, @RMSEBoxplotsButtonPushed, true);
+            app.RMSEBoxplotsButton.Position = [235 3 100 30];
+            app.RMSEBoxplotsButton.Text = 'RMSE Boxplots';
 
-            % Create ErrorbarsButton
-            app.ErrorbarsButton = uibutton(app.VisualisationPanel, 'push');
-            app.ErrorbarsButton.ButtonPushedFcn = createCallbackFcn(app, @ErrorbarsButtonPushed, true);
-            app.ErrorbarsButton.Position = [333 14 100 22];
-            app.ErrorbarsButton.Text = 'Error bars';
+            % Create RMSEBarsButton
+            app.RMSEBarsButton = uibutton(app.VisualisationPanel, 'push');
+            app.RMSEBarsButton.ButtonPushedFcn = createCallbackFcn(app, @RMSEBarsButtonPushed, true);
+            app.RMSEBarsButton.Position = [345 3 100 30];
+            app.RMSEBarsButton.Text = 'RMSE Bars';
+
+            % Create JacobiansObsButton
+            app.JacobiansObsButton = uibutton(app.VisualisationPanel, 'push');
+            app.JacobiansObsButton.ButtonPushedFcn = createCallbackFcn(app, @JacobiansObsButtonPushed, true);
+            app.JacobiansObsButton.Position = [15 3 100 30];
+            app.JacobiansObsButton.Text = 'Jacobians & Obs.';
+
+            % Create VisualisationfoldernameEditFieldLabel
+            app.VisualisationfoldernameEditFieldLabel = uilabel(app.VisualisationPanel);
+            app.VisualisationfoldernameEditFieldLabel.HorizontalAlignment = 'right';
+            app.VisualisationfoldernameEditFieldLabel.Position = [9 36 138 22];
+            app.VisualisationfoldernameEditFieldLabel.Text = 'Visualisation folder name';
+
+            % Create VisualisationfoldernameEditField
+            app.VisualisationfoldernameEditField = uieditfield(app.VisualisationPanel, 'text');
+            app.VisualisationfoldernameEditField.ValueChangedFcn = createCallbackFcn(app, @VisualisationfoldernameEditFieldValueChanged, true);
+            app.VisualisationfoldernameEditField.Position = [153 38 135 20];
 
             % Create CalibrationoptionsPanel
             app.CalibrationoptionsPanel = uipanel(app.MainTab);
+            app.CalibrationoptionsPanel.Enable = 'off';
             app.CalibrationoptionsPanel.Title = 'Calibration options';
-            app.CalibrationoptionsPanel.Position = [14 98 393 115];
+            app.CalibrationoptionsPanel.Position = [10 350 400 115];
 
             % Create ApproachListBoxLabel
             app.ApproachListBoxLabel = uilabel(app.CalibrationoptionsPanel);
@@ -1575,7 +1581,7 @@ classdef gui_exported < matlab.apps.AppBase
             app.jointTypesListBox.Multiselect = 'on';
             app.jointTypesListBox.ValueChangedFcn = createCallbackFcn(app, @ListBoxValueChangedCallback, true);
             app.jointTypesListBox.Tag = 'jointTypesListBox';
-            app.jointTypesListBox.Position = [138 9 115 60];
+            app.jointTypesListBox.Position = [140 9 115 60];
             app.jointTypesListBox.Value = {};
 
             % Create ChainsListBoxLabel
@@ -1590,19 +1596,19 @@ classdef gui_exported < matlab.apps.AppBase
             app.ChainsListBox.Multiselect = 'on';
             app.ChainsListBox.ValueChangedFcn = createCallbackFcn(app, @ListBoxValueChangedCallback, true);
             app.ChainsListBox.Tag = 'ChainsListBox';
-            app.ChainsListBox.Position = [268 9 115 60];
+            app.ChainsListBox.Position = [270 9 115 60];
             app.ChainsListBox.Value = {};
 
             % Create CalibrationsettingsPanel_4
             app.CalibrationsettingsPanel_4 = uipanel(app.MainTab);
             app.CalibrationsettingsPanel_4.Title = 'Calibration settings';
-            app.CalibrationsettingsPanel_4.Position = [15 7 393 78];
+            app.CalibrationsettingsPanel_4.Position = [10 7 400 78];
 
-            % Create RuncalibrationButton
-            app.RuncalibrationButton = uibutton(app.CalibrationsettingsPanel_4, 'push');
-            app.RuncalibrationButton.ButtonPushedFcn = createCallbackFcn(app, @RuncalibrationButtonPushed, true);
-            app.RuncalibrationButton.Position = [292 13 100 41];
-            app.RuncalibrationButton.Text = 'Run calibration';
+            % Create RunCalibrationButton
+            app.RunCalibrationButton = uibutton(app.CalibrationsettingsPanel_4, 'push');
+            app.RunCalibrationButton.ButtonPushedFcn = createCallbackFcn(app, @RunCalibrationButtonPushed, true);
+            app.RunCalibrationButton.Position = [292 5 100 49];
+            app.RunCalibrationButton.Text = 'Run Calibration';
 
             % Create SavejacobiansCheckBox
             app.SavejacobiansCheckBox = uicheckbox(app.CalibrationsettingsPanel_4);
@@ -1635,7 +1641,8 @@ classdef gui_exported < matlab.apps.AppBase
 
             % Create TextArea
             app.TextArea = uitextarea(app.MainTab);
-            app.TextArea.Position = [427 239 455 312];
+            app.TextArea.Editable = 'off';
+            app.TextArea.Position = [430 239 460 312];
 
             % Create ConfigTab
             app.ConfigTab = uitab(app.TabGroup);
@@ -1793,7 +1800,7 @@ classdef gui_exported < matlab.apps.AppBase
             % Create JointstructurePanel
             app.JointstructurePanel = uipanel(app.JointsTab);
             app.JointstructurePanel.Title = 'Joint structure';
-            app.JointstructurePanel.Position = [18 79 851 347];
+            app.JointstructurePanel.Position = [18 79 851 416];
 
             % Create UITable4
             app.UITable4 = uitable(app.JointstructurePanel);
@@ -1801,37 +1808,25 @@ classdef gui_exported < matlab.apps.AppBase
             app.UITable4.RowName = {};
             app.UITable4.ColumnEditable = true;
             app.UITable4.CellEditCallback = createCallbackFcn(app, @UITable4CellEdit, true);
-            app.UITable4.Position = [0 0 429 326];
+            app.UITable4.Position = [1 3 429 393];
 
             % Create UIAxes2
             app.UIAxes2 = uiaxes(app.JointstructurePanel);
             title(app.UIAxes2, {'Graph Model'; ''})
             app.UIAxes2.XTick = [];
             app.UIAxes2.YTick = [];
-            app.UIAxes2.Position = [428 8 405 305];
+            app.UIAxes2.Position = [429 1 426 392];
 
             % Create RobotnameEditFieldLabel
             app.RobotnameEditFieldLabel = uilabel(app.JointsTab);
             app.RobotnameEditFieldLabel.HorizontalAlignment = 'right';
-            app.RobotnameEditFieldLabel.Position = [25 491 71 22];
+            app.RobotnameEditFieldLabel.Position = [348 510 71 22];
             app.RobotnameEditFieldLabel.Text = 'Robot name';
 
             % Create RobotnameEditField
             app.RobotnameEditField = uieditfield(app.JointsTab, 'text');
             app.RobotnameEditField.ValueChangedFcn = createCallbackFcn(app, @RobotnameEditFieldValueChanged, true);
-            app.RobotnameEditField.Position = [110 486 85 30];
-
-            % Create H0transformationmatrixPanel
-            app.H0transformationmatrixPanel = uipanel(app.JointsTab);
-            app.H0transformationmatrixPanel.Title = 'H0 transformation matrix';
-            app.H0transformationmatrixPanel.Position = [666 430 174 120];
-
-            % Create H0mat
-            app.H0mat = uitable(app.H0transformationmatrixPanel);
-            app.H0mat.ColumnName = '';
-            app.H0mat.RowName = {};
-            app.H0mat.CellEditCallback = createCallbackFcn(app, @H0matCellEdit, true);
-            app.H0mat.Position = [3 5 168 92];
+            app.RobotnameEditField.Position = [433 505 85 30];
 
             % Create KinematicsTab
             app.KinematicsTab = uitab(app.TabGroup2);
@@ -2201,31 +2196,30 @@ classdef gui_exported < matlab.apps.AppBase
             app.DatasetnameEditField.ValueChangedFcn = createCallbackFcn(app, @DatasetnameEditFieldValueChanged, true);
             app.DatasetnameEditField.Position = [91 8 85 30];
 
-            % Create DatasetidEditFieldLabel
-            app.DatasetidEditFieldLabel = uilabel(app.DatasetinfoPanel);
-            app.DatasetidEditFieldLabel.HorizontalAlignment = 'right';
-            app.DatasetidEditFieldLabel.Position = [223 13 60 22];
-            app.DatasetidEditFieldLabel.Text = 'Dataset id';
-
-            % Create DatasetidEditField
-            app.DatasetidEditField = uieditfield(app.DatasetinfoPanel, 'numeric');
-            app.DatasetidEditField.Limits = [1 Inf];
-            app.DatasetidEditField.ValueChangedFcn = createCallbackFcn(app, @DatasetidEditFieldValueChanged, true);
-            app.DatasetidEditField.Position = [298 8 50 30];
-            app.DatasetidEditField.Value = 1;
-
             % Create DatasettypeDropDownLabel
             app.DatasettypeDropDownLabel = uilabel(app.DatasetinfoPanel);
             app.DatasettypeDropDownLabel.HorizontalAlignment = 'right';
-            app.DatasettypeDropDownLabel.Position = [398 12 73 22];
+            app.DatasettypeDropDownLabel.Position = [661 12 73 22];
             app.DatasettypeDropDownLabel.Text = 'Dataset type';
 
             % Create DatasettypeDropDown
             app.DatasettypeDropDown = uidropdown(app.DatasetinfoPanel);
             app.DatasettypeDropDown.Items = {'selftouch', 'planes', 'external', 'projection', ''};
             app.DatasettypeDropDown.ValueChangedFcn = createCallbackFcn(app, @DatasettypeDropDownValueChanged, true);
-            app.DatasettypeDropDown.Position = [486 8 100 30];
+            app.DatasettypeDropDown.Position = [748 8 100 30];
             app.DatasettypeDropDown.Value = 'selftouch';
+
+            % Create DatasetIDDropDownLabel
+            app.DatasetIDDropDownLabel = uilabel(app.DatasetinfoPanel);
+            app.DatasetIDDropDownLabel.HorizontalAlignment = 'right';
+            app.DatasetIDDropDownLabel.Position = [485 10 65 22];
+            app.DatasetIDDropDownLabel.Text = 'Dataset ID';
+
+            % Create DatasetIDDropDown
+            app.DatasetIDDropDown = uidropdown(app.DatasetinfoPanel);
+            app.DatasetIDDropDown.Items = {'1'};
+            app.DatasetIDDropDown.Position = [565 8 73 30];
+            app.DatasetIDDropDown.Value = '1';
 
             % Create DataPanel
             app.DataPanel = uipanel(app.DatasetTab);
@@ -2242,7 +2236,6 @@ classdef gui_exported < matlab.apps.AppBase
 
             % Show the figure after all components are created
             app.Robot_toolboxUIFigure.Visible = 'on';
-            set(0, 'ShowHiddenHandles', 'on');
         end
     end
 

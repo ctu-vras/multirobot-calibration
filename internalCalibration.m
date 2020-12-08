@@ -17,6 +17,7 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
             parsCount = parsCount+length(data.datasets.planes)*optim.planeParams;
         end
     end
+    assert(parsCount, 'Vector of calibrated parameters is empty! Check your settings.');
     options = weightRobotParameters(whitelist, options, parsCount,optim);
     opt_pars = zeros(parsCount, optim.repetitions, optim.pert_levels);
     ext_pars_init = zeros(parsCount-size(whpars.start_pars,1), optim.repetitions, optim.pert_levels);
