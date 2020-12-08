@@ -26,6 +26,7 @@ function plotErrorsBoxplots(folders,varargin)
     addParameter(p,'errorsType','errors');
     addParameter(p,'location','northwest');
     addParameter(p, 'points', 0);
+    addParameter(p, 'train', 0);
     parse(p,folders,varargin{:});
     
     % get values from parser
@@ -73,7 +74,11 @@ function plotErrorsBoxplots(folders,varargin)
         if strcmp(errorsType,'errors')
             % get cellArray from arrays
             distsTs = num2cell(errors(13:16,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const,2);
-            distsTr = num2cell(errors(5:8,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const,2);
+            if p.Results.train
+                distsTr = num2cell(errors(5:8,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const,2);
+            else
+                distsTr = num2cell(errors(9:12,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const,2);
+            end
         else
             distsTs=cell(4,1);
             distsTr=cell(4,1);
@@ -85,7 +90,11 @@ function plotErrorsBoxplots(folders,varargin)
                 else
                     dist=[errors{12+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
                     distsTs{i,:}=[distsTs{i,:};(dist(:)').*const];
-                    dist=[errors{4+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
+                    if p.Results.train
+                        dist=[errors{4+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
+                    else
+                        dist=[errors{8+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
+                    end
                     distsTr{i,:}=[distsTr{i,:};(dist(:)').*const];
                 end
             end
@@ -97,8 +106,13 @@ function plotErrorsBoxplots(folders,varargin)
         end
         
         % Prepare names and colors
-        optTypes={'Selftouch Test', 'Planes Test', 'External Test', 'Projection Test'};
-        optTypes2={'Selftouch Train', 'Planes Train', 'External Train', 'Projection Train'};
+        if p.Results.train
+            optTypes={'Selftouch Test', 'Planes Test', 'External Test', 'Projection Test'};
+            optTypes2={'Selftouch Train', 'Planes Train', 'External Train', 'Projection Train'};
+        else
+            optTypes={'Selftouch After', 'Planes After', 'External After', 'Projection After'};
+            optTypes2={'Selftouch Before', 'Planes Before', 'External Before', 'Projection Before'};
+        end
         colorTypes=[[233,114,77]; [214,215,39]; [149,196,243]; [121,204,179]]./255;
         colorTypes2=[[33,114,177]; [14,215,39]; [0,0,0]; [255,0,255]]./255;
         curNum=0;

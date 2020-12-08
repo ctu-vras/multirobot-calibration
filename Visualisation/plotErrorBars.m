@@ -22,6 +22,7 @@ function plotErrorBars(folders,varargin)
     addParameter(p,'location','northwest');
     addParameter(p,'type','minmax');
     addParameter(p, 'title', 'RMS errors');
+    addParameter(p, 'train', 0)
     parse(p,folders,varargin{:});
     
     pert=p.Results.pert+1;
@@ -30,7 +31,11 @@ function plotErrorBars(folders,varargin)
     type=p.Results.type;
     titl=p.Results.title;
     units=p.Results.units;
-    lines = [5,13,6,14,7,15,8,16];
+    if p.Results.train
+        lines = [5,13,6,14,7,15,8,16];
+    else
+        lines = [9,13,10,14,11,15,12,16];
+    end
     numLines = length(lines);
 
     lenFolders = length(folders); 
@@ -40,7 +45,11 @@ function plotErrorBars(folders,varargin)
     means = zeros(numLines, lenFolders);
     stds = zeros(numLines, lenFolders);
     %% names and colors to bars
-    optTypes={'Selftouch Train', 'Selftouch Test', 'Planes Train', 'Planes Test', 'External Train', 'External Test', 'Projection Train', 'Projection Test'};
+    if p.Results.train
+        optTypes={'Selftouch Train', 'Selftouch Test', 'Planes Train', 'Planes Test', 'External Train', 'External Test', 'Projection Train', 'Projection Test'};
+    else
+        optTypes={'Selftouch Before', 'Selftouch After', 'Planes Before', 'Planes After', 'External Before', 'External After', 'Projection Before', 'Projection After'};
+    end
     colors=[[33,114,177]; [233,114,77];[14,215,39]; [214,215,39];[0,0,0]; [149,196,243]; [255,0,255]; [121,204,179]]./255;
     
     %% compute min, max, mean and std for each error file
