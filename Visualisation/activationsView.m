@@ -30,13 +30,17 @@ end
 %% Fig show
 function showFig(robot,idx,dataset,parser)
     fnames=fieldnames(robot.structure.DH);
-    fnames(contains(fnames,'Skin') |...
+    fnames(contains(fnames,'torso') | contains(fnames,'Skin') |...
       contains(fnames,'Middle')...
     | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers') )= [];
     ang=cell(1,length(fnames));
     % Get angles from dataset in correct format for 'showModel'
     for name=1:length(fnames)
-        ang{name}=dataset.joints(idx).(fnames{name});
+        if isfield(dataset.joints(idx),fnames{name}) 
+            ang{name}=dataset.joints(idx).(fnames{name});
+        else
+            ang{name}=zeros(1, size(robot.structure.DH.((fnames{name})),1));
+        end
     end
     % check dataset name and add empty string if missing
     if ~isfield(dataset,'name')

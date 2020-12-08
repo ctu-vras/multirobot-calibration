@@ -37,7 +37,7 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
     datasets_out = datasets;
 
     for appr=fieldnames(approaches)'
-       assert(~(~isfield(datasets, appr{1}) && approaches.(appr{1})), ['Dataset for ', appr{1}, ' is emtpy!'])
+       assert(~((~isfield(datasets, appr{1}) || isempty(datasets.(appr{1}))) && approaches.(appr{1})), ['Dataset for ', appr{1}, ' is emtpy!'])
        if approaches.(appr{1}) && isfield(datasets, appr{1})
           for i=1:length(datasets.(appr{1}))
               assert(~isempty(datasets.(appr{1}){i}.point), ['Dataset for ', appr{1}, ' is emtpy!'])
