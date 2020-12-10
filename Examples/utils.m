@@ -66,11 +66,11 @@ disp(norm(matInt-mat3*mat2,'fro')<10*eps)
 
 %% Mass transformation of points
 % If you need to tranform more points to the base frame, you can use
-% 'getPoints'.
+% 'getPointsIntern'.
 
 % We can load dataset to get everything we need
 load('Results/exampleNao/info.mat');
 
 % And easily transform all point from local frame to the base frame
 [DH, type] = padVectors(rob.structure.DH); % Pad to size 6 vector
-newPoints=getPoints(DH, datasets.selftouch{1}, type);
+newPoints=getPointsIntern(DH, datasets.selftouch{1}, type);

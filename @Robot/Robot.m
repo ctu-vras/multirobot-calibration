@@ -156,7 +156,7 @@ classdef Robot < handle
         printTables(obj, tableType);
                  
         %% Show Matlab model
-        showModel(robot, angles, varargin);
+        fig = showModel(robot, varargin);
         
         %% Show graph model
         showGraphModel(robot, ax);

@@ -32,9 +32,11 @@ function fig = showModel(r, varargin)
     addParameter(p,'units','m', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'figName','');
     addParameter(p, 'naoSkin', 0);
+    addParameter(p, 'showText', 1);
     parse(p, varargin{:});
     angles = p.Results.angles;
     units = p.Results.units;
+    showText = p.Results.showText;
     if strcmp(units,'m')
         coef = 1;
     else
@@ -79,7 +81,7 @@ function fig = showModel(r, varargin)
     
     %% ROOT - plot the original root reference frame
     root = eye(4);
-    DrawRefFrame(root,1,0.04*coef,'hat','ROOT');
+    DrawRefFrame(root,1,0.04*coef, 1, 'hat','ROOT');
 
     %% Draw
     for robots=1+p.Results.dual:-1:1
@@ -156,7 +158,7 @@ function fig = showModel(r, varargin)
             str.refFrameSize = 0.01*coef;
             str.types=types_;
             str.naoSkin = p.Results.naoSkin;
-            FwdKin(r, str, coef);
+            FwdKin(r, str, coef, showText);
         end
         fnames = {'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'};
         if p.Results.naoSkin
@@ -189,7 +191,7 @@ function fig = showModel(r, varargin)
                 str.refFrameSize = 0.01*coef;
                 str.types=types_;
                 str.naoSkin = p.Results.naoSkin;
-                FwdKin(r, str, coef);
+                FwdKin(r, str, coef, showText);
             end
         end
     end

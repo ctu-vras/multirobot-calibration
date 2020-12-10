@@ -1,4 +1,4 @@
-function [Oxyz ] = DrawRefFrame(G,num,size,varargin)
+function [Oxyz ] = DrawRefFrame(G,num,size,showText, varargin)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Draw reference frames attached to the centers of mass
@@ -10,7 +10,7 @@ Origin1 = G*[0 0 0 1]';
 
 x_axis_1 = G*[length 0 0 1]';
 h = quiver3(Origin1(1), Origin1(2), Origin1(3), x_axis_1(1) - Origin1(1), x_axis_1(2) - Origin1(2), x_axis_1(3) - Origin1(3), 0);
-if nargin>=4
+if nargin>=5
 	if varargin{1} == 'hat'
 		set(h, 'Color', 'm', 'LineWidth', width, 'MaxHeadSize', 4, 'ShowArrowHead', 'off')
 	else
@@ -24,7 +24,7 @@ set(h, 'ShowArrowHead', 'on')
 
 y_axis_1 = G*[0 length 0 1]';
 h = quiver3(Origin1(1), Origin1(2), Origin1(3), y_axis_1(1) - Origin1(1), y_axis_1(2) - Origin1(2), y_axis_1(3) - Origin1(3), 0);
-if nargin>=4
+if nargin>=5
 	if varargin{1} == 'hat'
 		set(h, 'Color', 'c', 'LineWidth', width, 'MaxHeadSize', 4, 'ShowArrowHead', 'off')
 	else
@@ -51,19 +51,21 @@ label_x = Origin1(1) + (z_axis_1(1) - Origin1(1))/3;
 label_y = Origin1(2) + (z_axis_1(2) - Origin1(2))/3;
 label_z = Origin1(3) + (z_axis_1(3) - Origin1(3))/3;
 h=[];
-if nargin>=4
-	if nargin==4
-        if strcmp(varargin{1}, 'hat')
-            h = text(label_x, label_y, label_z, strcat(' (frame ', num2str(num-1),')'));
-        elseif strcmp(varargin{1}, 'noh') 
-            h = text(label_x, label_y, label_z, strcat(' (frame ', num2str(num-1), ')'));
+if (showText)
+    if nargin>=5
+        if nargin==5
+            if strcmp(varargin{1}, 'hat')
+                h = text(label_x, label_y, label_z, strcat(' (frame ', num2str(num-1),')'));
+            elseif strcmp(varargin{1}, 'noh') 
+                h = text(label_x, label_y, label_z, strcat(' (frame ', num2str(num-1), ')'));
+            end
+        elseif nargin>=6
+            % varargin{2} == body_part.name'
+                h = text(label_x, label_y, label_z, strcat(varargin{2},' (frame ', num2str(num-1), ')'));
         end
-    elseif nargin>=5
-        % varargin{2} == body_part.name'
-            h = text(label_x, label_y, label_z, strcat(varargin{2},' (frame ', num2str(num-1), ')'));
+    else
+        h = text(label_x, label_y, label_z, strcat('z_{', num2str(num-1), '}'));
     end
-else
-	h = text(label_x, label_y, label_z, strcat('z_{', num2str(num-1), '}'));
 end
 
 if ~isempty(h)

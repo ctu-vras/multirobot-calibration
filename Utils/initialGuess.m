@@ -17,7 +17,7 @@ function [params, typicalX] = initialGuess(datasets, dh_pars, approaches, optim)
         if approaches.(type)
             for dataset = datasets.(type)
                 dataset = dataset{1};
-                robPoints = getPoints(dh_pars, dataset, false);
+                robPoints = getPointsIntern(dh_pars, dataset, false);
                 if strcmp(type,'planes')
                     newParams = getPlane(robPoints);
                     newParams = newParams(1:3)/newParams(4); % plane equation in format ax+by+cz = 1

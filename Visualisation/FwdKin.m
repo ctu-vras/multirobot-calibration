@@ -1,7 +1,7 @@
 % Edited by Alessandro Roncone
 % Genova Oct 2013
 % changes Matej Hoffmann, July 2017
-function [RFFrame] = FwdKin(robot, str, coef)
+function [RFFrame] = FwdKin(robot, str, coef, showText)
 % This function computes and displays the forward kinematics of a body part
 % INPUT
 %   body_part (struct) - the body part under consideration. Each body part has the same structure:
@@ -116,15 +116,15 @@ function [RFFrame] = FwdKin(robot, str, coef)
                 DrawCylinder(ljnt, rjnt, RFFrame{i} * [1 0 0 0; 0 1 0 0; 0 0 1 -ljnt/2; 0 0 0 1], JntColor, 100, 0.8);
             end
             if ~refFrame
-                DrawRefFrame(RFFrame{1},1,refFrameSize,'hat',link);
+                DrawRefFrame(RFFrame{1},1,refFrameSize, showText, 'hat',link);
                 if length(RFFrame) >=2
                     for i = 2:length(RFFrame)
                         joint = robot.findJoint(jointNames{i-1});
                         joint = joint{1};
                         if any(contains(str.specialGroup, joint.group))
-                            DrawRefFrame(RFFrame{i},i,refFrameSize,'www');
+                            DrawRefFrame(RFFrame{i},i,refFrameSize,showText,'www');
                         else
-                            DrawRefFrame(RFFrame{i},i,refFrameSize,'noh',jointNames{i-1});
+                            DrawRefFrame(RFFrame{i},i,refFrameSize,showText,'noh',jointNames{i-1});
                         end
                     end
                 end  
