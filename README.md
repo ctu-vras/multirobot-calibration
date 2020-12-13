@@ -18,33 +18,37 @@
 # How to run
 
 Recommended steps (the order is optional):
- - [Download the toolbox and additional files](https://gitlab.fel.cvut.cz/body-schema/code-calib-multirobot/-/releases) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
- - Install the toolbox in Matlab by double clicking on the file. The toolbox directory (depending on your Matlab Preferences - Add-ons - Installation Folder) will be added to the Matlab "path".
- - Unpack the additionalFiles.zip into a folder of your choice. This will give you access to the folders discussed below.
+ - [Download the GUI installation file and user data](https://gitlab.fel.cvut.cz/body-schema/code-calib-multirobot/-/releases) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
+ - Install the GUI in Matlab by double clicking on the file. The toolbox directory (depending on your Matlab Preferences - Add-ons - Installation Folder) will be added to the Matlab "path".
+ - Unpack the additionalFiles.zip into a folder of your choice. This will give you access to the folders discussed below.  
+   - **Recommendation:** Create a working folder, move the additional files there and set it as Current Folder in Matlab.
  - Prepare functions for your robot (or use one of the existing from Robot function patterns)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
    - mandatory are functions with robot structures and DH (see [loading functions](#loading-functions)) and 
      functions to prepare datasets (see [Datasets](#datasets) and functions for existing robots)
    - voluntary are whitelist (see [Whitelist](#whitelist)), bounds (see [bounds](#bounds)) functions
- - Set up calibration config file (see [Calibration config](#calibration-config))
- - Select config files, output folders and run calibration 
-   - look at [Calibration examples](Examples/calibration.m)
-   - or use csv file as input (see [Loading from csv](#loading-from-csv))
- - Visualize and evaluate results (see [Visualization](#visualization))
- - **Recommendation:** _Create a working folder, move the additional files there and set it as Current Folder in Matlab_
+ - Set up calibration config file (see [Calibration config](#calibration-config))  
+ - Run calibration
+   - A) Manually:   
+     - Select config files, output folders and run calibration 
+       - look at [Calibration examples](UserData/Examples/calibration.m)
+     - or use csv file as input (see [Loading from csv](#loading-from-csv))
+     - Visualize and evaluate results (see [Visualization](#visualization))  
+      
+    - B) run GUI and follow the instructions
 
 # Examples
 
-Examples how to run calibration and use visualization and models can be found in [Examples folder](Examples) as .m files ([Calibration examples](Examples/calibration.m),[Models examples](Examples/models.m),[Visualization examples](Examples/visualization.m), [Utils examples](Examples/utils.m)) or livescripts .mlx files ([Calibration examples](Examples/calibration.mlx),[Models examples](Examples/models.mlx),[Visualization examples](Examples/visualization.mlx), [Utils examples](Examples/utils.m))
+Examples how to run calibration and use visualization and models can be found in [Examples folder](UserData/Examples) as .m files ([Calibration examples](UserData/Examples/calibration.m),[Models examples](UserData/Examples/models.m),[Visualization examples](UserData/Examples/visualization.m), [Utils examples](UserData/Examples/utils.m)) or livescripts .mlx files ([Calibration examples](UserData/Examples/calibration.mlx),[Models examples](UserData/Examples/models.mlx),[Visualization examples](UserData/Examples/visualization.mlx), [Utils examples](UserData/Examples/utils.m))
 
 # Templates
 
-Templates for [Robot function](Templates/loadExampleRobot.m), [Config function](Templates/exampleConfig.m), [Loading dataset function](Templates/loadExampleDataset.m) and dataset mat-file can be found in [Templates folder](Templates)
+Templates for [Robot function](UserData/Templates/loadExampleRobot.m), [Config function](UserData/Templates/exampleConfig.m), [Loading dataset function](UserData/Templates/loadExampleDataset.m) and dataset mat-file can be found in [Templates folder](Templates)
 
 # Robot
 
 Found in the [@Robot](@Robot) folder. This directory includes the main class file for the robots [Robot.m](@Robot/Robot.m).
-This file includes the constructor, which calls robot-specific functions (see [Robots](Robots)) to set up the robot.
+This file includes the constructor, which calls robot-specific functions (see [Robots](UserData/Robots)) to set up the robot.
 
 ## Properties
 
@@ -59,7 +63,7 @@ This file includes the constructor, which calls robot-specific functions (see [R
  - findJointByType - Returns instance of joints with given type
  - findJointByGroup - Returns instance of joints with given group
  - print - Displays Robot.joints as 'jointName jointId'
- - [printTables](@Robot/printTables.m) - Displays tables from Robot.structure as 'a, d, alpha, theta jointName'
+ - printTables - Displays tables from Robot.structure as 'a, d, alpha, theta jointName'
  - [showModel](@Robot/showModel.m) - Shows virtual model of the robot based on input joint angles.
  - [showGraphModel](@Robot/showGraphModel.m) - Shows tree-based graph of given robot
  - [prepareDH](@Robot/prepareDH.m) - Returns DH tables with/without perturbations and tables with bounds
@@ -69,15 +73,16 @@ This file includes the constructor, which calls robot-specific functions (see [R
 
 # Joint
 
-Found in the [@Joint](@Joint) folder. This directory includes the main class file for the joints [Joint.m](@Joint/Joint.m).
+Found in the [Joint](Utils/KinUtils/Joint.m). 
+
 ## Properties
 
  - name - String name of the joints
  - parent - Pointer to parent
  - parentId - Int id of parent
  - DHindex - Int id in DH/WL/Bounds table for given 'group'
- - type - 'type' of the joints...see [types.m](Utils/types.m)
- - group - 'group' of the joint...see [group.m](Utils/group.m)
+ - type - 'type' of the joints...see [types.m](Utils/DataTypes/types.m)
+ - group - 'group' of the joint...see [group.m](Utils/DataTypes/group.m)
 
 ## Methods
 
@@ -106,14 +111,14 @@ All of the datasets must be structure with these fields (some of them may be vol
  - pose - Nx1 array of any (almost) type, used to assigning points from one 'pose'
    - e.g. when camera has more photos of one touch 
 
-You can take an inspiration from existing functions [loadExampleDataset.m](Templates/loadExampleDataset.m) [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m) and existing dataset mat-file [multirobot_leica_dataset.mat](Robots/Motoman/multirobot_leica_dataset.mat) . 
+You can take an inspiration from existing functions [loadExampleDataset.m](UserData/Templates/loadExampleDataset.m) [loadDatasetNao.m](UserData/Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](UserData/Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](UserData/Robots/iCub/loadDatasetICub.m) and existing dataset mat-file [multirobot_leica_dataset.mat](UserData/Robots/Motoman/multirobot_leica_dataset.mat) . 
 
 # Configs
 
 ## Loading functions
 
 These functions serve to create the structure of the robot and set default DH, whitelist and bounds.
-Take a look at existing robots [loadExampleRobot.m](Templates/loadExampleRobot.m), [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m](Robots/Motoman/loadMotoman.m), [loadICUBv1.m](Robots/iCub/loadICUBv1.m)
+Take a look at existing robots [loadExampleRobot.m](UserData/Templates/loadExampleRobot.m), [loadNAO.m](UserData/Robots/Nao/loadNAO.m), [loadMotoman.m](UserData/Robots/Motoman/loadMotoman.m), [loadICUBv1.m](UserData/Robots/iCub/loadICUBv1.m)
 
 ### Output variables
 
@@ -130,13 +135,12 @@ Take a look at existing robots [loadExampleRobot.m](Templates/loadExampleRobot.m
      - group - in format group.'group', where group. is enumeration class (see [Groups](#groups))
    - the structure can contain optional number of joints
  - structure - is Matlab struct with all other information
-   - H0 - transformation matrix before DH links (mostly identity matrix)
    - DH - Matlab struct with field named after groups ([Groups](#groups)) contained in jointStructure
      - each line corresponds to one DH link and is linked with the jointStructure with its indexInArrays parameter 
    - defaultDH - defaultDH of the robot
      - the DH can be replaced with another one and it is useful to save the default one
    - bounds - bounds for each body part
-     - fields are named after body parts (see struct jointTypes in [optimizationConfig.m](Configs/optimizationConfig.m) for all possibilities) 
+     - fields are named after body parts (see struct jointTypes in [optimizationConfig.m](UserData/Configs/optimizationConfig.m) for all possibilities) 
      - each field contain 4 values (a,d,alpha,theta)
      - bounds are set relatively = 0.1 means that lower bound will be (DH-0.1) and upper bound (DH+0.1)
    - WL - Matlab struct with field named after groups ([Groups](#groups)) contained in jointStructure
@@ -145,7 +149,7 @@ Take a look at existing robots [loadExampleRobot.m](Templates/loadExampleRobot.m
 
 ## Calibration config
 
- See [optimizationConfig.m](Configs/optimizationConfig.m) for default settings and examples. This file has only the default settings and can be used for your calibration (with passing right arguments).
+ See [optimizationConfig.m](UserData/Configs/optimizationConfig.m) for default settings and examples. This file has only the default settings and can be used for your calibration (with passing right arguments).
 
 ### Description of parameters
 
@@ -156,22 +160,21 @@ Take a look at existing robots [loadExampleRobot.m](Templates/loadExampleRobot.m
    - UseParallel - set to 1, if you want to use more cores of CPU
    - ScaleProblem - set to 'jacobian' if differences in calibrated parameters are too high (e.g. lengths in thousands of mm and angles in units of rad)
  - chains - set which chains will be calibrated
-   - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Calibration examples](Examples/calibration.m))
+   - can be edited in the config file or passed in as an argument (e.g. {'rightArm','leftArm'}, see [Calibration examples](UserData/Examples/calibration.m))
    - if chains is set to 0, it does not matter if there are any 1 in the whitelist in given chain (this is superior over whitelist)
  - approaches - set which approach will be used (see [Calibration approaches](#calibration-approaches))
    - more than one approaches at a time can be used
    - value does not have to be 1/0, but any non-zero number will enable the approach and values from this approach will be scaled by given value
-   - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Calibration examples](Examples/calibration.m))
+   - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Calibration examples](UserData/Examples/calibration.m))
  - joint types - determine which part of the body will be calibrated
    - onlyOffsets - will calibrate only offsets of each link (the last DH parameter)
    - joint - will calibrate everything which is not skin, eye or finger
    - the settings are superior over chains (see above). So in case you enable 'rightArm' but does not enable 'joint' or 'finger', nothing will be calibrated
    - the settings are also depending on each other. If you enable 'onlyOffsets', you still need to enable for example 'mount' to calibrate
-   - can be edited in the config file or passed in as an argument (e.g. {'mount'}, see [Calibration examples](Examples/calibration.m))
+   - can be edited in the config file or passed in as an argument (e.g. {'mount'}, see [Calibration examples](UserData/Examples/calibration.m))
  - perturbations - set the perturbations ranges
-   - each field indicates other level of perturbation
-   - element in vector are the 4 DH parameters - [a, d, alpha, theta] 
-   - mainly the 'DH' subfield is used and 'camera' subfield is optional 
+   - each cell indicates other level of perturbation
+   - element in vector are the 4/6 kinematics parameters - [a/x, d/y,z, alpha, beta, theta/gamma]  
  - other settings - other settings for the calibration
    - bounds - set to enable bounds (Algorithm in solver options needs to be set to 'trust-region-reflective' !)
    - repetitions - number of repetitions of the training
@@ -186,8 +189,8 @@ Take a look at existing robots [loadExampleRobot.m](Templates/loadExampleRobot.m
      - else difference in each coordinate of the points will be used
    - parameterWeights - struct containing vector of positive numbers (1 or 2) for each field, the number indicates how will be the parameters scaled in calibration
      - fields and numbers are: 
-       - 'body' - [length (a,d), angle (alpha, offset)]
-       - 'skin' - [length (a,d), angle(alpha, offset)]
+       - 'body' - [lengths, angles]
+       - 'skin' - [lengths, angles]
        - 'planes' - [all plane parameters (a,b,c)] 
        - 'external' - [rotation (vector or quaternion), translation (vector)]. 
    - boundsFromDefault - set if the bounds are considering the latest DH or the default DH
@@ -213,14 +216,14 @@ Take a look at existing robots [loadExampleRobot.m](Templates/loadExampleRobot.m
 
 Whitelist functions serve to load customized whitelists. Whitelist is structure with multiple fields and each field contains Nx4 array with 1 or 0. 
 Each column represent one DH parameter (a,d,alpha,theta). Parameters with 1 can be calibrated. (depends on another settings from [Calibration config](#calibration-config).
-See already created files [loadNaoWL.m](Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](Robots/Motoman/loadMotomanWL.m), [loadICUBWL.m](Robots/iCub/loadICUBWL.m).  
+See already created files [loadNaoWL.m](UserData/Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](UserData/Robots/Motoman/loadMotomanWL.m), [loadICUBWL.m](UserData/Robots/iCub/loadICUBWL.m).  
   
 Output is 'WL' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any joint of the robot). 
 
 ## Bounds
 
 This functions serve when you want to have bounds different for any parameter, not just divided by body parts.
-See already created files [loadMotomanBounds.m](Robots/Motoman/loadMotomanBounds.m). Output is 'bounds' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any joint of the robot). Where each field is 4xN array of doubles. Each column represent one DH parameter (a,d,alpha,theta) and lines are connected to joints with 'indexInArrays' parameter (see [Loading functions](#loading-functions))
+See already created files [loadMotomanBounds.m](UserData/Robots/Motoman/loadMotomanBounds.m). Output is 'bounds' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any joint of the robot). Where each field is 4xN array of doubles. Each column represent one DH parameter (a,d,alpha,theta) and lines are connected to joints with 'indexInArrays' parameter (see [Loading functions](#loading-functions))
   
  - if value is 'nan' - default value from [Loading functions](#loading-functions) will be used
  - if value is 'inf' - there will be no bounds for this parameter
@@ -253,75 +256,109 @@ Approaches can be combined at one time. To set them, see [Calibration config](#c
 # Visualization
 
 Folder with functions designed for visualization of the results
-Exampes of function use can be found [Visualization examples](Examples/visualization.m) or [Models examples](Examples/models.m).
+Exampes of function use can be found [Visualization examples](UserData/Examples/visualization.m) or [Models examples](UserData/Examples/models.m).
 
 ## Files
-
- - [plotCorrections.m](Visualisation/plotCorrections.m) - shows two plots for each 'group'. One with length (a,d) and one with angles (alpha, theta) of corrections from given folder
+  
+ - [activationsView.m](Visualisation/activationsView.m) - shows moving model of the robot with option to show statistics and skin. Shows one fig for each dataset
+ - [plotCorrections.m](Visualisation/plotCorrections.m) - shows two plots for each 'group'. One with length (a,d) and one with angles (alpha, theta) of corrections from given folder  
+ - [plotDatasetPoints.m](Visualisation/plotDatasetPoints.m) - show robot model with all gathered points from datasets
  - [plotErrorBars.m](Visualisation/plotErrorBars.m) - plots rms errors bars
  - [plotErrorResiduals.m](Visualisation/plotErrorResiduals.m) - plots error residuals
- - [plotErrorsBoxplots.m](Visualisation/plotErrorsBoxplots.m) - shows boxplots with RMS errors from given folders
+ - [plotErrorsBoxplots.m](Visualisation/plotErrorsBoxplots.m) - shows boxplots with RMS errors from given folder
+ - [plotErrorsHistogram.m](Visualisation/plotErrorsHistogram.m) - shows histogram with errors from given folder
  - [plotJacobian.m](Visualisation/plotJacobian.m) - plots jacobians
- - [plotJointDistribution.m](Visualisation/plotJointDistribution.m) - plots joint distribution
+ - [plotJointDistribution.m](Visualisation/plotJointDistribution.m) - plots joint distribution  
+ - [plotJointsError.m](Visualisation/plotJointsError.m) - plots joint error dependency  
+ - [plotObserIndexes.m](Visualisation/plotObserIndexes.m) - plots observability indexes 
  - [plotProjections.m](Visualisation/plotProjections.m) - plots projections
- - [visualizeActivatedTaxels.m](Visualisation/visualizeActivatedTaxels.m) - shows activated taxels on all chains and number of activated taxels/triangles for given datasets
- - [activationsView.m](Visualisation/activationsView.m) - shows moving model of the robot with option to show statistics and skin. Shows one fig for each dataset
- - [getTaxelsDistances.m](Visualisation/getTaxelDistances.m) - shows distribution of distances between taxels/triangles
+
+
 
 # Utils
 
 Folder with functions designed for repetitive tasks.
 
-## Files
+## Folders  
 
- - [computeObservability.m](Utils/computeObservability.m) - computes different observability parameters
- - [dhpars2tfmat.m](Utils/dhpars2tfmat.m) - computes a transformation given by Denavit-Hartenberg parameters
- - [ezwraptopi.m](Utils/ezwraptopi.m) - easily wrap a vector or matrix of angles to [-pi; pi]
- - [fitSets.m](Utils/fitSets.m) - finds transformation between two sets of points
- - [getDatasetPart.m](Utils/getDatasetPart.m) - slices a dataset depends on the given pose numbers
- - [getIndexes.m](Utils/getIndexes.m) - computes indexes and parents needed to find transformations 
- - [getPlane.m](Utils/getPlane.m) - computes a plane fitted to set of given points using svd
- - [getPoints.](Utils/getPoints.m) - computes a plane fitted to set of given points using svd
- - [getTF.m](Utils/getTF.m) - computes transformation from given joint to base 
- - [getTF.m](Utils/getTFIntern.m) - computes transformation from given joint to base, needs additional parameters, it is used in calibration because of its higher speed
- - [getTFtoFrame.m](Utils/getTFtoFrame.m) - computes transformation from given joint to given joint 
- - [group.m](Utils/group.m) - static class of enumerated type containing string names of all part of robot body and skin
- - [initialGuess.m](Utils/initialGuess.m) - initial guess of plane and/or external transformation parameters for each dataset separately
- - [inversetf.m](Utils/inversetf.m) - inverse transformation matrix
- - [loadConfig.m](Utils/loadConfig.m) - loads Config file function
- - [loadDHfromMat.m](Utils/loadDHfromMat.m) - loads robot DH from mat file
- - [loadDHfromTxt.m](Utils/loadDHfromTxt.m) - loads robot DH from a text file
- - [loadTaskFromFile.m](Utils/loadTasksFromFile.m) - loads the calibration task from csv file
- - [matrix2quat.m](Utils/matrix2quat.m) - Converts the rotation matrix into quaternion 
- - [proj2distCoef.m](Utils/proj2distCoef.m) - Computes the coefficients to convert the pixels into metres (or millimetres) according to the point distance from the cameras
- - [projections.m](Utils/projections.m) - projects points to the cameras
- - [quat2matrix.m](Utils/quat2matrix.m) - Converts the quaternion into rotation matrix
- - [rmsErrors.m](Utils/rmsErrors.m) - computes rms errors
- - [rotMatrix2rotVector.m](Utils/rotMatrix2rotVector.m) - Converts the rotation matrix into rotation vector
- - [rotVector2rotMatrix.m](Utils/rotVector2rotMatrix.m) - Converts the rotation vector into rotation matrix  
- - [saveResults.m](Utils/saveResults.m) - saves results to mat files
- - [types.m](Utils/types.m) - static class of enumerated type containing string names of all possible type of joints
- - [symlog.m](Utils/symlog.m) - bi-symmetric logarithmic axes scaling
- - [weightRobotParameters.m](Utils/weightRobotParameters.m) - changes the optimized parameters weight
+### KinUtils  
+ - [dhpars2tfmat.m](Utils/KinUtils/dhpars2tfmat.m) - computes a transformation given by Denavit-Hartenberg parameters
+ - [ezwraptopi.m](Utils/KinUtils/ezwraptopi.m) - easily wrap a vector or matrix of angles to [-pi; pi]
+ - [getPlane.m](Utils/KinUtils/getPlane.m) - computes a plane fitted to set of given points using svd
+ - [getPoints.m](Utils/KinUtils/getPoints.m) - computes points from forward kinematics
+ - [getPointsIntern.m](Utils/KinUtils/getPointsIntern.m) - computes points from forward kinematics  
+ - [getTF.m](Utils/KinUtils/getTF.m) - computes transformation from given joint to base 
+ - [getTFIntern.m](Utils/KinUtils/getTFIntern.m) - computes transformation from given joint to base, needs additional parameters, it is used in calibration because of its higher speed
+ - [getTFtoFrame.m](Utils/KinUtils/getTFtoFrame.m) - computes transformation from given joint to given joint  
+ - [inversetf.m](Utils/KinUtils/inversetf.m) - inverse transformation matrix
+ - [matrix2quat.m](Utils/KinUtils/matrix2quat.m) - Converts the rotation matrix into quaternion 
+ - [proj2distCoef.m](Utils/KinUtils/proj2distCoef.m) - Computes the coefficients to convert the pixels into metres (or millimetres) according to the point distance from the cameras  
+ - [quat2matrix.m](Utils/KinUtils/quat2matrix.m) - Converts the quaternion into rotation matrix  
+ - [rotMatrix2rotVector.m](Utils/KinUtils/rotMatrix2rotVector.m) - Converts the rotation matrix into rotation vector
+ - [rotVector2rotMatrix.m](Utils/KinUtils/rotVector2rotMatrix.m) - Converts the rotation vector into rotation matrix  
+   
+### CalibUtils  
+
+ - [computeObservability.m](Utils/CalibUtils/computeObservability.m) - computes different observability parameters
+ - [fitSets.m](Utils/CalibUtils/fitSets.m) - finds transformation between two sets of points
+ - [getDatasetPart.m](Utils/CalibUtils/getDatasetPart.m) - slices a dataset depends on the given pose numbers
+ - [getIndexes.m](Utils/CalibUtils/getIndexes.m) - computes indexes and parents needed to find transformations   
+ - [initDataset.m](Utils/CalibUtils/initDataset.m) - creates empty dataset with fields  
+ - [initialGuess.m](Utils/CalibUtils/initialGuess.m) - initial guess of plane and/or external transformation parameters for each dataset separately  
+ - [internalCalibration.m](Utils/CalibUtils/interalCalibration.m) - defines calibration problem and runs calibration   
+ - [loadConfig.m](Utils/CalibUtils/loadConfig.m) - loads Config file function
+ - [loadDHfromMat.m](Utils/CalibUtils/loadDHfromMat.m) - loads robot DH from mat file
+ - [loadDHfromTxt.m](Utils/CalibUtils/loadDHfromTxt.m) - loads robot DH from a text file
+ - [loadTaskFromFile.m](Utils/CalibUtils/loadTasksFromFile.m) - loads the calibration task from csv file  
+ - [padVectors.m](Utils/CalibUtils/padVectors.m) - pad vectors to size 6
+ - [projections.m](Utils/CalibUtils/projections.m) - projects points to the cameras
+ - [rmsErrors.m](Utils/CalibUtils/rmsErrors.m) - computes rms errors  
+ - [runCalibration.m](Utils/CalibUtils/runCalibration.m) - prepares structures for calibration
+ - [saveResults.m](Utils/CalibUtils/saveResults.m) - saves results to mat files  
+ - [unpadVectors.m](Utils/CalibUtils/unpadVectors.m) - unpad vectors back to original size
+ - [weightRobotParameters.m](Utils/CalibUtils/weightRobotParameters.m) - changes the optimized parameters weight  
+   
+### DataTypes  
+
+ - [group.m](Utils/DataTypes/group.m) - static class of enumerated type containing string names of all part of robot body and skin
+ - [types.m](Utils/DataTypes/types.m) - static class of enumerated type containing string names of all possible type of joints  
+
+### VisuUtils  
+  
+ - [bisymlog.m](Utils/VisuUtils/bisymlog.m) - bi-symmetric logarithmic axes scaling  
+ - [bplot.m](Utils/VisuUtils/bplot.m) - custom boxplot  
+   - Jonathan C. Lansey (2020). Box and whiskers plot (without statistics toolbox) (https://www.mathworks.com/matlabcentral/fileexchange/42470-box-and-whiskers-plot-without-statistics-toolbox), MATLAB Central File Exchange.
+ - [DrawCylinder.m](Utils/VisuUtils/DrawCylinder.m), [DrawCylinderFromTo.m](Utils/VisuUtils/DrawCylinderFromTo.m), [DrawRefFrame.m](Utils/VisuUtils/DrawRefFrame.m), [FwdKin.m](Utils/VisuUtils/FwdKin.m) - function for visualization of robot model.  
+   - http://wiki.icub.org/wiki/ICubForwardKinematics 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
 # Robots
 
-Folder with folders for different robots. Right now, these robots are available: [Nao](Robots/Nao), [Motoman](Robots/Motoman), [iCub](Robots/iCub).
+Folder with folders for different robots. Right now, these robots are available: [Nao](UserData/Robots/Nao), [Motoman](UserData/Robots/Motoman), [iCub](UserData/Robots/iCub).
 The folders usually includes Datasets for given robot, robot-specific functions and robot-specific configuration files.  
-Mandatory are configs with structure of the robot (see [loadNAO.m](Robots/Nao/loadNAO.m), [loadMotoman.m](Robots/Motoman/loadMotoman.m), [loadICUBv1.m](Robots/iCub/loadICUBv1.m))
-and function to change dataset to format, which uses the toolbox (see [Datasets](#datasets) and [loadDatasetNao.m](Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](Robots/iCub/loadDatasetICub.m)).
+Mandatory are configs with structure of the robot (see [loadNAO.m](UserData/Robots/Nao/loadNAO.m), [loadMotoman.m](UserData/Robots/Motoman/loadMotoman.m), [loadICUBv1.m](UserData/Robots/iCub/loadICUBv1.m))
+and function to change dataset to format, which uses the toolbox (see [Datasets](#datasets) and [loadDatasetNao.m](UserData/Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](UserData/Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](UserData/Robots/iCub/loadDatasetICub.m)).
 
-Voluntary configs are for load of whitelist (see [loadNaoWL.m](Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](Robots/Motoman/loadMotomanWL.m), [loadICUBWL.m](Robots/iCub/loadICUBWL.m))
-and bounds (see [loadMotomanBounds.m](Robots/Motoman/loadMotomanBounds.m)).
+Voluntary configs are for load of whitelist (see [loadNaoWL.m](UserData/Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](UserData/Robots/Motoman/loadMotomanWL.m), [loadICUBWL.m](UserData/Robots/iCub/loadICUBWL.m))
+and bounds (see [loadMotomanBounds.m](UserData/Robots/Motoman/loadMotomanBounds.m)).
 
 # Types
 
-Each joint has defined its type. The types are defined in [types.m](Utils/types.m) and are used to create structure of the robot in [loading functions](#loading-functions). Types are some kind of substitute for body parts. And with this, we can calibrate and visualize the right joints.
+Each joint has defined its type. The types are defined in [types.m](Utils/DataTypes/types.m) and are used to create structure of the robot in [loading functions](#loading-functions). Types are some kind of substitute for body parts. And with this, we can calibrate and visualize the right joints.
 
 # Groups
 
-Each joint has defined its group. The types are defined in [group.m](Utils/group.m) and are used to create structure of the robot in [loading functions](#loading-functions). Groups help to select right DH, bounds and WL for each joint. Difference between groups and types is that, groups are more complex. E.g. type is joint, but group will be right arm and left arm. Simply it is substitute for chains.
-Also it helps to divide skin from other things.
+Each joint has defined its group. The types are defined in [group.m](Utils/DataTypes/group.m) and are used to create structure of the robot in [loading functions](#loading-functions). Groups help to select right DH, bounds and WL for each joint. Difference between groups and types is that, groups are more complex. E.g. type is joint, but group will be right arm and left arm. Simply it is substitute for chains.
+Also it helps to divide skin from other things.  
+  
+Methods:  
+  - sort - sorts  structures in given order
 
 # Loading from csv
 
@@ -336,6 +373,3 @@ Fields:
  - dataset_params is optional and takes one argument. But if you want more arguments just write them in another columns (each argument in new column)
 
 If you have everything prepared just type in Matlab console 'loadTasksFromFile('tasks.csv')'. (You must have at least [Utils](Utils) folder in Matlab path).
-
-# Schema
-![Calibration diagram](calibAll.jpg)
