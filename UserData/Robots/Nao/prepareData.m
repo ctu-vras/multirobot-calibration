@@ -68,17 +68,6 @@ end
 
 % Split string with word 'Arm' to get just side ...right for
 % rightArm, '' for Torso
-% if ~finger
-%     name1=strsplit(chain1,'Arm');
-%     name1=name1{1};
-%     name2=strsplit(chain2,'Arm');
-%     name2=name2{1};
-% else
-%     name1=strsplit(chain1,'Finger');
-%     name1=name1{1};
-%     name2=strsplit(chain2,'Finger');
-%     name2=name2{1}; 
-% end
 
 if contains(chain1, 'Arm')
     name1=strsplit(chain1,'Arm');
@@ -138,16 +127,6 @@ for taxelId=0:383
     end
 end
 
-% if finger
-%     %Add finger as second joint
-%     joint=robot.findJoint([name2,'Finger']);
-%     if ~isempty(joint)
-%         joint=joint{1};
-%         chain2Joints=[joint];
-%     else
-%         chain2Joints=[nan];
-%     end
-% end
 
 % variables init
 
@@ -188,12 +167,6 @@ for i=1:size(datasetLocal.(iterateVar),1)
     angles.leftArm=[0,ang.LShoulderPitch, ang.LShoulderRoll, ang.LElbowYaw,...
         ang.LElbowRoll, ang.LWristYaw];
     angles.head=[0,ang.HeadYaw, ang.HeadPitch];
-%     angles.leftIndex = [0, ang.LFinger11, ang.LFinger12, ang.LFinger13];
-%     angles.rightIndex = [0, ang.RFinger11, ang.RFinger12, ang.RFinger13];
-%     angles.leftMiddle = [0, ang.LFinger21, ang.LFinger12, ang.LFinger23];
-%     angles.rightMiddle = [0, ang.RFinger21, ang.RFinger22, ang.RFinger23];
-%     angles.leftThumb = [0, ang.LThumb1, ang.LThumb2];
-%     angles.rightThumb = [0, ang.RThumb1, ang.Rthumb2];
     angles.leftIndex = zeros(1,4);
     angles.rightIndex = zeros(1,4);
     angles.leftMiddle = zeros(1,4);
@@ -215,15 +188,6 @@ for i=1:size(datasetLocal.(iterateVar),1)
     chain2Points=zeros(384,3);
     s=[];
     
-%     dh=DH.(chain1_);
-%     dh(:,6)=dh(:,6)+angles.(chain1_)';
-%     rtMat.(chain1_)=dhpars2tfmat(dh);
-    
-%     dh=DH.(chain2_);
-%     dh(:,6)=dh(:,6)+angles.(chain2_)';
-%     rtMat.(chain2_)=dhpars2tfmat(dh);
-    
-%     rtFields = fieldnames(rtMat(1));
       rtFields = [];
     for taxelId=0:383
         % Get joint
@@ -238,7 +202,6 @@ for i=1:size(datasetLocal.(iterateVar),1)
             % assign 1:3 component of the vectors
             chain1Points(taxelId+1, :)=points(1:3,:)';
         end
-        %if ~finger
         joint=chain2Joints(taxelId+1);
         if ~isempty(joint.parent)
             s=getIndexes(s,joint);
@@ -248,15 +211,6 @@ for i=1:size(datasetLocal.(iterateVar),1)
         end
         %end
     end
-%     if finger
-%         joint=chain2Joints(1);
-%         if ~isempty(joint.parent)
-%             s=getIndexes(s,joint);
-%             mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
-%             points=mat*[0,0,0,1]';%.*1000
-%             chain2Points=points(1:3,:)';
-%         end
-%     end
     % load taxel indexes (4th components of the vector from activated
     % points in the dataset), and add 1 to all of them (to get matlab
     % indexing)
@@ -368,8 +322,7 @@ for i=1:size(dataset.(chain1).cop,2)
 
    %If 'minDist' is lower than given number (could help to get rid of 'bad'
    %activations)
-%    if minDist<0.002*optim.unitsCoef
-    if dataset.mins(i) < 0.01*optim.unitsCoef && minDist ~= 9999
+    if dataset.mins(i) < 9*optim.unitsCoef && minDist ~= 9999
        %Assign newData to the 'taxelStruct'
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId;minTaxel2Id];
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel;minTaxel2];

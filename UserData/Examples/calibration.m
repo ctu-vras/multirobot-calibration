@@ -5,8 +5,7 @@
 % example is full commented, the rest has only the 'new' parts commented.
 
 %% NAO example - right arm mount from rightArm - torso touch
-% with already precomputed values
-robot_fcn = 'loadNAOF3D'; % Name of the function with robot structure
+robot_fcn = 'loadNAO'; % Name of the function with robot structure
 config_fcn = 'optimizationConfig'; % Name of the function with calibration config
 approaches = {'selftouch'}; % Used approaches, delimited by comma (,)
 chains = {'rightArm'}; % Used chains, delimited by comma (,) 

@@ -81,7 +81,7 @@ TypicalX	 1	1	1	1	1	1
 UseParallel	 0	
 Algorithm	 trust-region-reflective	
 
-robot_fcn 	 loadNAOF3D 
+robot_fcn 	 loadNAO 
 
 dataset_fcn 	 loadDatasetNao 
 
