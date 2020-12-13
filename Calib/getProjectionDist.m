@@ -7,6 +7,7 @@ function [ dist, coeffs ] = getProjectionDist( dh_pars, robot, datasets)
 %                       each dataset is structure in common format
 %   OUTPUT - dist - 1xN array of distance;
 %                   N is number of errors from projections
+%          - coeffs - 1xN array of conversions from pixels to meters
     dist = [];
     coeffs = [];
     cam_frames = robot.findJointByType('eye');

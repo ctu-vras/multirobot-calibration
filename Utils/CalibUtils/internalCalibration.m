@@ -1,4 +1,12 @@
 function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveData)
+% INTERNALCALIBRATION - function defining calibration problem and running it
+%    INPUT - rob - instance of @Robot class
+%          - config - structure of configuration - (optim, chains...)
+%          - whpars - structure of whitelist parameters
+%          - data - structure with datasets and training/testing indexes
+%          - folder - folder to which save the results
+%          - saveInfo - [0/1, 0/1, 0/1] 
+%          - saveData - structure with filenames of loaded function
     %% calibration
     whitelist = whpars.whitelist;
     start_dh = whpars.start_dh;

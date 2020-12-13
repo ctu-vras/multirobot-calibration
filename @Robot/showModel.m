@@ -9,7 +9,7 @@ function fig = showModel(r, varargin)
     %                    of 'groups' will be shown.
     %                    E.g. {[th_1_chain1,...,th_n_chain1],...,[]}
     %         - varargin - Uses MATLABs argument parser, with these pairs:
-    %                       - 'skin' - 1/0 to visualize skin/markers
+    %                       - 'naoSkin' - 1/0 to visualize nao skin
     %                                - Default: 0
     %                       - 'dual' - 1/0 to visualize dual robot
     %                                - Default: 0
@@ -19,6 +19,14 @@ function fig = showModel(r, varargin)
     %                                  - Default: []
     %                       - 'figName' - string name of the figure
     %                                   - Default: ''
+    %                       - 'units' - m/mm, units of graph
+    %                                 - Default: 'm'
+    %                       - 'showText' - 0/1, show names of links
+    %                                    - Default: 1
+    %                       - 'specialGroup' - cell array of strings,
+    %                                          to show more groups
+    %                                          (markers, skin)
+    %                                        - Default: ''
     
     % argument parser
     p=inputParser;
@@ -72,9 +80,6 @@ function fig = showModel(r, varargin)
         fig=figure('Name',p.Results.figName,'Position', [1436 30 1300 750]);
     end
     
-    
-    %axes  ('Position', [0 0 1 1]); 
-    %setAxes(fig.CurrentAxes);
     hold on; grid on;
     xlabel(['x (',units,')']); ylabel(['y (',units,')']),zlabel(['z (',units,')']);
     hold on
@@ -115,10 +120,6 @@ function fig = showModel(r, varargin)
         elseif ~strcmp(fnames{1},'torso') && ~strcmp(fnames{end},'torso')
             fnames={'torso', fnames{1:end}}';
         end
-
-        
-        %contains(fnames, 'Finger') |
-        % iterate over minimum from all groups or legth of 'angles'
         
         if ~strcmp(p.Results.specialGroup, '')
             fnames = {fnames{:}, p.Results.specialGroup{:}}';
@@ -144,10 +145,7 @@ function fig = showModel(r, varargin)
             joints=findJointByGroup(r,name);
             for joint=1:size(joints,2)
                 j=joints(joint);
-                %if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)...
-                %        || strcmp(j{1}.type,types.finger || strcmp(j{1}.type,types.)
                 jointNames{end+1} = j{1}.name;
-                %end
             end 
             theta.(name) = reshape([angles_{i}], 1, []);
             str.link = name;
@@ -175,13 +173,9 @@ function fig = showModel(r, varargin)
                 joints=findJointByGroup(r,name);
                 for joint=1:size(joints,2)
                     j=joints(joint);
-                    %if strcmp(j{1}.type,types.joint) || strcmp(j{1}.type,types.eye)...
-                    %        || strcmp(j{1}.type,types.finger || strcmp(j{1}.type,types.)
                     jointNames{end+1} = j{1}.name;
-                    %end
                 end  
                 theta.(name) = zeros(1,size(joints, 2));
-    %             theta.(name) = reshape([angles_{i}], 1, []);
                 str.link = name;
                 str.DH = DH;
                 str.theta = theta;
@@ -200,7 +194,4 @@ function fig = showModel(r, varargin)
     axis equal;
     axis tight;
     set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
-    %if nargin > 7
-    %    saveas(gcf, varargin{1});
-    %end
 end

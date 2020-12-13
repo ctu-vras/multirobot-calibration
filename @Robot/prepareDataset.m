@@ -3,6 +3,7 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
     %                training/testing indexes
     %   INPUT - optim - structure of calibration settings
     %         - chains - structure of chain settings
+    %         - approaches - calibration approaches
     %         - funcname - name of the robot-specific function or mat-file
     %         with the datasets (and indexes)
     %         - varargin - agrument which will be passed to the
@@ -60,9 +61,6 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
                     camFrames = [camFrames{:}];
                     uniqueFrames = [uniqueFrames; {camFrames.name}'];
                 end
-                %part
-                %dataset
-                %datasets.(part){dataset}.rtMat
                 rtFields = fieldnames(datasets.(part){dataset}.rtMat)';
                 % Preallocate arrays
                 joints(length(datasets.(part){dataset}.frame), 1) = Joint();
@@ -145,13 +143,6 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
         end
         training_set_indexes{i} = training_set_indexes_dataset;
         testing_set_indexes{i} = testing_set_indexes_dataset;
-    end
-
-%     % Assigning datasets to the right groups
-%     datasetsStruct.selftouch=datasets{1};
-%     datasetsStruct.planes=datasets{2};
-%     datasetsStruct.external=datasets{3};
-%     datasetsStruct.projection=datasets{4};
-    
+    end   
 end
 

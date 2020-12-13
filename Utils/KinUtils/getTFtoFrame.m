@@ -42,7 +42,6 @@ function RTarm = getTFtoFrame(dh_pars,joint, joints, stopJoint)
             RTarm=dhpars2tfmat(DH)*RTarm;
         elseif type.(group) == 1
             pars = dh_pars.(group)(idx,:);
-            %RT = [1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1];
             for i=size(pars,1):-1:1
                 v = pars(i,4:6)';
                 th=norm(v);
@@ -55,7 +54,6 @@ function RTarm = getTFtoFrame(dh_pars,joint, joints, stopJoint)
             end
         else
             pars = dh_pars.(group)(idx,:);
-            %RTarm = [1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1];
             for line=size(pars,1):-1:1
                if any(isnan(pars(line,:)))
                    DH=pars(line,:);

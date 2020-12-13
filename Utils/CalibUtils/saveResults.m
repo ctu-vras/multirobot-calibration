@@ -13,6 +13,7 @@ function saveResults(rob,outfolder,res_dh,corrs_dh, errors, errorsAll, whitelist
 %      - jointTypes -joint types to calibrate
 %      - optim - calibration settings
 %      - options - lsqnonlin options object
+%      - obsIndexes - observability indexes
 %      - robot_fcn - string name of used robot_fcn
 %      - dataset_fcn - string name of used dataset_fcn
 %      - config_fcn  - string name of used config_fcn

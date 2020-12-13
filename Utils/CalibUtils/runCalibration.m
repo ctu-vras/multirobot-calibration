@@ -1,5 +1,22 @@
 function runCalibration(robot_fcn, config_fcn, approaches, chains, jointTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadDHfunc, loadDHargs, loadDHfolder)
-    %% preparation
+% RUNCALIBRATION - prepares structures for calibration
+%    INPUT - robot_fcn - string, name of the robot functon
+%          - config_fcn - string, name of the config function
+%          - approches - cell array of strings, name of used approaches
+%          - chains - cell array of strings, name of calibrated chains
+%          - jointTypes - cell array of strings, name of used joint types
+%          - dataset_fcn - string, name of dataset function
+%          - whhitelist_fcn - string, name of whitelist function
+%          - bounds_fcn, string, name of bounds_fcn
+%          - dataset_params - cell array, arguments for dataset function
+%          - folder - string, name of results folder
+%          - saveInfo - [0/1, 0/1, 0/1], to save given files
+%          - loadDHfunc - string, name of load Dh function (loadDHfromMat,
+%                         loadDHfromTXT)
+%          - loadDHargs - cell array, arguments for DH function
+%          - loadDHfolder - string, name of folder with results for load DH
+%                           function
+%% preparation
     assert(~isempty(robot_fcn) && ~isempty(config_fcn) && ~isempty(dataset_fcn),'Empty name of robot, config or dataset function')
     rob = Robot(robot_fcn);
     

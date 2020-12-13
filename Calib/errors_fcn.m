@@ -10,6 +10,8 @@ function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, datase
 %                     planes, external, projection} and and each field is 1xN cellArray
 %         - optim - structure of calibration settings
 %         - approach - structure of settings for each calibration approach
+%         - paramValues - 1xn array used for planes, external calibration,
+%                       - Default: []
 %   OUTPUT - error_vec - MxN array of distance;
 %                        M=1 if optim.useNorm, M=3 if ~optim.useNorm;
 %                        N is number of errors from all types of calib

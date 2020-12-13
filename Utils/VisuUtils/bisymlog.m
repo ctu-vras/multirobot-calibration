@@ -1,6 +1,11 @@
 function bisymlog(ax, logc, useExp, axes)
-%BISYMLOG Summary of this function goes here
-%   Detailed explanation goes here
+%BISYMLOG - Bi-Symmetric Log transformation
+%   INPUT - ax - matlab axis to be changed
+%         - logc - exponent of logarithm
+%         - useExp - 0/1, show as 10^x
+%         - axes - matlab axes
+% Webber, John. (2013). A bi-symmetric log transformation for wide-range data.
+% Measurement Science and Technology. 24. 027001. 10.1088/0957-0233/24/2/027001.
     if (nargin < 4)
         axes = gca;
     end

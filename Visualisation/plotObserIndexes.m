@@ -1,9 +1,6 @@
 function plotObserIndexes(folder)
-%PLOTJACOBIAN Function for plotting jacobians
-%INPUT - robot - Robot object
-%      - whitelist - whitelist structure to gain the parameters names
-%      - jacobians - cell array of jacobians
-%      - titles - subplot titles
+%PLOTOBSERINDEXES Function for plotting jacobians
+%INPUT - folder - folder with results
     info = load(['Results/',folder,'/info']);
     obsIndexes = cell2mat(permute(struct2cell(info.obsIndexes), [2,3,1]));
     figure();

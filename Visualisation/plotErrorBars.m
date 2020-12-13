@@ -14,6 +14,9 @@ function plotErrorBars(folders,varargin)
 %                                 - Default: minmax
 %                       - 'title' - plot title
 %                                 - Default: RMS errors
+%                       - 'train' - show train and test set after
+%                                   calibration
+%                                 - Default: 0
     p=inputParser;
     addRequired(p,'folders');
     addParameter(p,'pert',0);

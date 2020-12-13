@@ -3,7 +3,7 @@ function [ arm1, arm2 ] = getPointsIntern(dh_pars, dataset, compute_arm2, type)
 %INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is matrix.
 %      - dataset - dataset structure in common format
-%      - compute_arm2 - wheather compute second end effector or use
+%      - compute_arm2 - whether compute second end effector or use
 %      refPoints
 %OUTPUT - arm1 - points coordinates of first end effector
 %       - arm2 - points coordinates of second end effector

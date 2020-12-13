@@ -1,20 +1,14 @@
 function plotErrorsHistogram(folder,varargin)
-% PLOTERRORSBOXPLOTS shows boxplots with RMS errors from given folders
-%   INPUT - folders - 1xN cellArray of string names of folders with results
+% PLOTERRORSHISTOGRAM shows histogram with errors from given folder
+%   INPUT - folder - folder with results
 %         - varargin - Uses MATLABs argument parser, with these pairs:
 %                       - 'pert' - int, determines which perturbation
 %                                        level to use
 %                                      - Default: 0
-%                       - 'log' - 1/0 to use logarithmic scale
-%                               - Default: 0
 %                       - 'units' - 'm' or 'mm'
 %                                 - Default: mm
-%                       - 'errorsType' - 'errors'/'errorsAll'
-%                                      - Default: 'errors'
 %                       - 'location' - string, location of the legend
-%                                 - Default: 'northwest'
-%                       - 'points' - 1/0 to show points in boxes
-%                               - Default: 0
+%                                 - Default: 'northeast'
 
     % Argument parser
 %     close all;
@@ -102,7 +96,7 @@ function plotErrorsHistogram(folder,varargin)
     ax.YAxis.TickLabelInterpreter = 'latex';
     xlabel(['Error [', units, ']']);
     ylabel('Number of poses [-]');
-    title(['Comparison of RMS errors for ', folder])
+    title(['Comparison of errors for ', folder])
     set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
 end
 

@@ -1,5 +1,4 @@
 %% Example calibration
-% with already precomputed values
 robot_fcn = 'loadExampleRobot'; % Name of the function with robot structure
 config_fcn = 'optimizationConfig'; % Name of the function with calibration config
 approaches = {'selftouch'}; % Used approaches, delimited by comma (,)

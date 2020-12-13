@@ -15,7 +15,6 @@ function [RTarm] = getTF(dh_pars,joint,rtMat, joints, stopGroup)
         gr = joint.group;
         if ~isfield(rtMat, gr)
             % returns RT for the group and the first ancestor of another group
-            %~isfield(robot,'matrices') || ~contains(gr, 'Skin')
             if ~isfield(rtMat,[gr,'Mats'])  
                 [RT,joint] = joint.computeRTMatrix(dh_pars.(gr), joints.(gr), gr);
             else
@@ -33,7 +32,6 @@ function [RTarm] = getTF(dh_pars,joint,rtMat, joints, stopGroup)
                     idx=idxs{id};
                     RT=RT*mat(:,:,idx);
                     DH=dh_pars.(gr)(idx,:);
-                    %idx(idx>length(joints.(gr)))=find(idx>length(joints.(gr)));
                     DH(:,4)=DH(:,4)+joints.(gr)(id)';
                     RT=RT*dhpars2tfmat(DH);
                 end

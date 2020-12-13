@@ -2,20 +2,13 @@
 % Genova Oct 2013
 % changes Matej Hoffmann, July 2017
 function [RFFrame] = FwdKin(robot, str, coef, showText)
-% This function computes and displays the forward kinematics of a body part
-% INPUT
-%   body_part (struct) - the body part under consideration. Each body part has the same structure:
-%     name = the name of the body_part;
-%     DH   = it's the parameter matrix. Each row has 4 DH parameters (a, d, alpha, offset), thus each
-%            row completely describes a link. The more rows are added, the more links are attached.
-%     Th   = it's the joint values vector (as read from the encoders)
-%  This function is expecting input (lengths and angles in DH) in SI units (meters and radians).
-%  However, the lengths are converted to mm here and for the drawing of reference frames.
-%
-%   varargin - "noFrames" = do not draw any frames
-%
-% OUTPUT
-%   chain (struct) - the resulted chain with everything inside it. It's divided by body parts.
+% FWDKIN - this function computes and displays the forward kinematics of a body part
+% INPUT - robot - instance of @Robot class
+%       - str - structure with robot settings
+%       - coef - units of the plot
+%       - showText - 0/1, show names of links
+%                  - Default: 1
+%   OUTPUT - chain (struct) - the resulted chain with everything inside it. It's divided by body parts.
 
     %% MISC STUFF
         ljnt  = 0.007*coef;               % joint pic length
@@ -35,27 +28,6 @@ function [RFFrame] = FwdKin(robot, str, coef, showText)
         refFrame = str.refFrame;
         H0 = eye(4);
         [DH, types] = padVectors(DH);
-        %DH.(link)(:,1:2) = DH.(link)(:,1:2).*1000;
-        %DH(:,1:2) = DH(:, 1:2).*1000;
-%         if ~isempty(jointNames)
-%             if ~strcmp(link, 'torso')
-%                 joint = robot.findJoint(jointNames{1});
-%                 joint = joint{1}.parent;
-%                 if ~strcmp(joint.type, 'base')
-%                     H0 = getTF(DH,joint,[],theta, H0);
-%                 end
-%                 stopGroup = joint.group;
-%             else
-%                 stopGroup = '';
-%             end
-%             
-%         else
-%             stopGroup = '';
-%         end
-        %%% THETAS
-%         thetas = theta.(link)'
-%         offs = DH.(link)(:,4)
-%         thet = thetas + offs;
         try
             thetas = theta.(link)';
             offs = DH.(link)(:,6);
@@ -85,8 +57,6 @@ function [RFFrame] = FwdKin(robot, str, coef, showText)
                 joint = robot.findJoint(jointNames{i});
                 joint = joint{1};
                 % from root to i-th link
-                %DH_.(body_part.name) = DH;
-                %joints.(link)= theta';
                 RFFrame{i+1} = getTFtoFrame(DH,joint, theta, base);
             end
         end
@@ -106,7 +76,6 @@ function [RFFrame] = FwdKin(robot, str, coef, showText)
                     p = RFFrame{point};
                     points(point, :) = [p(1, end), p(2, end), p(3, end)];
                 end
-                %scatter3(p(1, end), p(2, end), p(3, end), 'b');
             end
             points(~any(points,2), :) = [];
             scatter3(points(:,1),points(:,2),points(:,3),str.SkinColor, 'filled', 'MarkerFaceAlpha', 0.7,'MarkerEdgeColor','k');

@@ -2,7 +2,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     %% Solver options
     options = optimoptions('lsqnonlin');
     options.Algorithm = 'trust-region-reflective'; %Use for bounds
-%     options.Algorithm = 'levenberg-marquardt';
+%   options.Algorithm = 'levenberg-marquardt';
     options.Display = 'iter';
     options.TolFun = 1e-12; %If problem does not converge, set lower values (and vice-versa)
     options.TolX = 1e-18;

@@ -15,9 +15,11 @@ function plotErrorsBoxplots(folders,varargin)
 %                                 - Default: 'northwest'
 %                       - 'points' - 1/0 to show points in boxes
 %                               - Default: 0
+%                       - 'train' - show train and test set after
+%                                   calibration
+%                                 - Default: 0
 
     % Argument parser
-%     close all;
     p=inputParser;
     addRequired(p,'folders');
     addParameter(p,'pert',0);
@@ -157,18 +159,8 @@ function plotErrorsBoxplots(folders,varargin)
         totalNum=totalNum+curNum;     
     end
     
-%     figure()
-
-% data2 = nan(10,4);
-% data2(1,1) = data(1);
-% data2(1,2) = data(2);
-% data2(:,3) = data(3:12);
-% data2(:,4) = data(13:end);
-data2 = data;
-% data2 = reshape(data,10,4);
-names2 = [1, 2, zeros(1,10)+3, zeros(1,10)+4];
-     bplot(data2,'width',0.9, 'nolegend');
-%       boxplot(ax,data,names,'position',1:size(unique(names),1),'width',0.9,'colors',colors)
+    names2 = [1, 2, zeros(1,10)+3, zeros(1,10)+4];
+    bplot(data,'width',0.9, 'nolegend');
     hold on
     h = findobj(gca, 'Type', 'Patch');
     % get them in reverse order

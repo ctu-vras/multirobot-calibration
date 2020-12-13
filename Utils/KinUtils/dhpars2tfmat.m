@@ -1,6 +1,6 @@
 function tfmat = dhpars2tfmat(dhpars)
 %DHPARS2TFMAT Compute a transformation given by Denavit-Hartenberg parameters.
-%INPUT - dhpars - (X,4) Denavit-Hartenberg parameters first line is first
+%INPUT - dhpars - (X,6) Denavit-Hartenberg parameters first line is first
 %joint of a group and last line is an end effector
 %OUTPUT - tfmat - transformation matrix from end effector to the first
 %joint of group.

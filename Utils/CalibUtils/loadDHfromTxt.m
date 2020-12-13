@@ -18,8 +18,6 @@ groups = {C{1}{isnan(A(:,1))}};
 idx = [find(isnan(A(:,1))); size(A,1)+1];
 % save DH for each group
 for i = 1:length(groups)
-%     groups{i}
-%     A(idx(i)+1:idx(i+1)-1,:)
     robot.structure.DH.(groups{i})= A(idx(i)+1:idx(i+1)-1,:);
 end
 fclose(fileID);

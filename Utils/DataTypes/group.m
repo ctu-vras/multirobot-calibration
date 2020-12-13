@@ -28,6 +28,10 @@ classdef group
     
     methods(Static)
         function newStruct = sort(oldStruct)
+            % SORT - sort structure in given order
+            %
+            %     INTPUT - structure to be sorted
+            %     OUTPUT - sorted structure
              order = {'torso', 'leftArm', 'rightArm', 'head', 'leftLeg', 'rightLeg',...
             'leftEye', 'rightEye', 'leftFinger', 'rightFinger', 'leftIndex', ...
             'rightIndex', 'leftThumb', 'rightThumb', 'leftMiddle', 'rightMiddle',...

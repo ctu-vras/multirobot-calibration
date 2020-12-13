@@ -18,7 +18,6 @@ function activationsView(robot,datasets,varargin)
     addRequired(p,'datasets');
     addParameter(p,'skin',0);
     addParameter(p,'info',0);
-    addParameter(p, 'finger', 0); 
     parse(p,robot,datasets,varargin{:});
     %% First fig of each dataset
     for dataset=datasets
@@ -32,7 +31,8 @@ function showFig(robot,idx,dataset,parser)
     fnames=fieldnames(robot.structure.DH);
     fnames(contains(fnames,'torso') | contains(fnames,'Skin') |...
       contains(fnames,'Middle')...
-    | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers') )= [];
+    | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers')...
+    | contains(fnames,'dummy') )= [];
     ang=cell(1,length(fnames));
     % Get angles from dataset in correct format for 'showModel'
     for name=1:length(fnames)
@@ -47,10 +47,6 @@ function showFig(robot,idx,dataset,parser)
         dataset.name='';
     end
     
-%     ang = ang(1:3);
-    if parser.finger
-       ang = [ang(:)', {0}, {0}]; 
-    end
     % Show model in given configuration
     robot.showModel(ang,'figName',dataset.name);
     
@@ -58,7 +54,7 @@ function showFig(robot,idx,dataset,parser)
     if parser.skin
         % show skin and color activated taxels, selected COP and all cops
         % with different color for each chain
-        x=0.001;
+        x=1;
         scatter3(dataset.newTaxelsNA{idx,1}(:,1).*x,dataset.newTaxelsNA{idx,1}(:,2).*x,dataset.newTaxelsNA{idx,1}(:,3).*x,'red')
         scatter3(dataset.newTaxels{idx,1}(:,1).*x,dataset.newTaxels{idx,1}(:,2).*x,dataset.newTaxels{idx,1}(:,3).*x,'filled','red')
         scatter3(dataset.newTaxelsNA{idx,2}(:,1).*x,dataset.newTaxelsNA{idx,2}(:,2).*x,dataset.newTaxelsNA{idx,2}(:,3).*x,'blue')

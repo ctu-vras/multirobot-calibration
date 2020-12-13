@@ -5,7 +5,7 @@ function [init, lb, ub]=prepareDH(r, pert, optim, funcname)
     %         - optim - structure of calibration settings
     %         - funcname - name of the robot-specific function
     %   OUTPUT - init - structure with all 'groups' used in the robot. Each
-    %                   field is 4D array with DH parameters of gien group
+    %                   field is 4D array with DH parameters of given group
     %                   for each repetition and perturation range
     %          - lb - same strcuture as 'init', but values are lower bounds
     %                 of each DH parameter

@@ -1,6 +1,7 @@
 function plotJointsError(robot, errors, dataset, group, plotTitle, skipIndexes)
 %PLOTJOINTSERROR Function for plotting mean errors for each joint value
 %INPUT - robot - Robot object
+%      - errors - 1xN array of errors
 %      - dataset - dataset structure
 %      - group - group of joints
 %      - plotTitle - plot title, can be empty ('')

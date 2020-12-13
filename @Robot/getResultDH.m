@@ -13,6 +13,12 @@ function [results, corrs, start_dh] = getResultDH(robot, opt_pars, start_dh, whi
 %                       - 4 params for each line
 %                       - number of repetitions
 %                       - number of perturation levels (1 for no pert)
+%          - corrs - corrections from nominal DH 
+%          - start_dh -  structure with all 'groups' used in the robot. Each
+%                        field is 4D array with DH parameters of given group
+%                        for each repetition and perturation range
+%
+%
     
     % start with non-calibrated values
     results = start_dh;

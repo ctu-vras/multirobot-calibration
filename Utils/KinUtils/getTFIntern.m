@@ -20,7 +20,6 @@ function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, indexes, parents, rt
                     DH=dh_pars.(gr)(indexes.(gr),:)';
                     j = joints.(gr);
                     DH(6,:)=DH(6,:)+j(indexes.(gr));
-%                     DH(6, :) = DH(6,:) + joints.(gr);
                     % reshape dh table 
                     s = size(DH,2);
                     as = DH(1,:); ds = DH(2,:); als = DH(4,:); ths = DH(6,:);
@@ -62,18 +61,9 @@ function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, indexes, parents, rt
                         x=v(1);
                         y=v(2);
                         z=v(3);
-%                             K=[0 -v(3) v(2); v(3) 0 -v(1); -v(2) v(1) 0];
                         R = [cos(th)+x^2*(1-cos(th)), x*y*(1-cos(th))-z*sin(th), x*z*(1-cos(th))+y*sin(th);
                              y*x*(1-cos(th))+z*sin(th), cos(th)+y^2*(1-cos(th)), y*z*(1-cos(th))-x*sin(th);
                              z*x*(1-cos(th))-y*sin(th), z*y*(1-cos(th))+x*sin(th), cos(th)+z^2*(1-cos(th))];
-%                             R= cos(th)*[1,0,0;0,1,0;0,0,1] + (1-cos(th))*kron(v,v')+sin(th)*K;
-%                             RT = RT * [R,pars(line,1:3)';0,0,0,1];
-%                             x=v(1);
-%                             y=v(2);
-%                             z=v(3);
-%                             R = [cos(x)*cos(y), cos(x)*sin(y)*sin(z)-sin(x)*cos(z), cos(x)*sin(y)*cos(z)+sin(x)*sin(z);
-%                                 sin(x)*cos(y), sin(x)*sin(y)*sin(z)+cos(x)*cos(z), sin(x)*sin(y)*cos(z)-cos(x)*sin(z);
-%                                 -sin(y), cos(y)*sin(z), cos(y)*cos(z)];
                         RT = RT * [R,pars(i,1:3)';0,0,0,1];
                     end
                 else
@@ -120,18 +110,9 @@ function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, indexes, parents, rt
                             x=v(1);
                             y=v(2);
                             z=v(3);
-%                             K=[0 -v(3) v(2); v(3) 0 -v(1); -v(2) v(1) 0];
                             R = [cos(th)+x^2*(1-cos(th)), x*y*(1-cos(th))-z*sin(th), x*z*(1-cos(th))+y*sin(th);
                                  y*x*(1-cos(th))+z*sin(th), cos(th)+y^2*(1-cos(th)), y*z*(1-cos(th))-x*sin(th);
                                  z*x*(1-cos(th))-y*sin(th), z*y*(1-cos(th))+x*sin(th), cos(th)+z^2*(1-cos(th))];
-%                             R= cos(th)*[1,0,0;0,1,0;0,0,1] + (1-cos(th))*kron(v,v')+sin(th)*K;
-%                             RT = RT * [R,pars(line,1:3)';0,0,0,1];
-%                             x=v(1);
-%                             y=v(2);
-%                             z=v(3);
-%                             R = [cos(x)*cos(y), cos(x)*sin(y)*sin(z)-sin(x)*cos(z), cos(x)*sin(y)*cos(z)+sin(x)*sin(z);
-%                                 sin(x)*cos(y), sin(x)*sin(y)*sin(z)+cos(x)*cos(z), sin(x)*sin(y)*cos(z)-cos(x)*sin(z);
-%                                 -sin(y), cos(y)*sin(z), cos(y)*cos(z)];
                             RT = RT * [R,pars(line,1:3)';0,0,0,1];
                        end
                     end

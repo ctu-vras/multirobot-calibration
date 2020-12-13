@@ -1,9 +1,10 @@
 function showGraphModel(r, ax)
-    % SHOWGRAPHMODEL shows tree-based graph of given robot
+% SHOWGRAPHMODEL shows tree-based graph of given robot
+%
+% INPUT - ax - matlab axes
     if(nargin < 2)
         ax = gca;
     end
-    %close all;
     % init vector and to each index assing its parent
     treeVector=[];
     for joint=r.joints

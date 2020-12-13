@@ -11,7 +11,7 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
     options.MaxFunctionEvaluations=49999;    
     options.UseParallel=false;
     %options.SpecifyObjectiveGradient=true
-%     options.ScaleProblem='jacobian';
+    %options.ScaleProblem='jacobian';
     
     %% Chains
     chains.rightArm=0;

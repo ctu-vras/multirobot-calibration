@@ -41,10 +41,6 @@ h = quiver3(Origin1(1), Origin1(2), Origin1(3), z_axis_1(1) - Origin1(1), z_axis
 set(h, 'Color', 'b', 'LineWidth', width, 'MaxHeadSize', 4, 'ShowArrowHead', 'off')
 set(h, 'ShowArrowHead', 'on')
 
-%h = text(x_axis_1(1), x_axis_1(2), x_axis_1(3), strcat('x_{', num2str(num), '}'));
-%set(h, 'FontSize', 16)
-%h = text(y_axis_1(1), y_axis_1(2), y_axis_1(3), strcat('y_{', num2str(num), '}'));
-%set(h, 'FontSize', 16)
 
 % we put the labels at 1/3 of the z-axis
 label_x = Origin1(1) + (z_axis_1(1) - Origin1(1))/3;
@@ -60,7 +56,6 @@ if (showText)
                 h = text(label_x, label_y, label_z, strcat(' (frame ', num2str(num-1), ')'));
             end
         elseif nargin>=6
-            % varargin{2} == body_part.name'
                 h = text(label_x, label_y, label_z, strcat(varargin{2},' (frame ', num2str(num-1), ')'));
         end
     else

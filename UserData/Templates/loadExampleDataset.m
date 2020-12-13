@@ -6,8 +6,8 @@ function datasets = loadExampleDataset(rob,optim, chains, varargin)
 %       - chains - structure containing which chains will be calibrated
 %       (not used here)
 %       - varargin - cellarray of arguments - {'LREye', 'LEye', 'REye', ''}
-%   OUTPUT - datasets - 1x4 ([self-touch, planes, external, projection]) 
-%                       cell array of cell arrays (1xN) of datasets
+%   OUTPUT - datasets - struct of cell arrays, fieldnames corresponds to
+%                       approaches
     
     if(~isempty(varargin))
        chain = varargin{1}{1}; 

@@ -1,8 +1,6 @@
 function plotJacobian(folder, titles)
 %PLOTJACOBIAN Function for plotting jacobians
-%INPUT - robot - Robot object
-%      - whitelist - whitelist structure to gain the parameters names
-%      - jacobians - cell array of jacobians
+%INPUT - folder - folder with results
 %      - titles - subplot titles
     info = load(['Results/',folder,'/info']);
     jac = load(['Results/',folder,'/jacobians']);

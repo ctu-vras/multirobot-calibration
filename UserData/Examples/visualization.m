@@ -109,13 +109,14 @@ activationsView(rob,{datasets_out.selftouch{:}})
 
 %%
 % For Nao robot it allows to show skin and info about activations
-folder = 'NAOOO';
+folder = 'bl';
 load(strcat('Results/',folder, '/info'));
 load(strcat('Results/',folder, '/results.mat'));
 % rob=Robot('loadNAO');
-rob.structure.DH = res_dh;
-dataset_params ={'rightArm_torso', 'leftArm_torso', 'rightArm_head', 'leftArm_head'};
-[~,~,datasets] = rob.prepareDataset(optim, chains, approaches, dataset_fcn,dataset_params);
+% rob.structure.DH = res_dh;
+% dataset_params ={'rightArm_torso', 'leftArm_torso', 'rightArm_head', 'leftArm_head'};
+loadDHfromMat(rob, 'bl', 'type', 'min');
+[~,~,datasets] = rob.prepareDataset(optim, chains, approach, dataset_fcn,dataset_params);
 activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
 
 
