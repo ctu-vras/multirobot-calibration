@@ -6,7 +6,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     options.Display = 'iter';
     options.TolFun = 1e-12; %If problem does not converge, set lower values (and vice-versa)
     options.TolX = 1e-18;
-    options.MaxIter = 200; %Set higher value if problem does not converge (but too big value can results in overfitting)
+    options.MaxIter = 50; %Set higher value if problem does not converge (but too big value can results in overfitting)
     options.InitDamping = 1000;
     options.MaxFunctionEvaluations=49999;    
     options.UseParallel=false; % set to use parallel computing on more cores
@@ -62,7 +62,7 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     
     %% Calibration settings
     optim.bounds=0; % set to use bounds
-    optim.repetitions=1; % number of training repetitions
+    optim.repetitions=10; % number of training repetitions
     optim.pert=[0,0,0]; % elements correspond to fields in 'pert', vector can have any length depending on fields in 'pert'
     optim.distribution = 'uniform'; % or 'normal'
     optim.units = 'm'; % 'm' or 'mm' 

@@ -165,7 +165,7 @@ function [name, jointStructure, structure]=loadNAOF3D()
 %     structure.DH.rightArmSkin=zeros(size(hands_upper,2)+size(hands_lower,2)+3+indexes(3),6);
     
     %% robot default joint position (e.g. home position) for visualisation    
-    structure.defaultJoints = {zeros(1,6), zeros(1,6), zeros(1,3), 0, 0};
+    structure.defaultJoints = {zeros(1,6), zeros(1,6), zeros(1,3)};
     
     %% Bounds
     structure.bounds.joint=[inf, inf, inf, inf, inf, inf];

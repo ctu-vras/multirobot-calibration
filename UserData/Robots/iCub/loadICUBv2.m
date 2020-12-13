@@ -126,21 +126,21 @@ function [ name, jointStructure, structure ] = loadICUBv2()
     structure.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0]; 
                    
-    structure.DH.leftLeg=[0, 0.0681, -0.1199, -1.5708, 0, 0;
-                           0, 0, -pi/2, pi/2, nan, nan;
-                           0, 0, -pi/2, pi/2, nan, nan;
-                           0, -0.2236, pi/2, -pi/2, nan, nan;
-                           -0.213, 0, pi, pi/2, nan, nan;
-                           0, 0, -pi/2, 0, nan, nan;
-                           -0.041, 0, 0, 0, nan, nan];
-
-    structure.DH.rightLeg=[0, -0.0681, -0.1199, -1.5708, 0, 0;
-                            0, 0, pi/2, pi/2, nan, nan;
-                            0, 0, pi/2, pi/2, nan, nan;
-                            0, 0.2236, -pi/2, -pi/2, nan, nan;
-                            -0.213, 0, pi, pi/2, nan, nan;
-                            0, 0, pi/2, 0, nan, nan;
-                            -0.041, 0, pi, 0, nan,nan];
+%     structure.DH.leftLeg=[0, 0.0681, -0.1199, -1.5708, 0, 0;
+%                            0, 0, -pi/2, pi/2, nan, nan;
+%                            0, 0, -pi/2, pi/2, nan, nan;
+%                            0, -0.2236, pi/2, -pi/2, nan, nan;
+%                            -0.213, 0, pi, pi/2, nan, nan;
+%                            0, 0, -pi/2, 0, nan, nan;
+%                            -0.041, 0, 0, 0, nan, nan];
+% 
+%     structure.DH.rightLeg=[0, -0.0681, -0.1199, -1.5708, 0, 0;
+%                             0, 0, pi/2, pi/2, nan, nan;
+%                             0, 0, pi/2, pi/2, nan, nan;
+%                             0, 0.2236, -pi/2, -pi/2, nan, nan;
+%                             -0.213, 0, pi, pi/2, nan, nan;
+%                             0, 0, pi/2, 0, nan, nan;
+%                             -0.041, 0, pi, 0, nan,nan];
     structure.DH.leftThumb=[0, 0, pi/2, 0;
                                    0.021, -0.0056, 0, 0;
                                    0.026, 0, 0, 0;
@@ -248,7 +248,8 @@ function [ name, jointStructure, structure ] = loadICUBv2()
                            0, 0, 0, 0];
      
     %% robot default joint position (e.g. home position) for visualisation    
-    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4), zeros(1,7), zeros(1,7), zeros(1,2), zeros(1,2)};
+    %zeros(1,7), zeros(1,7),
+    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4),  zeros(1,2), zeros(1,2)};
     
     %% robot bounds for DH parameters
     structure.bounds.joint = [inf inf inf inf];

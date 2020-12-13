@@ -22,7 +22,7 @@ function plotErrorsHistogram(folder,varargin)
     addRequired(p,'folders');
     addParameter(p,'pert',0);
     addParameter(p,'units','mm', @(x) any(validatestring(x,{'m','mm'})));
-    addParameter(p,'location','northwest');
+    addParameter(p,'location','northeast');
     parse(p,folder,varargin{:});
     
     % get values from parser

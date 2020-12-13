@@ -25,10 +25,10 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
     datasets.projection = {};
     DEG2RAD = pi/180;
     % all possible robot fingers
-    fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'}; 
-    for finger=fingers
-        matrices.(finger{1})=dhpars2tfmat(robot.structure.DH.(finger{1})); 
-    end
+    %fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'}; 
+    %for finger=fingers
+    %    matrices.(finger{1})=dhpars2tfmat(robot.structure.DH.(finger{1})); 
+    %end
     for k = 1:nmb_of_files
         dataset.cameras = [];
         f = strsplit(source_files{k}, '.');
@@ -78,9 +78,9 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
                 dhhead(:,end)=dhhead(:,end)+dataset.joints(i).head';
                 mat.head = dhpars2tfmat(dhhead);
             end
-            for finger=fingers
-                mat.(finger{1})=matrices.(finger{1}); 
-            end
+            %for finger=fingers
+            %    mat.(finger{1})=matrices.(finger{1}); 
+            %end
             dataset.rtMat(i) = mat;
         end
         dataset.rtMat = reshape(dataset.rtMat, size(data2,1),1);

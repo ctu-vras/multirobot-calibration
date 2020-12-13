@@ -19,7 +19,7 @@ function plotErrorBars(folders,varargin)
     addParameter(p,'pert',0);
     addParameter(p,'log',1);
     addParameter(p,'units','mm', @(x) any(validatestring(x,{'m','mm'})));
-    addParameter(p,'location','northwest');
+    addParameter(p,'location','northeast');
     addParameter(p,'type','minmax');
     addParameter(p, 'title', 'RMS errors');
     addParameter(p, 'train', 0)

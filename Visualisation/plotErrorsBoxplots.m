@@ -24,7 +24,7 @@ function plotErrorsBoxplots(folders,varargin)
     addParameter(p,'log',0);
     addParameter(p,'units','mm', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'errorsType','errors');
-    addParameter(p,'location','northwest');
+    addParameter(p,'location','northeast');
     addParameter(p, 'points', 0);
     addParameter(p, 'train', 0);
     parse(p,folders,varargin{:});
