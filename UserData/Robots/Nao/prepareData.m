@@ -5,6 +5,10 @@ function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt, ch
 %         - chain1, chain2 - strings with the names of the chains
 %         - DH - structure with 'groups' as fields
 %   OUTPUT - taxelStruct - structure with fields for each taxel
+for fname=fieldnames(DH)'
+    DH.(fname{1})(:,1:3) = DH.(fname{1})(:,1:3)*optim.unitsCoef;
+end
+
 
 rtMat=[];
 rtFields = [];
@@ -287,8 +291,8 @@ for i=1:size(datasetLocal.(iterateVar),1)
     dataset.(chain2).newTaxels{i}=newTaxels;
     
     % calculate cops and assigned them to dataset
-    cops1=findCop(dataset.(chain1).newTaxels{i},0.01); %10
-    cops2=findCop(dataset.(chain2).newTaxels{i},0.01); %10
+    cops1=findCop(dataset.(chain1).newTaxels{i},0.03*optim.unitsCoef); %10
+    cops2=findCop(dataset.(chain2).newTaxels{i},0.03*optim.unitsCoef); %10
     dataset.(chain1).cops{i}=cops1;
     dataset.(chain2).cops{i}=cops2;
     % find closest cops on the two chains
@@ -347,7 +351,7 @@ for i=1:size(dataset.(chain1).cop,2)
    %minDist reinit
    minDist=9999;
    %used to 'bound' how far can be the second taxel from COP
-   maxDistanceFromCop=5;
+   maxDistanceFromCop=0.005*optim.unitsCoef;
    minTaxel2=[];
    taxels=dataset.(chain2).newTaxels{i};
    cop=dataset.(chain2).cop{i};
@@ -364,7 +368,8 @@ for i=1:size(dataset.(chain1).cop,2)
 
    %If 'minDist' is lower than given number (could help to get rid of 'bad'
    %activations)
-   if minDist<0.005
+%    if minDist<0.002*optim.unitsCoef
+    if dataset.mins(i) < 0.01*optim.unitsCoef && minDist ~= 9999
        %Assign newData to the 'taxelStruct'
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxelId;minTaxel2Id];
        taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel=[taxelStruct.(strcat('s',num2str(taxelIdx))).secondTaxel;minTaxel2];
