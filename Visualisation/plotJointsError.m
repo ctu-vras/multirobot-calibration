@@ -65,5 +65,5 @@ function plotJointsError(robot, errors, dataset, group, plotTitle, skipIndexes)
     end
     axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
     text(0.45, 0.98, plotTitle, 'FontSize', 14)
-    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16)
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 12)
 end

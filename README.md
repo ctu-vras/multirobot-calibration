@@ -287,7 +287,6 @@ Folder with functions designed for repetitive tasks.
  - [getPlane.m](Utils/KinUtils/getPlane.m) - computes a plane fitted to set of given points using svd
  - [getPoints.m](Utils/KinUtils/getPoints.m) - computes points from forward kinematics
  - [getPointsIntern.m](Utils/KinUtils/getPointsIntern.m) - computes points from forward kinematics  
- - [getTF.m](Utils/KinUtils/getTF.m) - computes transformation from given joint to base 
  - [getTFIntern.m](Utils/KinUtils/getTFIntern.m) - computes transformation from given joint to base, needs additional parameters, it is used in calibration because of its higher speed
  - [getTFtoFrame.m](Utils/KinUtils/getTFtoFrame.m) - computes transformation from given joint to given joint  
  - [inversetf.m](Utils/KinUtils/inversetf.m) - inverse transformation matrix

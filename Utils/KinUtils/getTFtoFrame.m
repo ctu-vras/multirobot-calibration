@@ -5,7 +5,7 @@ function RTarm = getTFtoFrame(dh_pars,joint, joints, stopJoint)
 %       - joints - joint angles
 %       - stopJoint - at which joint the calculation will stop
 %OUTPUT - RT - transformation from the joint to stopJoint
-    if nargin<5
+    if nargin<4
        stopJoint = 'base';
     end
     if ~isfield(dh_pars,'torso')

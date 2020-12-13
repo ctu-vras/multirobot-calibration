@@ -1,55 +1,49 @@
 %% Examples of visualization
 % Its better to create some robot to add everything important to path
-rob = Robot('loadNAO');
-r
+rob = Robot('loadNAOF3D');
 %%
 % Most of the functions support optional arguments. To see the options try
 % to view the help for the function, e.g.
 help plotCorrections;
 
-%% NAO skin
-% Special function for NAO to show his skin with trinagles and taxels
-% numbers
-showNaoSkin();
-
 %% Corrections
 % To show corrections, you just need to provide folder with results
-folder = 'NAOOO';
+folder = 'nao-right-arm';
 plotCorrections(folder);
 
 %%
 % The function also supporst more arguments. For example, to use length in
 % mm
-folder = 'leica-comp';
+folder = 'nao-right-arm';
 plotCorrections(folder,'units','mm');
 
 %% Error boxplots
 % Boxplots of errors work very similar, but you can pass more than one
 % folder
-folder = 'plane-comp';
-folder2 = 'leica-comp';
+folder = 'nao-right-arm';
+folder2 = 'self-touch-motoman';
 plotErrorsBoxplots({folder,folder2});
 
 %%
 % Again, the function takes more optional arguments
 % E.g. to change location of the legend and use logaritmic scale
-folder = 'NAOOO';
-folder2 = 'NAO';
+folder = 'nao-right-arm';
+folder2 = 'self-touch-motoman';
 plotErrorsBoxplots({folder, folder2},'log',1,'location','northeast');
 
 
 %% Error bars
 % Errors can be also shown as bars
-folder = 'plane-comp';
-folder2 = 'leica-comp';
+folder = 'nao-right-arm';
+folder2 = 'self-touch-motoman';
 plotErrorBars({folder,folder2})
 
 %% Error Residuals
 % Shows residual errors using quiver plot
 % We need two set of points, which can be computed for example like this
 
-load('Results/NAO-rightArm/info'); %Load saved data
-load('Results/NAO-rightArm/datasets'); %Load saved data
+load('Results/nao-right-arm/info'); %Load saved data
+load('Results/nao-right-arm/datasets'); %Load saved data
 dataset = datasets_out.selftouch{1};
 extPoints=dataset.refPoints';
 robPoints = zeros(4, size(dataset.joints, 1));
@@ -66,7 +60,7 @@ plotErrorResiduals(extPoints, robPoints(1:3,:))
 % Function takes 2 datasets, where both of them are cellArray of structs
 close all
 folder = 'self-touch-motoman';
-% load(['Results/',folder,'/info']);
+load(['Results/',folder,'/info']);
 load(['Results/',folder,'/datasets']);
 % This example does not 'make sense', it just for demonstration of input.
 % Argument with 'rightArm' determines which chain to show.
@@ -75,7 +69,7 @@ plotJointDistribution(rob, {datasets_out.selftouch{1},datasets_out.projection{1}
 %%
 % Alternatively you can pass just one dataset
 close all
-folder = 'NAOOO';
+folder = 'nao-right-arm';
 load(['Results/',folder,'/info']);
 load(['Results/',folder,'/datasets']);
 % This example shows also title and legend settings
@@ -84,56 +78,53 @@ plotJointDistribution(rob, {datasets_out.selftouch{1}},[], 'rightArm', 'myFig', 
 %% Joint-error plot
 % shows mean errors for each joint value of given joints
 close all
-folder = 'leica-motoman';
+folder = 'self-touch-motoman';
 load(['Results/',folder,'/info']);
 load(['Results/',folder,'/errors']);
+load(['Results/',folder,'/datasets']);
 % errors must be for whole dataset (train + test together)
-plotJointsError(rob, [errorsAll{3}{1}, errorsAll{11}{1}], datasets.external, group.rightArm, 'Joint-error plot', [1,8])
+plotJointsError(rob, [errorsAll{1}{1}, errorsAll{9}{1}], datasets_out.selftouch, group.rightArm, 'Joint-error plot', [1,8])
 
 
-%% Projections
+%% Histogram
+% shows error for folder in histogram form
+folder = 'nao-right-arm';
+plotErrorsHistogram(folder);
 
 %% Jacobian
 % Shows Jacobians computed in each repetition of calibration. All the
 % mandatory arguments can be loaded from results
-folder = 'NAO-rightArm';
+folder = 'NAO-right-arm';
 plotJacobian(folder)
+
+%% Observability indexes
+% Shows observability indexes for given folder
+
+folder = 'nao-right-arm';
+plotObserIndexes(folder);
+
+%% Dataset points
+% Shows model of robot with all points from dataset
+
+folder = 'self-touch-motoman';
+load(['Results/',folder,'/info']);
+load(['Results/',folder,'/datasets']);
+plotDatasetPoints(rob, datasets_out);
+
 
 %% Moveable model
 % This model uses 'showModel' method of Robot and allows to change
 % activations by 'left' and 'right' arrow keys.
 % You need to have datasets from calibration, which can be easile loaded
-load('Results/NAOOO/info');
-load('Results/NAOOO/datasets');
+load('Results/self-touch-motoman/info');
+load('Results/self-touch-motoman/datasets');
 activationsView(rob,{datasets_out.selftouch{:}})
 
 %%
-% For Nao robot it allows to show skin and info about activations
-folder = 'bl';
+% For Nao (**only**) robot it allows to show skin and info about activations
+folder = 'nao-right-arm';
 load(strcat('Results/',folder, '/info'));
 load(strcat('Results/',folder, '/results.mat'));
-% rob=Robot('loadNAO');
-% rob.structure.DH = res_dh;
-% dataset_params ={'rightArm_torso', 'leftArm_torso', 'rightArm_head', 'leftArm_head'};
-loadDHfromMat(rob, 'bl', 'type', 'min');
+loadDHfromMat(rob, folder, 'type', 'min');
 [~,~,datasets] = rob.prepareDataset(optim, chains, approach, dataset_fcn,dataset_params);
 activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)
-
-
-%% Robots equipped with skin
-% Right now, the functions are developed for Nao and will probably not work
-% on any other robot
-
-%% Distances between taxels
-% Shows distribution of distances between taxels for each taxel or triangle
-folder = 'NAOOO';
-load(strcat('Results/',folder, '/info'));
-load(strcat('Results/',folder, '/results.mat'));
-rob.structure.DH = res_dh;
-rob.structure.matrices = rob.structure.matricesBack;
-getTaxelDistances(rob,dataset_params)
-
-%% Activated taxels
-% Shows activated taxels in the dataset
-load('Results/NAO-rightArm/info');
-visualizeActivatedTaxels(dataset_params)

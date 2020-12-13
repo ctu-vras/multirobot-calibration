@@ -20,27 +20,20 @@ function [ arm1, arm2 ] = getPoints(robot, dh_pars, dataset, compute_arm2)
         arm2 = [];
     end
     if(~isempty(joints))
-        if (isempty(dataset.rtMat)) % if no precomputed matrices -> fill up the array with []
-            rtMats{size(joints,1)} = [];
-            rtFields = [];
-        else
-            rtMats = dataset.rtMat;
-            rtFields = fieldnames(rtMats(1));
-        end
         for i = 1:size(joints, 1)      
             if (isobject(frames{i}))
-                arm1(:,i) =  getTF(dh_pars,frames{i},rtMats(i), joints(i)) *[points(i,1:3),1]';
+                arm1(:,i) =  getTFtoFrame(dh_pars,frames{i},joints(i)) *[points(i,1:3),1]';
             else
                 f=robot.findJoint(frames{i});
-                arm1(:,i) =  getTF(dh_pars,f{1},rtMats(i), joints(i)) *[points(i,1:3),1]';
+                arm1(:,i) =  getTFtoFrame(dh_pars,f{1},joints(i)) *[points(i,1:3),1]';
             end
             
             if compute_arm2
                 if (isobject(frames2{i}))
-                    arm2(:,i) =  getTF(dh_pars,frames2{i},rtMats(i), joints(i)) *[points(i,4:6),1]';
+                    arm2(:,i) =  getTFtoFrame(dh_pars,frames2{i}, joints(i)) *[points(i,4:6),1]';
                 else
                     f=robot.findJoint(frames2{i});
-                    arm2(:,i) =  getTF(dh_pars,f{1},rtMats(i), joints(i)) *[points(i,4:6),1]';
+                    arm2(:,i) =  getTFtoFrame(dh_pars,f{1}, joints(i)) *[points(i,4:6),1]';
                 end
             end
             
