@@ -36,14 +36,14 @@ classdef Robot < handle
     
     methods
         %% Constructor
-        function obj = Robot(name)
+        function obj = Robot(funcname)
             % Constructor of robot creates the robot from loading function
             %   name...string name of loading function for given robot
             if nargin==1
                 % add all framework to path
                 addpath(genpath(pwd));
                 % call loading function
-                func=str2func(name);
+                func=str2func(funcname);
                 [name, jointsStructure, structure]=func();
                 joints=cell(size(jointsStructure,2));
                 % Create Joints from Robot.structure
@@ -160,13 +160,13 @@ classdef Robot < handle
 
         %get all fieldnames
         fnames=fieldnames(robot.structure.(tableType));
-        for name=1:length(fnames)
+        for fname=1:length(fnames)
             %Get right table
-            table=robot.structure.(tableType).(fnames{name});
+            table=robot.structure.(tableType).(fnames{fname});
             %disp group name
-            fprintf('%s\n',(fnames{name}));
+            fprintf('%s\n',(fnames{fname}));
             %find all joints in given group
-            joints=robot.findJointByGroup(fnames{name});
+            joints=robot.findJointByGroup(fnames{fname});
             %print in given format
             for j=1:size(table,1)
                 fprintf('%-5.2f %-5.2f %-5.2f %-5.2f %-s\n',table(j,:),joints{j}.name);
@@ -174,12 +174,45 @@ classdef Robot < handle
         end
 
         end
-                 
-        %% Show Matlab model
-        fig = showModel(robot, varargin);
         
         %% Show graph model
-        showGraphModel(robot, ax);
+        function showGraphModel(r, ax)
+        % SHOWGRAPHMODEL shows tree-based graph of given robot
+        %
+        % INPUT - ax - matlab axes
+            if(nargin < 2)
+                ax = gca;
+            end
+            % init vector and to each index assing its parent
+            treeVec=zeros(length(r.joints),1);
+            count = 1;
+            for joint=r.joints
+               if ~isnan(joint{1}.parentId)  %parent of root is 0
+                   treeVec(count)=joint{1}.parentId; %from Joint.parent
+               end
+               count = count + 1;
+            end
+            %Disp tree
+            [x,y,~]=treelayout(treeVec);
+            X = [x(2:end); x(treeVec(2:end))];
+            Y = [y(2:end); y(treeVec(2:end))];
+            plot (ax,x, y, 'ro', X, Y, 'r-');
+
+            % Add names of each node
+            for i=1:length(x)
+                if ~strcmp(r.joints{i}.type,types.triangle) && ~strcmp(r.joints{i}.type,types.taxel) ...
+                        && ~strcmp(r.joints{i}.group, group.leftMarkers) && ~strcmp(r.joints{i}.group, group.rightMarkers) %do not display for triangles, because there are too many of them
+                    text(ax,x(i)+0.015,y(i),r.joints{i}.name);
+                end
+            end
+            title(ax,sprintf('Structure of %s robot',r.name))
+            xticks(ax,[])
+            yticks(ax,[])
+            set(findall(ax, '-property', 'FontSize'), 'FontSize', 16)
+        end
+        
+        %% Show Matlab model
+        fig = showModel(robot, varargin);
         
         %% Prepare DH, bounds and perts
         [init, lb, ub]=prepareDH(robot, pert, optim, funcname);
