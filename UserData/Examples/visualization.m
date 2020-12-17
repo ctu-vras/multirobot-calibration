@@ -1,6 +1,6 @@
 %% Examples of visualization
 % Its better to create some robot to add everything important to path
-rob = Robot('loadNAOF3D');
+rob = Robot('loadNAO');
 %%
 % Most of the functions support optional arguments. To see the options try
 % to view the help for the function, e.g.

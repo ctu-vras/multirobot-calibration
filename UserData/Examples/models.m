@@ -4,7 +4,7 @@
 
 %%
 % One possibility is to create a new one
-rob=Robot('loadNAOF3D');
+rob=Robot('loadNAO');
 %%
 % Or you can load robot from results
 load('Results/nao-right-arm/info.mat');
