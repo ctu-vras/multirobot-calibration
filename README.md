@@ -106,14 +106,14 @@ All of the datasets must be a Matlab structure with these fields (some of them m
  - point - Each value represent point in 3D space(x,y,z) and the field can be:
    - Nx3 array of doubles
    - Nx6 array of doubles, when two points are used (x1,y1,z1,x2,y2,z2)  
-   - Nx2/4 array if doubles, when one/two cameras are used (u1,v1,u2,v2)  
+   - Nx(Mx2) array of doubles, when M cameras are used (u1,v1,..,um,vm)  
  - frame - Nx1 array of strings, where each value is name of the joint from which the TF matrix will be computed	
  - frame2 (voluntary) - Nx1 array of strings, where each value is name of the joint from which the TF matrix for second point will be computed
  - joints - Nx1 array of structures, where each structure include joint angles for each group
    - each field of the inner structure is 1xM array of doubles
    - e.g. joints(1).leftArm=[...], joints(1).rightArmSkin=[...]
  - refPoints (voluntary) - Nx3 array of doubles, where each line represents point in 3D (x,y,z, which will be used as reference to point computed from optimized values
-   - can be also Nx2 if cameras are used 
+   - can be also Nx(Mx2) if cameras are used 
    - used for example in self-touch, when we calculate position of the finger, but we know where the finger was supposed to touch
  - rtMat (voluntary) - Nx1 array of structures, where each structure include RT matrices for each group
    - not all group must be included
