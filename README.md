@@ -1,5 +1,5 @@
-# Multi-chain calibration  
-This toolbox provides a solution to the calibration of a general robot by combining multiple calibration [approaches](#calibration-approaches). The toolbox also offers user-friendly GUI, which makes calibration of robots accessible even for the general public. 
+# Multisensorial robot calibration framework and toolbox 
+This toolbox provides a solution to the multi-chain calibration of a general robot by combining multiple calibration approaches. Users can define an arbitrary robot, choose calibration approach, set parameters of the optimization solver and the calibration. The results can be saved for later use and evaluated with a variety of prepared visualizations. Also, a user-friendly GUI is available, which makes the calibration of robots accessible even for the general public. 
 
 ![pipeline](overview.png)
 
