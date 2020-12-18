@@ -90,7 +90,7 @@ Found in the [Joint](Utils/KinUtils/Joint.m).
 
 # Datasets
 
-All of the datasets must be structure with these fields (some of them may be voluntary):
+All of the datasets must be a Matlab structure with these fields (some of them may be voluntary):
 (unless otherwise stated, all fields have N rows, where N represent number of training/testing values)
 
  - point - Each value represent point in 3D space(x,y,z) and the field can be:
@@ -109,7 +109,16 @@ All of the datasets must be structure with these fields (some of them may be vol
    - e.g. rmMat(1).leftArm=4x4 array
  - cameras (voluntary) - NxM array of [0,1], where M is number of cameras mounted directly on the robot and value 1 means the camera has the information about the pose
  - pose - Nx1 array of any (almost) type, used to assigning points from one 'pose'
-   - e.g. when camera has more photos of one touch 
+   - e.g. when camera has more photos of one touch  
+ - refDist (voluntary) - float, reference distance from the contact point
+
+Each approach contain different fields:  
+
+ - self-contact - pose, joints, frame, frame2, point, refPoints (optional), and refDist (optional)  
+ - planar - pose, joints, frame, points  
+ - self-observation - pose, joints, frame, points, cameras, refPoints  
+ - external device - pose, joints, frame, points, refPoints
+
 
 You can take an inspiration from existing functions [loadExampleDataset.m](UserData/Templates/loadExampleDataset.m) [loadDatasetNao.m](UserData/Robots/Nao/loadDatasetNao.m), [loadDatasetMotoman.m](UserData/Robots/Motoman/loadDatasetMotoman.m), [loadDatasetICub.m](UserData/Robots/iCub/loadDatasetICub.m) and existing dataset mat-file [multirobot_leica_dataset.mat](UserData/Robots/Motoman/multirobot_leica_dataset.mat) . 
 
