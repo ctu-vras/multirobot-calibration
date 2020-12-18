@@ -13,7 +13,7 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
     options = config.options;
     chains = config.chains;
     approach = config.approach;
-    jointTypes = config.jointTypes;
+    linkTypes = config.linkTypes;
     optim = config.optim;
     
     parsCount = size(whpars.start_pars, 1);
@@ -53,7 +53,7 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
 
             tr_datasets = getDatasetPart(data.datasets, data.training_set_indexes{rep});
             for field = 1:length(fnames)
-               dh.(fnames{field}) = start_dh.(fnames{field})(:,:, rep, pert_level);
+               kinematics.(fnames{field}) = start_dh.(fnames{field})(:,:, rep, pert_level);
             end
             % objective function setup
             if(optim.optimizeDifferences)
@@ -63,7 +63,7 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
             end
             initialParamValues = [];
             if optim.optimizeInitialGuess && (approach.planes || approach.external) 
-                [params, typicalX]=initialGuess(tr_datasets, dh, approach, optim);
+                [params, typicalX]=initialGuess(tr_datasets, kinematics, approach, optim);
                 options.TypicalX(end-length(params)+1:end) = typicalX;
                 if(optim.optimizeDifferences)
                     initialParamValues = params;
@@ -73,7 +73,7 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
                 ext_pars_init(:, rep, pert_level) = params;
             end
 
-            obj_func = @(pars)errors_fcn(pars, dh, rob, whitelist, tr_datasets, optim, approach, initialParamValues);
+            obj_func = @(pars)errors_fcn(pars, kinematics, rob, whitelist, tr_datasets, optim, approach, initialParamValues);
             sprintf('%f percent done', 100*((pert_level-1-optim.skipNoPert)*optim.repetitions + rep - 1)/((optim.pert_levels-optim.skipNoPert)*optim.repetitions))
             % optimization        
             [opt_result, calibOut.resnorms{1,rep, pert_level}, calibOut.residuals{1,rep, pert_level},...
@@ -86,7 +86,7 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
         end
     end
     %% evaluation
-    [res_dh, corrs_dh, start_dh] = getResultDH(rob, opt_pars, start_dh, whitelist, optim);
+    [res_dh, corrs_dh, start_dh] = getResultKinematics(rob, opt_pars, start_dh, whitelist, optim);
     
     errors = nan(16,optim.repetitions * optim.pert_levels);    
     errorsAll = cell(16,1);
@@ -96,17 +96,17 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
     [errors(13:16,:), errorsAll(13:16)] = rmsErrors(res_dh, rob, data.datasets, data.testing_set_indexes, optim, approach); % after calib on testing data
 
     %% unpad all variables to default state
-    res_dh = unpadVectors(res_dh, rob.structure.DH, rob.structure.type);
-    start_dh = unpadVectors(start_dh, rob.structure.DH, rob.structure.type);
-    whitelist = unpadVectors(whitelist, rob.structure.DH, rob.structure.type);
-    corrs_dh = unpadVectors(corrs_dh, rob.structure.DH, rob.structure.type);
-    rob.structure.DH = unpadVectors(rob.structure.DH, rob.structure.DH, rob.structure.type);
-    rob.structure.defaultDH = unpadVectors(rob.structure.defaultDH, rob.structure.defaultDH, rob.structure.type);
+    res_dh = unpadVectors(res_dh, rob.structure.kinematics, rob.structure.type);
+    start_dh = unpadVectors(start_dh, rob.structure.kinematics, rob.structure.type);
+    whitelist = unpadVectors(whitelist, rob.structure.kinematics, rob.structure.type);
+    corrs_dh = unpadVectors(corrs_dh, rob.structure.kinematics, rob.structure.type);
+    rob.structure.kinematics = unpadVectors(rob.structure.kinematics, rob.structure.kinematics, rob.structure.type);
+    rob.structure.defaultKinematics = unpadVectors(rob.structure.defaultKinematics, rob.structure.defaultKinematics, rob.structure.type);
     %% saving results
     outfolder = ['Results/', folder, '/'];
     ext_pars_result = opt_pars(size(whpars.start_pars,1)+1:end,:,:);
     
-    saveResults(rob, outfolder, res_dh, corrs_dh, errors, errorsAll, whitelist, chains, approach, jointTypes, optim, options, obsIndexes, saveData.robot_fcn, saveData.dataset_fcn, saveData.config_fcn, saveData.dataset_params);
+    saveResults(rob, outfolder, res_dh, corrs_dh, errors, errorsAll, whitelist, chains, approach, linkTypes, optim, options, obsIndexes, saveData.robot_fcn, saveData.dataset_fcn, saveData.config_fcn, saveData.dataset_params);
     
     if saveInfo(1)
         vars_to_save = {'start_dh', 'pert', ...

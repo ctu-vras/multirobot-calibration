@@ -18,7 +18,7 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
     % default selection of datasets groups
     used_datasets = [1,1,1,1,0]; 
     % check if robot has Leica end effector
-    if(isempty(rob.findJoint('LR1')))
+    if(isempty(rob.findLink('LR1')))
          % parts of individual groups of dataset (indexes to source_files array)
         indexes = {1:8, 9:12, 13:16, 17:20};
         isLeica = false;
@@ -158,28 +158,28 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
                 preMatrixLeftEye = zeros(4,4,length(index_pose));
                 if (chains.leftArm == 0)
                     for j = 1:length(index_pose)
-                        dh=rob.structure.DH.leftArm;
+                        dh=rob.structure.kinematics.leftArm;
                         dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).leftArm';
                         preMatrixLeft(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
                 end
                 if (chains.rightArm == 0)
                     for j = 1:length(index_pose)
-                        dh=rob.structure.DH.rightArm;
+                        dh=rob.structure.kinematics.rightArm;
                         dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).rightArm';
                         preMatrixRight(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
                 end
                 if (chains.rightEye == 0)
                     for j = 1:length(index_pose)
-                        dh=rob.structure.DH.rightEye;
+                        dh=rob.structure.kinematics.rightEye;
                         dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).rightEye';
                         preMatrixRightEye(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
                 end            
                 if (chains.leftEye == 0)
                     for j = 1:length(index_pose)
-                        dh=rob.structure.DH.leftEye;
+                        dh=rob.structure.kinematics.leftEye;
                         dh(:,end)=dh(:,end)+ dataset.joints(index_pose(j)).leftEye';
                         preMatrixLeftEye(:,:,dataset.pose(index_pose(j))) = dhpars2tfmat(dh);
                     end
@@ -187,10 +187,10 @@ function datasets = loadDatasetMotoman(rob,optim, chains, varargin )
                   
                 %% assign corresponding tf matrices to each pose
                 for j = length(dataset.pose):-1:1
-                    matrices.rightMarkers = [rotVector2rotMatrix(rob.structure.DH.rightMarkers(projData(j,2), 4:6)), ...
-                        rob.structure.DH.rightMarkers(projData(j,2), 1:3)'; 0 0 0 1]; %rob.structure.rightMarkers(:,:,projData(j,2));
-                    matrices.leftMarkers = [rotVector2rotMatrix(rob.structure.DH.leftMarkers(projData(j,2), 4:6)), ...
-                        rob.structure.DH.leftMarkers(projData(j,2), 1:3)'; 0 0 0 1]; % rob.structure.leftMarkers(:,:,projData(j,2));
+                    matrices.rightMarkers = [rotVector2rotMatrix(rob.structure.kinematics.rightMarkers(projData(j,2), 4:6)), ...
+                        rob.structure.kinematics.rightMarkers(projData(j,2), 1:3)'; 0 0 0 1]; %rob.structure.rightMarkers(:,:,projData(j,2));
+                    matrices.leftMarkers = [rotVector2rotMatrix(rob.structure.kinematics.leftMarkers(projData(j,2), 4:6)), ...
+                        rob.structure.kinematics.leftMarkers(projData(j,2), 1:3)'; 0 0 0 1]; % rob.structure.leftMarkers(:,:,projData(j,2));
                     matrices.torso = eye(4);
                     if(chains.leftArm == 0)
                         matrices.leftArm = preMatrixLeft(:,:,dataset.pose(j));

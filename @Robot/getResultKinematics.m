@@ -1,21 +1,21 @@
-function [results, corrs, start_dh] = getResultDH(robot, opt_pars, start_dh, whitelist, optim)
-%GETRESULTDH - Returns final DH parameters and correction of each run
+function [results, corrs, start_dh] = getResultKinematics(robot, opt_pars, start_dh, whitelist, optim)
+%GETRESULTKINEMATICS - Returns final kinematics parameters and correction of each run
 %   INPUT - opt_pars - 1xN vector of optimized parameters
-%         - start_dh - structure of DH parameters used in calibration;
+%         - start_dh - structure of kinematics parameters used in calibration;
 %                      fields are names of 'groups', and each is 4D array
 %         - whitelist - structure of whitelist; 
 %                       fields are names of 'groups', and each is 4D array
 %         - optim - optim - structure of calibration settings
-%   OUTPUT - results - structure of result DH, with optimized parameteres,
+%   OUTPUT - results - structure of result kinematics, with optimized parameteres,
 %                      wrapped to [-pi,pi]; field corresponds to 'groups'
 %                      used in robot and each one is 4D array:
-%                       - number of DH lines
-%                       - 4 params for each line
+%                       - number of kinematics lines
+%                       - 4/6 params for each line
 %                       - number of repetitions
 %                       - number of perturation levels (1 for no pert)
-%          - corrs - corrections from nominal DH 
+%          - corrs - corrections from nominal kinematics 
 %          - start_dh -  structure with all 'groups' used in the robot. Each
-%                        field is 4D array with DH parameters of given group
+%                        field is 4D array with kinematics parameters of given group
 %                        for each repetition and perturation range
 %
 %
@@ -45,8 +45,8 @@ function [results, corrs, start_dh] = getResultDH(robot, opt_pars, start_dh, whi
         mResults = results.(fnames{field});
         % corrections = results - default 
         corrs.(fnames{field}) = zeros(size(mResults));
-        corrs.(fnames{field})(:,1:3,:,:) = mResults(:,1:3,:,:)/optim.unitsCoef-robot.structure.DH.(fnames{field})(:,1:3,1); 
-        corrs.(fnames{field})(:,4:6,:,:) = mResults(:,4:6,:,:)-robot.structure.DH.(fnames{field})(:,4:6,1);
+        corrs.(fnames{field})(:,1:3,:,:) = mResults(:,1:3,:,:)/optim.unitsCoef-robot.structure.kinematics.(fnames{field})(:,1:3,1); 
+        corrs.(fnames{field})(:,4:6,:,:) = mResults(:,4:6,:,:)-robot.structure.kinematics.(fnames{field})(:,4:6,1);
         % wrap to [-pi,pi]
         corrs.(fnames{field})(:,4:6,:,:)=ezwraptopi(corrs.(fnames{field})(:,4:6,:,:));
         start_dh.(fnames{field})(:,1:3,:,:) = start_dh.(fnames{field})(:,1:3,:,:)/optim.unitsCoef;

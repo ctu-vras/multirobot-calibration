@@ -1,6 +1,6 @@
 function [ arm1, arm2 ] = getPoints(robot, dh_pars, dataset, compute_arm2)
 %GETPOINTS Compute points coordinates to base.
-%INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
+%INPUT - dh_pars - structure with kinematics parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is matrix.
 %      - dataset - dataset structure in common format
 %      - compute_arm2 - whether compute second end effector or use
@@ -24,7 +24,7 @@ function [ arm1, arm2 ] = getPoints(robot, dh_pars, dataset, compute_arm2)
             if (isobject(frames{i}))
                 arm1(:,i) =  getTFtoFrame(dh_pars,frames{i},joints(i)) *[points(i,1:3),1]';
             else
-                f=robot.findJoint(frames{i});
+                f=robot.findLink(frames{i});
                 arm1(:,i) =  getTFtoFrame(dh_pars,f{1},joints(i)) *[points(i,1:3),1]';
             end
             
@@ -32,7 +32,7 @@ function [ arm1, arm2 ] = getPoints(robot, dh_pars, dataset, compute_arm2)
                 if (isobject(frames2{i}))
                     arm2(:,i) =  getTFtoFrame(dh_pars,frames2{i}, joints(i)) *[points(i,4:6),1]';
                 else
-                    f=robot.findJoint(frames2{i});
+                    f=robot.findLink(frames2{i});
                     arm2(:,i) =  getTFtoFrame(dh_pars,f{1}, joints(i)) *[points(i,4:6),1]';
                 end
             end

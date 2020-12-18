@@ -28,7 +28,7 @@ function activationsView(robot,datasets,varargin)
 end
 %% Fig show
 function showFig(robot,idx,dataset,parser)
-    fnames=fieldnames(robot.structure.DH);
+    fnames=fieldnames(robot.structure.kinematics);
     fnames(contains(fnames,'torso') | contains(fnames,'Skin') |...
       contains(fnames,'Middle')...
     | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers')...
@@ -39,7 +39,7 @@ function showFig(robot,idx,dataset,parser)
         if isfield(dataset.joints(idx),fnames{name}) 
             ang{name}=dataset.joints(idx).(fnames{name});
         else
-            ang{name}=zeros(1, size(robot.structure.DH.((fnames{name})),1));
+            ang{name}=zeros(1, size(robot.structure.kinematics.((fnames{name})),1));
         end
     end
     % check dataset name and add empty string if missing

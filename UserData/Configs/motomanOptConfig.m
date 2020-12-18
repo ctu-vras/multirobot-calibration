@@ -1,4 +1,4 @@
-function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(approaches, ~, ~)
+function [options, chains, approach, linkTypes, optim, pert]=motomanOptConfig(approaches, ~, ~)
     %% Solver options
     options = optimoptions('lsqnonlin');
     options.Algorithm = 'trust-region-reflective';
@@ -45,16 +45,15 @@ function [options, chains, approach, jointTypes, optim, pert]=motomanOptConfig(a
         approach.external=approach.external*10;
     end
     
-    %% Calibration joint types
-    jointTypes.onlyOffsets=0;
-    jointTypes.joint=0;
-    jointTypes.eye=0;
-    jointTypes.torso=0;
-    jointTypes.patch=0;
-    jointTypes.triangle=0;
-    jointTypes.mount=0;
-    jointTypes.finger=0;
-    jointTypes.taxel=0;
+    %% Calibration link types
+    linkTypes.onlyOffsets=0;
+    linkTypes.joint=0;
+    linkTypes.eye=0;
+    linkTypes.patch=0;
+    linkTypes.triangle=0;
+    linkTypes.mount=0;
+    linkTypes.finger=0;
+    linkTypes.taxel=0;
     
     %% Calibration settings
     optim.bounds=0;

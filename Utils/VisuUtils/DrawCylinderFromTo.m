@@ -21,7 +21,7 @@ end
 ljnt = norm(strtv-endv);
 rjnt = ratio * ljnt;
 
-z = ((endv+0.000000001)-strtv)/norm((endv+0.000000001)-strtv); %Little offset to draw links, which are on the same position on robot,but not in DH 
+z = ((endv+0.000000001)-strtv)/norm((endv+0.000000001)-strtv); %Little offset to draw links, which are on the same position on robot,but not in kinematics 
 
 if isnan(z)
 	HandleCyl = []

@@ -48,8 +48,8 @@ dataset = datasets_out.selftouch{1};
 extPoints=dataset.refPoints';
 robPoints = zeros(4, size(dataset.joints, 1));
 for i = 1:size(dataset.joints,1) % Transform all point to base frame
-    joint = rob.findJoint(dataset.frame{i});
-    robPoints(:,i) =  getTFtoFrame(rob.structure.defaultDH, joint{1}, dataset.joints(i)) *[dataset.point(i,1:3),1]';
+    link = rob.findLink(dataset.frame{i});
+    robPoints(:,i) =  getTFtoFrame(rob.structure.defaultKinematics, link{1}, dataset.joints(i)) *[dataset.point(i,1:3),1]';
 end
 % And the function itself can be called
 plotErrorResiduals(extPoints, robPoints(1:3,:))
@@ -125,6 +125,6 @@ activationsView(rob,{datasets_out.selftouch{:}})
 folder = 'nao-right-arm';
 load(strcat('Results/',folder, '/info'));
 load(strcat('Results/',folder, '/results.mat'));
-loadDHfromMat(rob, folder, 'type', 'min');
+loadKinfromMat(rob, folder, 'type', 'min');
 [~,~,datasets] = rob.prepareDataset(optim, chains, approach, dataset_fcn,dataset_params);
 activationsView(rob,{datasets.selftouch{:}},'info',1,'skin',1)

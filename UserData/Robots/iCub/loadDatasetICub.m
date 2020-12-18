@@ -27,7 +27,7 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
     % all possible robot fingers
     %fingers={'rightThumb','rightIndex','rightMiddle','leftThumb','leftIndex','leftMiddle'}; 
     %for finger=fingers
-    %    matrices.(finger{1})=dhpars2tfmat(robot.structure.DH.(finger{1})); 
+    %    matrices.(finger{1})=dhpars2tfmat(robot.structure.kinematics.(finger{1})); 
     %end
     for k = 1:nmb_of_files
         dataset.cameras = [];
@@ -52,29 +52,29 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
         
         % precompute rt matrices
         for i = size(data2,1):-1:1
-            mat.torso = getTFtoFrame(robot.structure.DH, robot.joints{4},  dataset.joints(i));
+            mat.torso = getTFtoFrame(robot.structure.kinematics, robot.links{4},  dataset.joints(i));
             if(chains.leftArm == 0)
-                dhleft=robot.structure.DH.leftArm;
+                dhleft=robot.structure.kinematics.leftArm;
                 dhleft(:,end)=dhleft(:,end)+dataset.joints(i).leftArm';
                 mat.leftArm = dhpars2tfmat(dhleft);
             end
             if(chains.rightArm == 0)
-                dhright=robot.structure.DH.rightArm;
+                dhright=robot.structure.kinematics.rightArm;
                 dhright(:,end)=dhright(:,end)+dataset.joints(i).rightArm';
                 mat.rightArm = dhpars2tfmat(dhright);
             end
             if(chains.leftEye == 0)
-                dhleft=robot.structure.DH.leftEye;
+                dhleft=robot.structure.kinematics.leftEye;
                 dhleft(:,end)=dhleft(:,end)+dataset.joints(i).leftEye';
                 mat.leftEye = dhpars2tfmat(dhleft);
             end
             if(chains.rightEye == 0)
-                dhright=robot.structure.DH.rightEye;
+                dhright=robot.structure.kinematics.rightEye;
                 dhright(:,end)=dhright(:,end)+dataset.joints(i).rightEye';
                 mat.rightEye = dhpars2tfmat(dhright);
             end
             if(chains.head == 0)
-                dhhead=robot.structure.DH.head;
+                dhhead=robot.structure.kinematics.head;
                 dhhead(:,end)=dhhead(:,end)+dataset.joints(i).head';
                 mat.head = dhpars2tfmat(dhhead);
             end
@@ -110,12 +110,12 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
             if(contains(chain, 'LEye') || contains(chain, 'LREye'))
                 dataset2.cameras(:,2) = 1;
             end
-            cam_frames = robot.findJointByType('eye');
-            dh_pars = robot.structure.defaultDH;
-            right_finger = robot.findJoint('rightHandFinger');
-            left_finger = robot.findJoint('leftHandFinger');
-            parents = struct('rightArm', robot.joints{3}, 'leftArm', robot.joints{3}, 'torso', robot.joints{1}, ...
-                'head', robot.joints{3}, 'leftEye', robot.joints{23}, 'rightEye', robot.joints{23});
+            cam_frames = robot.findLinkByType('eye');
+            dh_pars = robot.structure.defaultKinematics;
+            right_finger = robot.findLink('rightHandFinger');
+            left_finger = robot.findLink('leftHandFinger');
+            parents = struct('rightArm', robot.links{3}, 'leftArm', robot.links{3}, 'torso', robot.links{1}, ...
+                'head', robot.links{3}, 'leftEye', robot.links{23}, 'rightEye', robot.links{23});
             DHindexes.rightHandFinger = struct('rightArm', 1:8, 'torso', 1:2);
             DHindexes.leftHandFinger = struct('leftArm', 1:8, 'torso', 1:2);
             DHindexes.rightEyeVergence = struct('head', 1:4, 'torso', 1:2, 'rightEye', 1:2);

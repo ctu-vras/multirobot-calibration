@@ -11,7 +11,7 @@ function plotDatasetPoints(robot,datasets)
         fig = robot.showModel('showText', 0);
         set(0, 'CurrentFigure', fig);
         hold on;
-        [dh_pars, ~] = padVectors(robot.structure.DH);
+        [dh_pars, ~] = padVectors(robot.structure.kinematics);
         arm1 = getPoints(robot, dh_pars, dataset{1}, false);    
         scatter3(arm1(1,:), arm1(2,:), arm1(3,:), 'g', 'filled', 'MarkerEdgeColor', 'k');
     end

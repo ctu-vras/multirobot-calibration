@@ -11,32 +11,32 @@ function [RFFrame] = FwdKin(robot, str, coef, showText)
 %   OUTPUT - chain (struct) - the resulted chain with everything inside it. It's divided by body parts.
 
     %% MISC STUFF
-        ljnt  = 0.007*coef;               % joint pic length
-        rjnt  = 0.002*coef;               % joint pic radius
+        ljnt  = 0.007*coef;               % link pic length
+        rjnt  = 0.002*coef;               % link pic radius
         linkratio = 1/15;        % link dimension ratio
         linkTransparency = 0.2;
         LinkColor = str.LinkColor;
         refFrameSize = str.refFrameSize;
-        JntColor   = [.7 .7 .7];  % RGB color of the joints
+        JntColor   = [.7 .7 .7];  % RGB color of the links
 
 
     %% PARAMETERS
-        DH = str.DH;
-        link = str.link;
-        jointNames = str.jointNames;
+        kinematics = str.kinematics;
+        name = str.name;
+        linkNames = str.linkNames;
         theta = str.theta;
         refFrame = str.refFrame;
         H0 = eye(4);
-        [DH, types] = padVectors(DH);
+        [kinematics, types] = padVectors(kinematics);
         try
-            thetas = theta.(link)';
-            offs = DH.(link)(:,6);
+            thetas = theta.(name)';
+            offs = kinematics.(name)(:,6);
             thet = thetas + offs;
             theta.dummy = [0;0];
         catch ME
-            msg = ['Body part: ', link, '\nActual number of joint angles: ', ...
+            msg = ['Body part: ', name, '\nActual number of joint angles: ', ...
                 num2str(size(offs,1)), '\nNumber of joint angles inserted: ', ...
-                num2str(size(theta.(link),2)), '\nInserted joint angles: ', num2str(theta.(link))] ;
+                num2str(size(theta.(name),2)), '\nInserted joint angles: ', num2str(theta.(name))] ;
             causeException = MException('MATLAB:myCode:dimensions',msg);
             ME = addCause(ME,causeException);
             rethrow(ME);
@@ -45,34 +45,34 @@ function [RFFrame] = FwdKin(robot, str, coef, showText)
         
         
         %%% CHAIN
-        RFFrame  = cell(1,size(DH.(link)(:, 1), 1)+1);
-        cyl      = cell(1,size(DH.(link)(:, 1), 1)+1);
+        RFFrame  = cell(1,size(kinematics.(name)(:, 1), 1)+1);
+        cyl      = cell(1,size(kinematics.(name)(:, 1), 1)+1);
         RFFrame{1} = H0;
-        base = robot.findJointByType('base');
+        base = robot.findLinkByType('base');
         base = base{1}.name;
-        for i = size(DH.(link)(:, 1), 1):-1:1
-            if isempty(jointNames)
+        for i = size(kinematics.(name)(:, 1), 1):-1:1
+            if isempty(linkNames)
               RFFrame{i+1} = eye(4);
             else
-                joint = robot.findJoint(jointNames{i});
-                joint = joint{1};
+                link = robot.findLink(linkNames{i});
+                link = link{1};
                 % from root to i-th link
-                RFFrame{i+1} = getTFtoFrame(DH,joint, theta, base);
+                RFFrame{i+1} = getTFtoFrame(kinematics,link, theta, base);
             end
         end
         
-        if ~strcmp(link, 'torso')
-            joint = robot.findJoint(jointNames{1});
-            joint = joint{1}.parent;
-            if ~strcmp(joint.type, 'base')
-                RFFrame{1} = getTFtoFrame(DH,joint, theta, base);
+        if ~strcmp(name, 'torso')
+            link = robot.findLink(linkNames{1});
+            link = link{1}.parent;
+            if ~strcmp(link.type, 'base')
+                RFFrame{1} = getTFtoFrame(kinematics,link, theta, base);
             end
         end
                 
-        if str.naoSkin && any(ismember({'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'}, str.link))
+        if str.naoSkin && any(ismember({'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'}, str.name))
             points = zeros(length(RFFrame)-1,3);
             for point = 2:length(RFFrame)
-                if contains(jointNames{point-1}, 'Taxel')
+                if contains(linkNames{point-1}, 'Taxel')
                     p = RFFrame{point};
                     points(point, :) = [p(1, end), p(2, end), p(3, end)];
                 end
@@ -80,29 +80,29 @@ function [RFFrame] = FwdKin(robot, str, coef, showText)
             points(~any(points,2), :) = [];
             scatter3(points(:,1),points(:,2),points(:,3),str.SkinColor, 'filled', 'MarkerFaceAlpha', 0.7,'MarkerEdgeColor','k');
         else
-            % Draw the stuff (joints, ref frames, links)
+            % Draw the stuff (links, ref frames, links)
             for i = 1:length(RFFrame)
                 DrawCylinder(ljnt, rjnt, RFFrame{i} * [1 0 0 0; 0 1 0 0; 0 0 1 -ljnt/2; 0 0 0 1], JntColor, 100, 0.8);
             end
             if ~refFrame
-                DrawRefFrame(RFFrame{1},1,refFrameSize, showText, 'hat',link);
+                DrawRefFrame(RFFrame{1},1,refFrameSize, showText, 'hat',name);
                 if length(RFFrame) >=2
                     for i = 2:length(RFFrame)
-                        joint = robot.findJoint(jointNames{i-1});
-                        joint = joint{1};
-                        if any(contains(str.specialGroup, joint.group))
+                        link = robot.findLink(linkNames{i-1});
+                        link = link{1};
+                        if any(contains(str.specialGroup, link.group))
                             DrawRefFrame(RFFrame{i},i,refFrameSize,showText,'www');
                         else
-                            DrawRefFrame(RFFrame{i},i,refFrameSize,showText,'noh',jointNames{i-1});
+                            DrawRefFrame(RFFrame{i},i,refFrameSize,showText,'noh',linkNames{i-1});
                         end
                     end
                 end  
             end
             for i = 1:length(RFFrame)-1
-                if ~isempty(jointNames)
-                    joint = robot.findJoint(jointNames{i});
-                    joint = joint{1};
-                    gr=joint.group;
+                if ~isempty(linkNames)
+                    link = robot.findLink(linkNames{i});
+                    link = link{1};
+                    gr=link.group;
                 else
                     gr = '';
                 end

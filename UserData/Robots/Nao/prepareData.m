@@ -1,12 +1,12 @@
-function taxelStruct=prepareData(robot, datasetName, chain1, chain2, DH, alt, chains, optim)
+function taxelStruct=prepareData(robot, datasetName, chain1, chain2, kinematics, alt, chains, optim)
 % PREPAREDATA returns 'taxelStruct' with Nao dataset informations
 %   INPUT - robot - instance of @robot class
 %         - datasetName - string with name of the dataset
 %         - chain1, chain2 - strings with the names of the chains
-%         - DH - structure with 'groups' as fields
+%         - kinematics - structure with 'groups' as fields
 %   OUTPUT - taxelStruct - structure with fields for each taxel
-for fname=fieldnames(DH)'
-    DH.(fname{1})(:,1:3) = DH.(fname{1})(:,1:3)*optim.unitsCoef;
+for fname=fieldnames(kinematics)'
+    kinematics.(fname{1})(:,1:3) = kinematics.(fname{1})(:,1:3)*optim.unitsCoef;
 end
 
 
@@ -90,40 +90,40 @@ else
 end
 
 % Prepare instances of each frame to speed-up the computation
-chain1Joints=[];
-chain2Joints=[];
+chain1Links=[];
+chain2Links=[];
 
 for taxelId=0:383
     tri_num = fix(taxelId/12);
     taxel_num = mod(taxelId, 12);
     %Find frame from string, e.g. rightTaxel5
     if ~ismember(chain1, {'leftFinger', 'rightFinger'})
-        joint=robot.findJoint([name1,'Taxel',int2str(tri_num),'_',int2str(taxel_num)]);
+        link=robot.findLink([name1,'Taxel',int2str(tri_num),'_',int2str(taxel_num)]);
     else
-        joint=robot.findJoint([name1,'Finger']);
+        link=robot.findLink([name1,'Finger']);
     end
-    %Save it joint was found
-    if ~isempty(joint)
-        joint=joint{1};
-        chain1Joints=[chain1Joints;joint];
+    %Save it link was found
+    if ~isempty(link)
+        link=link{1};
+        chain1Links=[chain1Links;link];
     %Else save 'nan'...in case the triangle is not equipped on the robot
-    %it is non really 'nan' as matlab define the array as array of joints
-    %and when 'nan' is inserted, he insert empty 'joint'
+    %it is non really 'nan' as matlab define the array as array of links
+    %and when 'nan' is inserted, he insert empty 'link'
     else
-        chain1Joints=[chain1Joints;nan];
+        chain1Links=[chain1Links;nan];
     end
     
     if ~ismember(chain2, {'leftFinger', 'rightFinger'})
         %The same for second chain
-        joint=robot.findJoint([name2,'Taxel',int2str(tri_num),'_',int2str(taxel_num)]);
+        link=robot.findLink([name2,'Taxel',int2str(tri_num),'_',int2str(taxel_num)]);
     else
-        joint=robot.findJoint([name2,'Finger']);
+        link=robot.findLink([name2,'Finger']);
     end
-    if ~isempty(joint)
-        joint=joint{1};
-        chain2Joints=[chain2Joints;joint];
+    if ~isempty(link)
+        link=link{1};
+        chain2Links=[chain2Links;link];
     else
-        chain2Joints=[chain2Joints;nan];
+        chain2Links=[chain2Links;nan];
     end
 end
 
@@ -136,7 +136,7 @@ dataset.(chain1).cops=cell(1, size(datasetLocal.(iterateVar),1)); % 1xN cell arr
 dataset.(chain2).cops=cell(1, size(datasetLocal.(iterateVar),1));
 dataset.(chain1).cop=cell(1, size(datasetLocal.(iterateVar),1)); % 1xN cell array of points with selected cop (1x3 point)
 dataset.(chain2).cop=cell(1, size(datasetLocal.(iterateVar),1));
-dataset.angles=[]; % Nx1 structure of joint angles (field names are names of the groups)
+dataset.angles=[]; % Nx1 structure of Link angles (field names are names of the groups)
 dataset.mins=zeros(size(datasetLocal.(iterateVar),1), 1); % Nx1 array of double distances between selected cops
 dataset.difs=zeros(size(datasetLocal.(iterateVar),1), 3); % Nx3 array of double distances in each coordinate
 dataset.(chain1).newTaxelsNA=cell(1, size(datasetLocal.(iterateVar),1)); %1xN cell array of non-activated points (1x3 point)
@@ -190,22 +190,22 @@ for i=1:size(datasetLocal.(iterateVar),1)
     
       rtFields = [];
     for taxelId=0:383
-        % Get joint
-        joint=chain1Joints(taxelId+1);
+        % Get link
+        link=chain1Links(taxelId+1);
         % If parent is not empty == not 'nan'
-        if ~isempty(joint.parent)
+        if ~isempty(link.parent)
             % compute RT matrix
-            s=getIndexes(s,joint);
-            mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
+            s=getIndexes(s,link);
+            mat=getTFIntern(kinematics,link,rtMat,angles, s.DHindexes.(link.name),s.parents, rtFields, robot.structure.type);
             % transform all points for given frame
             points=mat*[chain1Original(taxelId+1, 1:3),1]';%.*1000
             % assign 1:3 component of the vectors
             chain1Points(taxelId+1, :)=points(1:3,:)';
         end
-        joint=chain2Joints(taxelId+1);
-        if ~isempty(joint.parent)
-            s=getIndexes(s,joint);
-            mat=getTFIntern(DH,joint,rtMat,angles, s.DHindexes.(joint.name),s.parents, rtFields, robot.structure.type);
+        link=chain2Links(taxelId+1);
+        if ~isempty(link.parent)
+            s=getIndexes(s,link);
+            mat=getTFIntern(kinematics,link,rtMat,angles, s.DHindexes.(link.name),s.parents, rtFields, robot.structure.type);
             points=mat*[chain2Original(taxelId+1, 1:3),1]';%.*1000
             chain2Points(taxelId+1, :)=points(1:3,:)';
         end
@@ -273,7 +273,7 @@ taxelStruct=struct();
 for i=1:384
     taxelStruct.(strcat('s',num2str(i))).secondTaxel=[]; %Selected taxel on second chain (1x3 double)
     taxelStruct.(strcat('s',num2str(i))).secondTaxelId=[]; %Id of the selected taxel (1 int)
-    taxelStruct.(strcat('s',num2str(i))).angles=[]; %structure of joints angles
+    taxelStruct.(strcat('s',num2str(i))).angles=[]; %structure of links angles
     taxelStruct.(strcat('s',num2str(i))).distances=[]; %distances of selected taxels
     taxelStruct.(strcat('s',num2str(i))).mins=[]; %cops distance
     taxelStruct.(strcat('s',num2str(i))).difs=[]; %cops distance in each coord

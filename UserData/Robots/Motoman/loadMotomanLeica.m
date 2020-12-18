@@ -1,19 +1,19 @@
-function [ name, jointStructure, structure ] = loadMotomanLeica()
+function [ name, linkStructure, structure ] = loadMotomanLeica()
 %LOADMOTOMANLEICA Motoman robot configuration function
 %   Custom function for Motoman robot configuration with leica end effector.
 % OUTPUT - name - robot name
-%        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
-%        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
+%        - links - cellarray of robot links (name, type, parent, DHindex, isEE, group)
+%        - structure - kinematics - table of kinematics parameters for each group (columns - a, d, alpha, offset)
 %                    - WL - logical array of whitelisted parameters for calibration 
 %                    - defaultJoints - stores robot default joint position
 %                    (e.g. home position) for visualisation  
-%                    - bounds - bounds for DH parameters (a, d, alpha, offset)
+%                    - bounds - bounds for kinematics parameters (a, d, alpha, offset)
 %                    - eyes - cameras and their instrinsic parameters
 %                    (camera matrix, distortion coefficents - radial and tangential)
 %                    - markers - transformation matrices of ArUco markers
     name='motoman';
     %% Robot structure
-    jointStructure={{'base',types.base,nan,0,group.torso},...
+    linkStructure={{'base',types.base,nan,0,group.torso},...
         {'TT2',types.joint,'base',1,group.leftArm},...
         {'S2',types.joint,'TT2',2,group.leftArm},...
         {'L2',types.joint,'S2',3,group.leftArm},...
@@ -37,8 +37,8 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
         {'leftHead',types.joint,'base',1,group.leftEye},...
         {'leftEye',types.eye,'leftHead',2,group.leftEye}};
     
-    %% robot initial DH
-    structure.DH.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
+    %% robot initial kinematics
+    structure.kinematics.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -47,7 +47,7 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
            0.000,  0.200, 0.000, 0.000;
             0.05,  0.25, 0, 0];
        
-    structure.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
+    structure.kinematics.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -56,10 +56,10 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
            0.000,  0.200, 0.000, 0.000;
            0.045,  0.245, 0.000, -0.38]; % 0.045,  0.24, 0, -0.35];  %  0.05,  0.25, 0, 0];
        
-    structure.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
+    structure.kinematics.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
             0.0, -0.445,    0.0,  pi];
         
-    structure.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
+    structure.kinematics.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
             0.0, -0.445,     0.0,  0.0];
         
     %% robot initial whitelist      
@@ -90,7 +90,7 @@ function [ name, jointStructure, structure ] = loadMotomanLeica()
     %% robot default joint position (e.g. home position) for visualisation    
     structure.defaultJoints = {zeros(1,8), zeros(1,8), zeros(1,2), zeros(1,2)};
     
-    %% robot bounds for DH parameters
+    %% robot bounds for kinematics parameters
     structure.bounds.joint = [0.05, 0.05, 0.05, 0.1];
     structure.bounds.eye = [0.15, 0.15, 0.05, 0.1];
     

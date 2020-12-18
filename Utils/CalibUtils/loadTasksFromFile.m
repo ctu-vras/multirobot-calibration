@@ -11,7 +11,7 @@ function loadTasksFromFile(fileName)
     opts.Delimiter=';';
     file=readtable(fileName,opts);
 
-    keyWords={'min', 'max', 'median'}; % type of selecting DH from Mat
+    keyWords={'min', 'max', 'median'}; % type of selecting kinematics from Mat
     for lineId=1:size(file,1)
         line=table2cell(file(lineId,:));
         %% save info switch
@@ -21,11 +21,11 @@ function loadTasksFromFile(fileName)
             line{11}=0;
         end
 
-        %% loadDH
+        %% loadkinematics
         if ~isempty(line{12})
             spl=strsplit(line{13},','); 
             mat=0;
-            % If type {min,max,median} selected -> use loadDHfromMat
+            % If type {min,max,median} selected -> use loadKinfromMat
             for key=1:length(keyWords)
                 if any(cellfun(@(x) strcmp(x,keyWords{key}), spl))
                     mat=1;
@@ -34,7 +34,7 @@ function loadTasksFromFile(fileName)
             end
             args=cell(1,2*size(spl,2));
             if mat
-                loadDHfunc='loadDHfromMat';
+                loadKinfunc='loadKinfromMat';
                 %% args can be type and perturbation together
                 for j=1:size(spl,2)
                     if ismember(spl{j},keyWords)
@@ -45,11 +45,11 @@ function loadTasksFromFile(fileName)
                     args{2*j}=spl{j};  
                 end
             else
-                loadDHfunc='loadDHfromTxt';
+                loadKinfunc='loadKinfromTxt';
                 args=spl;
             end
         else
-            loadDHfunc='';
+            loadKinfunc='';
             args='';
         end
         %% dataset params as varargs
@@ -68,7 +68,7 @@ function loadTasksFromFile(fileName)
         %% config params
         approaches = strsplit(line{4},','); 
         chains = strsplit(line{5},','); 
-        jointTypes = strsplit(line{6},','); 
+        linkTypes = strsplit(line{6},','); 
         
         %% save info
         saveInfo = [];
@@ -79,7 +79,7 @@ function loadTasksFromFile(fileName)
             end
         end
         %% run the main script and write timestamp after end of program
-        runCalibration(line{2},line{3},approaches, chains, jointTypes, line{7},line{8},line{9},varArgs,num2str(line{10}),saveInfo,loadDHfunc,args, line{12});
+        runCalibration(line{2},line{3},approaches, chains, linkTypes, line{7},line{8},line{9},varArgs,num2str(line{10}),saveInfo,loadKinfunc,args, line{12});
         stamp=datestr(now,'HH:MM:SS.FFF');
         file.Timestamp{lineId,1}=stamp;
         writetable(file,fileName,'Delimiter',';')

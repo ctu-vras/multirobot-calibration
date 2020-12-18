@@ -4,7 +4,7 @@ function [params, typicalX] = initialGuess(datasets, dh_pars, approaches, optim)
 % (quaternion) and translation vector for each dataset.external separately
 %INPUT - datasets - structure of dataset, where field names are {selftouch,
 %                     planes, external, projections} and and each field is 1xN cellArray
-%      - dh_pars - structure with DH parameters, where field names corresponding to names of
+%      - dh_pars - structure with kinematics parameters, where field names corresponding to names of
 %                     the 'groups' in robot. Each group is matrix.
 %      - approaches - structure of settings for each calibration approach
 %      - optim - structure of calibration settings

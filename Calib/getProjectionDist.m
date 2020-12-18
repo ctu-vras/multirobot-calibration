@@ -1,6 +1,6 @@
 function [ dist, coeffs ] = getProjectionDist( dh_pars, robot, datasets)
 %GETPROJECTIONDIST returns errors from projections
-%   INPUT - dh_pars - structure with DH parameters, where field names corresponding to names of
+%   INPUT - dh_pars - structure with kinematics parameters, where field names corresponding to names of
 %                      the 'groups' in robot. Each group is 4D array.
 %         - robot - instance of @Robot class
 %         - datasets - 1xN cellarray of datasets for selftouch;

@@ -58,8 +58,8 @@ function plotCorrections(folder, varargin)
     for name=1:length(fnames)
         % if any parameter from 'group' was optimized
         if any(any(whitelist.(fnames{name})))
-           % find joint by it's group
-           joints=robot.findJointByGroup(fnames{name});
+           % find link by it's group
+           links=robot.findLinkByGroup(fnames{name});
            % find indexes of '1' in whitelist and substract 1 to get values
            % from 0 to n-1
            idx=find(whitelist.(fnames{name})')-1;
@@ -70,7 +70,7 @@ function plotCorrections(folder, varargin)
            values=[];
            xt={};
            
-           % for each DH parameter
+           % for each kinematics parameter
            for i=1:6
               % for every parameter, where column index is 'i' (1-6)
               for j=row(col==i)'
@@ -81,7 +81,7 @@ function plotCorrections(folder, varargin)
                       values=[values,corrections.(fnames{name})(j,i,:,noiseLevel+1).*coef];
                   end
                   % get name of parameter
-                  xt{end+1}=[joints{j}.name,' ',params{i}];
+                  xt{end+1}=[links{j}.name,' ',params{i}];
               end
               % if i%3==0 (3,6) show figure
               if mod(i,3)==0 && ~isempty(values)
@@ -100,7 +100,7 @@ function plotCorrections(folder, varargin)
                    bp.YAxis.TickLabelInterpreter = 'latex';
                    values=[];
                    xt={};
-                   xlabel(bp,'Joints')
+                   xlabel(bp,'Links')
                    % lengths
                    if i==3
                     ylabel(bp,['Corrections [',units,']']);

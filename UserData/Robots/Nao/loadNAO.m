@@ -1,8 +1,8 @@
-function [name, jointStructure, structure]=loadNAO()
+function [name, linkStructure, structure]=loadNAO()
     %LOADNAO returns structure of the NAO robot
     %   OUTPUT - name - string name of the robot
-    %          - jointStructure - joint structure of the robot
-    %          - structure - DH,WL and bounds of the robot
+    %          - linkStructure - link structure of the robot
+    %          - structure - kinematics,WL and bounds of the robot
     
     %% Patches
     hands_upper=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
@@ -13,7 +13,7 @@ function [name, jointStructure, structure]=loadNAO()
     torso_right=[16,17,18,24,25,26,27,28,29,30,31];
     
     %% Robot structure
-    jointStructure={{'base',types.base,nan,0,group.torso},...
+    linkStructure={{'base',types.base,nan,0,group.torso},...
         ...
         {'headYaw',types.joint,'base',1,group.head},...
         {'headPitch',types.joint,'headYaw',2,group.head},...
@@ -59,24 +59,24 @@ function [name, jointStructure, structure]=loadNAO()
     
     %% Assign triangles into the structure
     for triangleId=1:size(hands_upper,2)
-        jointStructure{end+1}={strcat('rightTriangle',num2str(hands_upper(triangleId))),types.triangle,'rightUpperPatch',triangleId+3,group.rightArmSkin};
-        jointStructure{end+1}={strcat('leftTriangle',num2str(hands_upper(triangleId))),types.triangle,'leftUpperPatch',triangleId+3,group.leftArmSkin};
+        linkStructure{end+1}={strcat('rightTriangle',num2str(hands_upper(triangleId))),types.triangle,'rightUpperPatch',triangleId+3,group.rightArmSkin};
+        linkStructure{end+1}={strcat('leftTriangle',num2str(hands_upper(triangleId))),types.triangle,'leftUpperPatch',triangleId+3,group.leftArmSkin};
     end
     for triangleId=1:size(hands_lower,2)
-        jointStructure{end+1}={strcat('rightTriangle',num2str(hands_lower(triangleId))),types.triangle,'rightLowerPatch',triangleId+3+size(hands_upper,2),group.rightArmSkin};
-        jointStructure{end+1}={strcat('leftTriangle',num2str(hands_lower(triangleId))),types.triangle,'leftLowerPatch',triangleId+3+size(hands_upper,2),group.leftArmSkin};
+        linkStructure{end+1}={strcat('rightTriangle',num2str(hands_lower(triangleId))),types.triangle,'rightLowerPatch',triangleId+3+size(hands_upper,2),group.rightArmSkin};
+        linkStructure{end+1}={strcat('leftTriangle',num2str(hands_lower(triangleId))),types.triangle,'leftLowerPatch',triangleId+3+size(hands_upper,2),group.leftArmSkin};
     end
     for triangleId=1:size(head_left,2)
-        jointStructure{end+1}={strcat('headTriangle',num2str(head_left(triangleId))),types.triangle,'headLeftPatch',triangleId+3,group.headSkin};
+        linkStructure{end+1}={strcat('headTriangle',num2str(head_left(triangleId))),types.triangle,'headLeftPatch',triangleId+3,group.headSkin};
     end
     for triangleId=1:size(head_right,2)
-        jointStructure{end+1}={strcat('headTriangle',num2str(head_right(triangleId))),types.triangle,'headRightPatch',triangleId+3+size(head_left,2),group.headSkin};
+        linkStructure{end+1}={strcat('headTriangle',num2str(head_right(triangleId))),types.triangle,'headRightPatch',triangleId+3+size(head_left,2),group.headSkin};
     end
     for triangleId=1:size(torso_left,2)
-        jointStructure{end+1}={strcat('torsoTriangle',num2str(torso_left(triangleId))),types.triangle,'torsoLeftPatch',triangleId+3,group.torsoSkin};
+        linkStructure{end+1}={strcat('torsoTriangle',num2str(torso_left(triangleId))),types.triangle,'torsoLeftPatch',triangleId+3,group.torsoSkin};
     end
     for triangleId=1:size(torso_right,2)
-        jointStructure{end+1}={strcat('torsoTriangle',num2str(torso_right(triangleId))),types.triangle,'torsoRightPatch',triangleId+3+size(torso_left,2),group.torsoSkin};
+        linkStructure{end+1}={strcat('torsoTriangle',num2str(torso_right(triangleId))),types.triangle,'torsoRightPatch',triangleId+3+size(torso_left,2),group.torsoSkin};
     end
     
     %% Assign taxels to the strucutre
@@ -90,47 +90,47 @@ function [name, jointStructure, structure]=loadNAO()
             triangle_num = fix(i/12);
             if ismember(triangle_num, [torso_left,torso_right])
                 indexes(1) = indexes(1) + 1;
-                jointStructure{end+1}={strcat('torsoTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
+                linkStructure{end+1}={strcat('torsoTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
                     types.taxel, strcat('torsoTriangle', num2str(triangle_num)),...
                     index_offsets(1)+indexes(1), group.torsoSkin};
             end
             if ismember(triangle_num, [head_left,head_right])
                 indexes(2) = indexes(2) + 1;
-                jointStructure{end+1}={strcat('headTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
+                linkStructure{end+1}={strcat('headTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
                     types.taxel, strcat('headTriangle', num2str(triangle_num)),...
                     index_offsets(2)+indexes(2), group.headSkin};
                 
             end
             if ismember(triangle_num, [hands_upper,hands_lower])
                 indexes(3) = indexes(3) + 1;
-                jointStructure{end+1}={strcat('leftTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
+                linkStructure{end+1}={strcat('leftTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
                     types.taxel, strcat('leftTriangle', num2str(triangle_num)),...
                     index_offsets(3)+indexes(3), group.leftArmSkin};
-                jointStructure{end+1}={strcat('rightTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
+                linkStructure{end+1}={strcat('rightTaxel', num2str(triangle_num),'_',num2str(taxel_num)), ...
                     types.taxel, strcat('rightTriangle', num2str(triangle_num)),...
                     index_offsets(3)+indexes(3), group.rightArmSkin};
             end
        end
     end
 
-    %% DH
-    structure.DH.leftArm=[0, 0.1, -pi/2, 0;
+    %% kinematics
+    structure.kinematics.leftArm=[0, 0.1, -pi/2, 0;
                0, 0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
                0.015, 0.105, -pi/2, 0.0;
                0, 0.0, pi/2, 0;
                0, 0.05775+0.05595, -pi/2, pi];
-    structure.DH.rightArm=[0, 0.1, -pi/2, 0; 
+    structure.kinematics.rightArm=[0, 0.1, -pi/2, 0; 
                0, -0.098, pi/2, 0;
                0, 0,  pi/2, pi/2;
                -0.015, 0.105, -pi/2, 0.0;
                0, 0, pi/2, 0;
                0, 0.05775+0.05595, -pi/2, pi;];
 
-    structure.DH.head=[0, 0.1265, 0, 0.0;
+    structure.kinematics.head=[0, 0.1265, 0, 0.0;
          0, 0, -pi/2, 0;
          0,0,0,0];
-     structure.DH.dummy = [0, 0.05595, -pi/2, pi;
+     structure.kinematics.dummy = [0, 0.05595, -pi/2, pi;
                            0, 0.05595, -pi/2, pi];
    
     %% robot default joint position (e.g. home position) for visualisation    
@@ -172,26 +172,26 @@ function [name, jointStructure, structure]=loadNAO()
     name='nao';
     
     %% Fingers    
-    %Add zeros to angles and add to DH  
-    structure.DH.leftFinger = [0, 0, 0.0600,zeros(1,3)];
-    structure.DH.rightFinger = [0, 0, 0.0600,zeros(1,3)];
+    %Add zeros to angles and add to kinematics  
+    structure.kinematics.leftFinger = [0, 0, 0.0600,zeros(1,3)];
+    structure.kinematics.rightFinger = [0, 0, 0.0600,zeros(1,3)];
     %% Translatoon Matrices
     rightArmSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/rightArm.txt',' ', 0);                     
-    structure.DH.rightArmSkin=[rightArmSkinTranslation,zeros(size(rightArmSkinTranslation,1),3)];
-    structure.DH.rightArmSkin(1,:) = [-0.0292, -0.0300, -0.0222, -0.5452, 1.7668, 1.9904];    
+    structure.kinematics.rightArmSkin=[rightArmSkinTranslation,zeros(size(rightArmSkinTranslation,1),3)];
+    structure.kinematics.rightArmSkin(1,:) = [-0.0292, -0.0300, -0.0222, -0.5452, 1.7668, 1.9904];    
 
     leftArmSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/leftArm.txt',' ', 0);
-    structure.DH.leftArmSkin=[leftArmSkinTranslation,zeros(size(leftArmSkinTranslation,1),3)];
-     structure.DH.leftArmSkin(1,:) = [0.0295,-0.0682,-0.0259,1.5291,0.5315,-0.4926];
+    structure.kinematics.leftArmSkin=[leftArmSkinTranslation,zeros(size(leftArmSkinTranslation,1),3)];
+     structure.kinematics.leftArmSkin(1,:) = [0.0295,-0.0682,-0.0259,1.5291,0.5315,-0.4926];
     
     torsoSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/torso.txt',' ', 0);
-    structure.DH.torsoSkin=[torsoSkinTranslation,zeros(size(torsoSkinTranslation,1),3)];
-    structure.DH.torsoSkin(1,:) = [0.0646, 0.0006, 0.0468, -0.0012, 0.0427, 0.0005];
+    structure.kinematics.torsoSkin=[torsoSkinTranslation,zeros(size(torsoSkinTranslation,1),3)];
+    structure.kinematics.torsoSkin(1,:) = [0.0646, 0.0006, 0.0468, -0.0012, 0.0427, 0.0005];
 
     
     headSkinTranslation=importdata('Robots/Nao/Dataset/Transformations/head.txt',' ', 0);
-    structure.DH.headSkin=[headSkinTranslation,zeros(size(headSkinTranslation,1),3)];
-    structure.DH.headSkin(1,:)= [0.0597, -0.0704, -0.0013, 1.5512, -0.2112, -0.2574];
+    structure.kinematics.headSkin=[headSkinTranslation,zeros(size(headSkinTranslation,1),3)];
+    structure.kinematics.headSkin(1,:)= [0.0597, -0.0704, -0.0013, 1.5512, -0.2112, -0.2574];
 
 
 end

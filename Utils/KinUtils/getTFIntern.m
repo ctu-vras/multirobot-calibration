@@ -1,16 +1,16 @@
-function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, indexes, parents, rtFields, type)
-%GETTFIntern computes transformation from given joint to base 
-%INPUT - dh_pars - DH parameters 
-%       - joint - given Joint object to start the transformation
+function [RTarm] = getTFIntern(dh_pars,link,rtMat, joints, indexes, parents, rtFields, type)
+%GETTFIntern computes transformation from given link to base 
+%INPUT - dh_pars - kinematics parameters 
+%       - link - given link object to start the transformation
 %       - rtMat - precomputed matrices
 %       - joints - joint angles
-%       - indexes - row indexes into DH table 
-%       - parents - structure of joint ancestors for each group)
+%       - indexes - row indexes into kinematics table 
+%       - parents - structure of link ancestors for each group)
 %       - rtFields - fields in rtMat
-%OUTPUT - RTarm - transformation from the joint to base
+%OUTPUT - RTarm - transformation from the link to base
     RTarm= [1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1]; 
-    while isobject(joint)
-        gr = joint.group;
+    while isobject(link)
+        gr = link.group;
         switch gr
             case rtFields
                RT=rtMat.(gr);
@@ -118,9 +118,9 @@ function [RTarm] = getTFIntern(dh_pars,joint,rtMat, joints, indexes, parents, rt
                     end
                 end
         end
-        joint = parents.(gr);
+        link = parents.(gr);
         RTarm = RT*RTarm;
-        if(strcmp(joint.type, types.base)) % if the joint is base end the computation          
+        if(strcmp(link.type, types.base)) % if the link is base end the computation          
             break;
         end
     end

@@ -7,7 +7,7 @@ function plotJacobian(folder, titles)
     jacobians = jac.jacobians;
     robot = info.rob;
     whitelist = info.whitelist;
-    fnames=fieldnames(robot.structure.DH);
+    fnames=fieldnames(robot.structure.kinematics);
     for name = 1:size(fnames,1)
         whitelist.(fnames{name}) = double(whitelist.(fnames{name}));
     end
@@ -20,13 +20,13 @@ function plotJacobian(folder, titles)
     xt = {};
     for name=1:length(fnames)
         if any(any(whitelist.(fnames{name})))
-           joints=robot.findJointByGroup(fnames{name});
+           links=robot.findLinkByGroup(fnames{name});
            idx=find(whitelist.(fnames{name})')-1;
            col=mod(idx,6)+1;
            row=floor(idx/6)+1;
            for i=1:size(whitelist.(fnames{name}),1)
               for j=col(row==i)'
-                  xt{end+1}=[joints{i}.name,' ',params{j}];
+                  xt{end+1}=[links{i}.name,' ',params{j}];
               end       
            end
         end  

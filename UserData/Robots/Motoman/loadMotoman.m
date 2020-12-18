@@ -1,19 +1,19 @@
-function [ name, jointStructure, structure ] = loadMotoman()
+function [ name, linkStructure, structure ] = loadMotoman()
 %LOADMOTOMAN Motoman robot configuration function
 %Custom function for Motoman robot configuration with original end effector.
 % OUTPUT - name - robot name
-%        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
-%        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
+%        - links - cellarray of robot links (name, type, parent, DHindex, isEE, group)
+%        - structure - kinematics - table of kinematics parameters for each group (columns - a, d, alpha, offset)
 %                    - WL - logical array of whitelisted parameters for calibration 
 %                    - defaultJoints - stores robot default joint position
 %                    (e.g. home position) for visualisation 
-%                    - bounds - bounds for DH parameters (a, d, alpha, offset)
+%                    - bounds - bounds for kinematics parameters (a, d, alpha, offset)
 %                    - eyes - cameras and their instrinsic parameters
 %                    (camera matrix, distortion coefficents - radial and tangential)
 %                    - markers - transformation matrices of ArUco markers
     name='motoman';
-    %% Robot joints
-    jointStructure={{'base',types.base,nan,0,group.torso},...
+    %% Robot links
+    linkStructure={{'base',types.base,nan,0,group.torso},...
         {'TT2',types.joint,'base',1,group.leftArm},...
         {'S2',types.joint,'TT2',2,group.leftArm},...
         {'L2',types.joint,'S2',3,group.leftArm},...
@@ -78,8 +78,8 @@ function [ name, jointStructure, structure ] = loadMotoman()
         {'MK219', types.finger, 'EE2', 19, group.leftMarkers},...
         {'MK220', types.finger, 'EE2', 20, group.leftMarkers}};
     
-    %% robot initial DH
-    structure.DH.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
+    %% robot initial kinematics
+    structure.kinematics.leftArm = [0.000, -0.263, -15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -88,7 +88,7 @@ function [ name, jointStructure, structure ] = loadMotoman()
            0.000,  0.200, 0.000, 0.000;
            0.000,  0.354, 0.000, 0.000];
        
-    structure.DH.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
+    structure.kinematics.rightArm = [0.000, -0.263, 15*pi/180, -pi/2;
            0.150, 1.4159, -pi/2, 0.000;
            0.614,  0.000,    pi, -pi/2;
            0.200,  0.000, -pi/2, 0.000;
@@ -97,16 +97,16 @@ function [ name, jointStructure, structure ] = loadMotoman()
            0.000,  0.200, 0.000, 0.000;
            0.000,  0.354, 0.000, 0.000];
        
-% this dh not working
-%     structure.DH.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
+% this kinematics not working
+%     structure.kinematics.leftEye = [0.15,   1.96, 3*pi/4, -10*pi/180;
 %             0.0, -0.445,    0.0,  pi];
 %         
-%     structure.DH.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
+%     structure.kinematics.rightEye = [0.15,   1.96, -3*pi/4, -170*pi/180;
 %             0.0, -0.445,     0.0,  0.0];
-    % dh after camera calibration    
-    structure.DH.rightEye = [0.0741 1.8034 -2.5086 -2.7753;
+    % kinematics after camera calibration    
+    structure.kinematics.rightEye = [0.0741 1.8034 -2.5086 -2.7753;
             0.0000 -0.5670 0.0000 0.2863];
-    structure.DH.leftEye = [0.2315 1.8602 2.5486 0.0860;
+    structure.kinematics.leftEye = [0.2315 1.8602 2.5486 0.0860;
             0.0000 -0.4982 0.0000 -3.0618];
     
     %% robot initial whitelist    
@@ -137,7 +137,7 @@ function [ name, jointStructure, structure ] = loadMotoman()
     %% robot default joint position (e.g. home position) for visualisation    
     structure.defaultJoints = {zeros(1,8), zeros(1,8), zeros(1,2), zeros(1,2)};
     
-    %% robot bounds for DH parameters
+    %% robot bounds for kinematics parameters
     structure.bounds.joint = [0.05, 0.05, 0.05, 0.1];
     structure.bounds.eye = [0.15, 0.15, 0.05, 0.1];
     
@@ -157,7 +157,7 @@ function [ name, jointStructure, structure ] = loadMotoman()
                                      0.000,  8098.218,  2991.727;
                                      0.000,     0.000,     1.000];
     %% robot ArUco markers on the end effectors                              
-    structure.DH.leftMarkers = [
+    structure.kinematics.leftMarkers = [
    0.032000570000000  0                  -0.041890750000000   0                   2.489251283624426   0
    0.009890000000000  0.030434990000000  -0.041889980000000  -2.367371516321296   0.769288792697395   0.000000000000000
   -0.025889960000000  0.018809970000000  -0.041889930000000  -1.463120740121269  -2.013832860131754  -0.000000000000001
@@ -178,6 +178,6 @@ function [ name, jointStructure, structure ] = loadMotoman()
   -0.009890000000000  0.030434990000000   0.041889980000000  -0.620429804418819  -0.201611656909703  -0.000000000000000
   -0.032000570000000  0                   0.041890750000000   0                  -0.652341369965366   0
   -0.009890000000000 -0.030434990000000   0.041889980000000   0.620429804418819  -0.201611656909703   0.000000000000000];
-    structure.DH.rightMarkers = structure.DH.leftMarkers;
+    structure.kinematics.rightMarkers = structure.kinematics.leftMarkers;
 end
 

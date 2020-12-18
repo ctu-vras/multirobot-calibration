@@ -1,19 +1,19 @@
-function [ name, jointStructure, structure ] = loadExampleRobot()
+function [ name, linkStructure, structure ] = loadExampleRobot()
 
 %LOADEXAMPLEROBOT Template function for loading example robot 
 % OUTPUT - name - robot name
-%        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
-%        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
+%        - links - cellarray of robot links (name, type, parent, DHindex, isEE, group)
+%        - structure - kinematics - table of kinematics parameters for each group (columns - a, d, alpha, offset)
 %                    - WL - logical array of whitelisted parameters for calibration 
 %                    - defaultJoints - stores robot default joint position
 %                    (e.g. home position) for visualisation 
-%                    - bounds - bounds for DH parameters (a, d, alpha, offset)
+%                    - bounds - bounds for kinematics parameters (a, d, alpha, offset)
 %                    - eyes - cameras and their instrinsic parameters
 %                    (camera matrix, distortion coefficents - radial and tangential)
     name='example';
-    % Each joint consists from 'name', 'jointType', 'parent', 'idx', 'group'
+    % Each link consists from 'name', 'linkType', 'parent', 'idx', 'group'
     %% Robot structure
-    jointStructure={{'base',types.base,nan,0,group.torso},... %here idx is 0, because it does not point anywhere
+    linkStructure={{'base',types.base,nan,0,group.torso},... %here idx is 0, because it does not point anywhere
         {'torso',types.joint,'base',1,group.torso},...
         ...
         {'leftShoulder',types.joint,'torso',1,group.leftArm},... 
@@ -34,26 +34,26 @@ function [ name, jointStructure, structure ] = loadExampleRobot()
         {'rightEyeVersion',types.joint,'eyesTilt',1,group.rightEye},...
         {'rightEyeVergence',types.eye,'rightEyeVersion',2,group.rightEye}};  
         
-    %% robot initial DH   fields of structure.DH are the ones  
-    structure.DH.torso = [0.001, 0.000, 0, 0]; 
+    %% robot initial kinematics   fields of structure.kinematics are the ones  
+    structure.kinematics.torso = [0.001, 0.000, 0, 0]; 
                     
-    structure.DH.leftArm = [0.020, 0.140, -pi/2.0, pi/2.0; % this line corresponds to leftShoulder joint defined above
+    structure.kinematics.leftArm = [0.020, 0.140, -pi/2.0, pi/2.0; % this line corresponds to leftShoulder joint defined above
                              0.000, 0.100, -pi/2.0, pi/2.0;
                              0.000, 0.000, pi/2.0, -pi/2.0;
                              0.015, 0.150, -pi/2.0, pi/2.0];
             
-    structure.DH.rightArm =  [-0.020, 0.140, pi/2.0, -pi/2.0;  
+    structure.kinematics.rightArm =  [-0.020, 0.140, pi/2.0, -pi/2.0;  
                                0.000, -0.100, pi/2.0, -pi/2.0;
                                0.000, 0.000, -pi/2.0, -pi/2.0;
                               -0.015, -0.150, -pi/2.0, -pi/2.0]; 
            
-    structure.DH.head = [0.003, 0.193, -pi/2.0, -pi/2.0;  
+    structure.kinematics.head = [0.003, 0.193, -pi/2.0, -pi/2.0;  
                        0.033, 0.000,  pi/2.0,  pi/2.0];
                 
-    structure.DH.leftEye = [0.000, -0.034, -pi/2.0,   0.000;  
+    structure.kinematics.leftEye = [0.000, -0.034, -pi/2.0,   0.000;  
                        0.000,  0.000,  pi/2.0,  -pi/2.0];
                     
-    structure.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
+    structure.kinematics.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0];                                  
                                
     %% robot initial whitelist          
@@ -74,7 +74,7 @@ function [ name, jointStructure, structure ] = loadExampleRobot()
     % joint angles for 'n' first groups (order defined in Utils/groups.m)
     structure.defaultJoints = {zeros(1,4), zeros(1,4), zeros(1,2), zeros(1,2), zeros(1,2)};
     
-    %% robot bounds for DH parameters
+    %% robot bounds for kinematics parameters
     structure.bounds.joint = [0.5 0.5 0 0]; % +- 0.5m in a,d and 0 in alpha, theta
     structure.bounds.eye = [inf inf inf inf];  % no bounds
 

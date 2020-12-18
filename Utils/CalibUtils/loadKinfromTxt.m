@@ -1,10 +1,10 @@
-function loadDHfromTxt(robot, folder, file)
-%LOADDHFROMTXT Loading robot DH from a text file
-%   Function for loading robot DH from a text file saved in a subfolder in
+function loadKinfromTxt(robot, folder, file)
+%LOADKINFROMTXT Loading robot kinematics from a text file
+%   Function for loading robot kinematics from a text file saved in a subfolder in
 %   folder Results
-%INPUT - robot - Robot object to store DH 
+%INPUT - robot - Robot object to store kinematics 
 %      - folder - folder with the required txt file
-%      - file - file with the required DH
+%      - file - file with the required kinematics
 if(nargin == 2)
     fileID = fopen(folder);
 else
@@ -16,9 +16,9 @@ C = textscan(fileID,'%s %s %s %s %s %s %s');
 A = [str2double(C{2}),str2double(C{3}),str2double(C{4}),str2double(C{5}),str2double(C{6}),str2double(C{7})];
 groups = {C{1}{isnan(A(:,1))}};
 idx = [find(isnan(A(:,1))); size(A,1)+1];
-% save DH for each group
+% save kinematics for each group
 for i = 1:length(groups)
-    robot.structure.DH.(groups{i})= A(idx(i)+1:idx(i+1)-1,:);
+    robot.structure.kinematics.(groups{i})= A(idx(i)+1:idx(i+1)-1,:);
 end
 fclose(fileID);
 end

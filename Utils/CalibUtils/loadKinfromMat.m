@@ -1,12 +1,12 @@
-function loadDHfromMat(robot,folder,varargin)
-%LOADDHFROMMAT Loading robot DH from mat file
-%   Function for loading robot DH from mat file saved in a subfolder in
+function loadKinfromMat(robot,folder,varargin)
+%LOADKINFROMMAT Loading robot kinematics from mat file
+%   Function for loading robot kinematics from mat file saved in a subfolder in
 %   folder Results
-%INPUT - robot - Robot object to store DH 
-%      - folder - folder with required DH mat file
-%      - varargin - rep - selects DH of the given repetititon
-%      - varargin - pert - selects only DH of the given perturbation 
-%      - varargin - type - selects DH with {min,max,median} testing rms error
+%INPUT - robot - Robot object to store kinematics 
+%      - folder - folder with required kinematics mat file
+%      - varargin - rep - selects kinematics of the given repetititon
+%      - varargin - pert - selects only kinematics of the given perturbation 
+%      - varargin - type - selects kinematics with {min,max,median} testing rms error
     p=inputParser;
     addRequired(p,'robot');
     addRequired(p,'folder');
@@ -16,7 +16,7 @@ function loadDHfromMat(robot,folder,varargin)
     parse(p,robot,folder,varargin{:});
     
     res_dh=load(['Results/',folder,'/results.mat']);
-    res_dh=res_dh.res_dh; % load result DH
+    res_dh=res_dh.res_dh; % load result kinematics
     %% pert level is +1 (indexing from 1)
     if ischar(p.Results.pert)
         pert=str2double(p.Results.pert)+1;
@@ -51,9 +51,9 @@ function loadDHfromMat(robot,folder,varargin)
             rep = find(sortedValues(ceil(length(sortedValues)/2)) == values);
         end
     end
-    %% selecting the desired DH
+    %% selecting the desired kinematics
     fnames=fieldnames(res_dh);
     for name=1:length(fnames)
-        robot.structure.DH.(fnames{name})=res_dh.(fnames{name})(:,:,rep,pert);
+        robot.structure.kinematics.(fnames{name})=res_dh.(fnames{name})(:,:,rep,pert);
     end
 end

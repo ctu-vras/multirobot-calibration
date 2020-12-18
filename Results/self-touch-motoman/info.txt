@@ -46,12 +46,11 @@ selftouch	 1
 planes	 0	
 external	 0	
 
-jointTypes
+linkTypes
 
 onlyOffsets	 0	
 joint	 1	
 eye	 0	
-torso	 0	
 patch	 0	
 triangle	 0	
 mount	 0	
@@ -74,7 +73,7 @@ PlotFcn
 SpecifyObjectiveGradient	 0	
 StepTolerance	 1.000000e-25	
 SubproblemAlgorithm	 factorization	
-TypicalX	 1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	
+TypicalX	 1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	
 UseParallel	 0	
 Algorithm	 levenberg-marquardt	
 

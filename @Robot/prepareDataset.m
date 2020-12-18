@@ -17,7 +17,7 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
     %                             cellarrays
     %          - datasets_out - structure with 4 fields, which are 1xN
     %                             cellarrays
-    %                         - joints are kept as stings and not instances
+    %                         - links are kept as stings and not instances
     %                         of a class
     %% Call appropriate functions with arguments
     if isstruct(funcname)
@@ -46,7 +46,7 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
        end
        
     end
-    %% Assing joint to names and split
+    %% Assing link to names and split
     index = 0;
         % Assigning datasets to the right groups
     for part={'selftouch', 'planes', 'external', 'projection'}
@@ -54,25 +54,25 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
         if isfield(datasets, part)
             for dataset=1:length(datasets.(part))
                 index = index + 1;
-                clear joints; 
-                uniqueFrames = unique(datasets.(part){dataset}.frame); % unique (end effector) joint names
-                camFrames = r.findJointByType('eye');
-                if(~isempty(camFrames)) % append eye end effector joint names
+                clear links; 
+                uniqueFrames = unique(datasets.(part){dataset}.frame); % unique (end effector) link names
+                camFrames = r.findLinkByType('eye');
+                if(~isempty(camFrames)) % append eye end effector link names
                     camFrames = [camFrames{:}];
                     uniqueFrames = [uniqueFrames; {camFrames.name}'];
                 end
                 rtFields = fieldnames(datasets.(part){dataset}.rtMat)';
                 % Preallocate arrays
-                joints(length(datasets.(part){dataset}.frame), 1) = Joint();
+                links(length(datasets.(part){dataset}.frame), 1) = Link();
                 for name=1:length(datasets.(part){dataset}.frame)
-                    % find joint by name
-                    j=findJoint(r,datasets.(part){dataset}.frame{name});
-                    joints(name)=j{1};
+                    % find link by name
+                    j=findLink(r,datasets.(part){dataset}.frame{name});
+                    links(name)=j{1};
                     for field = rtFields
                         datasets.(part){dataset}.rtMat(name).(field{1})(1:3,4) = datasets.(part){dataset}.rtMat(name).(field{1})(1:3,4) * optim.unitsCoef;
                     end
                 end
-                datasets.(part){dataset}.frame=joints;
+                datasets.(part){dataset}.frame=links;
 
                 if strcmp(part, 'projection')
                    datasets.(part){dataset}.refPoints = datasets.(part){dataset}.refPoints * optim.unitsCoef;
@@ -80,20 +80,20 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
 
                 if strcmp(part, 'selftouch') && isfield(datasets.(part){dataset},'frame2')
                     uniqueFrames = [uniqueFrames; unique(datasets.(part){dataset}.frame2)];
-                    clear joints2;
-                    joints2(length(datasets.(part){dataset}.frame2), 1) = Joint();
+                    clear links2;
+                    links2(length(datasets.(part){dataset}.frame2), 1) = Link();
                     for name=1:length(datasets.(part){dataset}.frame2)
-                        j2=findJoint(r,datasets.(part){dataset}.frame2{name});
-                        joints2(name)=j2{1};
+                        j2=findLink(r,datasets.(part){dataset}.frame2{name});
+                        links2(name)=j2{1};
                     end
-                    datasets.(part){dataset}.frame2=joints2;       
+                    datasets.(part){dataset}.frame2=links2;       
                 end
 
-                % iterate over joint names
+                % iterate over link names
                 for name=1:length(uniqueFrames)
-                    joint = r.findJoint(uniqueFrames{name});
-                    joint = joint{1};
-                    datasets.(part){dataset}=getIndexes(datasets.(part){dataset},joint);
+                    link = r.findLink(uniqueFrames{name});
+                    link = link{1};
+                    datasets.(part){dataset}=getIndexes(datasets.(part){dataset},link);
                 end
 
                 % Default refDist=0

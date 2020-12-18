@@ -1,4 +1,4 @@
-function [options, chains, approach, jointTypes, optim, pert]=exampleConfig(approaches, inputChains, jointType)
+function [options, chains, approach, linkTypes, optim, pert]=exampleConfig(approaches, inputChains, linkType)
  %% Solver options
  % other parameters can be found in optimoptions or lsqnonlin documentation
     options = optimoptions('lsqnonlin');
@@ -32,19 +32,19 @@ function [options, chains, approach, jointTypes, optim, pert]=exampleConfig(appr
     approach.planes=0;
     approach.external=0;
 
-    %% Calibration joint types
+    %% Calibration link types
     % set which parts of the body will be calibrated
     % superior over chains
     % can be set by an argument into the function
     % depends on each other - 'onlyOffsets' without anything else will do nothing
-    jointTypes.onlyOffsets=0;
-    jointTypes.joint=0;
-    jointTypes.eye=0;
-    jointTypes.torso=0;
-    jointTypes.patch=0;
-    jointTypes.triangle=0;
-    jointTypes.mount=0;
-    jointTypes.finger=0;
+    linkTypes.onlyOffsets=0;
+    linkTypes.joint=0;
+    linkTypes.eye=0;
+
+    linkTypes.patch=0;
+    linkTypes.triangle=0;
+    linkTypes.mount=0;
+    linkTypes.finger=0;
     
     %% Calibration settings
     optim.bounds=0; % set to use bounds

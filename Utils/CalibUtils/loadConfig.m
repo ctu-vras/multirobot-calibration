@@ -1,27 +1,27 @@
-function [options, chains, approach, jointTypes, optim, pert] = loadConfig(config, approaches, inputChains, jointType)
+function [options, chains, approach, linkTypes, optim, pert] = loadConfig(config, approaches, inputChains, linkType)
 %LOADCONFIG Loading Config file function
 %INPUT - config - Config function name
 %       - inputChains - chains to calibrate
 %       - approaches - calibration approaches
-%       - jointType -joint types to calibrate
+%       - linkType -link types to calibrate
 %OUTPUT - options - lsqnonlin solver options
 %       - chains - chains to calibrate
 %       - approach - calibration approaches
-%       - jointTypes -joint types to calibrate
+%       - linkTypes -link types to calibrate
 %       - optim - calibration settings
 %       - pert - perturbation levels
     if ischar(config) || isstring(config)
         func=str2func(config);
         if nargin>1
-            [options, chains, approach, jointTypes, userOptim, pert]=func(approaches, inputChains, jointType);
+            [options, chains, approach, linkTypes, userOptim, pert]=func(approaches, inputChains, linkType);
         else
-            [options, chains, approach, jointTypes, userOptim, pert]=func();
+            [options, chains, approach, linkTypes, userOptim, pert]=func();
         end
     else
         options = config.options;
         chains = config.chains;
         approach = config.approach;
-        jointTypes = config.jointTypes;
+        linkTypes = config.linkTypes;
         userOptim = config.optim;
         pert = config.pert;
     end
@@ -41,19 +41,19 @@ function [options, chains, approach, jointTypes, optim, pert] = loadConfig(confi
         end
     end
     
-    if ~isempty(jointType{1})
-        for i = 1:length(jointType)
-            if (jointTypes.(jointType{i}) == 0)
-                jointTypes.(jointType{i}) = 1;
+    if ~isempty(linkType{1})
+        for i = 1:length(linkType)
+            if (linkTypes.(linkType{i}) == 0)
+                linkTypes.(linkType{i}) = 1;
             end
         end
     end
     
     chains_ = struct2cell(chains);
-    jointTypes_ = struct2cell(jointTypes);
-    assert(sum([chains_{:}]) && sum([jointTypes_{:}]), 'Nothing to calibrate chains or jointTypes do not contain fields with non-zero value')
+    linkTypes_ = struct2cell(linkTypes);
+    assert(sum([chains_{:}]) && sum([linkTypes_{:}]), 'Nothing to calibrate chains or linkTypes do not contain fields with non-zero value')
     assert(all(ismember(fieldnames(approach), {'selftouch', 'planes', 'external', 'projection'})), 'Invalid approach used');
-    assert(all(cellfun(@(x) isprop(types, x) | strcmp(x,'onlyOffsets'), fieldnames(jointTypes))), 'Invalid jointTypes, use only types from class types and/or ''onlyOffsets'' option');
+    assert(all(cellfun(@(x) isprop(types, x) | strcmp(x,'onlyOffsets'), fieldnames(linkTypes))), 'Invalid linkTypes, use only types from class types and/or ''onlyOffsets'' option');
     
     weightFields = {'body', 'skin', 'external', 'planes'};
     p = inputParser;

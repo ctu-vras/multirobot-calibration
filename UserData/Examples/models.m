@@ -21,11 +21,11 @@ rob.showGraphModel()
 
 %%
 % If you do not know this order, look at 
-fieldnames(rob.structure.DH)
+fieldnames(rob.structure.kinematics)
 
 %%
-% The angles for individual joints are in order as they goes from root to the end-effector (or the last joint). And there must
-% be one joint angle for each joint, which means it sometimes requires to add '0' (zero) to position, where virtual link is
+% The angles for individual links are in order as they goes from root to the end-effector (or the last link). And there must
+% be one joint angle for each link, which means it sometimes requires to add '0' (zero) to position, where virtual link is
 % added and the robot does not normally has a joint angle - usually torso or end-effectors.
 %
 % *If the robot does not have 'moveable' torso (ie. joint angles are
@@ -54,13 +54,13 @@ rob2.showModel({[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]},'specialGroup',{'leftMarker
 %%
 % And to compare with other settings, two robots can be shown. 
 %
-% You can either just turn the other robot on and it will load DH from 'defaultDH' field of 'Robot.structure'
+% You can either just turn the other robot on and it will load kinematics from 'defaultKinematics' field of 'Robot.structure'
 close all
 rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1)
 
 %%
-% Or you can pass the new DH
+% Or you can pass the new kinematics
 close all
-newDH=rob.structure.DH;
-newDH.rightArm(6,1)=0.1;
-rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1,'dualDH',newDH)
+newKinematics=rob.structure.kinematics;
+newKinematics.rightArm(6,1)=0.1;
+rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1,'dualKinematics',newKinematics)

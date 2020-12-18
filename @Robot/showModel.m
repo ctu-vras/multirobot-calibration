@@ -1,11 +1,11 @@
 function fig = showModel(r, varargin)
-    % SHOWMODEL shows virtual model of the robot based on input joint
+    % SHOWMODEL shows virtual model of the robot based on input Link
     %           angles.
-    %   INPUT - angles - cellarray of 1xN arrays joint in order corresponding
-    %                    to order of 'groups' in Robot.structure.DH, 
-    %                    where each array contains joint angles in the same 
-    %                    order as joints in given DH fields. If there are
-    %                    less arrays than joint 'group', only the same number
+    %   INPUT - angles - cellarray of 1xN arrays link in order corresponding
+    %                    to order of 'groups' in Robot.structure.kinematics, 
+    %                    where each array contains link angles in the same 
+    %                    order as links in given kinematics fields. If there are
+    %                    less arrays than link 'group', only the same number
     %                    of 'groups' will be shown.
     %                    E.g. {[th_1_chain1,...,th_n_chain1],...,[]}
     %         - varargin - Uses MATLABs argument parser, with these pairs:
@@ -13,8 +13,8 @@ function fig = showModel(r, varargin)
     %                                - Default: 0
     %                       - 'dual' - 1/0 to visualize dual robot
     %                                - Default: 0
-    %                       - 'dualDH' - structure in same format as
-    %                                    Robot.structure.DH with DH for
+    %                       - 'dualKinematics' - structure in same format as
+    %                                    Robot.structure.kinematics with kinematics for
     %                                    second robot
     %                                  - Default: []
     %                       - 'figName' - string name of the figure
@@ -36,7 +36,7 @@ function fig = showModel(r, varargin)
     addOptional(p,'angles',  r.structure.defaultJoints);
     addParameter(p,'specialGroup','');
     addParameter(p,'dual',0,@isnumeric);
-    addParameter(p,'dualDH',[]);
+    addParameter(p,'dualKinematics',[]);
     addParameter(p,'units','m', @(x) any(validatestring(x,{'m','mm'})));
     addParameter(p,'figName','');
     addParameter(p, 'naoSkin', 0);
@@ -58,9 +58,9 @@ function fig = showModel(r, varargin)
 
     % Each body part has the same structure:
     %     name = the name of the body_part;
-    %     DH   = it's the parameter matrix. Each row has 4 DH parameters (a, d, alpha, offset), thus each
+    %     kinematics   = it's the parameter matrix. Each row has 4 kinematics parameters (a, d, alpha, offset), thus each
     %            row completely describes a link. The more rows are added, the more links are attached.
-    %     Th   = it's the joint values vector (as read from the encoders)
+    %     Th   = it's the link values vector (as read from the encoders)
     %  Please note that everything is in SI units (i.e. meters and radians),
     %  unless the variables have the _deg suffix (the eventual conversions will be handled by
     %  the algorithm itself). However, the FwdKin.m works internally with
@@ -90,18 +90,18 @@ function fig = showModel(r, varargin)
 
     %% Draw
     for robots=1+p.Results.dual:-1:1
-        fnames=fieldnames(r.structure.DH);
+        fnames=fieldnames(r.structure.kinematics);
         angles_ = angles;
         if robots==1
-            DH_ = r.structure.DH;
+            kinematics_ = r.structure.kinematics;
         else
             str = struct();
-            if size(p.Results.dualDH,1)==0
-                DH_=r.structure.defaultDH;
-             %else use input DH
+            if size(p.Results.dualKinematics,1)==0
+                kinematics_=r.structure.defaultKinematics;
+             %else use input kinematics
             else
                 for name=1:size(fnames,1)
-                   DH_.(fnames{name})=p.Results.dualDH.(fnames{name}); 
+                   kinematics_.(fnames{name})=p.Results.dualKinematics.(fnames{name}); 
                 end
             end
         end
@@ -109,12 +109,12 @@ function fig = showModel(r, varargin)
               contains(fnames,'Middle')...
             | contains(fnames,'Index') | contains(fnames,'Thumb') | contains(fnames,'Markers') )= [];
         
-        fnames = fnames(1:(size(angles,2)+isfield(DH_, 'torso')));
-        if ~isfield(DH_,'torso')
-            DH_.torso=[0 0 0 0]; 
+        fnames = fnames(1:(size(angles,2)+isfield(kinematics_, 'torso')));
+        if ~isfield(kinematics_,'torso')
+            kinematics_.torso=[0 0 0 0]; 
         end
-        angles_ = {zeros(1,size(DH_.torso, 1)),angles{:}};
-        [DH, types_] = padVectors(DH_);
+        angles_ = {zeros(1,size(kinematics_.torso, 1)),angles{:}};
+        [kinematics, types_] = padVectors(kinematics_);
         if ~strcmp(fnames{1},'torso') && strcmp(fnames{end},'torso')
             fnames={'torso', fnames{1:end-1}}';
         elseif ~strcmp(fnames{1},'torso') && ~strcmp(fnames{end},'torso')
@@ -125,8 +125,8 @@ function fig = showModel(r, varargin)
             fnames = {fnames{:}, p.Results.specialGroup{:}}';
             for gr=p.Results.specialGroup
                 gr = gr{1};
-                joints = r.findJointByGroup(gr);
-                angles_ = {angles_{:}, zeros(1,size(joints, 2))};
+                links = r.findLinkByGroup(gr);
+                angles_ = {angles_{:}, zeros(1,size(links, 2))};
             end
             
            
@@ -134,24 +134,24 @@ function fig = showModel(r, varargin)
         str.specialGroup = p.Results.specialGroup;
         for i=1:length(fnames)
             name=fnames{i};
-            DH.(name)(:,1:3) = DH.(name)(:,1:3).*coef;
+            kinematics.(name)(:,1:3) = kinematics.(name)(:,1:3).*coef;
             if strcmp(name, 'torso')
                 str.refFrame = 1;
             else
                 str.refFrame = 0;
             end
-            jointNames = {};
-            % find joint from given group to save their names
-            joints=findJointByGroup(r,name);
-            for joint=1:size(joints,2)
-                j=joints(joint);
-                jointNames{end+1} = j{1}.name;
+            linkNames = {};
+            % find link from given group to save their names
+            links=findLinkByGroup(r,name);
+            for link=1:size(links,2)
+                j=links(link);
+                linkNames{end+1} = j{1}.name;
             end 
             theta.(name) = reshape([angles_{i}], 1, []);
-            str.link = name;
-            str.DH = DH;
+            str.name = name;
+            str.kinematics = kinematics;
             str.theta = theta;
-            str.jointNames = jointNames;
+            str.linkNames = linkNames;
             str.LinkColor = LINK_COLORS(robots,:);
             str.refFrameSize = 0.01*coef;
             str.types=types_;
@@ -162,24 +162,24 @@ function fig = showModel(r, varargin)
         if p.Results.naoSkin
             for i=1:length(fnames)
                 name=fnames{i};
-                DH.(name)(:,1:3) = DH.(name)(:,1:3).*coef;
+                kinematics.(name)(:,1:3) = kinematics.(name)(:,1:3).*coef;
                 if strcmp(name, 'torso')
                     str.refFrame = 1;
                 else
                     str.refFrame = 0;
                 end
-                jointNames = {};
-                % find joint from given group to save their names
-                joints=findJointByGroup(r,name);
-                for joint=1:size(joints,2)
-                    j=joints(joint);
-                    jointNames{end+1} = j{1}.name;
+                linkNames = {};
+                % find link from given group to save their names
+                links=findLinkByGroup(r,name);
+                for link=1:size(links,2)
+                    j=links(link);
+                    linkNames{end+1} = j{1}.name;
                 end  
-                theta.(name) = zeros(1,size(joints, 2));
-                str.link = name;
-                str.DH = DH;
+                theta.(name) = zeros(1,size(links, 2));
+                str.name = name;
+                str.kinematics = kinematics;
                 str.theta = theta;
-                str.jointNames = jointNames;
+                str.linkNames = linkNames;
                 str.LinkColor = LINK_COLORS(robots,:);
                 str.SkinColor = SKIN_COLORS{robots};
                 str.refFrameSize = 0.01*coef;

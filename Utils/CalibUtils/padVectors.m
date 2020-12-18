@@ -7,7 +7,7 @@ function [str, type] = padVectors(str,wl)
 %   OUTPUT - str - structure with the same fields as input with padded
 %                  vectors
 %          - type - structure with the same fields as input with possible
-%          values: 0 - field contains only DH representation
+%          values: 0 - field contains only kinematics representation
 %                  1 - field contains only RT matrix representation 
 %                  2 - field contains mixed representation
 
@@ -22,7 +22,7 @@ function [str, type] = padVectors(str,wl)
        name = name{1}; 
        str.(name)(:,end+1:6,:, :) = nan; % pad nans to make vector of size 6
        nans = isnan(str.(name));
-       if all(any(nans,2)) %Only DH
+       if all(any(nans,2)) %Only kinematics
            type.(name) = 0;
            if all(isnan(str.(name)(:,6))) 
                str.(name)(:,[3,4,6],:, :) = str.(name)(:,[6,3,4],:, :); % a,d,nan,alpha,offset,nan
@@ -32,7 +32,7 @@ function [str, type] = padVectors(str,wl)
        else %Both
            type.(name) = 2;
            for line=1:size(str.(name),1) %Need to check every line
-               if any(isnan(str.(name)(line,:))) %if DH
+               if any(isnan(str.(name)(line,:))) %if kinematics
                    if isnan(str.(name)(line, 6))
                        str.(name)(line,[3,4,6],:, :) = str.(name)(line,[6,3,4],:, :);
                    end

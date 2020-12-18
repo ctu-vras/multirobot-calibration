@@ -1,23 +1,23 @@
-function structure=getIndexes(structure, joint)
+function structure=getIndexes(structure, link)
 % GETINDEXES computes indexes and parents needed to find transformations
 %   INPUT - structure - structure where new fields will be added/updated
-%         - joint - Joint object for which we want find the informations
+%         - link - link object for which we want find the informations
 %   OUTPUT - structure - updated input variable
-    gr = joint.group;
-    name=joint.name;
+    gr = link.group;
+    name=link.name;
     idx = [];
     id=1;
-    while isobject(joint) 
-        while strcmp(joint.group,gr) && ~strcmp(joint.type,types.base) % save indexes into DH table for all joints of the group
-           idx(id)=joint.DHindex;
+    while isobject(link) 
+        while strcmp(link.group,gr) && ~strcmp(link.type,types.base) % save indexes into kinematics table for all links of the group
+           idx(id)=link.DHindex;
            id=id+1;
-           joint=joint.parent;
+           link=link.parent;
         end
         structure.DHindexes.(name).(gr) = idx(end:-1:1);
-        structure.parents.(gr) = joint; % joint.group differs from gr
-        gr = joint.group;
-        idx = joint.DHindex; 
+        structure.parents.(gr) = link; % link.group differs from gr
+        gr = link.group;
+        idx = link.DHindex; 
         id=2;
-        joint=joint.parent; 
+        link=link.parent; 
     end
 end

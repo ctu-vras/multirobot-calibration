@@ -1,4 +1,4 @@
-function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig(~, ~, ~)
+function [options, chains, approach, linkTypes, optim, pert]=optimizationConfig(~, ~, ~)
     %% Solver options
     options = optimoptions('lsqnonlin');
     options.Algorithm = 'trust-region-reflective'; %Use for bounds
@@ -45,20 +45,19 @@ function [options, chains, approach, jointTypes, optim, pert]=optimizationConfig
     approach.planes=0;
     approach.external=0;
 
-    %% Calibration joint types
+    %% Calibration link types
     % set which parts of the body will be calibrated
     % superior over chains
     % can be set by an argument into the function
     % depends on each other - 'onlyOffsets' without anything else will do nothing
-    jointTypes.onlyOffsets=0;
-    jointTypes.joint=0;
-    jointTypes.eye=0;
-    jointTypes.torso=0;
-    jointTypes.patch=0;
-    jointTypes.triangle=0;
-    jointTypes.mount=0;
-    jointTypes.taxel=0; 
-    jointTypes.finger=0;
+    linkTypes.onlyOffsets=0;
+    linkTypes.joint=0;
+    linkTypes.eye=0;
+    linkTypes.patch=0;
+    linkTypes.triangle=0;
+    linkTypes.mount=0;
+    linkTypes.taxel=0; 
+    linkTypes.finger=0;
     
     %% Calibration settings
     optim.bounds=0; % set to use bounds

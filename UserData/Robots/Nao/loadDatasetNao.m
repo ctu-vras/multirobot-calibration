@@ -23,13 +23,13 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
     end
     assert(~alt, 'Alternative mode is not supported now!');
     %datasetsNames=varargin{1};
-    % Assign robot's DH into new variable
-    DH=robot.structure.DH;
-    if size(DH.leftArm,2)==4
-       [DH, ~] = padVectors(DH); 
+    % Assign robot's kinematics into new variable
+    kinematics=robot.structure.kinematics;
+    if size(kinematics.leftArm,2)==4
+       [kinematics, ~] = padVectors(kinematics); 
     end
     % Add 'dummy' torso link to precompute RT matrices
-    DH.torso=[0,0,nan,0,0,nan];
+    kinematics.torso=[0,0,nan,0,0,nan];
     % Variables init
     datasets.selftouch=cell(1,length(datasetsNames));
     for name=1:length(datasetsNames)
@@ -73,7 +73,7 @@ function datasets = loadDatasetNao(robot,optim, chains, varargin)
         end
         
         % call prepareData to get current values
-        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,DH,alt,chains, optim);
+        taxelStruct=prepareData(robot,datasetsNames{name},chain1,chain2,kinematics,alt,chains, optim);
         %Init dataset 
         dataset.point = []; % Points in local frame Mx3 (Mx6 if no refPoint)
         dataset.pose = []; % Mx1 int id of pose

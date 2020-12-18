@@ -9,9 +9,9 @@ function plotJointsError(robot, errors, dataset, group, plotTitle, skipIndexes)
     if(nargin <6)
         skipIndexes = [];
     end
-    joints = robot.findJointByGroup(group);
-    joints = [joints{:}];
-    names = {joints.name};    
+    links = robot.findLinkByGroup(group);
+    links = [links{:}];
+    names = {links.name};    
     joint_angles = [];
     
     %% merge dataset joint angles
@@ -50,7 +50,7 @@ function plotJointsError(robot, errors, dataset, group, plotTitle, skipIndexes)
     index = 1;
     figure()
     for i=1:length(names)
-        if ismember(i, skipIndexes) % skip unwanted joint
+        if ismember(i, skipIndexes) % skip unwanted link
             continue
         end
         subplot(rows,cols,index);

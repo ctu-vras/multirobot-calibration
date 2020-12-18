@@ -1,18 +1,18 @@
-function [ name, jointStructure, structure ] = loadICUBv1()
+function [ name, linkStructure, structure ] = loadICUBv1()
 %LOADICUBV1 Function for loading iCub version 1 robot 
 % Custom function for loading iCub version 1 robot.
 % OUTPUT - name - robot name
-%        - joints - cellarray of robot joints (name, type, parent, DHindex, isEE, group)
-%        - structure - DH - table of DH parameters for each group (columns - a, d, alpha, offset)
+%        - links - cellarray of robot links (name, type, parent, DHindex, isEE, group)
+%        - structure - kinematics - table of kinematics parameters for each group (columns - a, d, alpha, offset)
 %                    - WL - logical array of whitelisted parameters for calibration 
 %                    - defaultJoints - stores robot default joint position
 %                    (e.g. home position) for visualisation 
-%                    - bounds - bounds for DH parameters (a, d, alpha, offset)
+%                    - bounds - bounds for kinematics parameters (a, d, alpha, offset)
 %                    - eyes - cameras and their instrinsic parameters
 %                    (camera matrix, distortion coefficents - radial and tangential)
     name='iCub';
     %% Robot structure
-    jointStructure={{'base',types.base,nan,0,group.torso},...
+    linkStructure={{'base',types.base,nan,0,group.torso},...
         {'torsoYaw', types.joint, 'base',1,group.torso},...
         {'torsoRoll', types.joint, 'torsoYaw',2,group.torso},... % link from 1st to 2nd torso joint
         {'torsoPitch', types.joint, 'torsoRoll',3,group.torso},... % link from 2nd to 3rd torso joint 
@@ -91,12 +91,12 @@ function [ name, jointStructure, structure ] = loadICUBv1()
         {'rightMiddle2',types.joint,'rightMiddle1',2,group.rightMiddle},...
         {'rightMiddle3',types.joint,'rightMiddle2',3,group.rightMiddle}};  
         
-    %% robot initial DH    
-    structure.DH.torso = [0, 0, 0, 1.2092, -1.2092, 1.2092;
+    %% robot initial kinematics    
+    structure.kinematics.torso = [0, 0, 0, 1.2092, -1.2092, 1.2092;
                         0.032, 0.000, pi/2.0, 0.000, nan, nan; 
                         0.000, -0.0055, pi/2.0, -pi/2, nan, nan]; 
                     
-    structure.DH.leftArm = [0.0233647, -0.1433, -pi/2.0, 105.0*pi/180;
+    structure.kinematics.leftArm = [0.0233647, -0.1433, -pi/2.0, 105.0*pi/180;
                              0.000, 0.10774, -pi/2.0, pi/2.0;
                              0.000, 0.000, pi/2.0, -pi/2.0;
                              0.015, 0.15228, -pi/2.0, 75.0*pi/180;
@@ -105,7 +105,7 @@ function [ name, jointStructure, structure ] = loadICUBv1()
                              0.000, 0.000, pi/2.0, pi/2;
                             0.0625, -0.016, 0.000, 0.000 ];
             
-    structure.DH.rightArm =  [-0.0233647, -0.1433, pi/2.0, -105.0*pi/180;  
+    structure.kinematics.rightArm =  [-0.0233647, -0.1433, pi/2.0, -105.0*pi/180;  
                                  0.000, -0.10774, pi/2.0, -pi/2;
                                  0.000, 0.000, -pi/2.0, -pi/2;
                                 -0.015, -0.15228, -pi/2.0, -105.0*pi/180;
@@ -114,18 +114,18 @@ function [ name, jointStructure, structure ] = loadICUBv1()
                                  0.000, 0.000, pi/2.0, pi/2;
                                 0.0625, 0.016, 0, pi ]; 
            
-    structure.DH.head = [0.00231, -0.1933, -pi/2.0, -pi/2.0;  
+    structure.kinematics.head = [0.00231, -0.1933, -pi/2.0, -pi/2.0;  
                        0.033, 0.000,  pi/2.0,  pi/2.0;
                        0.000, 0.001, -pi/2.0, -pi/2.0;
                        -0.054, 0.0825, -pi/2.0,  pi/2.0];
                 
-    structure.DH.leftEye = [0.000, -0.034, -pi/2.0,   0.000;  
+    structure.kinematics.leftEye = [0.000, -0.034, -pi/2.0,   0.000;  
                        0.000,  0.000,  pi/2.0,  -pi/2.0];
                     
-    structure.DH.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
+    structure.kinematics.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0]; 
                                      
-    structure.DH.leftLeg=[0, 0.0681, -0.1199, -1.5708, 0, 0;
+    structure.kinematics.leftLeg=[0, 0.0681, -0.1199, -1.5708, 0, 0;
                            0, 0, -pi/2, pi/2, nan, nan;
                            0, 0, -pi/2, pi/2, nan, nan;
                            0, -0.2236, pi/2, -pi/2, nan, nan;
@@ -133,7 +133,7 @@ function [ name, jointStructure, structure ] = loadICUBv1()
                            0, 0, -pi/2, 0, nan, nan;
                            -0.041, 0, 0, 0, nan, nan];
 
-    structure.DH.rightLeg=[0, -0.0681, -0.1199, -1.5708, 0, 0;
+    structure.kinematics.rightLeg=[0, -0.0681, -0.1199, -1.5708, 0, 0;
                             0, 0, pi/2, pi/2, nan, nan;
                             0, 0, pi/2, pi/2, nan, nan;
                             0, 0.2236, -pi/2, -pi/2, nan, nan;
@@ -141,33 +141,33 @@ function [ name, jointStructure, structure ] = loadICUBv1()
                             0, 0, pi/2, 0, nan, nan;
                             0, 0, pi, 0, nan, nan];
                             
-    structure.DH.leftThumb=[0, 0, pi/2, 0;
+    structure.kinematics.leftThumb=[0, 0, pi/2, 0;
                                    0.021, -0.0056, 0, 0;
                                    0.026, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                             
-    structure.DH.leftIndex=[0.0148, 0, -pi/2, 0;
+    structure.kinematics.leftIndex=[0.0148, 0, -pi/2, 0;
                                    0.0259, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                            
-    structure.DH.leftMiddle=[0.0285, 0, 0, 0;
+    structure.kinematics.leftMiddle=[0.0285, 0, 0, 0;
                                    0.024, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                                    
-    structure.DH.rightThumb=[0, 0, -pi/2, 0;
+    structure.kinematics.rightThumb=[0, 0, -pi/2, 0;
                                    0.021, 0.0056, 0, 0;
                                    0.026, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                             
-    structure.DH.rightIndex=[0.0148, 0, pi/2, 0;
+    structure.kinematics.rightIndex=[0.0148, 0, pi/2, 0;
                                    0.0259, 0, 0, 0;
                                    0.022, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                            
-    structure.DH.rightMiddle=[0.0285, 0, 0, 0;
+    structure.kinematics.rightMiddle=[0.0285, 0, 0, 0;
                                    0.024, 0, 0, 0;
                                    0.0168, 0, -pi/2, 0];
                                
@@ -250,7 +250,7 @@ function [ name, jointStructure, structure ] = loadICUBv1()
     %% robot default joint position (e.g. home position) for visualisation    
     structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4), zeros(1,7), zeros(1,7), zeros(1,2), zeros(1,2)};
     
-    %% robot bounds for DH parameters
+    %% robot bounds for kinematics parameters
     structure.bounds.joint = [inf inf inf inf];
     structure.bounds.eye = [inf inf inf inf];
 

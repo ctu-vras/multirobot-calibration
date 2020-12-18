@@ -11,9 +11,9 @@ function plotJointDistribution(robot, dataset, dataset2, group, plotTitle, legen
     if(nargin <8)
         skipIndexes = [];
     end
-    joints = robot.findJointByGroup(group);
-    joints = [joints{:}];
-    names = {joints.name};
+    links = robot.findLinkByGroup(group);
+    links = [links{:}];
+    names = {links.name};
     pose_number = [];
     joint_angles = [];
     pose_number2 = [];
@@ -65,7 +65,7 @@ function plotJointDistribution(robot, dataset, dataset2, group, plotTitle, legen
     %% plot histograms
     index = 1;
     for i=1:length(names)
-        if ismember(i, skipIndexes) % skip unwanted joint
+        if ismember(i, skipIndexes) % skip unwanted link
             continue
         end
         subplot(rows,cols,index);
@@ -86,5 +86,5 @@ function plotJointDistribution(robot, dataset, dataset2, group, plotTitle, legen
     legend(legends,'Location','east');
     axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
     text(0.55-length(plotTitle)/100, 0.98, plotTitle, 'FontSize', 14)
-    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 12)
+    %set(findall(gcf, '-property', 'FontSize'), 'FontSize', 12)
 end

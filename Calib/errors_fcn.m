@@ -1,7 +1,7 @@
 function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, dataset, optim, approach, paramValues)
 %ERRORS_FCN returns vector of vector of errors for all types of calibration
 %   INPUT - opt_pars - 1xN vector of optimized parameters
-%         - dh_pars - structure with DH parameters, where field names corresponding to names of
+%         - dh_pars - structure with kinematics parameters, where field names corresponding to names of
 %                     the 'groups' in robot. Each group is matrix.
 %         - robot - instance of @Robot class
 %         - whitelist - structure with 1/0, where field names corresponding to names of

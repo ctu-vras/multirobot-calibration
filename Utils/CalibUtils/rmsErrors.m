@@ -1,7 +1,7 @@
-function [rms_errors, errors_all] = rmsErrors(dh, robot, datasets, dataset_indexes, optim, approach)
+function [rms_errors, errors_all] = rmsErrors(kinematics, robot, datasets, dataset_indexes, optim, approach)
 %RMSERRORS Compute rms errors
 %   Function computes rms errors and individual errors and return them
-%INPUT - dh - DH parameters for all repetititons and perturbations
+%INPUT - kinematics - kinematics parameters for all repetititons and perturbations
 %      - robot - Robot object
 %      - datasets - dataset structure
 %      - dataset_indexes - poses to use from datasets
@@ -19,14 +19,14 @@ function [rms_errors, errors_all] = rmsErrors(dh, robot, datasets, dataset_index
     marker_dist_all = {};
     
     optim.useNorm=1;
-    fnames = fieldnames(dh);
+    fnames = fieldnames(kinematics);
     for pert_level = 1:optim.pert_levels
         for rep = 1:optim.repetitions
             % slice dataset
             dataset = getDatasetPart(datasets, dataset_indexes{rep});
-            % select corresponding dh parameters
+            % select corresponding kinematics parameters
             for field = 1:length(fnames)
-                dh_pars.(fnames{field}) = dh.(fnames{field})(:,:, rep, pert_level);
+                dh_pars.(fnames{field}) = kinematics.(fnames{field})(:,:, rep, pert_level);
             end
              %% Call appropriate functions if given approach is enabled and save errors
             if(approach.selftouch)
