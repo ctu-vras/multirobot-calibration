@@ -8,7 +8,7 @@ This toolbox provides a solution to the multi-chain calibration of a general rob
  - [How to run](#how-to-run)
  - [Examples](#examples)
  - [Robot](#robot)
- - [Joint](#joint)
+ - [Link](#link)
  - [Datasets](#datasets)
  - [Configs](#configs)
  - [Robots](#robots)
@@ -29,7 +29,7 @@ Recommended steps (the order is optional):
    - **Recommendation:** Create a working folder, move the additional files there and set it as Current Folder in Matlab.
  - Prepare functions for your robot (or use one of the existing from Robot function patterns)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
-   - mandatory are functions with robot structures and DH (see [loading functions](#loading-functions)) and 
+   - mandatory are functions with robot structures and kinematics (see [loading functions](#loading-functions)) and 
      functions to prepare datasets (see [Datasets](#datasets) and functions for existing robots)
    - voluntary are whitelist (see [Whitelist](#whitelist)), bounds (see [bounds](#bounds)) functions
  - Set up calibration config file (see [Calibration config](#calibration-config))  
@@ -63,40 +63,40 @@ This file includes the constructor, which calls robot-specific functions (see se
 ## Properties
 
  - name - String name of the robot 
- - joints - Cell array of [Joint](#joint) classes
- - structure - Structure containing DH, WL and bounds
+ - links - Cell array of [Link](#link) classes
+ - structure - Structure containing kinematics, WL and bounds
 
 ## Methods
 
- - findJoint - Returns an instance of joints with given name
- - findJointById - Returns an instance of joints with given Id
- - findJointByType - Returns an instance of joints with given type
- - findJointByGroup - Returns an instance of joints with given group
- - print - Displays Robot.joints as 'jointName jointId'
- - printTables - Displays tables from Robot.structure as 'a, d, alpha, theta jointName'
- - [showModel](@Robot/showModel.m) - Shows virtual model of the robot based on input joint angles.
+ - findLink - Returns an instance of Links with given name
+ - findLinkById - Returns an instance of Links with given Id
+ - findLinkByType - Returns an instance of Links with given type
+ - findLinkByGroup - Returns an instance of Links with given group
+ - print - Displays Robot.links as 'linkName linkId'
+ - printTables - Displays tables from Robot.structure as 'a, d, alpha, theta linkName'
+ - [showModel](@Robot/showModel.m) - Shows virtual model of the robot based on input link angles.
  - [showGraphModel](@Robot/showGraphModel.m) - Shows tree-based graph of given robot
- - [prepareDH](@Robot/prepareDH.m) - Returns DH tables with/without perturbations and tables with bounds
+ - [prepareKinematics](@Robot/prepareKinematics.m) - Returns Kinematics tables with/without perturbations and tables with bounds
  - [prepareDataset](@Robot/prepareDataset.m) - Returns datasets in universal format, together with training/testing indexes
- - [getResultDH](@Robot/getResultDH.m) - Returns final DH parameters and correction of each run
+ - [getResultKinematics](@Robot/getResultKinematics.m) - Returns final Kinematics parameters and correction of each run
  - [createWhitelist](@Robot/createWhitelist.m) - Selects whitelist and returns selected parameters based on the whitelist, together with lower/upper bounds for the parameters.
 
-# Joint
+# Link
 
-Found in the [Joint](Utils/KinUtils/Joint.m). 
+Found in the [Link](Utils/KinUtils/Link.m). 
 
 ## Properties
 
- - name - String name of the joints
+ - name - String name of the links
  - parent - Pointer to a parent
  - parentId - Int, id of a parent
- - DHindex - Int, id in DH/WL/Bounds table for given 'group'
- - type - 'type' of the joints...see [types.m](Utils/DataTypes/types.m)
- - group - 'group' of the joint...see [group.m](Utils/DataTypes/group.m)
+ - DHindex - Int, id in kinematics/WL/Bounds table for given 'group'
+ - type - 'type' of the links...see [types.m](Utils/DataTypes/types.m)
+ - group - 'group' of the link...see [group.m](Utils/DataTypes/group.m)
 
 ## Methods
 
- - computeRTMatrix - iterates over the parents of the input Joint and returns RT matrix
+ - computeRTMatrix - iterates over the parents of the input link and returns RT matrix
 
 # Datasets
 
@@ -107,11 +107,11 @@ All of the datasets must be a Matlab structure with these fields (some of them m
    - Nx3 array of doubles
    - Nx6 array of doubles, when two points are used (x1,y1,z1,x2,y2,z2)  
    - Nx(Mx2) array of doubles, when M cameras are used (u1,v1,..,um,vm)  
- - frame - Nx1 array of strings, where each value is name of the joint from which the TF matrix will be computed	
- - frame2 (voluntary) - Nx1 array of strings, where each value is name of the joint from which the TF matrix for second point will be computed
- - joints - Nx1 array of structures, where each structure include joint angles for each group
+ - frame - Nx1 array of strings, where each value is name of the link from which the TF matrix will be computed	
+ - frame2 (voluntary) - Nx1 array of strings, where each value is name of the link from which the TF matrix for second point will be computed
+ - links - Nx1 array of structures, where each structure include link angles for each group
    - each field of the inner structure is 1xM array of doubles
-   - e.g. joints(1).leftArm=[...], joints(1).rightArmSkin=[...]
+   - e.g. links(1).leftArm=[...], links(1).rightArmSkin=[...]
  - refPoints (voluntary) - Nx3 array of doubles, where each line represents point in 3D (x,y,z, which will be used as reference to point computed from optimized values
    - can be also Nx(Mx2) if cameras are used 
    - used for example in self-touch, when we calculate position of the finger, but we know where the finger was supposed to touch
@@ -138,34 +138,34 @@ You can take an inspiration from existing functions [loadExampleDataset.m](UserD
 
 ## Loading functions
 
-These functions serve to create the structure of the robot and set default DH, whitelist and bounds.
+These functions serve to create the structure of the robot and set default kinematics, whitelist and bounds.
 Take a look at existing robots [loadExampleRobot.m](UserData/Templates/loadExampleRobot.m), [loadNAO.m](UserData/Robots/Nao/loadNAO.m), [loadMotoman.m](UserData/Robots/Motoman/loadMotoman.m), [loadICUBv1.m](UserData/Robots/iCub/loadICUBv1.m)
 
 ### Output variables
 
  - name - name of the robot, any string to distinguish the robots
- - jointStructure - the structure of the robot, created by joints
+ - linkStructure - the structure of the robot, created by links
 
    - 1xN cellArray
-   - each element is another cellArray in mandatory format: {'nameOfJoint',jointType,'nameOfParent',indexInArrays,group}
+   - each element is another cellArray in mandatory format: {'nameOfLink',linkType,'nameOfParent',indexInArrays,group}
 
-     - 'nameOfJoint' - string name of the joint
-     - jointType - in format types.'type', where types. is enumeration class (see [Types](#Types))
-     - 'nameOfParent' - string name of a parent joint (parent must already exist!)
-     - indexInArrays - index into DH, WL and bounds arrays (number of line corresponding to the joint)
+     - 'nameOfLink' - string name of the link
+     - linkType - in format types.'type', where types. is enumeration class (see [Types](#Types))
+     - 'nameOfParent' - string name of a parent link (parent must already exist!)
+     - indexInArrays - index into kinematics, WL and bounds arrays (number of line corresponding to the link)
      - group - in format group.'group', where group. is enumeration class (see [Groups](#groups))
-   - the structure can contain optional number of joints
+   - the structure can contain optional number of links
  - structure - is Matlab struct with all other information
-   - DH - Matlab struct with fields named after groups ([Groups](#groups)) contained in jointStructure
-     - each line corresponds to one DH link and is linked with the jointStructure with its indexInArrays parameter 
-   - defaultDH - defaultDH of the robot
-     - the DH can be replaced with another one and it is useful to save the default one
+   - kinematics - Matlab struct with fields named after groups ([Groups](#groups)) contained in linkStructure
+     - each line corresponds to one kinematics link and is linked with the linkStructure with its indexInArrays parameter 
+   - defaultKinematics - defaultKinematics of the robot
+     - the kinematics can be replaced with another one and it is useful to save the default one
    - bounds - bounds for each body part
-     - fields are named after body parts (see struct jointTypes in [optimizationConfig.m](UserData/Configs/optimizationConfig.m) for all possibilities) 
+     - fields are named after body parts (see struct linkTypes in [optimizationConfig.m](UserData/Configs/optimizationConfig.m) for all possibilities) 
      - each field contain 4 or 6 values (a,d,alpha,theta) or (x,y,z,alpha,beta,gamma)  
-     - bounds are set relatively = 0.1 means that lower bound will be (DH-0.1) and upper bound (DH+0.1)
-   - WL - Matlab struct with field named after groups ([Groups](#groups)) contained in jointStructure
-     - each line corresponds to one DH link and is linked with the jointStructure with its indexInArrays parameter
+     - bounds are set relatively = 0.1 means that lower bound will be (kinematics-0.1) and upper bound (kinematics+0.1)
+   - WL - Matlab struct with field named after groups ([Groups](#groups)) contained in linkStructure
+     - each line corresponds to one kinematics link and is linked with the linkStructure with its indexInArrays parameter
      - parameters with '1' on their place can be calibrated 
 
 ## Calibration config
@@ -187,9 +187,9 @@ Take a look at existing robots [loadExampleRobot.m](UserData/Templates/loadExamp
    - more than one approaches at a time can be used
    - value does not have to be 1/0, but any non-zero number will enable the approach and values from this approach will be scaled by given value
    - can be edited in the config file or passed in as an argument (e.g. {'selftouch','planes'}, see [Calibration examples](UserData/Examples/calibration.m))
- - joint types - determine which part of the body will be calibrated
+ - link types - determine which part of the body will be calibrated
    - onlyOffsets - will calibrate only offsets of each link (the last DH parameter)
-   - e.g. joint will calibrate everything defined as joint in robot 'jointStructure'
+   - e.g. link will calibrate everything defined as link in robot 'linkStructure'
    - the settings are superior over chains (see above). So in case you enable 'rightArm' but does not enable 'joint' or 'finger', nothing will be calibrated
    - the settings are also depending on each other. If you enable 'onlyOffsets', you still need to enable for example 'mount' to calibrate
    - can be edited in the config file or passed in as an argument (e.g. {'mount'}, see [Calibration examples](UserData/Examples/calibration.m))
@@ -214,7 +214,7 @@ Take a look at existing robots [loadExampleRobot.m](UserData/Templates/loadExamp
        - 'skin' - [lengths, angles]
        - 'planes' - [all plane parameters (a,b,c)] 
        - 'external' - [rotation (vector or quaternion), translation (vector)]. 
-   - boundsFromDefault - set if the bounds are considering the latest DH or the default DH
+   - boundsFromDefault - set if the bounds are considering the latest kinematics or the default kinematics
      - useful in sequential calibration 
    - optimizeInitialGuess - set if the plane or external transformation parameters should be optimized too
    - skipNoPert - set if the calibration without perturbation should be skipped
@@ -240,12 +240,12 @@ Whitelist functions serve to load customized whitelists. Whitelist is a Matlab s
 Each column represent one DH parameter (a,d,alpha,theta) or one 6D transformation (x,y,z,alpha,beta,gamma). Parameters with 1 can be calibrated. (depends on another settings from [Calibration config](#calibration-config).
 See already created files [loadNaoWL.m](UserData/Robots/Nao/loadNaoWL.m), [loadMotomanWL.m](UserData/Robots/Motoman/loadMotomanWL.m), [loadICUBWL.m](UserData/Robots/iCub/loadICUBWL.m).  
   
-Output is 'WL' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any joint of the robot). 
+Output is 'WL' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any link of the robot). 
 
 ## Bounds
 
 This functions serve when you want to have bounds different for any parameter, not just divided by body parts.
-See already created files [loadMotomanBounds.m](UserData/Robots/Motoman/loadMotomanBounds.m). Output is 'bounds' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any joint of the robot). Where each field is Nx4/6 array of positive doubles. Each column represent one DH parameter (a,d,alpha,theta) or 6D transform parameter (x,y,z,alpha,beta,gamma) and lines are connected to joints with 'indexInArrays' parameter (see [Loading functions](#loading-functions))
+See already created files [loadMotomanBounds.m](UserData/Robots/Motoman/loadMotomanBounds.m). Output is 'bounds' Matlab struct with fields named after [Groups](#groups) (struct has to contain every group which is used at least one time in any link of the robot). Where each field is Nx4/6 array of positive doubles. Each column represent one DH parameter (a,d,alpha,theta) or 6D transform parameter (x,y,z,alpha,beta,gamma) and lines are connected to links with 'indexInArrays' parameter (see [Loading functions](#loading-functions))
   
  - if value is 'nan' - default value from [Loading functions](#loading-functions) will be used
  - if value is 'inf' - there will be no bounds for this parameter
@@ -310,8 +310,8 @@ Folder with functions designed for repetitive tasks.
  - [getPlane.m](Utils/KinUtils/getPlane.m) - computes a plane fitted to set of given points using svd
  - [getPoints.m](Utils/KinUtils/getPoints.m) - computes points from forward kinematics
  - [getPointsIntern.m](Utils/KinUtils/getPointsIntern.m) - computes points from forward kinematics  
- - [getTFIntern.m](Utils/KinUtils/getTFIntern.m) - computes transformation from given joint to base - needs additional parameters and is used internally in calibration because of its higher speed
- - [getTFtoFrame.m](Utils/KinUtils/getTFtoFrame.m) - computes transformation from a given joint to other given joint  
+ - [getTFIntern.m](Utils/KinUtils/getTFIntern.m) - computes transformation from given link to base - needs additional parameters and is used internally in calibration because of its higher speed
+ - [getTFtoFrame.m](Utils/KinUtils/getTFtoFrame.m) - computes transformation from a given link to other given link  
  - [inversetf.m](Utils/KinUtils/inversetf.m) - computes inverse transformation matrix
  - [matrix2quat.m](Utils/KinUtils/matrix2quat.m) - converts the rotation matrix into quaternion 
  - [proj2distCoef.m](Utils/KinUtils/proj2distCoef.m) - computes the coefficients to convert the pixels into metres (or millimetres) according to the point distance from the cameras  
@@ -329,8 +329,8 @@ Folder with functions designed for repetitive tasks.
  - [initialGuess.m](Utils/CalibUtils/initialGuess.m) - initial guess of plane and/or external transformation parameters for each dataset separately  
  - [internalCalibration.m](Utils/CalibUtils/interalCalibration.m) - defines calibration problem and runs calibration   
  - [loadConfig.m](Utils/CalibUtils/loadConfig.m) - loads Config file function
- - [loadDHfromMat.m](Utils/CalibUtils/loadDHfromMat.m) - loads robot DH from a mat file
- - [loadDHfromTxt.m](Utils/CalibUtils/loadDHfromTxt.m) - loads robot DH from a text file
+ - [loadKinfromMat.m](Utils/CalibUtils/loadKinfromMat.m) - loads robot Kin from a mat file
+ - [loadKinfromTxt.m](Utils/CalibUtils/loadKinfromTxt.m) - loads robot Kin from a text file
  - [loadTaskFromFile.m](Utils/CalibUtils/loadTasksFromFile.m) - loads the calibration task from csv file  
  - [padVectors.m](Utils/CalibUtils/padVectors.m) - pad vectors to size 6
  - [projections.m](Utils/CalibUtils/projections.m) - projects points to the cameras
@@ -343,7 +343,7 @@ Folder with functions designed for repetitive tasks.
 ### DataTypes  
 
  - [group.m](Utils/DataTypes/group.m) - static class of enumerated type containing string names of all part of robot body and skin
- - [types.m](Utils/DataTypes/types.m) - static class of enumerated type containing string names of all possible type of joints  
+ - [types.m](Utils/DataTypes/types.m) - static class of enumerated type containing string names of all possible type of links  
 
 ### VisuUtils  
   
@@ -372,11 +372,11 @@ and bounds (see [loadMotomanBounds.m](UserData/Robots/Motoman/loadMotomanBounds.
 
 # Types
 
-Each joint has defined type. The types are defined in [types.m](Utils/DataTypes/types.m) and are used to create structure of the robot in [loading functions](#loading-functions). Types are some kind of substitute for body parts - with this, we can calibrate and visualize the right joints.
+Each link has defined type. The types are defined in [types.m](Utils/DataTypes/types.m) and are used to create structure of the robot in [loading functions](#loading-functions). Types are some kind of substitute for body parts - with this, we can calibrate and visualize the right links.
 
 # Groups
 
-Each joint has defined group. The groups are defined in [group.m](Utils/DataTypes/group.m) and are used to create structure of the robot in [loading functions](#loading-functions). Groups help to select right DH, bounds and WL for each joint. Difference between groups and types is that, groups are more complex. E.g. type is joint, but group will be right arm and left arm. Simply it is a substitutions for chains. Also it helps to divide skin from other things.  
+Each link has defined group. The groups are defined in [group.m](Utils/DataTypes/group.m) and are used to create structure of the robot in [loading functions](#loading-functions). Groups help to select right kinematics, bounds and WL for each link. Difference between groups and types is that, groups are more complex. E.g. type is link, but group will be right arm and left arm. Simply it is a substitutions for chains. Also it helps to divide skin from other things.  
   
 Methods:  
   - sort - sorts structures in given order
@@ -389,8 +389,8 @@ See [Tasks](tasks.csv) with example. The field Timestamp will be automatically f
 Fields:
 
  - robot_fcn, config_fcn, dataset_fcn, folder and saveInfo are mandatory and each takes one argument
- - bounds_fcn, loadDHFolder are optional and take one argument
- - approaches, chains, jointTypes, loadDHArgs are optional and takes multiple argument delimited by ',' (comma)
+ - bounds_fcn, loadKinFolder are optional and take one argument
+ - approaches, chains, linkTypes, loadKinArgs are optional and takes multiple argument delimited by ',' (comma)
  - dataset_params is optional and takes one argument. But if you want more arguments just write them in another columns (each argument in new column)
 
 If you have everything prepared just type in Matlab console 'loadTasksFromFile('tasks.csv')'. (You must have at least [Utils](Utils) folder in Matlab path).
