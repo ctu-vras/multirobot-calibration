@@ -1,10 +1,32 @@
 function str = unpadVectors(str, kinematics, type)
-% PADVECTORS unpad vector and get it back to default form set by user
-%   INPUT - str - structure to unpad
-%         - kinematics - Robot kinematics structure
-%         - type - structure: 0 - only DH; 1 - only RT; 2 - mixed trans
-%   OUTPUT - str - structure with the same fields as input with unpadded
-%                  values
+    % PADVECTORS unpad vector and get it back to default form set by user
+    %   INPUT - str - structure to unpad
+    %         - kinematics - Robot kinematics structure
+    %         - type - structure: 0 - only DH; 1 - only RT; 2 - mixed trans
+    %   OUTPUT - str - structure with the same fields as input with unpadded
+    %                  values
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
     for name=fieldnames(str)'
         name = name{1};
         str.(name) = double(str.(name));

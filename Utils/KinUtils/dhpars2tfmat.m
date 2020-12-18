@@ -1,9 +1,31 @@
 function tfmat = dhpars2tfmat(dhpars)
-%DHPARS2TFMAT Compute a transformation given by Denavit-Hartenberg parameters.
-%INPUT - dhpars - (X,6) Denavit-Hartenberg parameters first line is first
-%joint of a group and last line is an end effector
-%OUTPUT - tfmat - transformation matrix from end effector to the first
-%joint of group.
+    %DHPARS2TFMAT Compute a transformation given by Denavit-Hartenberg parameters.
+    %INPUT - dhpars - (X,6) Denavit-Hartenberg parameters first line is first
+    %joint of a group and last line is an end effector
+    %OUTPUT - tfmat - transformation matrix from end effector to the first
+    %joint of group.
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
     s = size(dhpars,1);
     % reshape dh table to third dimension
     dhpars = reshape(dhpars', 1,6,s);

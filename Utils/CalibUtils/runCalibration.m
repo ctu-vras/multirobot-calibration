@@ -1,22 +1,44 @@
 function runCalibration(robot_fcn, config_fcn, approaches, chains, linkTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadKinfunc, loadKinargs, loadKinfolder)
-% RUNCALIBRATION - prepares structures for calibration
-%    INPUT - robot_fcn - string, name of the robot functon
-%          - config_fcn - string, name of the config function
-%          - approches - cell array of strings, name of used approaches
-%          - chains - cell array of strings, name of calibrated chains
-%          - linkTypes - cell array of strings, name of used link types
-%          - dataset_fcn - string, name of dataset function
-%          - whhitelist_fcn - string, name of whitelist function
-%          - bounds_fcn, string, name of bounds_fcn
-%          - dataset_params - cell array, arguments for dataset function
-%          - folder - string, name of results folder
-%          - saveInfo - [0/1, 0/1, 0/1], to save given files
-%          - loadKinfunc - string, name of load kinematics function (loadKinfromMat,
-%                         loadKinfromTXT)
-%          - loadKinargs - cell array, arguments for kinematics function
-%          - loadKinfolder - string, name of folder with results for load kinematics
-%                           function
-%% preparation
+    % RUNCALIBRATION - prepares structures for calibration
+    %    INPUT - robot_fcn - string, name of the robot functon
+    %          - config_fcn - string, name of the config function
+    %          - approches - cell array of strings, name of used approaches
+    %          - chains - cell array of strings, name of calibrated chains
+    %          - linkTypes - cell array of strings, name of used link types
+    %          - dataset_fcn - string, name of dataset function
+    %          - whhitelist_fcn - string, name of whitelist function
+    %          - bounds_fcn, string, name of bounds_fcn
+    %          - dataset_params - cell array, arguments for dataset function
+    %          - folder - string, name of results folder
+    %          - saveInfo - [0/1, 0/1, 0/1], to save given files
+    %          - loadKinfunc - string, name of load kinematics function (loadKinfromMat,
+    %                         loadKinfromTXT)
+    %          - loadKinargs - cell array, arguments for kinematics function
+    %          - loadKinfolder - string, name of folder with results for load kinematics
+    %                           function
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
+    %% preparation
     assert(~isempty(robot_fcn) && ~isempty(config_fcn) && ~isempty(dataset_fcn),'Empty name of robot, config or dataset function')
     rob = Robot(robot_fcn);
     

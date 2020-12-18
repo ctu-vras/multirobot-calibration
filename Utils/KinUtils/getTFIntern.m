@@ -1,13 +1,35 @@
 function [RTarm] = getTFIntern(dh_pars,link,rtMat, joints, indexes, parents, rtFields, type)
-%GETTFIntern computes transformation from given link to base 
-%INPUT - dh_pars - kinematics parameters 
-%       - link - given link object to start the transformation
-%       - rtMat - precomputed matrices
-%       - joints - joint angles
-%       - indexes - row indexes into kinematics table 
-%       - parents - structure of link ancestors for each group)
-%       - rtFields - fields in rtMat
-%OUTPUT - RTarm - transformation from the link to base
+    %GETTFIntern computes transformation from given link to base 
+    %INPUT - dh_pars - kinematics parameters 
+    %       - link - given link object to start the transformation
+    %       - rtMat - precomputed matrices
+    %       - joints - joint angles
+    %       - indexes - row indexes into kinematics table 
+    %       - parents - structure of link ancestors for each group)
+    %       - rtFields - fields in rtMat
+    %OUTPUT - RTarm - transformation from the link to base
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
     RTarm= [1,0,0,0;0,1,0,0;0,0,1,0;0,0,0,1]; 
     while isobject(link)
         gr = link.group;

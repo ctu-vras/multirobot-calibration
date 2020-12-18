@@ -1,15 +1,37 @@
 function [params, typicalX] = initialGuess(datasets, dh_pars, approaches, optim)
-%INITIALGUESS Compute initial guess of plane and/or external transformation parameters
-% Compute plane parameters for each dataset.planes and rotation vector
-% (quaternion) and translation vector for each dataset.external separately
-%INPUT - datasets - structure of dataset, where field names are {selftouch,
-%                     planes, external, projections} and and each field is 1xN cellArray
-%      - dh_pars - structure with kinematics parameters, where field names corresponding to names of
-%                     the 'groups' in robot. Each group is matrix.
-%      - approaches - structure of settings for each calibration approach
-%      - optim - structure of calibration settings
-%OUTPUT - params - row vector of initial parameters for planes and/or external transformation 
-%       - typicalX - row vector of scaling coefficients of the params
+    %INITIALGUESS Compute initial guess of plane and/or external transformation parameters
+    % Compute plane parameters for each dataset.planes and rotation vector
+    % (quaternion) and translation vector for each dataset.external separately
+    %INPUT - datasets - structure of dataset, where field names are {selftouch,
+    %                     planes, external, projections} and and each field is 1xN cellArray
+    %      - dh_pars - structure with kinematics parameters, where field names corresponding to names of
+    %                     the 'groups' in robot. Each group is matrix.
+    %      - approaches - structure of settings for each calibration approach
+    %      - optim - structure of calibration settings
+    %OUTPUT - params - row vector of initial parameters for planes and/or external transformation 
+    %       - typicalX - row vector of scaling coefficients of the params
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
     params=[];
     typicalX = [];
     for type = {'planes','external'}

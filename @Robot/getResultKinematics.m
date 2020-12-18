@@ -1,24 +1,43 @@
 function [results, corrs, start_dh] = getResultKinematics(robot, opt_pars, start_dh, whitelist, optim)
-%GETRESULTKINEMATICS - Returns final kinematics parameters and correction of each run
-%   INPUT - opt_pars - 1xN vector of optimized parameters
-%         - start_dh - structure of kinematics parameters used in calibration;
-%                      fields are names of 'groups', and each is 4D array
-%         - whitelist - structure of whitelist; 
-%                       fields are names of 'groups', and each is 4D array
-%         - optim - optim - structure of calibration settings
-%   OUTPUT - results - structure of result kinematics, with optimized parameteres,
-%                      wrapped to [-pi,pi]; field corresponds to 'groups'
-%                      used in robot and each one is 4D array:
-%                       - number of kinematics lines
-%                       - 4/6 params for each line
-%                       - number of repetitions
-%                       - number of perturation levels (1 for no pert)
-%          - corrs - corrections from nominal kinematics 
-%          - start_dh -  structure with all 'groups' used in the robot. Each
-%                        field is 4D array with kinematics parameters of given group
-%                        for each repetition and perturation range
-%
-%
+    %GETRESULTKINEMATICS - Returns final kinematics parameters and correction of each run
+    %   INPUT - opt_pars - 1xN vector of optimized parameters
+    %         - start_dh - structure of kinematics parameters used in calibration;
+    %                      fields are names of 'groups', and each is 4D array
+    %         - whitelist - structure of whitelist; 
+    %                       fields are names of 'groups', and each is 4D array
+    %         - optim - optim - structure of calibration settings
+    %   OUTPUT - results - structure of result kinematics, with optimized parameteres,
+    %                      wrapped to [-pi,pi]; field corresponds to 'groups'
+    %                      used in robot and each one is 4D array:
+    %                       - number of kinematics lines
+    %                       - 4/6 params for each line
+    %                       - number of repetitions
+    %                       - number of perturation levels (1 for no pert)
+    %          - corrs - corrections from nominal kinematics 
+    %          - start_dh -  structure with all 'groups' used in the robot. Each
+    %                        field is 4D array with kinematics parameters of given group
+    %                        for each repetition and perturation range
+    %
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
     
     % start with non-calibrated values
     results = start_dh;

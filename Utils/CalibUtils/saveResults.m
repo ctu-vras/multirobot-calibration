@@ -1,23 +1,44 @@
 function saveResults(rob,outfolder,res_dh,corrs_dh, errors, errorsAll, whitelist, chains, approach, linkTypes, optim, options, obsIndexes, robot_fcn, dataset_fcn, config_fcn, dataset_params)
-%SAVERESULTS Save results to mat files
-%   Saving inputed variables to mat files
-%INPUT - rob - Robot object
-%      - outfolder - save folder name
-%      - res_dh - robot result Kinematics
-%      - corrs_dh - corrections from nominal Kinematics
-%      - errors - before/after training rms errors, before/after testing rms errors
-%      - errorsAll - before/after training individual errors, before/after testing individual errors
-%      - whitelist - parameters to calibrate
-%      - chains - chains to calibrate
-%      - approach - calibration approaches
-%      - linkTypes -link types to calibrate
-%      - optim - calibration settings
-%      - options - lsqnonlin options object
-%      - obsIndexes - observability indexes
-%      - robot_fcn - string name of used robot_fcn
-%      - dataset_fcn - string name of used dataset_fcn
-%      - config_fcn  - string name of used config_fcn
-%      - dataset_params - cell array of used dataset_params
+    %SAVERESULTS Save results to mat files
+    %   Saving inputed variables to mat files
+    %INPUT - rob - Robot object
+    %      - outfolder - save folder name
+    %      - res_dh - robot result Kinematics
+    %      - corrs_dh - corrections from nominal Kinematics
+    %      - errors - before/after training rms errors, before/after testing rms errors
+    %      - errorsAll - before/after training individual errors, before/after testing individual errors
+    %      - whitelist - parameters to calibrate
+    %      - chains - chains to calibrate
+    %      - approach - calibration approaches
+    %      - linkTypes -link types to calibrate
+    %      - optim - calibration settings
+    %      - options - lsqnonlin options object
+    %      - obsIndexes - observability indexes
+    %      - robot_fcn - string name of used robot_fcn
+    %      - dataset_fcn - string name of used dataset_fcn
+    %      - config_fcn  - string name of used config_fcn
+    %      - dataset_params - cell array of used dataset_params
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
         
     if strcmp(optim.units, 'm')
         units = 1;       

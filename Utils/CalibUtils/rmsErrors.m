@@ -1,14 +1,36 @@
 function [rms_errors, errors_all] = rmsErrors(kinematics, robot, datasets, dataset_indexes, optim, approach)
-%RMSERRORS Compute rms errors
-%   Function computes rms errors and individual errors and return them
-%INPUT - kinematics - kinematics parameters for all repetititons and perturbations
-%      - robot - Robot object
-%      - datasets - dataset structure
-%      - dataset_indexes - poses to use from datasets
-%      - optim - calibration settings
-%      - approach -calibration approach
-%OUTPUT - rms_errors - rms errors
-%       - errors_all - individual errors
+    %RMSERRORS Compute rms errors
+    %   Function computes rms errors and individual errors and return them
+    %INPUT - kinematics - kinematics parameters for all repetititons and perturbations
+    %      - robot - Robot object
+    %      - datasets - dataset structure
+    %      - dataset_indexes - poses to use from datasets
+    %      - optim - calibration settings
+    %      - approach -calibration approach
+    %OUTPUT - rms_errors - rms errors
+    %       - errors_all - individual errors
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
     rms_distances = nan(1,optim.pert_levels*optim.repetitions);
     rms_plane_distances = nan(1,optim.pert_levels*optim.repetitions);
     rms_dist_from_ext = nan(1,optim.pert_levels*optim.repetitions);

@@ -1,15 +1,36 @@
 function plotCorrections(folder, varargin)
-% PLOTCORRECTIONS shows two plots for each 'group'. One with length (a,d)
-% and one with angles (alpha, theta) of corrections from given folder.
-%   INPUT - folder - string name of folder with results
-%         - varargin - Uses MATLABs argument parser, with these pairs:
-%                       - 'noiseLevel' - int, determines which perturbation
-%                                        level to use
-%                                      - Default: 0
-%                       - 'log' - 1/0 to use logarithmic scale
-%                               - Default: 1
-%                       - 'units' - 'm' or 'mm'
-%                                 - Default: units from the calibration
+    % PLOTCORRECTIONS shows two plots for each 'group'. One with length (a,d)
+    % and one with angles (alpha, theta) of corrections from given folder.
+    %   INPUT - folder - string name of folder with results
+    %         - varargin - Uses MATLABs argument parser, with these pairs:
+    %                       - 'noiseLevel' - int, determines which perturbation
+    %                                        level to use
+    %                                      - Default: 0
+    %                       - 'log' - 1/0 to use logarithmic scale
+    %                               - Default: 1
+    %                       - 'units' - 'm' or 'mm'
+    %                                 - Default: units from the calibration
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
 
     % Argument parser
     p=inputParser;

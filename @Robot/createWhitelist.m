@@ -1,30 +1,49 @@
 function [ opt_pars, min_pars, max_pars, whitelist, dh_pars] = createWhitelist( robot, dh_pars, lb_pars, ub_pars, optim, chains, linkTypes,  funcname )
-%CREATEWHITELIST selects whitelist and returns selected parameters based 
-%                on the whitelist, together with lower/upper bounds for the
-%                parameters.
-%   INPUT - dh_pars - structure where fields are names of  'groups', each 
-%                     field is 4D array with kinematics parameters
-%         - lb_pars - structure where fields are names of  'groups', each 
-%                     field is 4D array with lower bounds
-%         - ub_pars - structure where fields are names of  'groups', each 
-%                     field is 4D array with upper bounds
-%         - optim - structure of calibration settings
-%         - chains - structure of chain settings
-%         - linkTypes - structure of 'types' settings
-%         - funcname - name of the robot-specific function
-%   OUTPUT - opt_pars - 3D matrix of optimized pars, with dimensions:
-%                       - number of optimized pars
-%                       - number of repetitions
-%                       - number of perturbations (1 for no pert)
-%          - min_pars - 3D matrix of lower bounds;
-%                       same dimesions as opt_pars
-%          - max_pars - 3D matrix of upper bounds;
-%                       same dimesions as opt_pars
-%          - whitelist - structure where fields are names of  'groups', each 
-%                        field is 4D array with 1/0
-%          - dh_pars - structure where fields are names of  'groups', each 
-%                     field is 4D array with kinematics parameters
+    %CREATEWHITELIST selects whitelist and returns selected parameters based 
+    %                on the whitelist, together with lower/upper bounds for the
+    %                parameters.
+    %   INPUT - dh_pars - structure where fields are names of  'groups', each 
+    %                     field is 4D array with kinematics parameters
+    %         - lb_pars - structure where fields are names of  'groups', each 
+    %                     field is 4D array with lower bounds
+    %         - ub_pars - structure where fields are names of  'groups', each 
+    %                     field is 4D array with upper bounds
+    %         - optim - structure of calibration settings
+    %         - chains - structure of chain settings
+    %         - linkTypes - structure of 'types' settings
+    %         - funcname - name of the robot-specific function
+    %   OUTPUT - opt_pars - 3D matrix of optimized pars, with dimensions:
+    %                       - number of optimized pars
+    %                       - number of repetitions
+    %                       - number of perturbations (1 for no pert)
+    %          - min_pars - 3D matrix of lower bounds;
+    %                       same dimesions as opt_pars
+    %          - max_pars - 3D matrix of upper bounds;
+    %                       same dimesions as opt_pars
+    %          - whitelist - structure where fields are names of  'groups', each 
+    %                        field is 4D array with 1/0
+    %          - dh_pars - structure where fields are names of  'groups', each 
+    %                     field is 4D array with kinematics parameters
 
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
     %% Call appropriate function or select default
     if(nargin == 8)
        if ischar(funcname) || isstring(funcname)

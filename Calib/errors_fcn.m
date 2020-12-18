@@ -1,20 +1,40 @@
 function [ error_vec ] = errors_fcn( opt_pars, dh_pars, robot, whitelist, dataset, optim, approach, paramValues)
-%ERRORS_FCN returns vector of vector of errors for all types of calibration
-%   INPUT - opt_pars - 1xN vector of optimized parameters
-%         - dh_pars - structure with kinematics parameters, where field names corresponding to names of
-%                     the 'groups' in robot. Each group is matrix.
-%         - robot - instance of @Robot class
-%         - whitelist - structure with 1/0, where field names corresponding to names of
-%                       the 'groups' in robot. Each group is matrix.
-%         - dataset - structure of dataset, where field names are {selftouch,
-%                     planes, external, projection} and and each field is 1xN cellArray
-%         - optim - structure of calibration settings
-%         - approach - structure of settings for each calibration approach
-%         - paramValues - 1xn array used for planes, external calibration,
-%                       - Default: []
-%   OUTPUT - error_vec - MxN array of distance;
-%                        M=1 if optim.useNorm, M=3 if ~optim.useNorm;
-%                        N is number of errors from all types of calib
+    %ERRORS_FCN returns vector of vector of errors for all types of calibration
+    %   INPUT - opt_pars - 1xN vector of optimized parameters
+    %         - dh_pars - structure with kinematics parameters, where field names corresponding to names of
+    %                     the 'groups' in robot. Each group is matrix.
+    %         - robot - instance of @Robot class
+    %         - whitelist - structure with 1/0, where field names corresponding to names of
+    %                       the 'groups' in robot. Each group is matrix.
+    %         - dataset - structure of dataset, where field names are {selftouch,
+    %                     planes, external, projection} and and each field is 1xN cellArray
+    %         - optim - structure of calibration settings
+    %         - approach - structure of settings for each calibration approach
+    %         - paramValues - 1xn array used for planes, external calibration,
+    %                       - Default: []
+    %   OUTPUT - error_vec - MxN array of distance;
+    %                        M=1 if optim.useNorm, M=3 if ~optim.useNorm;
+    %                        N is number of errors from all types of calib
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
 
     % Create matrices
     distances = [];

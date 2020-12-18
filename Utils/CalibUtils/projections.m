@@ -1,10 +1,32 @@
 function camera_points = projections(points, eyes, cameras)
-%PROJECTIONS Project points to the cameras
-% Project points given by 4x4xN transformation matrices array tfs to the cameras
-%INPUT - points - points in cameras coordinate system
-%      - eyes - cameras intrinsic parameters (dist coeffs and camera matrix)
-%      - cameras - number of poses in poses set
-%OUTPUT - camera_points - row vector of projection coords (u,v)
+    %PROJECTIONS Project points to the cameras
+    % Project points given by 4x4xN transformation matrices array tfs to the cameras
+    %INPUT - points - points in cameras coordinate system
+    %      - eyes - cameras intrinsic parameters (dist coeffs and camera matrix)
+    %      - cameras - number of poses in poses set
+    %OUTPUT - camera_points - row vector of projection coords (u,v)
+    
+    
+    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Department of Cybernetics, Faculty of Electrical Engineering, 
+    % Czech Technical University in Prague
+    %
+    % This file is part of Multisensorial robot calibration toolbox (MRC).
+    % 
+    % MRC is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU Lesser General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    % 
+    % MRC is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU Lesser General Public License for more details.
+    % 
+    % You should have received a copy of the GNU Leser General Public License
+    % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
     dc = eyes.dist; % radial distortion coeffs
     tdc = eyes.tandist; % tangential distortion coeffs
     mat = eyes.matrix(1:2,:,:); % camera matrix
