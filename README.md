@@ -1,3 +1,8 @@
+# Multi-chain calibration  
+This toolbox provides a solution to the calibration of a general robot by combining multiple calibration [approaches](#calibration-approaches). The toolbox also offers user-friendly GUI, which makes calibration of robots accessible even for the general public. 
+
+![pipeline](pipeline.jpg)
+
 # Contents
 
  - [How to run](#how-to-run)
@@ -48,7 +53,7 @@ Templates for [Robot function](UserData/Templates/loadExampleRobot.m), [Config f
 # Robot
 
 Found in the [@Robot](@Robot) folder. This directory includes the main class file for the robots [Robot.m](@Robot/Robot.m).
-This file includes the constructor, which calls robot-specific functions (see [Robots](UserData/Robots)) to set up the robot.
+This file includes the constructor, which calls robot-specific functions (see section [Robots](#robots) and folder [Robots](UserData/Robots)) to set up the robot.
 
 ## Properties
 
@@ -247,11 +252,11 @@ Folder with functions designed for calibration
 
 The toolbox allows to calibrate with 4 principles:
 
- - selftouch - touch of two different chains
+ - self-contact (selftouch) - touch of two different chains
    - e.g. finger to arm (iCub), two end-effectors (Motoman), arm and torso (Nao)
- - projection - calibration with camera mounted directly on the robot
- - planes - calibration using plane constrains
- - external - calibration using external cameras (laser sensor, kinect...)
+ - self-observation (projection) - calibration with camera mounted directly on the robot
+ - planar (planes) - calibration using plane constrains
+ - external device  (external) - calibration using external cameras (laser sensor, kinect...)
 
 Approaches can be combined at one time. To set them, see [Calibration config](#calibration-config).
 ## Files
