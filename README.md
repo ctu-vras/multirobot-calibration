@@ -1,7 +1,7 @@
 # Multi-chain calibration  
 This toolbox provides a solution to the calibration of a general robot by combining multiple calibration [approaches](#calibration-approaches). The toolbox also offers user-friendly GUI, which makes calibration of robots accessible even for the general public. 
 
-![pipeline](pipeline.jpg)
+![pipeline](overview.png)
 
 # Contents
 
