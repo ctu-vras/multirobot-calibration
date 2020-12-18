@@ -52,6 +52,11 @@ Templates for [Robot function](UserData/Templates/loadExampleRobot.m), [Config f
 
 # Robot
 
+Robot is considered as an object with a tree-like kinematic structure. Kinematics structure can contain three types of matrices:  
+ - whole body part described by DH - matrix has four columns  
+ - whole body part described by vectors - matrix has six columns  
+ - the links of the body part are described either by DH or by vectors - the matrix has six columns and missing values in case of rows with DH parameters are defined as NaN  
+ 
 Found in the [@Robot](@Robot) folder. This directory includes the main class file for the robots [Robot.m](@Robot/Robot.m).
 This file includes the constructor, which calls robot-specific functions (see section [Robots](#robots) and folder [Robots](UserData/Robots)) to set up the robot.
 
