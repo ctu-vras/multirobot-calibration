@@ -32,7 +32,7 @@ function [ dist, coeffs ] = getProjectionDist( dh_pars, robot, datasets)
     
     dist = [];
     coeffs = [];
-    cam_frames = robot.findJointByType('eye');
+    cam_frames = robot.findLinkByType('eye');
     type = robot.structure.type;
     for dataset=datasets
         dataset = dataset{1};

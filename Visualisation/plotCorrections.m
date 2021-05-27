@@ -62,7 +62,7 @@ function plotCorrections(folder, varargin)
         units = info.optim.units;
     end
     
-    fnames=fieldnames(corrections);
+    fnames=fieldnames(whitelist);
     
     for name = 1:size(fnames,1)
         whitelist.(fnames{name}) = double(whitelist.(fnames{name}));

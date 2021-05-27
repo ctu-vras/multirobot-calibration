@@ -36,12 +36,11 @@ function [ dist ] = getDist(dh_pars, robot, datasets, optim)
     for dataset=datasets
         dataset = dataset{1};
         refPoints = dataset.refPoints;
-        computeArm2 = ~optim.refPoints || (isempty(refPoints));
         % compute RT matrices and transform points to base frame
-        [arm1,arm2] = getPointsIntern(dh_pars, dataset, computeArm2, robot.structure.type);
-        
-        % if only one arm, use the refPoints
-        if(~computeArm2) 
+        if (~optim.refPoints || (isempty(refPoints))) 
+            [arm1,arm2] = getPointsIntern(dh_pars, dataset, robot.structure.type);
+        else % if only one arm, use the refPoints
+            arm1 = getPointsIntern(dh_pars, dataset, robot.structure.type);
             arm2 = refPoints';
         end
         

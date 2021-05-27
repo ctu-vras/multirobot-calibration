@@ -11,7 +11,7 @@ function datasets = loadNewLeicaDataset(rob,~, ~, ~ )
 %   OUTPUT - datasets - 1x4 ([self-touch, planes, external, projection]) 
 %                       cell array of cell arrays (1xN) of datasets
 
-    assert(~isempty(rob.findJoint('LR1')))
+    assert(~isempty(rob.findLink('LR1')))
     
     
     dataset.cameras = [];

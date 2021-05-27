@@ -61,6 +61,9 @@ function [results, corrs, start_dh] = getResultKinematics(robot, opt_pars, start
             results.(fnames{field})(:,4:6,:,:)=ezwraptopi(results.(fnames{field})(:,4:6,:,:));
             count = new_count;
         end
+        if (optim.skipNoPert) 
+            results.(fnames{field})(:,:,:,1) = start_dh.(fnames{field})(:,:,:,1);
+        end
         mResults = results.(fnames{field});
         % corrections = results - default 
         corrs.(fnames{field}) = zeros(size(mResults));
@@ -69,6 +72,9 @@ function [results, corrs, start_dh] = getResultKinematics(robot, opt_pars, start
         % wrap to [-pi,pi]
         corrs.(fnames{field})(:,4:6,:,:)=ezwraptopi(corrs.(fnames{field})(:,4:6,:,:));
         start_dh.(fnames{field})(:,1:3,:,:) = start_dh.(fnames{field})(:,1:3,:,:)/optim.unitsCoef;
+        if (optim.skipNoPert) 
+           corrs.(fnames{field})(:,:,:,1) = nan;
+        end
     end
 end
 

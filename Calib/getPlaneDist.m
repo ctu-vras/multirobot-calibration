@@ -31,10 +31,10 @@ function [ dist ] = getPlaneDist( dh_pars, robot, datasets, planePars)
     
     
     dist = [];
-    for datasetId=length(datasets)
+    for datasetId=1:length(datasets)
         dataset = datasets{datasetId};    
         % compute points in the base frame
-        robPoints = getPointsIntern(dh_pars, dataset, false, robot.structure.type);
+        robPoints = getPointsIntern(dh_pars, dataset, robot.structure.type);
         if isempty(planePars)
             % compute the plane
             plane = getPlane(robPoints);

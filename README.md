@@ -1,7 +1,11 @@
 # Multisensorial robot calibration framework and toolbox 
 This toolbox provides a solution to the multi-chain calibration of a general robot by combining multiple calibration approaches. Users can define an arbitrary robot, choose calibration approach, set parameters of the optimization solver and the calibration. The results can be saved for later use and evaluated with a variety of prepared visualizations. Also, a user-friendly GUI is available, which makes the calibration of robots accessible even for the general public. 
 
-![pipeline](overview.png)
+![pipeline](overview.png)  
+
+**Check out youtube video as well**
+[![Youtube video](yt_thumb.png)](https://www.youtube.com/watch?v=ZZHztHF6eNs)
+
 
 # Contents
 
@@ -23,7 +27,7 @@ This toolbox provides a solution to the multi-chain calibration of a general rob
 # How to run
 
 Recommended steps (the order is optional):
- - [Download the GUI installation file and user data](https://github.com/ctu-vras/multirobot-calibration/releases/latest) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
+ - [Download the GUI installation file and user data](https://gitlab.fel.cvut.cz/body-schema/code-calib-multirobot/-/releases) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
  - Install the GUI in Matlab by double clicking on the file. The toolbox directory (depending on your Matlab Preferences - Add-ons - Installation Folder) will be added to the Matlab "path".
  - Unpack the additionalFiles.zip into a folder of your choice. This will give you access to the folders discussed below.  
    - **Recommendation:** Create a working folder, move the additional files there and set it as Current Folder in Matlab.

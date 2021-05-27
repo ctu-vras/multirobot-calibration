@@ -1,7 +1,8 @@
-function loadTasksFromFile(fileName)
+function loadTasksFromFile(fileName, startRow)
     %LOADTASKSFROMFILE Loading the calibration task from csv file
     %Function for loading calibrations tasks from csv file and running main
     %INPUT - fileName - csv file name
+    %      - startRow - index of first row (default 1)
     
     
     % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
@@ -23,6 +24,9 @@ function loadTasksFromFile(fileName)
     % You should have received a copy of the GNU Leser General Public License
     % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
     
+    if (nargin < 2)
+       startRow = 1; 
+    end
     
     %% loading column names and type from file
     opts=detectImportOptions(fileName);
@@ -34,7 +38,7 @@ function loadTasksFromFile(fileName)
     file=readtable(fileName,opts);
 
     keyWords={'min', 'max', 'median'}; % type of selecting kinematics from Mat
-    for lineId=1:size(file,1)
+    for lineId=startRow:size(file,1)
         line=table2cell(file(lineId,:));
         %% save info switch
         if strcmpi(line{11},'true')
