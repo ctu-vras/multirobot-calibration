@@ -22,7 +22,7 @@ This toolbox provides a solution to the multi-chain calibration of a general rob
  - [Utils](#utils)
  - [Visualization](#visualization)
  - [Loading from csv](#loading-from-csv)
- - [Schema](#schema)
+ - [Publications](#publications)
 
 # How to run
 
@@ -398,3 +398,10 @@ Fields:
  - dataset_params is optional and takes one argument. But if you want more arguments just write them in another columns (each argument in new column)
 
 If you have everything prepared just type in Matlab console 'loadTasksFromFile('tasks.csv')'. (You must have at least [Utils](Utils) folder in Matlab path).
+
+# Publications
+The toolbox was presented in the following publication:
+
+Rozlivek, J.; Rustler, L.; Stepanova, K. & Hoffmann, M. (2021), Multisensorial robot calibration framework and toolbox, in 'Humanoid Robots (Humanoids), IEEE-RAS International Conference on', pp. 459-466.
+
+If you use this software in your work, please cite this article. 
