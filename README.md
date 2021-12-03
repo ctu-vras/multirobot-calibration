@@ -400,12 +400,14 @@ Fields:
 If you have everything prepared just type in Matlab console 'loadTasksFromFile('tasks.csv')'. (You must have at least [Utils](Utils) folder in Matlab path).
 
 # Publications
-The toolbox was presented in the following publication:
-
-Rozlivek, J.; Rustler, L.; Stepanova, K. & Hoffmann, M. (2021), Multisensorial robot calibration framework and toolbox, in 'Humanoid Robots (Humanoids), IEEE-RAS International Conference on', pp. 459-466.  [[preprint-pdf]](https://drive.google.com/file/d/1iiIgpIlK2S5aXLhQlaLMu0ujcuXZ73gc/view)
 
 **If you use this software in your work, please cite this article.**
 
+The toolbox was presented in the following publication:
+
+Rozlivek, J.; Rustler, L.; Stepanova, K. & Hoffmann, M. (2021), Multisensorial robot calibration framework and toolbox, in 'Humanoid Robots (Humanoids), IEEE-RAS International Conference on', pp. 459-466.  [[IEEE Xplore]](https://doi.org/10.1109/HUMANOIDS47582.2021.9555803) [[preprint-pdf]](https://drive.google.com/file/d/1iiIgpIlK2S5aXLhQlaLMu0ujcuXZ73gc/view)
+
+
 In addition, the toolbox was applied in these works:
-- Stepanova, K.; Rozlivek, J.; Puciow, F.; Krsek, P.; Pajdla, T. & Hoffmann, M. (2021), 'Automatic self-contained calibration of an industrial dual-arm robot with cameras using self-contact, planar constraints, and self-observation', Robotics and Computer-Integrated Manufacturing. [[arxiv-pdf]](https://arxiv.org/abs/2012.07548)[[youtube video]](https://youtu.be/LMwINqA1t9w)
-- Rustler, L.; Potocna, B.; Polic, M.; Stepanova, K. & Hoffmann, M. (2021), Spatial calibration of whole-body artificial skin on a humanoid robot: comparing self-contact, 3D reconstruction, and CAD-based calibration, in 'Humanoid Robots (Humanoids), IEEE-RAS International Conference on', pp. 445-452. [[preprint-pdf]](https://drive.google.com/file/d/12KiZfZMiFZhHr8xuMZ-lMv0gJiEAmngn/view)[[youtube video]](https://youtu.be/CCa2OPDq-BY)
+- Stepanova, K.; Rozlivek, J.; Puciow, F.; Krsek, P.; Pajdla, T. & Hoffmann, M. (2022), 'Automatic self-contained calibration of an industrial dual-arm robot with cameras using self-contact, planar constraints, and self-observation', Robotics and Computer-Integrated Manufacturing 73, 102250. [[Elsevier - OPEN ACCESS pdf]](https://www.sciencedirect.com/science/article/pii/S0736584521001307)[[youtube video]](https://youtu.be/LMwINqA1t9w)
+- Rustler, L.; Potocna, B.; Polic, M.; Stepanova, K. & Hoffmann, M. (2021), Spatial calibration of whole-body artificial skin on a humanoid robot: comparing self-contact, 3D reconstruction, and CAD-based calibration, in 'Humanoid Robots (Humanoids), IEEE-RAS International Conference on', pp. 445-452. [[IEEE Xplore]](https://doi.org/10.1109/HUMANOIDS47582.2021.9555806) [[preprint-pdf]](https://drive.google.com/file/d/12KiZfZMiFZhHr8xuMZ-lMv0gJiEAmngn/view)[[youtube video]](https://youtu.be/CCa2OPDq-BY)
