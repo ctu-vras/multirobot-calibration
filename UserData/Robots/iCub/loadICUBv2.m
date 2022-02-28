@@ -126,21 +126,21 @@ function [ name, linkStructure, structure ] = loadICUBv2()
     structure.kinematics.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0]; 
                    
-%     structure.kinematics.leftLeg=[0, 0.0681, -0.1199, -1.5708, 0, 0;
-%                            0, 0, -pi/2, pi/2, nan, nan;
-%                            0, 0, -pi/2, pi/2, nan, nan;
-%                            0, -0.2236, pi/2, -pi/2, nan, nan;
-%                            -0.213, 0, pi, pi/2, nan, nan;
-%                            0, 0, -pi/2, 0, nan, nan;
-%                            -0.041, 0, 0, 0, nan, nan];
-% 
-%     structure.kinematics.rightLeg=[0, -0.0681, -0.1199, -1.5708, 0, 0;
-%                             0, 0, pi/2, pi/2, nan, nan;
-%                             0, 0, pi/2, pi/2, nan, nan;
-%                             0, 0.2236, -pi/2, -pi/2, nan, nan;
-%                             -0.213, 0, pi, pi/2, nan, nan;
-%                             0, 0, pi/2, 0, nan, nan;
-%                             -0.041, 0, pi, 0, nan,nan];
+    structure.kinematics.leftLeg=[0, 0.0681, -0.1199, -1.5708, 0, 0;
+                           0, 0, -pi/2, pi/2, nan, nan;
+                           0, 0, -pi/2, pi/2, nan, nan;
+                           0, -0.2236, pi/2, -pi/2, nan, nan;
+                           -0.213, 0, pi, pi/2, nan, nan;
+                           0, 0, -pi/2, 0, nan, nan;
+                           -0.041, 0, 0, 0, nan, nan];
+
+    structure.kinematics.rightLeg=[0, -0.0681, -0.1199, -1.5708, 0, 0;
+                            0, 0, pi/2, pi/2, nan, nan;
+                            0, 0, pi/2, pi/2, nan, nan;
+                            0, 0.2236, -pi/2, -pi/2, nan, nan;
+                            -0.213, 0, pi, pi/2, nan, nan;
+                            0, 0, pi/2, 0, nan, nan;
+                            -0.041, 0, pi, 0, nan,nan];
     structure.kinematics.leftThumb=[0, 0, pi/2, 0;
                                    0.021, -0.0056, 0, 0;
                                    0.026, 0, 0, 0;
@@ -248,8 +248,7 @@ function [ name, linkStructure, structure ] = loadICUBv2()
                            0, 0, 0, 0];
      
     %% robot default joint position (e.g. home position) for visualisation    
-    %zeros(1,7), zeros(1,7),
-    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4),  zeros(1,2), zeros(1,2)};
+    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4), zeros(1,2), zeros(1,2), zeros(1,7), zeros(1,7)};
     
     %% robot bounds for kinematics parameters
     structure.bounds.joint = [inf inf inf inf];

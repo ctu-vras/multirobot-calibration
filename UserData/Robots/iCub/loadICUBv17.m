@@ -247,7 +247,7 @@ function [ name, linkStructure, structure ] = loadICUBv17()
                            0, 0, 0, 0];
      
     %% robot default joint position (e.g. home position) for visualisation    
-    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4), zeros(1,7), zeros(1,7), zeros(1,2), zeros(1,2)};
+    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4), zeros(1,2), zeros(1,2), zeros(1,7), zeros(1,7)};
     
     %% robot bounds for kinematics parameters
     structure.bounds.joint = [inf inf inf inf];
