@@ -70,7 +70,7 @@ folder = 'projections-motoman';
 saveInfo = [1, 1, 1];
 loadKinfunc = 'loadKinfromTxt'; %load from txt files
 loadKinargs = {'kin-rep1-pert1'}; % name of the file
-loadKinfolder = '';
+loadKinfolder = 'self-touch-motoman';
 runCalibration(robot_fcn, config_fcn, approaches, chains, linkTypes, dataset_fcn, whitelist_fcn, bounds_fcn, dataset_params, folder, saveInfo, loadKinfunc, loadKinargs, loadKinfolder);
 
 %% iCub selftouch calibration - only right arm, using first 100 point from dataset

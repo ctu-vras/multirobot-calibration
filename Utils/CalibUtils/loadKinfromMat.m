@@ -75,7 +75,10 @@ function loadKinfromMat(robot,folder,varargin)
     end
     %% selecting the desired kinematics
     fnames=fieldnames(res_dh);
+    existing_fnames = unique(robot.linksStructure(:, end));
     for name=1:length(fnames)
-        robot.structure.kinematics.(fnames{name})=res_dh.(fnames{name})(:,:,rep,pert);
+        if ismember(fnames{name}, existing_fnames)
+            robot.structure.kinematics.(fnames{name})=res_dh.(fnames{name})(:,:,rep,pert);
+        end
     end
 end

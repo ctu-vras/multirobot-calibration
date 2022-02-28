@@ -26,7 +26,6 @@ function loadKinfromTxt(robot, folder, file)
     % You should have received a copy of the GNU Leser General Public License
     % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
     
-    
     if(nargin == 2)
         fileID = fopen(folder);
     else
@@ -39,8 +38,11 @@ function loadKinfromTxt(robot, folder, file)
     groups = {C{1}{isnan(A(:,1))}};
     idx = [find(isnan(A(:,1))); size(A,1)+1];
     % save kinematics for each group
+    existing_fnames = unique(robot.linksStructure(:, end));
     for i = 1:length(groups)
-        robot.structure.kinematics.(groups{i})= A(idx(i)+1:idx(i+1)-1,:);
+        if ismember(groups{i}, existing_fnames)
+            robot.structure.kinematics.(groups{i})= A(idx(i)+1:idx(i+1)-1,:);
+        end
     end
     fclose(fileID);
 end
