@@ -94,8 +94,8 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
         dataset.refPoints = data2(:,1:3); 
         dataset.name = 'self-touch';
         datasets.selftouch{k} = dataset; 
-       
         if(contains(chain, 'Eye'))
+            types = robot.structure.type;
             % projection dataset is doubled touch dataset
             dataset2.frame =  reshape([dataset.frame'; dataset.frame2'],[],1);
             dataset2.point =  reshape([dataset.point'; dataset.point'],[],6);
@@ -126,34 +126,34 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
             if(contains(chain, 'LREye'))
                 for i = 1:size(data2, 1)     
                     rtMat = dataset.rtMat(i);
-                    points2Cam(:,4*i-3) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields))*...
-                        (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields)*[0;0;0;1]);
-                    points2Cam(:,4*i-2) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields))*...
-                    (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields)*[0;0;0;1]);
-                    points2Cam(:,4*i-1) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields))*...
-                        (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields)*[0;0;0;1]);
-                    points2Cam(:,4*i) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields))*...
-                    (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields)*[0;0;0;1]);
+                    points2Cam(:,4*i-3) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields, types))*...
+                        (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields, types)*[0;0;0;1]);
+                    points2Cam(:,4*i-2) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields, types))*...
+                    (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields, types)*[0;0;0;1]);
+                    points2Cam(:,4*i-1) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields, types))*...
+                        (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields, types)*[0;0;0;1]);
+                    points2Cam(:,4*i) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields, types))*...
+                    (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields, types)*[0;0;0;1]);
                 end 
                 projs = projections(points2Cam, robot.structure.eyes, dataset2.cameras);
                 dataset2.refPoints = reshape(projs, 4,2*nmbPoses)';
             elseif(contains(chain,'REye'))
                 for i = 1:size(data2, 1)     
                     rtMat = dataset.rtMat(i);
-                    points2Cam(:,2*i-1) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields))*...
-                        (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields)*[0;0;0;1]);
-                    points2Cam(:,2*i) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields))*...
-                        (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields)*[0;0;0;1]);
+                    points2Cam(:,2*i-1) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields, types))*...
+                        (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields, types)*[0;0;0;1]);
+                    points2Cam(:,2*i) =  inversetf(getTFIntern(dh_pars,cam_frames{1},rtMat, dataset.joints(i), DHindexes.leftEyeVergence, parents, rtFields, types))*...
+                        (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields, types)*[0;0;0;1]);
                 end 
                 projs = projections(points2Cam, robot.structure.eyes, dataset2.cameras);
                 dataset2.refPoints = [projs;nan(2,length(points2Cam))]';
             elseif(contains(chain,'LEye'))
                 for i = 1:size(data2, 1)     
                     rtMat = dataset.rtMat(i);
-                    points2Cam(:,2*i-1) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields))*...
-                    (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields)*[0;0;0;1]);
-                    points2Cam(:,2*i) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields))*...
-                    (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields)*[0;0;0;1]);
+                    points2Cam(:,2*i-1) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields, types))*...
+                    (getTFIntern(dh_pars,right_finger{1},rtMat, dataset.joints(i), DHindexes.rightHandFinger, parents, rtFields, types)*[0;0;0;1]);
+                    points2Cam(:,2*i) =  inversetf(getTFIntern(dh_pars,cam_frames{2},rtMat, dataset.joints(i), DHindexes.rightEyeVergence, parents, rtFields, types))*...
+                    (getTFIntern(dh_pars,left_finger{1},rtMat, dataset.joints(i), DHindexes.leftHandFinger, parents, rtFields, types)*[0;0;0;1]);
                 end
                 projs = projections(points2Cam, robot.structure.eyes, dataset2.cameras);
                 dataset2.refPoints = [nan(2,length(points2Cam));projs]';
@@ -164,4 +164,5 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
     end
 %     datasets = {datasets.selftouch,{},{}, datasets.projection};
 end
+
 
