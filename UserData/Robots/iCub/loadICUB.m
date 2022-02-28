@@ -1,4 +1,4 @@
-function [ name, linkStructure, structure ] = loadICUB()
+function [ name, linkStructure, structure ] = loadICUBv2()
 %LOADICUBV2 Function for loading iCub version 2 robot 
 % Custom function for loading iCub version 2 robot.
 % OUTPUT - name - robot name
@@ -44,7 +44,53 @@ function [ name, linkStructure, structure ] = loadICUB()
         {'leftEyeVersion',types.joint,'eyesTilt',1,group.leftEye},...
         {'leftEyeVergence',types.eye,'leftEyeVersion',2,group.leftEye},...
         {'rightEyeVersion',types.joint,'eyesTilt',1,group.rightEye},...
-        {'rightEyeVergence',types.eye,'rightEyeVersion',2,group.rightEye}};
+        {'rightEyeVergence',types.eye,'rightEyeVersion',2,group.rightEye},...
+        ...
+        {'leftLegH0',types.joint,'base',1,group.leftLeg},...
+        {'leftHipPitch', types.joint, 'leftLegH0', 2, group.leftLeg},...
+        {'leftHipRoll',types.joint,'leftHipPitch',3,group.leftLeg},...
+        {'leftHipYaw',types.joint,'leftHipRoll',4,group.leftLeg},...
+        {'leftKnee',types.joint,'leftHipYaw',5,group.leftLeg},...
+        {'leftAnklePitch',types.joint,'leftKnee',6,group.leftLeg},...
+        {'leftAnkleRoll',types.joint,'leftAnklePitch',7,group.leftLeg},...
+        ...
+        {'rightLegH0',types.joint,'base',1,group.rightLeg},...
+        {'rightHipPitch', types.joint, 'rightLegH0', 2, group.rightLeg},...
+        {'rightHipRoll',types.joint,'rightHipPitch',3,group.rightLeg},...
+        {'rightHipYaw',types.joint,'rightHipRoll',4,group.rightLeg},...
+        {'rightKnee',types.joint,'rightHipYaw',5,group.rightLeg},...
+        {'rightAnklePitch',types.joint,'rightKnee',6,group.rightLeg},...
+        {'rightAnkleRoll',types.joint,'rightAnklePitch',7,group.rightLeg},...
+        ...
+        {'leftThumb1',types.joint,'leftHandFinger',1,group.leftThumb},...
+        {'leftThumb2',types.joint,'leftThumb1',2,group.leftThumb},...
+        {'leftThumb3',types.joint,'leftThumb2',3,group.leftThumb},...
+        {'leftThumb4',types.joint,'leftThumb3',4,group.leftThumb},...
+        {'leftThumb5',types.joint,'leftThumb4',5,group.leftThumb},...
+        ...
+        {'leftIndex1',types.joint,'leftHandFinger',1,group.leftIndex},...
+        {'leftIndex2',types.joint,'leftIndex1',2,group.leftIndex},...
+        {'leftIndex3',types.joint,'leftIndex2',3,group.leftIndex},...
+        {'leftIndex4',types.joint,'leftIndex3',4,group.leftIndex},...
+        ...
+        {'leftMiddle1',types.joint,'leftHandFinger',1,group.leftMiddle},...
+        {'leftMiddle2',types.joint,'leftMiddle1',2,group.leftMiddle},...
+        {'leftMiddle3',types.joint,'leftMiddle2',3,group.leftMiddle},...
+        ...
+        {'rightThumb1',types.joint,'rightHandFinger',1,group.rightThumb},...
+        {'rightThumb2',types.joint,'rightThumb1',2,group.rightThumb},...
+        {'rightThumb3',types.joint,'rightThumb2',3,group.rightThumb},...
+        {'rightThumb4',types.joint,'rightThumb3',4,group.rightThumb},...
+        {'rightThumb5',types.joint,'rightThumb4',5,group.rightThumb},...
+        ...
+        {'rightIndex1',types.joint,'rightHandFinger',1,group.rightIndex},...
+        {'rightIndex2',types.joint,'rightIndex1',2,group.rightIndex},...
+        {'rightIndex3',types.joint,'rightIndex2',3,group.rightIndex},...
+        {'rightIndex4',types.joint,'rightIndex3',4,group.rightIndex},...
+        ...
+        {'rightMiddle1',types.joint,'rightHandFinger',1,group.rightMiddle},...
+        {'rightMiddle2',types.joint,'rightMiddle1',2,group.rightMiddle},...
+        {'rightMiddle3',types.joint,'rightMiddle2',3,group.rightMiddle}};  
         
     %% robot initial kinematics     
     structure.kinematics.torso = [0, 0, 0, 1.2092, -1.2092, 1.2092;
@@ -80,7 +126,50 @@ function [ name, linkStructure, structure ] = loadICUB()
     structure.kinematics.rightEye = [0.000, 0.034, -pi/2.0, 0.000;  
                        0.000, 0.000, pi/2.0, -pi/2.0]; 
                    
-                                          
+    structure.kinematics.leftLeg=[0, 0.0681, -0.1199, -1.5708, 0, 0;
+                           0, 0, -pi/2, pi/2, nan, nan;
+                           0, 0, -pi/2, pi/2, nan, nan;
+                           0, -0.2236, pi/2, -pi/2, nan, nan;
+                           -0.213, 0, pi, pi/2, nan, nan;
+                           0, 0, -pi/2, 0, nan, nan;
+                           -0.041, 0, 0, 0, nan, nan];
+
+    structure.kinematics.rightLeg=[0, -0.0681, -0.1199, -1.5708, 0, 0;
+                            0, 0, pi/2, pi/2, nan, nan;
+                            0, 0, pi/2, pi/2, nan, nan;
+                            0, 0.2236, -pi/2, -pi/2, nan, nan;
+                            -0.213, 0, pi, pi/2, nan, nan;
+                            0, 0, pi/2, 0, nan, nan;
+                            -0.041, 0, pi, 0, nan,nan];
+    structure.kinematics.leftThumb=[0, 0, pi/2, 0;
+                                   0.021, -0.0056, 0, 0;
+                                   0.026, 0, 0, 0;
+                                   0.022, 0, 0, 0;
+                                   0.0168, 0, -pi/2, 0];
+                            
+    structure.kinematics.leftIndex=[0.0148, 0, -pi/2, 0;
+                                   0.0259, 0, 0, 0;
+                                   0.022, 0, 0, 0;
+                                   0.0168, 0, -pi/2, 0];
+                           
+    structure.kinematics.leftMiddle=[0.0285, 0, 0, 0;
+                                   0.024, 0, 0, 0;
+                                   0.0168, 0, -pi/2, 0];
+                                   
+   structure.kinematics.rightThumb=[0, 0, -pi/2, 0;
+                                   0.021, 0.0056, 0, 0;
+                                   0.026, 0, 0, 0;
+                                   0.022, 0, 0, 0;
+                                   0.0168, 0, -pi/2, 0];
+                            
+    structure.kinematics.rightIndex=[0.0148, 0, pi/2, 0;
+                                   0.0259, 0, 0, 0;
+                                   0.022, 0, 0, 0;
+                                   0.0168, 0, -pi/2, 0];
+                           
+    structure.kinematics.rightMiddle=[0.0285, 0, 0, 0;
+                                   0.024, 0, 0, 0;
+                                   0.0168, 0, -pi/2, 0];             
     
     %% robot initial whitelist                              
     structure.WL.torso = zeros(2,4);
@@ -114,11 +203,52 @@ function [ name, linkStructure, structure ] = loadICUB()
                     
     structure.WL.rightEye = [1, 1, 1, 1;
                               1, 1, 1, 1];
+    structure.WL.leftLeg=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
+
+    structure.WL.rightLeg=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
                             
+    structure.WL.leftThumb=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
+                            
+    structure.WL.leftIndex=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
+                           
+    structure.WL.leftMiddle=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
+                                   
+    structure.WL.rightThumb=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
+                            
+    structure.WL.rightIndex=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
+                           
+    structure.WL.rightMiddle=[0, 0, 0, 0;
+                           0, 0, 0, 0;
+                           0, 0, 0, 0];
      
     %% robot default joint position (e.g. home position) for visualisation    
-    %zeros(1,7), zeros(1,7),
-    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4),  zeros(1,2), zeros(1,2)};
+    structure.defaultJoints = {[0, -pi/2, 0, 0, 0, 0, 0, 0], [0, -pi/2, 0, 0, 0, 0, 0, 0], zeros(1,4), zeros(1,2), zeros(1,2), zeros(1,7), zeros(1,7)};
     
     %% robot bounds for kinematics parameters
     structure.bounds.joint = [inf inf inf inf];
