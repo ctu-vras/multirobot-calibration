@@ -61,7 +61,7 @@ classdef Robot < handle
             %   name...string name of loading function for given robot
             if nargin==1
                 % add all framework to path
-                addpath(genpath(pwd));
+                %addpath(genpath(pwd));
                 % call loading function
                 func=str2func(funcname);
                 [name, linksStructure, structure]=func();
