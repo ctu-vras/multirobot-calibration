@@ -388,7 +388,7 @@ Methods:
 # Loading from csv
 
 Apart from directly settings parametrs in GUI to run the calibration, you can set up the configuration files and use csv file to run calibration (for example in case of batch calibration or calibration on headless server).
-See [Tasks](tasks.csv) with example. The field Timestamp will be automatically filled after completing the task. Every other field take text or numbers.  
+See [Tasks](UserData/tasks.csv) with example. The field Timestamp will be automatically filled after completing the task. Every other field take text or numbers.  
 
 Fields:
 
