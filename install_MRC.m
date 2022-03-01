@@ -44,7 +44,7 @@ function install_MRC(varargin)
     fprintf('Installing MRC in %s\n', install_prefix);
 
     % The install url is created following
-    mrc_url = 'https://github.com/ctu-vras/multirobot-calibration/releases/download/v1.2/MRC.mlappinstall';
+    mrc_url = 'https://github.com/ctu-vras/multirobot-calibration/releases/latest/download/MRC.mlappinstall';
     
     app_name = 'MRC.mlappinstall';
     fprintf('Downloading and installing MRC \n');
@@ -52,7 +52,7 @@ function install_MRC(varargin)
     install_info = matlab.apputil.install(app_name);
     delete(app_name)
 
-    user_files_url = 'https://github.com/ctu-vras/multirobot-calibration/releases/download/v1.2/UserData.zip';
+    user_files_url = 'https://github.com/ctu-vras/multirobot-calibration/releases/latest/download/UserData.zip';
     unzip(user_files_url, pwd);
     movefile('UserData', install_prefix);
 
