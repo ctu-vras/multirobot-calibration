@@ -9,6 +9,7 @@ This toolbox provides a solution to the multi-chain calibration of a general rob
 
 # Contents
 
+ - [How to install](#how-to-install)
  - [How to run](#how-to-run)
  - [Examples](#examples)
  - [Robot](#robot)
@@ -24,13 +25,22 @@ This toolbox provides a solution to the multi-chain calibration of a general rob
  - [Loading from csv](#loading-from-csv)
  - [Publications](#publications)
 
-# How to run
+# How to install
 
-Recommended steps (the order is optional):
- - [Download the GUI installation file and user data](https://github.com/ctu-vras/multirobot-calibration/releases/latest) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**
- - Install the GUI in Matlab by double clicking on the file. The toolbox directory (depending on your Matlab Preferences - Add-ons - Installation Folder) will be added to the Matlab "path".
- - Unpack the additionalFiles.zip into a folder of your choice. This will give you access to the folders discussed below.  
-   - **Recommendation:** Create a working folder, move the additional files there and set it as Current Folder in Matlab.
+There are three possibilities (sorted by recommendation):
+1) Download and run [install_MRC.m](install_MRC.m)  
+   - This will download the newest release and install it in your computer  
+2) [Download the GUI installation file and user data](https://github.com/ctu-vras/multirobot-calibration/releases/latest) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**  
+
+   - Install the GUI in Matlab by double clicking on the file. The toolbox will be installed in you installation path (can be seen in: Matlab Preferences -> Add-ons -> Installation Folder).
+    - Unpack the additionalFiles.zip into a folder of your choice. This will give you access to the folders discussed below.  
+      - **Recommendation:** Create a working folder, move the additional files there and set it as Current Folder in Matlab.
+    - Add folder and subfolders of your UserData to the path. In some versions of Matlab also the installation folder need to be added  
+      - you can try to type ''which Robot'' in the Matlab console and if the path is correctly added, you should see path to Robot.m  
+3) Clone this repository and add it to Matlab path  
+
+
+# How to run
  - Prepare functions for your robot (or use one of the existing from Robot function patterns)
    - take a look at [Robots](#robots) section and [Robots folder](Robots) to see existing possibilities
    - mandatory are functions with robot structures and kinematics (see [loading functions](#loading-functions)) and 
@@ -43,7 +53,6 @@ Recommended steps (the order is optional):
        - look at [Calibration examples](UserData/Examples/calibration.m)
      - or use csv file as input (see [Loading from csv](#loading-from-csv))
      - Visualize and evaluate results (see [Visualization](#visualization))  
-      
     - B) run GUI and follow the instructions
 
 # Examples
