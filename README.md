@@ -32,7 +32,7 @@ There are three possibilities (sorted by recommendation):
    - This will download the newest release and install it in your computer  
 2) [Download the GUI installation file and user data](https://github.com/ctu-vras/multirobot-calibration/releases/latest) (Configuration file pattern, Robot function pattern, Example codes, csv file pattern) - **always download the lastest release!**  
 
-   - Install the GUI in Matlab by double clicking on the file. The toolbox will be installed in you installation path (can be seen in: Matlab Preferences -> Add-ons -> Installation Folder).
+   - Install the GUI in Matlab by double clicking on the .mlappinstall file. The toolbox will be installed in you installation path (can be seen in: Matlab Preferences -> Add-ons -> Installation Folder).
     - Unpack the additionalFiles.zip into a folder of your choice. This will give you access to the folders discussed below.  
       - **Recommendation:** Create a working folder, move the additional files there and set it as Current Folder in Matlab.
     - Add folder and subfolders of your UserData to the path. In some versions of Matlab also the installation folder need to be added  
