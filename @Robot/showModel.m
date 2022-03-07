@@ -1,4 +1,4 @@
-function fig = showModel(r, varargin)
+function [fig, tfs] = showModel(r, varargin)
     % SHOWMODEL shows virtual model of the robot based on input Link
     %           angles.
     %   INPUT - angles - cellarray of 1xN arrays link in order corresponding
@@ -29,7 +29,7 @@ function fig = showModel(r, varargin)
     %                                        - Default: ''
     
     
-    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Copyright (C) 2019-2022  Jakub Rozlivek and Lukas Rustler
     % Department of Cybernetics, Faculty of Electrical Engineering, 
     % Czech Technical University in Prague
     %
@@ -106,7 +106,7 @@ function fig = showModel(r, varargin)
     
     %% ROOT - plot the original root reference frame
     root = eye(4);
-    DrawRefFrame(root,1,0.04*coef, 1, 'hat','ROOT');
+    DrawRefFrame(root,1,0.04*coef, 0, 'hat','ROOT');
 
     %% Draw
     for robots=1+p.Results.dual:-1:1
@@ -176,7 +176,7 @@ function fig = showModel(r, varargin)
             str.refFrameSize = 0.01*coef;
             str.types=types_;
             str.naoSkin = p.Results.naoSkin;
-            FwdKin(r, str, coef, showText);
+            tfs.(name) = FwdKin(r, str, coef, showText);
         end
         fnames = {'rightArmSkin', 'leftArmSkin', 'torsoSkin', 'headSkin'};
         if p.Results.naoSkin

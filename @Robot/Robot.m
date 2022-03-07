@@ -27,7 +27,7 @@ classdef Robot < handle
     %                parameters.
     
     
-    % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+    % Copyright (C) 2019-2022  Jakub Rozlivek and Lukas Rustler
     % Department of Cybernetics, Faculty of Electrical Engineering, 
     % Czech Technical University in Prague
     %
@@ -232,7 +232,7 @@ classdef Robot < handle
         end
         
         %% Show Matlab model
-        fig = showModel(robot, varargin);
+        [fig, tfs] = showModel(robot, varargin);
         
         %% Prepare kinematics, bounds and perts
         [init, lb, ub]=prepareKinematics(robot, pert, optim, funcname);

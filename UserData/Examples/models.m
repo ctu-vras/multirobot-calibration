@@ -64,3 +64,9 @@ close all
 newKinematics=rob.structure.kinematics;
 newKinematics.rightArm(6,1)=0.1;
 rob.showModel({[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0]},'dual',1,'dualKinematics',newKinematics)
+
+%%
+% Finally you can check the robot end-effector's manipulability
+rob = Robot('loadICUBv2');
+limb = 'leftArm';
+manipulability(rob, limb);

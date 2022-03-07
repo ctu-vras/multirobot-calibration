@@ -1,5 +1,23 @@
 classdef group
 % group is static class of enumerated type containing string names of all part of robot body and skin
+% Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
+% Department of Cybernetics, Faculty of Electrical Engineering, 
+% Czech Technical University in Prague
+%
+% This file is part of Multisensorial robot calibration toolbox (MRC).
+% 
+% MRC is free software: you can redistribute it and/or modify
+% it under the terms of the GNU Lesser General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% MRC is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU Lesser General Public License for more details.
+% 
+% You should have received a copy of the GNU Leser General Public License
+% along with MRC.  If not, see <http://www.gnu.org/licenses/>.
     properties(Constant)
         leftArm = 'leftArm';
         rightArm = 'rightArm';
@@ -33,26 +51,6 @@ classdef group
             %     INTPUT - structure to be sorted
             %     OUTPUT - sorted structure
             
-            % Copyright (C) 2019-2021  Jakub Rozlivek and Lukas Rustler
-            % Department of Cybernetics, Faculty of Electrical Engineering, 
-            % Czech Technical University in Prague
-            %
-            % This file is part of Multisensorial robot calibration toolbox (MRC).
-            % 
-            % MRC is free software: you can redistribute it and/or modify
-            % it under the terms of the GNU Lesser General Public License as published by
-            % the Free Software Foundation, either version 3 of the License, or
-            % (at your option) any later version.
-            % 
-            % MRC is distributed in the hope that it will be useful,
-            % but WITHOUT ANY WARRANTY; without even the implied warranty of
-            % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-            % GNU Lesser General Public License for more details.
-            % 
-            % You should have received a copy of the GNU Leser General Public License
-            % along with MRC.  If not, see <http://www.gnu.org/licenses/>.
-            
-            
              order = {'torso', 'leftArm', 'rightArm', 'head', 'leftEye', 'rightEye',...
              'leftLeg', 'rightLeg', 'leftFinger', 'rightFinger', 'leftIndex', ...
             'rightIndex', 'leftThumb', 'rightThumb', 'leftMiddle', 'rightMiddle',...
@@ -66,6 +64,20 @@ classdef group
                     newStruct.(f) = oldStruct.(f);
                 end
             end
+        end
+        
+        function idx = getSortedIndex(name)
+            % getSortedIndex - get index of the body part
+            %
+            %     INTPUT - body part name
+            %     OUTPUT - body part index
+            
+             order = {'torso', 'leftArm', 'rightArm', 'head', 'leftEye', 'rightEye',...
+             'leftLeg', 'rightLeg', 'leftFinger', 'rightFinger', 'leftIndex', ...
+            'rightIndex', 'leftThumb', 'rightThumb', 'leftMiddle', 'rightMiddle',...
+            'leftMarkers', 'rightMarkers', 'torsoSkin', 'leftArmSkin', 'rightArmSkin', ...
+            'headSkin',  'dummy'};
+            idx = find(strcmp(name, order));
         end
     end
 end
