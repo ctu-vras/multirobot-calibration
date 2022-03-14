@@ -142,4 +142,5 @@ function internalCalibration(rob, config, whpars, data, folder, saveInfo, saveDa
     if saveInfo(2)
        save([outfolder, 'jacobians.mat'], 'jacobians', '-v7.3');
     end
+    addpath(outfolder);
 end

@@ -1,4 +1,4 @@
-function [ name, linkStructure, structure ] = loadICUBv2()
+function [ name, linkStructure, structure ] = loadICUB()
 %LOADICUBV2 Function for loading iCub version 2 robot 
 % Custom function for loading iCub version 2 robot.
 % OUTPUT - name - robot name

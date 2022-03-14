@@ -59,11 +59,12 @@ function plotJacobian(folder, titles)
     for fig=1:floor(length(jacobians)/6)+1
         rows = 2;
         cols = 3;
-        h = figure();
-        hold on;
+        %h = figure();
+        %hold on;
         %% plot normalized jacobians
         for j = count:min(count+5,length(jacobians))
-            subplot(rows,cols,j-count+1);
+            %subplot(rows,cols,j-count+1);
+            h = figure();
             maxs = max(max(abs(jacobians{j})));
             maxs(maxs == 0) = 1;
             jac = jacobians{j}./maxs;
@@ -72,7 +73,7 @@ function plotJacobian(folder, titles)
             ylim([-1,1])
             xlim([0.5, size(jac,2)+0.5])
             bp = gca;
-            xtickangle(15)
+            xtickangle(30)
             bp.XAxis.TickLabelInterpreter = 'latex';
             ylabel('$\frac{\partial X_i}{\partial \phi_j}$', 'Interpreter', 'latex','FontSize',12);
 
