@@ -96,11 +96,12 @@ function plotErrorsBoxplots(folders,varargin)
         robot=info.rob;
         if strcmp(errorsType,'errors')
             % get cellArray from arrays
-            distsTs = num2cell(errors(13:16,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const,2);
+            distsTs = num2cell([errors(13:15,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const; errors(16,(pert-1)*optim.repetitions+(1:optim.repetitions))],2);
+            
             if p.Results.train
-                distsTr = num2cell(errors(5:8,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const,2);
+                distsTr = num2cell([errors(5:7,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const;errors(8,(pert-1)*optim.repetitions+(1:optim.repetitions))],2);
             else
-                distsTr = num2cell(errors(9:12,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const,2);
+                distsTr = num2cell([errors(9:11,(pert-1)*optim.repetitions+(1:optim.repetitions)).*const; errors(12,(pert-1)*optim.repetitions+(1:optim.repetitions))],2);
             end
         else
             distsTs=cell(4,1);
@@ -203,7 +204,7 @@ function plotErrorsBoxplots(folders,varargin)
     ax.XAxis.TickLabelInterpreter = 'latex';
     ax.YAxis.TickLabelInterpreter = 'latex';
     xlabel('Dataset');
-    ylabel(['Error [',units,']']);
+    ylabel(['Error [',units,'/px]']);
     title('Comparison of RMS errors')
     %get y limits for lines
     yl=ylim;

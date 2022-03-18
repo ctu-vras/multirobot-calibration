@@ -58,12 +58,13 @@ function plotErrorsHistogram(folder,varargin)
     errors=errors.errorsAll;
     optim = info.optim;
     if strcmp(units,'m') &&  strcmp(optim.units,'mm')
-        const = 0.001;
+        const = repmat(0.001, 1, 4);
     elseif strcmp(units,'mm') &&  strcmp(optim.units,'m')
-        const = 1000;
+        const = repmat(1000, 1, 4);
     else
-        const = 1;
+        const = ones(1, 4);
     end
+    const(end) = 1;
     robot=info.rob;
     distsTs=cell(4,1);
     distsTr=cell(4,1);
@@ -74,14 +75,14 @@ function plotErrorsHistogram(folder,varargin)
             distsTr{i,:}=[distsTr{i,:};nan];
         else
             dist=[errors{12+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
-            distsTs{i,:}=[distsTs{i,:};(dist(:)').*const];
+            distsTs{i,:}=[distsTs{i,:};(dist(:)').*const(i)];
             dist=[errors{4+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
-            distsTs{i,:}=[distsTs{i,:},(dist(:)').*const];
+            distsTs{i,:}=[distsTs{i,:},(dist(:)').*const(i)];
 
             dist=[errors{0+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
-            distsTr{i,:}=[distsTr{i,:};(dist(:)').*const];
+            distsTr{i,:}=[distsTr{i,:};(dist(:)').*const(i)];
             dist=[errors{8+i}{(pert-1)*optim.repetitions+(1:optim.repetitions)}];
-            distsTr{i,:}=[distsTr{i,:},(dist(:)').*const];
+            distsTr{i,:}=[distsTr{i,:},(dist(:)').*const(i)];
         end
     end
 
@@ -95,7 +96,6 @@ function plotErrorsHistogram(folder,varargin)
     optTypes2={'Selftouch Before', 'Planes Before', 'External Before', 'Projection Before'};
     colorTypes=[[233,114,77]; [214,215,39]; [149,196,243]; [121,204,179]]./255;
     colorTypes2=[[33,114,177]; [14,215,39]; [0,0,0]; [255,0,255]]./255;
-
     for i=1:4
         % if values for given calibration type
         if any(~isnan(distsTr{i,:}))

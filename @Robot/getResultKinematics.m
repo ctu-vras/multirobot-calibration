@@ -66,7 +66,9 @@ function [results, corrs, start_dh] = getResultKinematics(robot, opt_pars, start
         end
         mResults = results.(fnames{field});
         % corrections = results - default 
+        
         corrs.(fnames{field}) = zeros(size(mResults));
+
         corrs.(fnames{field})(:,1:3,:,:) = mResults(:,1:3,:,:)/optim.unitsCoef-robot.structure.kinematics.(fnames{field})(:,1:3,1); 
         corrs.(fnames{field})(:,4:6,:,:) = mResults(:,4:6,:,:)-robot.structure.kinematics.(fnames{field})(:,4:6,1);
         % wrap to [-pi,pi]

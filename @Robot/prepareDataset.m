@@ -81,10 +81,11 @@ function [training_set_indexes, testing_set_indexes, datasets, datasets_out]=pre
                     camFrames = [camFrames{:}];
                     uniqueFrames = [uniqueFrames; {camFrames.name}'];
                 end
-                if isstruct(datasets.(part){dataset}.rtMat)
+                if isfield(datasets.(part){dataset}, 'rtMat') && isstruct(datasets.(part){dataset}.rtMat)
                     rtFields = fieldnames(datasets.(part){dataset}.rtMat)';
                 else
                     rtFields = {};
+                    datasets.(part){dataset}.rtMat = [];
                 end
                 % Preallocate arrays
                 links(length(datasets.(part){dataset}.frame), 1) = Link();

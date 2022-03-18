@@ -43,6 +43,9 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
             nmbPoses = length(idxs);
         else
             nmbPoses = varargin{1};
+            if ischar(nmbPoses)
+                nmbPoses = str2double(nmbPoses);
+            end
         end
         data2(nmbPoses+1:end,:) = [];
         eyeAngle = data2(:,29)/2;
@@ -111,7 +114,7 @@ function datasets = loadDatasetICub(robot,optim, chains, varargin )
                 dataset2.cameras(:,2) = 1;
             end
             cam_frames = robot.findLinkByType('eye');
-            dh_pars = robot.structure.defaultKinematics;
+            dh_pars = robot.structure.kinematics;
             right_finger = robot.findLink('rightHandFinger');
             left_finger = robot.findLink('leftHandFinger');
             parents = struct('rightArm', robot.links{3}, 'leftArm', robot.links{3}, 'torso', robot.links{1}, ...

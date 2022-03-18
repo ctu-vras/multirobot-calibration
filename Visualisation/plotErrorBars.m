@@ -63,17 +63,18 @@ function plotErrorBars(folders,varargin)
         errors=errors.errors;
         optim = info.optim;
         if strcmp(units,'m') &&  strcmp(optim.units,'mm')
-            const = 0.001;
+            const = repmat(0.001, 1, 8);
         elseif strcmp(units,'mm') &&  strcmp(optim.units,'m')
-            const = 1000;
+            const = repmat(1000, 1, 8);
         else
-            const = 1;
+            const = ones(1, 8);
         end
+        const(end-1:end) = 1;
         for l = 1:numLines
-            mins(l, fi) = min(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
-            maxs(l, fi) = max(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
-            means(l, fi) = mean(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
-            stds(l, fi) = std(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)))*const;
+            mins(l, fi) = min(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)))*const(l);
+            maxs(l, fi) = max(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)))*const(l);
+            means(l, fi) = mean(errors(lines(l), optim.repetitions*(pert-1)+(1:optim.repetitions)))*const(l);
+            stds(l, fi) = std(errors(lines(l),  optim.repetitions*(pert-1)+(1:optim.repetitions)))*const(l);
         end
     end
     
