@@ -28,14 +28,16 @@ function install_MRC(varargin)
     p = inputParser;
     default_install_prefix = fullfile(pwd,'MRC');
     addOptional(p,'installPrefix', default_install_prefix);
+    addOptional(p, 'update', 0);
     parse(p,varargin{:});
 
     % Build package installation directory
     install_prefix = p.Results.installPrefix;
+    update_only = p.Results.update;
     
     setup_script = fullfile(userpath, 'startup.m');
 
-    if exist(install_prefix)
+    if ~update_only && exist(install_prefix)
         fprintf('Directory %s already present.\n', install_prefix);
         fprintf('Please use it or delete to proceed with the install.\n');
         return;
@@ -51,25 +53,29 @@ function install_MRC(varargin)
     websave(app_name, mrc_url);
     install_info = matlab.apputil.install(app_name);
     delete(app_name)
-
-    user_files_url = 'https://github.com/ctu-vras/multirobot-calibration/releases/latest/download/UserData.zip';
-    unzip(user_files_url, pwd);
-    movefile('UserData', install_prefix);
-
-    fprintf('Download of MRC completed\n');
-
-    fprintf('Creating setup script in %s\n', setup_script);
-    setupID = fopen(setup_script,'a');
-    fprintf(setupID, '\n%%MRC start\n');
-    fprintf(setupID, '%% MRC and UserData locations (hardcoded at generation time)\n');
-    fprintf(setupID, 'UserData = "%s";\n', install_prefix);
-    fprintf(setupID, 'MRC = "%s";\n', install_info.location);
-    fprintf(setupID, '\n');
-    fprintf(setupID, '%% Add directory to MATLAB path\n');
-    fprintf(setupID, 'addpath(genpath(UserData));\n');
-    fprintf(setupID, 'addpath(genpath(MRC));\n');
-    fprintf(setupID, '%%MRC end\n\n');
-    fclose(setupID);
+    
+    if ~update_only
+        user_files_url = 'https://github.com/ctu-vras/multirobot-calibration/releases/latest/download/UserData.zip';
+        unzip(user_files_url, pwd);
+        movefile('UserData', install_prefix);
+    
+        fprintf('Download of MRC completed\n');
+    end
+    
+    if  ~update_only
+        fprintf('Creating setup script in %s\n', setup_script);
+        setupID = fopen(setup_script,'a');
+        fprintf(setupID, '\n%%MRC start\n');
+        fprintf(setupID, '%% MRC and UserData locations (hardcoded at generation time)\n');
+        fprintf(setupID, 'UserData = "%s";\n', install_prefix);
+        fprintf(setupID, 'MRC = "%s";\n', install_info.location);
+        fprintf(setupID, '\n');
+        fprintf(setupID, '%% Add directory to MATLAB path\n');
+        fprintf(setupID, 'addpath(genpath(UserData));\n');
+        fprintf(setupID, 'addpath(genpath(MRC));\n');
+        fprintf(setupID, '%%MRC end\n\n');
+        fclose(setupID);
+    end
 
     startup;
 
